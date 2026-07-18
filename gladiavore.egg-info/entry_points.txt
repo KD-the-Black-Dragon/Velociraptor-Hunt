@@ -1,0 +1,3 @@
+[console_scripts]
+gladiavore = src.main:main
+kds-roguelike = src.main:main

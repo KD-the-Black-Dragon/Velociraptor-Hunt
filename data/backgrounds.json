@@ -1,0 +1,37 @@
+{
+  "backgrounds": [
+    {
+      "id": "street_scrapper",
+      "name": "Street Scrapper",
+      "blurb": "You learned to fight for scraps in the alleys. Tough start, thin purse.",
+      "starting_gold_bonus": 0,
+      "starting_renown": 0,
+      "note": "No special bonus yet (stub)."
+    },
+    {
+      "id": "pit_favorite",
+      "name": "Pit Favorite",
+      "blurb": "A minor name already — the stands know your face.",
+      "starting_gold_bonus": 20,
+      "starting_renown": 2,
+      "note": "Small gold and renown bump (stub)."
+    },
+    {
+      "id": "debtor",
+      "name": "Debtor",
+      "blurb": "You owe the wrong people. Gold pressure, nothing else yet.",
+      "starting_gold_bonus": -30,
+      "starting_renown": 0,
+      "note": "Start poorer; long-term goals later."
+    },
+    {
+      "id": "beast_handler",
+      "name": "Beast Handler",
+      "blurb": "You understand animal fighters better than most.",
+      "starting_gold_bonus": 10,
+      "starting_renown": 1,
+      "note": "Flavor stub; beast synergy later."
+    }
+  ],
+  "comment": "Background choice at career start. Victory goals deferred."
+}

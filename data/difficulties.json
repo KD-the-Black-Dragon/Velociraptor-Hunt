@@ -1,0 +1,42 @@
+{
+  "default": "normal",
+  "difficulties": [
+    {
+      "id": "easier",
+      "label": "Easier",
+      "payout_mult": 0.9,
+      "enemy_hp_mult": 0.85,
+      "enemy_damage_mult": 0.85,
+      "grab_chance_mult": 0.8,
+      "extra_green_rounds": true
+    },
+    {
+      "id": "normal",
+      "label": "Normal",
+      "payout_mult": 1.0,
+      "enemy_hp_mult": 1.0,
+      "enemy_damage_mult": 1.0,
+      "grab_chance_mult": 1.0,
+      "extra_green_rounds": false
+    },
+    {
+      "id": "hard",
+      "label": "Hard",
+      "payout_mult": 1.15,
+      "enemy_hp_mult": 1.15,
+      "enemy_damage_mult": 1.1,
+      "grab_chance_mult": 1.15,
+      "extra_green_rounds": false
+    },
+    {
+      "id": "nightmare",
+      "label": "Nightmare",
+      "payout_mult": 1.35,
+      "enemy_hp_mult": 1.35,
+      "enemy_damage_mult": 1.25,
+      "grab_chance_mult": 1.3,
+      "extra_green_rounds": false
+    }
+  ],
+  "comment": "Arena-career difficulty hooks (stub). Full reimagining later."
+}

@@ -1,0 +1,112 @@
+"""PR7: Supercoward flee at any HP."""
+
+from __future__ import annotations
+
+import random
+
+from src.components import Abilities, Alignment, Fighter, Position
+from src.data.ability_parser import parse_abilities
+from src.engine import GameEngine
+from src.systems.abilities import coward_flee_direction, coward_should_flee, has_supercoward
+from src.systems.ai import run_monster_turns, spawn_test_npc
+from src.systems.fov import update_fov
+from tests.map_test_helpers import (
+    ARENA_X,
+    ARENA_Y,
+    carve_horizontal_line,
+    isolate_other_ais,
+    spawn_wolf_with_abilities,
+)
+
+
+def _chebyshev(a: Position, b: Position) -> int:
+    return max(abs(a.x - b.x), abs(a.y - b.y))
+
+
+def _attach_abilities(entity, tokens: list[str]) -> None:
+    parsed = parse_abilities(tokens)
+    entity.components[Abilities] = Abilities(parsed=parsed)
+
+
+def _supercoward_wolf(engine: GameEngine, *, hp: int | None = None):
+    wolf = spawn_wolf_with_abilities(
+        engine.world,
+        ARENA_X,
+        ARENA_Y,
+        ["Supercoward"],
+    )
+    if hp is not None:
+        wolf.components[Fighter].hp = hp
+    isolate_other_ais(engine, keep=(wolf,))
+    return wolf
+
+
+def test_supercoward_should_flee_at_full_hp() -> None:
+    engine = GameEngine()
+    wolf = _supercoward_wolf(engine, hp=24)
+    assert has_supercoward(wolf)
+    assert coward_should_flee(wolf)
+
+
+def test_supercoward_wolf_full_hp_flees_player() -> None:
+    engine = GameEngine()
+    wolf = _supercoward_wolf(engine)
+    player = engine.player
+    assert player is not None
+    carve_horizontal_line(engine, ARENA_X - 2, ARENA_Y, 8)
+    player.components[Position] = Position(ARENA_X + 3, ARENA_Y)
+    update_fov(engine.game_map, ARENA_X + 3, ARENA_Y)
+    wolf_pos_before = wolf.components[Position]
+    player_pos = player.components[Position]
+    run_monster_turns(
+        engine.world,
+        engine.game_map,
+        player,
+        engine.message_log,
+        rng=random.Random(3),
+    )
+    assert wolf.components[Position] != wolf_pos_before
+    assert _chebyshev(wolf.components[Position], player_pos) > _chebyshev(
+        wolf_pos_before, player_pos
+    )
+
+
+def test_supercoward_neutral_full_hp_wants_flee_direction() -> None:
+    """Supercoward threshold at full HP; neutrals already flee evil by alignment baseline."""
+    engine = GameEngine()
+    isolate_other_ais(engine)
+    carve_horizontal_line(engine, ARENA_X, ARENA_Y, 8)
+    wolf = spawn_test_npc(
+        engine.world,
+        x=ARENA_X + 2,
+        y=ARENA_Y,
+        species="wolf",
+        alignment=Alignment.EVIL,
+    )
+    rabbit = spawn_test_npc(
+        engine.world,
+        x=ARENA_X + 4,
+        y=ARENA_Y,
+        species="rabbit",
+        alignment=Alignment.NEUTRAL,
+        hp=8,
+    )
+    rabbit.components[Fighter].max_hp = 8
+    _attach_abilities(rabbit, ["Supercoward"])
+    player = engine.player
+    assert player is not None
+    player.components[Position] = Position(ARENA_X + 7, ARENA_Y)
+    update_fov(engine.game_map, ARENA_X + 4, ARENA_Y)
+    assert coward_should_flee(rabbit)
+    assert (
+        coward_flee_direction(
+            rabbit,
+            engine.world,
+            engine.game_map,
+            player,
+            random.Random(0),
+            alignment=Alignment.NEUTRAL,
+            blocked_tiles=frozenset(),
+        )
+        is not None
+    )

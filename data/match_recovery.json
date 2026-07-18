@@ -1,0 +1,22 @@
+{
+  "crawl_step_aut_mult": 3.0,
+  "recovery_bar_fill_per_aut": 0.2,
+  "recovery_bar_full": 1.0,
+  "recover_to_hp": 5,
+  "stamina_regen_while_down_per_aut": 0.0,
+  "second_wind": {
+    "enabled": true,
+    "id": "second_wind",
+    "name": "Second Wind",
+    "letter": "s",
+    "uses_per_match": 1,
+    "ap_cost": 0,
+    "aut_cost": 1.0,
+    "hp_restore": 8,
+    "balance_delta": 1,
+    "debuff_aut": 8.0,
+    "debuff_accuracy_mult": 0.9,
+    "debuff_evade_mult": 0.9,
+    "description": "Once per match: surge back into the fight on willpower. Leaves you shaky for a while."
+  }
+}

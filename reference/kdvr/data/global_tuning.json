@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "player": {
+    "max_hp": 30,
+    "accuracy": 1.5,
+    "evade": 1,
+    "ac": 1,
+    "min_damage": 1,
+    "max_damage": 2
+  },
+  "regen": {
+    "hp": 1,
+    "every_n_player_turns": 8,
+    "evil_every_n_player_turns": 12
+  },
+  "vore": {
+    "hp_threshold": 0.5,
+    "hit_min": 0.25,
+    "hit_max": 1.0,
+    "escape_base": 0.15,
+    "escape_per_fail": 0.05,
+    "struggle_damage": 2
+  },
+  "loot": {
+    "max_floor_item_placements": 5,
+    "min_floor_potions": 1
+  }
+}

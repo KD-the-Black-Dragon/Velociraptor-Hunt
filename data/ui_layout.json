@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "tile_px": 12,
+  "tile_scale": 2,
+  "default_preset": "standard",
+  "presets": {
+    "standard": {
+      "root_cols": 80,
+      "root_rows": 44,
+      "regions": {
+        "map_viewport": { "x": 0, "y": 0, "w": 57, "h": 34 },
+        "sidebar": { "x": 57, "y": 0, "w": 23, "h": 34 },
+        "message_log": { "x": 0, "y": 34, "w": 70, "h": 10 },
+        "status_corner": { "x": 70, "y": 34, "w": 10, "h": 10 }
+      },
+      "map_viewport_tiles": { "w": 57, "h": 34 },
+      "message_log_lines": 8,
+      "sidebar": {
+        "hp_bar_width": 9,
+        "npc_hp_bar_width": 6,
+        "max_evil": 10,
+        "max_good": 4,
+        "evil_per_column": 5,
+        "good_per_column": 2,
+        "player_top_pad": 1,
+        "player_bottom_pad": 1,
+        "good_bottom_pad": 2,
+        "rows_per_npc": 3
+      }
+    },
+    "wide_sidebar": {
+      "root_cols": 80,
+      "root_rows": 44,
+      "regions": {
+        "map_viewport": { "x": 0, "y": 0, "w": 44, "h": 34 },
+        "sidebar": { "x": 44, "y": 0, "w": 36, "h": 34 },
+        "message_log": { "x": 0, "y": 34, "w": 70, "h": 10 },
+        "status_corner": { "x": 70, "y": 34, "w": 10, "h": 10 }
+      },
+      "map_viewport_tiles": { "w": 44, "h": 34 },
+      "message_log_lines": 8,
+      "sidebar": {
+        "hp_bar_width": 18,
+        "npc_hp_bar_width": 6,
+        "max_evil": 10,
+        "max_good": 4,
+        "evil_per_column": 5,
+        "good_per_column": 2,
+        "player_top_pad": 1,
+        "player_bottom_pad": 1,
+        "good_bottom_pad": 2,
+        "rows_per_npc": 3
+      }
+    }
+  }
+}

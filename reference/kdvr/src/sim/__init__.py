@@ -1,0 +1,1 @@
+"""Headless balance play simulator (difficulty analyzer)."""

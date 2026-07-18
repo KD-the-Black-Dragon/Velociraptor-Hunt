@@ -1,0 +1,23 @@
+{
+  "start_favor": 50,
+  "min_favor": 0,
+  "max_favor": 100,
+  "on_player_hit": 3,
+  "on_player_miss": -1,
+  "on_enemy_hit_player": -2,
+  "on_win": 12,
+  "on_loss": -10,
+  "on_surrender": -5,
+  "on_digest": -20,
+  "on_patron_hit": 5,
+  "high_threshold": 75,
+  "low_threshold": 25,
+  "high_bonus_gold": 8,
+  "low_bonus_gold": 0,
+  "moods": {
+    "high": "The crowd is roaring for you.",
+    "mid": "The crowd watches with mixed interest.",
+    "low": "The crowd is restless and unimpressed."
+  },
+  "comment": "Crowd is a thin mechanical stub — expand later into real force."
+}

@@ -1,0 +1,131 @@
+{
+  "ap_max": 10,
+  "ap_regen_per_aut": 1.0,
+  "balance_min": -10,
+  "balance_max": 10,
+  "balance_on_wait": -1,
+  "balance_on_step": 0,
+  "balance_on_attack": 1,
+  "balance_decay_toward_zero": false,
+  "balance_passive": {
+    "overextended_start": 4,
+    "cowering_start": -4,
+    "extreme_acc_penalty": 0.15,
+    "extreme_evade_penalty": 0.15,
+    "extreme_damage_bonus": 0.2,
+    "moderate_acc_bonus": 0.05,
+    "moderate_evade_bonus": 0.05
+  },
+  "maneuvers": {
+    "step": {
+      "aut_cost": 0.45,
+      "ap_cost": 0,
+      "balance_delta": 0,
+      "damage_mult": 1.0,
+      "accuracy_mult": 1.0
+    },
+    "wait": {
+      "aut_cost": 1.0,
+      "ap_cost": 0,
+      "balance_delta": -1,
+      "damage_mult": 1.0,
+      "accuracy_mult": 1.0
+    },
+    "jab": {
+      "aut_cost": 1.0,
+      "ap_cost": 0,
+      "balance_delta": 1,
+      "damage_mult": 0.65,
+      "accuracy_mult": 1.15
+    },
+    "standard_attack": {
+      "aut_cost": 1.2,
+      "ap_cost": 0,
+      "balance_delta": 1,
+      "damage_mult": 1.0,
+      "accuracy_mult": 1.0
+    },
+    "all_out": {
+      "aut_cost": 1.5,
+      "ap_cost": 0,
+      "balance_delta": 2,
+      "damage_mult": 1.25,
+      "accuracy_mult": 1.05
+    },
+    "talk_paid": {
+      "aut_cost": 1.0,
+      "ap_cost": 1,
+      "balance_delta": 0
+    },
+    "free_talk_refresh_aut": 1.0
+  },
+  "abilities": [
+    {
+      "letter": "a",
+      "id": "haymaker",
+      "name": "Haymaker",
+      "ap_cost": 5,
+      "aut_cost": 2.0,
+      "balance_delta": 3,
+      "damage_mult_open": 1.8,
+      "accuracy_mult_open": 1.2,
+      "damage_mult_guarded": 0.9,
+      "accuracy_mult_guarded": 0.55,
+      "openness_threshold": 0.55,
+      "push_tiles": 1,
+      "description": "All-in strike. High risk unless the target is open/distracted."
+    },
+    {
+      "letter": "b",
+      "id": "shield_push",
+      "name": "Shield Push",
+      "ap_cost": 3,
+      "aut_cost": 1.2,
+      "balance_delta": -1,
+      "damage_mult": 0.5,
+      "accuracy_mult": 1.1,
+      "turtle_damage_bonus": 1.3,
+      "turtle_accuracy_bonus": 1.1,
+      "push_tiles": 2,
+      "description": "Shove the foe; better if they are turtling."
+    },
+    {
+      "letter": "c",
+      "id": "hook_shield",
+      "name": "Hook Shield",
+      "ap_cost": 3,
+      "aut_cost": 1.2,
+      "balance_delta": 1,
+      "damage_mult": 0.85,
+      "accuracy_mult": 1.25,
+      "turtle_damage_bonus": 1.4,
+      "turtle_accuracy_bonus": 1.25,
+      "push_tiles": 1,
+      "description": "Hook past a raised guard; stronger the more they turtle."
+    },
+    {
+      "letter": "d",
+      "id": "low_kick",
+      "name": "Low Kick",
+      "ap_cost": 2,
+      "aut_cost": 1.1,
+      "balance_delta": 1,
+      "damage_mult": 0.7,
+      "accuracy_mult": 1.2,
+      "push_tiles": 0,
+      "description": "Quick leg strike. Cheap AP; chips and sets up openings."
+    },
+    {
+      "letter": "e",
+      "id": "shoulder_check",
+      "name": "Shoulder Check",
+      "ap_cost": 4,
+      "aut_cost": 1.4,
+      "balance_delta": 2,
+      "damage_mult": 1.1,
+      "accuracy_mult": 1.0,
+      "push_tiles": 2,
+      "description": "Body check. Solid shove; costs more AP."
+    }
+  ]
+}

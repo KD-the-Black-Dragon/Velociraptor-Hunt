@@ -1,0 +1,9 @@
+tcod>=16.0
+tcod-ecs>=5.0
+numpy>=1.26
+Pillow>=10.0
+platformdirs>=4.0
+
+[dev]
+pytest>=8.0
+pytest-xdist>=3.5

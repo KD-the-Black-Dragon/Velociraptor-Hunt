@@ -1,0 +1,209 @@
+{
+  "offer_count": 3,
+  "green_rounds": [1, 3, 5, 7, 10, 14],
+  "green_rounds_easier_extra": [2, 4, 6, 8, 12],
+  "economy": {
+    "win_gold_base": 40,
+    "green_loss_gold_base": 15,
+    "red_loss_gold_base": 5,
+    "win_renown_red": 2,
+    "win_renown_green": 1,
+    "loss_renown": 0,
+    "surrender_min_world_aut": 2.5,
+    "surrender_base_fraction": 0.3,
+    "surrender_aut_bonus_per_aut": 0.04,
+    "surrender_fraction_max": 0.8
+  },
+  "cards": [
+    {
+      "id": "r1_rats",
+      "title": "3 dire rats (exhibition pit)",
+      "kind": "red",
+      "payout_mult": 1.0,
+      "max_allies": 2,
+      "min_round": 1,
+      "max_round": 4,
+      "enemies": [{ "entity_id": "rat", "count": 3 }]
+    },
+    {
+      "id": "r1_kobolds",
+      "title": "Kobold knife squad",
+      "kind": "red",
+      "payout_mult": 1.1,
+      "max_allies": 2,
+      "min_round": 1,
+      "max_round": 5,
+      "enemies": [{ "entity_id": "kobold", "count": 3 }]
+    },
+    {
+      "id": "r1_green_spar",
+      "title": "Sparring exhibition (nonlethal)",
+      "kind": "green",
+      "payout_mult": 0.45,
+      "max_allies": 2,
+      "min_round": 1,
+      "max_round": 99,
+      "enemies": [{ "entity_id": "rat", "count": 1 }]
+    },
+    {
+      "id": "r1_green_drill",
+      "title": "Weapons drill (mercy rules)",
+      "kind": "green",
+      "payout_mult": 0.5,
+      "max_allies": 2,
+      "min_round": 1,
+      "max_round": 99,
+      "enemies": [{ "entity_id": "kobold", "count": 2 }]
+    },
+    {
+      "id": "r1_wolves",
+      "title": "Pair of pit wolves",
+      "kind": "red",
+      "payout_mult": 1.2,
+      "max_allies": 2,
+      "min_round": 1,
+      "max_round": 6,
+      "enemies": [{ "entity_id": "wolf", "count": 2 }]
+    },
+    {
+      "id": "r1_bats",
+      "title": "Cave bat swarm",
+      "kind": "red",
+      "payout_mult": 0.95,
+      "max_allies": 2,
+      "min_round": 1,
+      "max_round": 4,
+      "enemies": [{ "entity_id": "bat", "count": 4 }]
+    },
+    {
+      "id": "r2_mixed_pack",
+      "title": "Rat pack and a kobold",
+      "kind": "red",
+      "payout_mult": 1.15,
+      "max_allies": 2,
+      "min_round": 2,
+      "max_round": 7,
+      "enemies": [
+        { "entity_id": "rat", "count": 2 },
+        { "entity_id": "kobold", "count": 1 }
+      ]
+    },
+    {
+      "id": "r2_slugs",
+      "title": "Tunnel slugs",
+      "kind": "red",
+      "payout_mult": 1.05,
+      "max_allies": 1,
+      "min_round": 2,
+      "max_round": 8,
+      "enemies": [{ "entity_id": "tunnel_slug", "count": 2 }]
+    },
+    {
+      "id": "r3_gnoll",
+      "title": "Gnoll mercenary (solo)",
+      "kind": "red",
+      "payout_mult": 1.35,
+      "max_allies": 2,
+      "min_round": 3,
+      "max_round": 10,
+      "enemies": [{ "entity_id": "gnoll_mercenary", "count": 1 }]
+    },
+    {
+      "id": "r3_tarantula",
+      "title": "Pit tarantulas",
+      "kind": "red",
+      "payout_mult": 1.25,
+      "max_allies": 2,
+      "min_round": 3,
+      "max_round": 12,
+      "enemies": [{ "entity_id": "tarantula", "count": 2 }]
+    },
+    {
+      "id": "r4_wolves3",
+      "title": "Wolf trio",
+      "kind": "red",
+      "payout_mult": 1.4,
+      "max_allies": 2,
+      "min_round": 4,
+      "max_round": 99,
+      "enemies": [{ "entity_id": "wolf", "count": 3 }]
+    },
+    {
+      "id": "r4_green_mercy",
+      "title": "Crowd-pleasing exhibition (green)",
+      "kind": "green",
+      "payout_mult": 0.4,
+      "max_allies": 2,
+      "min_round": 1,
+      "max_round": 99,
+      "enemies": [{ "entity_id": "wolf", "count": 1 }]
+    },
+    {
+      "id": "r5_slime",
+      "title": "Slime pit",
+      "kind": "red",
+      "payout_mult": 1.3,
+      "max_allies": 2,
+      "min_round": 4,
+      "max_round": 99,
+      "enemies": [{ "entity_id": "slime", "count": 2 }]
+    },
+    {
+      "id": "r6_pack",
+      "title": "Kobold warband",
+      "kind": "red",
+      "payout_mult": 1.5,
+      "max_allies": 2,
+      "min_round": 5,
+      "max_round": 99,
+      "enemies": [{ "entity_id": "kobold", "count": 4 }]
+    },
+    {
+      "id": "r8_hard",
+      "title": "Gnoll and wolves",
+      "kind": "red",
+      "payout_mult": 1.7,
+      "max_allies": 2,
+      "min_round": 7,
+      "max_round": 99,
+      "enemies": [
+        { "entity_id": "gnoll_mercenary", "count": 1 },
+        { "entity_id": "wolf", "count": 2 }
+      ]
+    },
+    {
+      "id": "r2_fox",
+      "title": "Fox archer duel",
+      "kind": "red",
+      "payout_mult": 1.2,
+      "max_allies": 2,
+      "min_round": 2,
+      "max_round": 9,
+      "enemies": [{ "entity_id": "fox_archer", "count": 1 }]
+    },
+    {
+      "id": "r5_mixed",
+      "title": "Kobolds and a tarantula",
+      "kind": "red",
+      "payout_mult": 1.45,
+      "max_allies": 2,
+      "min_round": 5,
+      "max_round": 99,
+      "enemies": [
+        { "entity_id": "kobold", "count": 2 },
+        { "entity_id": "tarantula", "count": 1 }
+      ]
+    },
+    {
+      "id": "r1_green_bats",
+      "title": "Bat-netting exhibition (green)",
+      "kind": "green",
+      "payout_mult": 0.42,
+      "max_allies": 2,
+      "min_round": 1,
+      "max_round": 99,
+      "enemies": [{ "entity_id": "bat", "count": 2 }]
+    }
+  ],
+  "comment": "Premade card pool. Hub offers offer_count random eligible cards per round. Green only on green_rounds (+ easier extras)."
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "max_target_depth": 20,
+  "throwable_stack_count": 5,
+  "potion_count": 3,
+  "wand_count": 3,
+  "simulated_runes_min_numerator": 2,
+  "simulated_runes_min_denominator": 3
+}

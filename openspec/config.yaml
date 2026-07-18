@@ -1,0 +1,24 @@
+schema: spec-driven
+
+# Agents: read AGENTS.md at the start of every task (master procedure, principles, checklists).
+workflow: AGENTS.md
+
+context: |
+  Project: KD's Vore Roguelike
+  Workflow: see AGENTS.md (OpenSpec discipline, one PR at a time, manual checklists, spec updates)
+  Language: Python 3.11+
+  Engine: libtcod 16.x
+  Architecture: lightweight ECS (tcod.ecs or thin custom registry)
+  Terminology: monsters are "defeated" (never killed); player at 0 HP is "stunned";
+    player "digested" only via future vore module (not core combat)
+  Scope: minimal turn-based dungeon crawler first; vore mechanics as modular extensions
+  Modding: planned core feature; not implemented yet (see openspec/changes/deferred-add-modding-support/)
+
+rules:
+  specs:
+    - Use GIVEN/WHEN/THEN scenario format
+    - Avoid death/kill/die terminology; use defeated, stunned, digested
+    - Keep requirements behavioral; put implementation detail in design.md for changes
+  design:
+    - Prefer ECS components over inheritance
+    - Design vore hooks as optional components, not core dependencies

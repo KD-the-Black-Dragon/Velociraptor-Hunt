@@ -1,0 +1,1 @@
+"""Gladiavore — career roguelike (arena matches + downtime)."""

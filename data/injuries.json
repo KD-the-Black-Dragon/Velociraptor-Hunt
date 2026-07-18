@@ -1,0 +1,46 @@
+{
+  "regions": ["Arm", "Leg", "Head", "Torso"],
+  "severities": ["Minor", "Moderate", "Major"],
+  "penalty_fraction": {
+    "Minor": 0.10,
+    "Moderate": 0.20,
+    "Major": 0.30
+  },
+  "region_effects": {
+    "Arm": {
+      "accuracy": true,
+      "damage": true,
+      "comment": "Weapon swing power and hit chance"
+    },
+    "Leg": {
+      "step_aut_mult": true,
+      "evade": true,
+      "comment": "Movement cost and dodge"
+    },
+    "Head": {
+      "accuracy": true,
+      "mentality": true,
+      "comment": "Focus / aim"
+    },
+    "Torso": {
+      "max_hp_fraction": true,
+      "ac": true,
+      "comment": "Stamina capacity and toughness"
+    }
+  },
+  "apply": {
+    "solid_hit_hp_fraction_min": 0.12,
+    "solid_hit_chance": 0.35,
+    "critical_hit_hp_fraction_min": 0.28,
+    "critical_hit_chance": 0.85,
+    "critical_double_step_chance": 0.25,
+    "comment": "Solid hit: chance of +1 severity step. Critical: almost always step; sometimes two steps."
+  },
+  "heal_gold_per_step": {
+    "Minor": 40,
+    "Moderate": 70,
+    "Major": 110
+  },
+  "natural_heal_steps_per_match": 0,
+  "display_format": "Injured {region}: {severity}"
+}

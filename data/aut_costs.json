@@ -1,0 +1,7 @@
+{
+  "step": 0.45,
+  "wait": 1.0,
+  "jab_attack": 1.0,
+  "standard_attack": 1.2,
+  "comment": "Legacy mirror of match_combat.json maneuvers — prefer match_combat for balance. AUT cooldowns until the next action; cooldown does not reduce defense by itself."
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "macguffins": [
+    {
+      "id": "sword_of_freedom",
+      "display_name": "The Sword of Freedom",
+      "glyph": "/",
+      "fg": [220, 220, 255],
+      "examine": "A blade that hums with the promise of escape.",
+      "min_depth": 20,
+      "max_depth": 1000,
+      "score": 100
+    },
+    {
+      "id": "shield_of_justice",
+      "display_name": "The Shield of Justice",
+      "glyph": "[",
+      "fg": [180, 200, 255],
+      "examine": "A shield etched with symbols of protection and resolve.",
+      "min_depth": 20,
+      "max_depth": 1000,
+      "score": 150
+    },
+    {
+      "id": "cup_that_heals",
+      "display_name": "The Cup that Heals",
+      "glyph": "\"",
+      "fg": [255, 220, 120],
+      "examine": "A golden cup that radiates gentle warmth.",
+      "min_depth": 20,
+      "max_depth": 1000,
+      "score": 200
+    }
+  ]
+}

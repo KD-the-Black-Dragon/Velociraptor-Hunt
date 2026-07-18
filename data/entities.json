@@ -1,0 +1,2771 @@
+{
+  "schema_version": 1,
+  "entities": [
+    {
+      "id": "bat",
+      "display_name": "bat",
+      "glyph": "b",
+      "fg": [
+        90,
+        60,
+        110
+      ],
+      "alignment": "evil",
+      "mobility": "flyer",
+      "examine": "A small, ordinary-looking bat flits and darts through the air on quick, fluttering wingbeats. It is no larger than your two hands cupped together, with leathery wings, needle-fine fangs, and a pair of tiny gleaming eyes fixed on you. It lets out a rapid, high-pitched squeak that sounds unnervingly like giggling.",
+      "proper_name": null,
+      "max_hp": 8,
+      "evade": 2,
+      "ac": 1,
+      "accuracy": 0.85,
+      "min_damage": 2,
+      "max_damage": 3,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "experience_points": 55,
+      "digestion_damage_per_tick": 2,
+      "digest_time": 5,
+      "abilities": [
+        "Erratic",
+        "Lifedrain"
+      ],
+      "spawn": {
+        "weight": 4,
+        "min_depth": 2,
+        "max_depth": 6,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "{predator} darts straight at your face, its tiny jaws gaped \u2014 but no wider than your nose."
+            ],
+            "success": [
+              "The little snout latches over your face and stretches like warm rubber, and before you can flinch your whole head is crammed into a slick, squishing tunnel puffing rapid breaths at your face in the bat\u2019s frenzied excitement.",
+              "Each frantic wingbeat wiggles and gyrates the tiny frame, and with every gyration you slide another few inches into a hot, slimy tunnel that has no business being this large. The bat's throat swallows down over your chest, then your waist, its skin stretching thin and taut over your bulk.",
+              "Through the bat\u2019s skin, your face presses against the ground, followed by your feet being lifted up, then vanishing inside as the bat works you the rest of the way down. The bat's whole body has ballooned into a grotesque, tightly-stretched sac many times its own size, your shape pressing out through the straining skin.",
+              "The bat tumbles to the floor, pinned in place atop its own monstrous, quivering belly. It squeaks and giggles down at the churning gut it now perches upon, wings flexing in pure lustful glee as slime floods in around you."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "The bat flips upside down in the air, jabbing a startlingly girthy little batcock in your direction!"
+            ],
+            "success": [
+              "The tip flares open and swallows your head in one slick, sucking pull. The bat squeaks a high, salacious giggle, its wings beating in fast, jerking flutters that wiggle its whole body against you.",
+              "The batcock stretches down over your shoulders, gulping you inward by rapid inches with every gyration of those tiny wings. The hot and slippery tunnel constricts and pulsates, dragging you deeper no matter how you resist.",
+              "Your hips, then your legs are drawn in, and you sink down into a plush, straining ballsack that has swollen far past any reasonable size. Your outline bulges obscenely through the thin, quivering skin.",
+              "Your feet squeeze through the twitching cock and drop into the churning, slimy sack below. The bat squeaks triumphantly, wings shivering as it sits perched atop a swollen, sloshing ballsack many times its size."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "The bat whirls tail-first in the air, presenting its tiny puckered tailhole with a haughty squeak!"
+            ],
+            "success": [
+              "The little ring stretches like taffy and clamps over your head, and a single hard wingbeat yanks you into a slick, clenching tunnel that squeezes rhythmically down your face.",
+              "Every gyrating wingbeat wiggles the bat's whole frame and hauls you inward another few inches, its clenching lower gut stretching thin and taut over your shoulders and chest.",
+              "You are wedged and crammed deeper into a hot, rippling tunnel, the bat's rump ballooning grotesquely around you until even your feet disappear and the tailhole seals shut with a wet squelch.",
+              "The bat sinks to the floor, stuck fast atop a massively stretched, plush lower belly. It squeaks and giggles down at the squirming bulge, wings twitching with lustful delight at having crammed something so much bigger than itself up its own backside."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "{predator} squeaks triuphantly as its enormous belly roils, rounds taut, and then shrinks back to normal with a thunderous and elongated gurgle. {prey} is gone.",
+          "With a series of over-loud sloshes and gurgling, {predator}'s monstrous gut liquefies {prey} and shrinks rapidly back to its normal size."
+        ],
+        "CV": [
+          "{predator}'s enormous sack rounds out, then pulses and shrinks as it sprays {prey} out in a voluminous flood of cum, all while the bat chitters with delighted squeaking.",
+          "{predator} mashes its massive ballsack against the ground as it orgasms {prey} away, its sack draining back to tiny size in seconds."
+        ],
+        "AV": [
+          "{predator} giggles triumphantly as its swollen lower gut rounds smooth, then shrinks back to normal with thunderous gurgling. {prey} is bat-fat.",
+          "A deafening series of glugs, and {predator}'s stretched lower gut compresses {prey} into a bit of bat-plush and snaps back to normal."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "{predator} darts at {prey} and stretches its snout over {prey}'s head, gulping {prey} down with hard, jerking wingbeats! The proud little bat perches on top of its massively swollen belly.",
+          "{predator}'s little jaws gape wide and gulp {prey} down in a few frantic, fluttering lurches! The proud little bat perches on top of its massively swollen belly."
+        ],
+        "CV": [
+          "{predator} flips over and sucks {prey} into its startlingly girthy batcock!  The proud little bat perches on top of its massively swollen ballsack.",
+          "{predator}'s tiny cock flares open and swallows {prey} whole, swelling into a monstrous sack!"
+        ],
+        "AV": [
+          "{predator} spins tail-first and stretches its ring over {prey}, sucking {prey} in with jerking wingbeats! The little bat perches on top of its massively swollen lower gut.",
+          "{predator}'s little backdoor gapes wide and gulps {prey} inside, its lower gut ballooning huge!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "{predator} lunges snout-first at {prey} but flits past with a shrill squeak.",
+          "{predator} lunges maw-first at {prey}, but {prey} bats it away."
+        ],
+        "CV": [
+          "{predator} jabs its cock toward {prey} but can't get a grip.",
+          "{predator} flips at {prey} cock-first, but misses and tumbles."
+        ],
+        "AV": [
+          "{predator} whirls tail-first at {prey} but veers wide with a shrill squeak.",
+          "{predator} backs toward {prey} tailhole-first, but {prey} dodges."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "You hear a wet lurching gulp, followed by a shrill, giggling squeak.",
+          "You hear rapid little wingbeats and a sloppy swallow somewhere nearby."
+        ],
+        "CV": [
+          "You hear a slick, sucking slurp, followed by an eager squeak.",
+          "You hear rapid fluttering and a wet, salacious squelch nearby."
+        ],
+        "AV": [
+          "You hear a clenching squish, followed by a smug little squeak.",
+          "You hear frantic wingbeats and a disgusting wet gulp nearby."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "You hear thunderous gurgling and sloshing, capped by a triumphant squeak."
+        ],
+        "CV": [
+          "You hear a voluminous splatter, followed by a giddy, giggling squeak."
+        ],
+        "AV": [
+          "You hear booming, wet churning, capped by a smug little squeak."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "Crammed inside {predator}'s absurdly stretched gut, you are pinned on all sides by hot, slick walls that quiver and clench around every inch of you. The skin is stretched so thin you can see the little creature's shadow perched smugly atop the bulge you make, squeaking and giggling down at you.",
+              "Tingling slime floods in and everything begins to soften and sink. Your limbs go slushy, your shape melts into the churning dark, and the giggling grows louder as you drip away.",
+              "The bulge that is you rounds out smooth and then, with a chorus of deafening gurgles and sloshes, shrinks fast. The bat squeaks in giddy triumph as its belly shrinks back to its tiny size, all of you gurgled down and absorbed into one proud little bat."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "Squeezed inside the bat's grotesquely swollen sack, you are pressed and mashed by plush, throbbing walls that pulse in time with the little creature's twitching hips. It perches atop the enormous sack, squeaking a lustful, mocking giggle.",
+              "Warm slime seeps in and your body begins to soften and dissolve, your edges going syrupy and slick as you melt into the churning cream. The sack rounds out smooth as the last of your shape sloshes away.",
+              "The bat's whole tiny frame bucks and shudders as it orgasms, spraying what\u2019s left of you out across the stone in a voluminous flood while its sack drains back to nothing. It flutters up, weightless and giddy, squeaking with delight at the fat little puddle of cum it left behind."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "Wedged deep in the bat's massively stretched lower gut, you are clenched and crushed by rippling walls on every side. Above you the tiny creature sits perched on the huge bulge of its own rump, squeaking and giggling at the humiliation it has inflicted by having crammed you up its backside.",
+              "Tingling slime washes over you and your body begins to sink and soften, melting into the churning dark as the bat's giggling swells louder and louder.",
+              "The bulge rounds out smooth, then compresses with booming, wet churning as the bat's gut shrinks back to its tiny size, all of you settled into a bit of extra plush on its haunches and tail. The little bat squeaks smugly and flutters off, hips a touch heavier than before."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "wolf",
+      "display_name": "wolf",
+      "glyph": "w",
+      "fg": [
+        80,
+        80,
+        80
+      ],
+      "alignment": "evil",
+      "mobility": "ground",
+      "examine": "This lupine beast is slightly larger than you, with a dense pelt of grey fur, drool-coated fangs, and a crazed look in its eyes.",
+      "proper_name": null,
+      "max_hp": 13,
+      "evade": 2,
+      "ac": 2,
+      "accuracy": 0.55,
+      "min_damage": 5,
+      "max_damage": 7,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "experience_points": 40,
+      "digestion_damage_per_tick": 3,
+      "digest_time": 5,
+      "abilities": [],
+      "spawn": {
+        "weight": 3,
+        "min_depth": 3,
+        "max_depth": 10,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "The wolf leaps toward you maw-first!"
+            ],
+            "success": [
+              "In an instant, your entire head is crammed into the wolf's hot, slimy gullet. The wolf follows up with a savage pull, forcing you to belly-flop hard onto the ground.",
+              "The wolf wastes no time taking advantage of your sprawled form. Its jaws chomp over your shoulders and torso while crushing throat muscles force you deeper into its innards. You are folded up entirely within the wolf's sweltering, fur coated stomach. As tingling slime pours into the tight fleshy chamber, there's no doubt that this beast means to digest you as soon as it can."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "The wolf leaps, aiming its paws at your shoulders!"
+            ],
+            "success": [
+              "The wolf's paws hook over your shoulders and slam you belly-first onto the ground, followed by the beast stepping over top of you and pointing its furry crotch and fully erect, knotted lupine cock at your face.",
+              "The wolf slams its hips forward, and its cock instantly expands around your entire head, drawing you into the crushingly tight tunnel reeking of salt and wet dog. The wolf's tail wags feverishly as it continues with rapid humping motions. Each motion sucks you a little deeper inside no matter what you do, until at last you are curled up entirely within the wolf's pliable, fur-covered ballsack."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "The wolf suddenly turns around and raises its tail, aiming its tailhole in your direction!"
+            ],
+            "success": [
+              "The wolf leaps backward. There's no time to dodge the furry missile aimed straight at your face; the wolf's tailhole expands instantly around your head and clenches tight.",
+              "You lose balance and fall to the ground belly first, leaving you no leverage as the wolf continues grinding its rump hard against you and the ground while its lower gut muscles rapidly suck you inside. You are unable to resist being lodged deeper into the wolf's crushing, twisting lower gut, until even your feet vanish beyond the beast's tailhole, which seals tightly behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "{predator} howls in triumph as {prey} is gurgled into lupine fat.",
+          "{predator} howls in triumph as the {prey}-bulge in its belly rapidly shrinks."
+        ],
+        "CV": [
+          "{predator} howls and sprays what's left of {prey} from its cock.",
+          "{predator} humps the floor wildly and sprays what's left of {prey} from its cock."
+        ],
+        "AV": [
+          "{predator}'s abdomen compresses, turning {prey} into lupine haunch-fat.",
+          "{predator}'s abdomen tightens with a loud gurgle - {prey} has been digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "{predator} lunges and swallows {prey} whole!",
+          "{predator} suddenly gulps {prey} down in one motion!"
+        ],
+        "CV": [
+          "{predator} sucks {prey} into its knotted lupine cock!",
+          "{predator} pulls {prey} into its furry lupine ballsack!"
+        ],
+        "AV": [
+          "{predator} lifts its fluffy tail and draws {prey} into its plush backdoor!",
+          "{predator} turns around and sucks {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "{predator} chomps viciously at {prey}, slobbering everywhere.",
+          "{predator} lunges at {prey}, but {prey} dodges just in time."
+        ],
+        "CV": [
+          "{predator} attempts to get {prey} closer to its cock, but loses grip.",
+          "{predator} tries to guide {prey} to its cock, but loses grip."
+        ],
+        "AV": [
+          "{predator} turns around and lunges backward at {prey}, but misses.",
+          "{predator} turns around and leaps backward at {prey}, but misses."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "You hear a wet gulping noise, followed by a lupine whimper.",
+          "You hear a wet gulping noise, followed by doglike panting."
+        ],
+        "CV": [
+          "You hear an elongated slurp, followed by a lupine whimper.",
+          "You hear an elongated slurp, followed by doglike panting."
+        ],
+        "AV": [
+          "You hear a disgusting squish, followed by a lupine whimper.",
+          "You hear a disgusting squish, followed by doglike panting."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "You hear a rumbling gurgle, followed by a victorious howl."
+        ],
+        "CV": [
+          "You hear splattering liquid, followed by a victorious howl."
+        ],
+        "AV": [
+          "You hear a rumbling gurgle, followed by a victorious howl."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "Between the heat of the wolf's furry coat and your dwindling strength, you soon lack the means to attempt fighting your way back out. Sensing your weakness, the wolf struts around, allowing its sagging belly to grotesquely sway while coating you with hot stomach slime.",
+              "As the wolf's body rapidly converts you into rich lupine belly-fat, the last thing you hear is its howl of victory, having achieved the rare feat of digesting an adventurer."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "Despite the seeming impossibility of having been sucked into the wolf's cock in the first place, it's even more impossible to get out. You are compacted into a tighter and tighter space while the fur-coating encases you in stifling heat.",
+              "Eventually, a prolonged howl rings out all around you, accompanied by rhythmic pulses as the wolf makes the laborious effort of orgasming your almost fully-liquefied body onto the stone floor. After a minute or so, all that's left of you is an anonymous white puddle of wolf cum."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "Between the heat of the wolf's furry coat and your dwindling strength, you soon lack the means to attempt fighting your way back out. You can only imagine how the wolf must look with a full-sized prey awkwardly crammed into its lower gut.",
+              "As the wolf's body rapidly converts you into curvaceous lupine haunch-fat, the last thing you hear is its howl of victory, having achieved the rare feat of digesting an adventurer."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "knight",
+      "display_name": "dog knight",
+      "glyph": "k",
+      "fg": [
+        120,
+        220,
+        255
+      ],
+      "alignment": "good",
+      "mobility": "ground",
+      "examine": "An anthro dog belonging to an order of knights errant. Loyal, brave, and famously courageous, dog knights seldom need much encouragement to charge headlong at enemies.",
+      "proper_name": null,
+      "max_hp": 20,
+      "evade": 1,
+      "ac": 3,
+      "accuracy": 1.0,
+      "min_damage": 4,
+      "max_damage": 6,
+      "experience_points": 25,
+      "abilities": [],
+      "spawn": {
+        "weight": 1,
+        "min_depth": 3,
+        "max_depth": 1000,
+        "terrain": "land"
+      },
+      "introduction_log_category": "speech",
+      "introduction": [
+        "I am {name}, sworn to aid you.",
+        "I am {name}, and I will fight at your side.",
+        "{name}, at your service!",
+        "{name} is here. Let's drive these beasts back!",
+        "Another ally! I am {name}.",
+        "Well met! I am {name}.",
+        "A pleasure to meet you. I am {name}.",
+        "{name}. Together we'll clear this place.",
+        "{name}, ready for whatever lurks ahead.",
+        "{name}, knight of the expedition.",
+        "{name}, ready to lend a paw.",
+        "Fear not. {name} walks beside you now.",
+        "{name} never turns down a worthy cause.",
+        "Together we're stronger. I am {name}.",
+        "Courage, friend. {name} has arrived.",
+        "This dungeon has met its match. {name} is here.",
+        "You look like you could use a knight. I'm {name}.",
+        "{name} never backs down from a fight.",
+        "The name's {name}. Let's get to work.",
+        "Adventure awaits! I'm {name}.",
+        "{name} is ready to sniff out danger.",
+        "Nothing escapes the nose of {name}.",
+        "{name} is barking up the right dungeon.",
+        "You've got a loyal companion in {name}.",
+        "{name} never leaves a friend behind.",
+        "{name} won't roll over for evil.",
+        "{name} is itching for a righteous scrap.",
+        "{name} has a bone to pick with these monsters."
+      ]
+    },
+    {
+      "id": "rabbit",
+      "display_name": "rabbit",
+      "glyph": "r",
+      "fg": [
+        140,
+        140,
+        140
+      ],
+      "alignment": "neutral",
+      "mobility": "ground",
+      "examine": "A small and harmless lagomorph.",
+      "proper_name": null,
+      "max_hp": 8,
+      "evade": 4,
+      "ac": 0,
+      "accuracy": 1.0,
+      "min_damage": 0,
+      "max_damage": 0,
+      "experience_points": 5,
+      "abilities": [],
+      "spawn": {
+        "weight": 0,
+        "min_depth": 1,
+        "max_depth": 1000,
+        "terrain": "land"
+      }
+    },
+    {
+      "id": "shark",
+      "display_name": "shark",
+      "glyph": "s",
+      "fg": [
+        100,
+        180,
+        220
+      ],
+      "alignment": "evil",
+      "mobility": "aquatic",
+      "examine": "A massive, toothy fish of no species you can name, its slate-grey hide gleaming wet, rubbery as a drowned tire. Flat black eyes sit in its skull like holes punched through to nowhere, fixed on you without a flicker of intelligence behind them.",
+      "proper_name": null,
+      "max_hp": 15,
+      "evade": 2,
+      "ac": 3,
+      "accuracy": 1.5,
+      "min_damage": 6,
+      "max_damage": 9,
+      "experience_points": 45,
+      "digestion_damage_per_tick": 4,
+      "digest_time": 5,
+      "abilities": [],
+      "spawn_requires_water": true,
+      "spawn": {
+        "weight": 1,
+        "min_depth": 4,
+        "max_depth": 20,
+        "terrain": "water"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "The shark bursts up out of the shallows and throws half its bulk onto the shore, jaws cranking open around a black ringed maw!"
+            ],
+            "success": [
+              "The jaws crash shut over your head and shoulders before your legs even understand you should run. Rows of jagged teeth lie flat against your skin like a cage folding closed, and a warm flood of salty, fishy slime sheets down over your face as the shark begins to gulp. The wet haul of the shark's throat muscles ripple over you in slow contractions, dragging you in headfirst while its heavy body scrapes backward across the stone toward the water, taking you with it.",
+              "The shark's whole body heaves, dragging itself back into the surf and hauling you along as your torso is crammed down the shark's wide gullet, the walls squelching shut around your ribs with each swallow, the salt reek packed so thick into the tunnel that every breath tastes like the bottom of the sea. One last shove of its jaws and your feet slip past the teeth into darkness. You fold up knees-to-chest inside the shark's cold, sloshing belly as the beast slides beneath the surface, the world shrinking to muffled water-noise and the slow rock of the gut around you."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "The shark lunges from the water and clamps its jaws around your ankle, trying to drag you into the water!"
+            ],
+            "success": [
+              "You fall into the cold water and the shark immediately slams blunt tonnage over you, grinding you into stone just beneath the surface while something girthy and rubbery flexes up between your legs from below, twitching against you in the current. Its blunt, tapered sharkcock unsheathes along your legs, hot even through the cold water, drooling salty precum that ribbons away in the flow. The shark's flat stare never changes as the wide opening at the tip stretches and yawns down over your feet.",
+              "Water churns white around you as your legs are drawn into the twitching cock, the shaft constricting and hauling in slow, blunt pulses, each one swallowing another handspan of you. The tunnel is cold at first, then disturbingly warm, squeezing shut around your hips like a fist closing. Each dull throb crams you deeper, salty froth boiling around your face, until you are sucked inside and forced to lie curled whole inside the shark's heavy, water-cooled sack, left to sway beneath the shark as the beast rolls lazily off the shelf of stone and sinks into the deep."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "The shark suddenly spins around and whips its tail at your legs!"
+            ],
+            "success": [
+              "The tail hits you like a swung log and dumps you sprawling into the shallows. Before you can get back to shore, the shark reverses its heavy rump onto you. Its slick tailhole spreads over your head and clenches down tight around your skull. The dull, wet suction of the shark's lower gut swallows you past your shoulders in steady pulls while cold water sloshes and slapping around your legs.",
+              "Every blunt pulse wedges you deeper into the clenching, salt-slick tunnel, the fishy reek soaking into your lungs in the cramped dark, until your feet are the last of you to drag through the rubbery ring and vanish. {predator}'s tailhole seals shut behind your soles, and you feel the shark's whole body tilt, sink, and drift, carrying you folded and squeezed inside its cold, sloshing gut down and down into the depths."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "{predator} rolls belly-up in the water, and the {prey}-shaped bulge sloshes, slumps, and spreads out into smooth blubbery grey fat.",
+          "A dull gurgle rolls out through the water as the last outline of {prey} sinks and vanishes into shark-blubber."
+        ],
+        "CV": [
+          "{predator} shudders nose to tail and pumps a pale cloud of what was once {prey} billowing out through the dark water.",
+          "{predator} shudders once, nose to tail, and what was {prey} billows out of its cock in a drifting fog of shark spunk."
+        ],
+        "AV": [
+          "{predator}'s hindquarters clench and gurgle, and the swell of {prey} melts down into thick grey tail-muscle.",
+          "The lump behind {predator}'s belly smooths away stroke by stroke as {prey} is worked into its heavy tail."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "{predator} heaves onto the shore and swallows {prey} whole in one blunt, throat-stretching gulp!",
+          "{predator} heaves up the shore, folds its jaws around {prey}, and slides back into the water with the bulge still kicking!"
+        ],
+        "CV": [
+          "{predator} drags {prey} into the water and hauls their whole body up into its twitching sharkcock!",
+          "{predator} drags {prey} beneath the waves - a moment later, {prey} is a squirming bulge sliding down the shark's cock!"
+        ],
+        "AV": [
+          "{predator} rolls belly-up and trips {prey} forcing them to trip headfirst into the shark\u2019s tailhole!",
+          "{predator} backs its rump down over {prey} and swallows the body whole into its lower gut!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "{predator} lunges from the water at {prey}, but its gnashing jaws miss the mark.",
+          "{predator} heaves at {prey}, who manages to scramble clear."
+        ],
+        "CV": [
+          "{predator} tries to drag {prey} into the water, but {prey} scrambles clear.",
+          "{predator} aims a chomp at {prey}\u2019s leg, but {prey} steps clear."
+        ],
+        "AV": [
+          "{predator} attempts to trip {prey} with its tail, but only ends up splashing them with water.",
+          "{predator} attempts a rolling maneuver at {prey}, but {prey} gets clear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "You hear splashing water, followed by a wet, effortful slurp that goes on far too long.",
+          "You hear splashing water, then a brief yelp cut off by a deep, sloshing gulp"
+        ],
+        "CV": [
+          "You hear a sharp splash of water, followed by a muted, elongated slurping.",
+          "You hear a sharp splash of water, followed by a drawn-out wet suction."
+        ],
+        "AV": [
+          "You hear chruning of water, followed by a disgusting squishing sound.",
+          "You hear churning of water, followed by a disgusting muffled squishing."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "You hear a dull underwater gurgle echo through the halls."
+        ],
+        "CV": [
+          "You hear a muffled underwater pulse and the hiss of scattering foam."
+        ],
+        "AV": [
+          "You hear a deep, rolling underwater gurgle echo through the halls."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "The shark\u2019s whole gut sways as drifts along in the water, and you sway with it, weightless, tumbled side to side by the slow roll of water beyond the walls, cold brine sloshing around your legs while tingling slime creeps up over the rest of you and softens everything it touches. The shark floats idly, gut gurgling staring expressionless ahead as its stomach works you over.",
+              "You begin to sink into the walls themselves, thinning and running down into the sloshing dark, and the shark's belly settles heavier and rounder, its grey hide filling out with fresh fish-fat as the last of you drips away into its body and the shark drifts on without a single thought."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "The cramped, water-cooled sack sways with the shark's slow drift, and salty froth thickens around you with every dull pulse of the walls, until you breathe more slime than air. You are squeezed smaller with each clench, your body softening and running apart in the cold slick dark, the fishy reek soaked into what is left of you.",
+              "A slow throbbing builds through the sack as the shark rolls in the water, walls clamping down in longer, harder waves. Above the surface there is nothing to see - but below it the shark's flanks clench, its blunt cock jerks, and a pale plume of what used to be you billows out into the black current, spreading, thinning, until nothing remains but a fading cloud of salty white."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "Wedged deep in the shark's hindquarters, you feel every stroke of the enormous tail wring the hot, slimy pocket around you like a fist. The gut walls clench and knead in time with its swimming, milking tingling goo into your softening body, and with every squeeze you sink a little further into the spongy flesh, dissolving by inches while cold currents drum against the outside of your prison.",
+              "Soon enough you are dripping, sagging, running away into the dark a little more with every squeeze. The shark drifts on without a flicker of passion behind its flat black eyes, its rump swelling heavier and rounder in the water as what used to be you is churned smooth into thick grey tail-fat."
+            ]
+          }
+        ]
+      },
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0
+    },
+    {
+      "proper_name": null,
+      "placeholder": false,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "abilities": [],
+      "spawn_requires_water": false,
+      "id": "rat",
+      "display_name": "rat",
+      "glyph": "r",
+      "fg": [
+        150,
+        120,
+        70
+      ],
+      "alignment": "evil",
+      "mobility": "ground",
+      "examine": "[placeholder] An ROUS. They really do exist.",
+      "max_hp": 9,
+      "evade": 1,
+      "ac": 0,
+      "accuracy": 0.8,
+      "min_damage": 1,
+      "max_damage": 3,
+      "experience_points": 35,
+      "digestion_damage_per_tick": 2,
+      "digest_time": 6,
+      "spawn": {
+        "weight": 5,
+        "min_depth": 1,
+        "max_depth": 5,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "kobold",
+      "display_name": "kobold",
+      "glyph": "k",
+      "fg": [
+        160,
+        130,
+        60
+      ],
+      "alignment": "evil",
+      "mobility": "ground",
+      "examine": "[placeholder] An bipedal lizard with small horns.",
+      "proper_name": null,
+      "placeholder": true,
+      "max_hp": 15,
+      "evade": 2,
+      "ac": 1,
+      "accuracy": 2.50,
+      "min_damage": 8,
+      "max_damage": 12,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "experience_points": 55,
+      "digestion_damage_per_tick": 3,
+      "digest_time": 6,
+      "abilities": [
+        "Hands",
+        "Coward",
+        "NoChase"
+      ],
+      "spawn": {
+        "weight": 2,
+        "min_depth": 6,
+        "max_depth": 12,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "tunnel_slug",
+      "display_name": "tunnel slug",
+      "glyph": "u",
+      "fg": [
+        120,
+        80,
+        140
+      ],
+      "alignment": "evil",
+      "mobility": "stationary",
+      "examine": "[placeholder] A heavy dungeon slug.",
+      "proper_name": null,
+      "placeholder": true,
+      "max_hp": 40,
+      "evade": 2,
+      "ac": 3,
+      "accuracy": 3.0,
+      "min_damage": 11,
+      "max_damage": 17,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "experience_points": 80,
+      "digestion_damage_per_tick": 4,
+      "digest_time": 7,
+      "abilities": [
+        "Slow"
+      ],
+      "spawn": {
+        "weight": 2,
+        "min_depth": 9,
+        "max_depth": 15,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "proper_name": null,
+      "placeholder": true,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "abilities": [
+        "Slow"
+      ],
+      "spawn_requires_water": false,
+      "id": "slime",
+      "display_name": "slime",
+      "glyph": "j",
+      "fg": [
+        80,
+        200,
+        120
+      ],
+      "alignment": "evil",
+      "mobility": "ground",
+      "examine": "[Placeholder] A giant mobile blob of slime, like in that one Goosebumps book.",
+      "max_hp": 28,
+      "evade": 2,
+      "ac": 2,
+      "accuracy": 1.75,
+      "min_damage": 8,
+      "max_damage": 12,
+      "experience_points": 40,
+      "digestion_damage_per_tick": 2,
+      "digest_time": 7,
+      "spawn": {
+        "weight": 2,
+        "min_depth": 4,
+        "max_depth": 9,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "proper_name": null,
+      "placeholder": true,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "abilities": [
+        "NoChase"
+      ],
+      "spawn_requires_water": false,
+      "id": "tarantula",
+      "display_name": "tarantula",
+      "glyph": "S",
+      "fg": [
+        90,
+        70,
+        50
+      ],
+      "alignment": "evil",
+      "mobility": "ground",
+      "examine": "[placeholder] Big spider. Very big spider.",
+      "max_hp": 18,
+      "evade": 1,
+      "ac": 1,
+      "accuracy": 2.03,
+      "min_damage": 10,
+      "max_damage": 13,
+      "experience_points": 70,
+      "digestion_damage_per_tick": 3,
+      "digest_time": 6,
+      "spawn": {
+        "weight": 2,
+        "min_depth": 5,
+        "max_depth": 11,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "proper_name": null,
+      "placeholder": true,
+      "ranged_accuracy": 3.5,
+      "ranged_min_damage": 5,
+      "ranged_max_damage": 7,
+      "abilities": [
+        "Range5",
+        "NoChase"
+      ],
+      "spawn_requires_water": false,
+      "id": "fox_archer",
+      "display_name": "fox archer",
+      "glyph": "f",
+      "fg": [
+        200,
+        120,
+        60
+      ],
+      "alignment": "evil",
+      "mobility": "ground",
+      "examine": "[placeholder] An anthro fox armed with a bow and arrows.",
+      "max_hp": 10,
+      "evade": 2,
+      "ac": 1,
+      "accuracy": 0.35,
+      "min_damage": 1,
+      "max_damage": 2,
+      "experience_points": 75,
+      "digestion_damage_per_tick": 3,
+      "digest_time": 5,
+      "spawn": {
+        "weight": 2,
+        "min_depth": 6,
+        "max_depth": 12,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "proper_name": null,
+      "placeholder": true,
+      "ranged_accuracy": 1.95,
+      "ranged_min_damage": 6,
+      "ranged_max_damage": 9,
+      "abilities": [
+        "Range3",
+        "Hands"
+      ],
+      "spawn_requires_water": false,
+      "id": "gnoll_mercenary",
+      "display_name": "gnoll mercenary",
+      "glyph": "h",
+      "fg": [
+        180,
+        140,
+        70
+      ],
+      "alignment": "evil",
+      "mobility": "ground",
+      "examine": "[placeholder] An anthro hyena with a normal axe for melee and smaller axes for throwing.",
+      "max_hp": 23,
+      "evade": 2,
+      "ac": 2,
+      "accuracy": 1.95,
+      "min_damage": 7,
+      "max_damage": 10,
+      "experience_points": 85,
+      "digestion_damage_per_tick": 3,
+      "digest_time": 5,
+      "spawn": {
+        "weight": 2,
+        "min_depth": 8,
+        "max_depth": 14,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "proper_name": null,
+      "placeholder": true,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "abilities": [],
+      "spawn_requires_water": false,
+      "id": "roc",
+      "display_name": "roc",
+      "glyph": "R",
+      "fg": [
+        160,
+        140,
+        100
+      ],
+      "alignment": "evil",
+      "mobility": "flyer",
+      "examine": "[placeholder] A very large bird.",
+      "max_hp": 34,
+      "evade": 2,
+      "ac": 3,
+      "accuracy": 3.25,
+      "min_damage": 11,
+      "max_damage": 15,
+      "experience_points": 120,
+      "digestion_damage_per_tick": 4,
+      "digest_time": 5,
+      "spawn": {
+        "weight": 2,
+        "min_depth": 10,
+        "max_depth": 16,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "proper_name": null,
+      "placeholder": true,
+      "ranged_accuracy": 6.5,
+      "ranged_min_damage": 6,
+      "ranged_max_damage": 8,
+      "abilities": [
+        "Smite5",
+        "NoChase"
+      ],
+      "spawn_requires_water": false,
+      "id": "owl_mage",
+      "display_name": "owl mage",
+      "glyph": "M",
+      "fg": [
+        200,
+        200,
+        220
+      ],
+      "alignment": "evil",
+      "mobility": "ground",
+      "examine": "[placeholder] A magical anthro owl.",
+      "max_hp": 12,
+      "evade": 2,
+      "ac": 1,
+      "accuracy": 0.35,
+      "min_damage": 1,
+      "max_damage": 2,
+      "experience_points": 100,
+      "digestion_damage_per_tick": 3,
+      "digest_time": 6,
+      "spawn": {
+        "weight": 2,
+        "min_depth": 11,
+        "max_depth": 17,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "proper_name": null,
+      "placeholder": true,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "abilities": [
+        "Knockback"
+      ],
+      "spawn_requires_water": false,
+      "id": "wyvern",
+      "display_name": "wyvern",
+      "glyph": "y",
+      "fg": [
+        100,
+        160,
+        90
+      ],
+      "alignment": "evil",
+      "mobility": "flyer",
+      "examine": "[placeholder] A lean dragonlike creature with two legs and two wings.",
+      "max_hp": 34,
+      "evade": 2,
+      "ac": 3,
+      "accuracy": 3.90,
+      "min_damage": 10,
+      "max_damage": 14,
+      "experience_points": 140,
+      "digestion_damage_per_tick": 5,
+      "digest_time": 5,
+      "spawn": {
+        "weight": 2,
+        "min_depth": 13,
+        "max_depth": 18,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "proper_name": null,
+      "placeholder": true,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "abilities": [
+        "Knockback"
+      ],
+      "spawn_requires_water": false,
+      "id": "drake",
+      "display_name": "drake",
+      "glyph": "d",
+      "fg": [
+        140,
+        90,
+        50
+      ],
+      "alignment": "evil",
+      "mobility": "ground",
+      "examine": "[placeholder] A wingless but sturdy dragon.",
+      "max_hp": 50,
+      "evade": 2,
+      "ac": 4,
+      "accuracy": 4.80,
+      "min_damage": 14,
+      "max_damage": 19,
+      "experience_points": 160,
+      "digestion_damage_per_tick": 5,
+      "digest_time": 5,
+      "spawn": {
+        "weight": 2,
+        "min_depth": 15,
+        "max_depth": 19,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "proper_name": null,
+      "placeholder": true,
+      "ranged_accuracy": 0.0,
+      "ranged_min_damage": 0,
+      "ranged_max_damage": 0,
+      "abilities": [
+        "Knockback"
+      ],
+      "spawn_requires_water": false,
+      "id": "gryphon",
+      "display_name": "gryphon",
+      "glyph": "g",
+      "fg": [
+        190,
+        160,
+        80
+      ],
+      "alignment": "evil",
+      "mobility": "flyer",
+      "examine": "[placeholder] A strange half-bird, half-feline creature that only ever says 'squak squak'.",
+      "max_hp": 54,
+      "evade": 2,
+      "ac": 4,
+      "accuracy": 5.10,
+      "min_damage": 15,
+      "max_damage": 21,
+      "experience_points": 155,
+      "digestion_damage_per_tick": 6,
+      "digest_time": 5,
+      "spawn": {
+        "weight": 2,
+        "min_depth": 17,
+        "max_depth": 20,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "proper_name": null,
+      "placeholder": true,
+      "ranged_accuracy": 9.5,
+      "ranged_min_damage": 13,
+      "ranged_max_damage": 20,
+      "abilities": [
+        "Range5"
+      ],
+      "spawn_requires_water": false,
+      "id": "dragon",
+      "display_name": "dragon",
+      "glyph": "D",
+      "fg": [
+        200,
+        60,
+        40
+      ],
+      "alignment": "evil",
+      "mobility": "ground",
+      "examine": "[placeholder] A normal dragon. Not a dracobug.",
+      "max_hp": 68,
+      "evade": 2,
+      "ac": 5,
+      "accuracy": 9.5,
+      "min_damage": 15,
+      "max_damage": 22,
+      "experience_points": 250,
+      "digestion_damage_per_tick": 7,
+      "digest_time": 4,
+      "spawn": {
+        "weight": 5,
+        "min_depth": 20,
+        "max_depth": 1000,
+        "terrain": "land"
+      },
+      "vore_narratives": {
+        "OV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} lunges and tries to stuff you into its maw!"
+            ],
+            "success": [
+              "[placeholder] {predator} swallows you whole in one motion.",
+              "[placeholder] You slide completely into {predator}'s belly."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} tries to pull you toward its cock!"
+            ],
+            "success": [
+              "[placeholder] {predator} draws you into its cock.",
+              "[placeholder] You are pulled deeper inside {predator}'s ballsack until you're fully contained."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "attempt": [
+              "[placeholder] {predator} turns around, aiming its rear at you!"
+            ],
+            "success": [
+              "[placeholder] {predator} sucks you into its tailhole.",
+              "[placeholder] You are pulled fully into {predator}'s backside, which closes behind you."
+            ]
+          }
+        ]
+      },
+      "digestion_complete": {
+        "OV": [
+          "[placeholder] {predator} finishes digesting {prey}.",
+          "[placeholder] {predator}'s belly settles as {prey} is fully digested."
+        ],
+        "CV": [
+          "[placeholder] {predator} orgasms out what\u2019s left of {prey}.",
+          "[placeholder] {predator} cums out what\u2019s left of {prey}."
+        ],
+        "AV": [
+          "[placeholder] {predator} finishes digesting {prey} in its lower gut.",
+          "[placeholder] {predator}'s rear settles as {prey} is fully digested."
+        ]
+      },
+      "npc_vore_hit": {
+        "OV": [
+          "[placeholder] {predator} swallows {prey} whole!",
+          "[placeholder] {predator} gulps {prey} down!"
+        ],
+        "CV": [
+          "[placeholder] {predator} pulls {prey} into its cock!",
+          "[placeholder] {predator} draws {prey} into its cock!"
+        ],
+        "AV": [
+          "[placeholder] {predator} sucks {prey} into its rear!",
+          "[placeholder] {predator} pulls {prey} into its tailhole!"
+        ]
+      },
+      "npc_vore_miss": {
+        "OV": [
+          "[placeholder] {predator} tries to swallow {prey}, but fails.",
+          "[placeholder] {predator} lunges at {prey} and misses."
+        ],
+        "CV": [
+          "[placeholder] {predator} tries to pull {prey} into its cock, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its cock."
+        ],
+        "AV": [
+          "[placeholder] {predator} tries to pull {prey} into its rear, but fails.",
+          "[placeholder] {predator} fails to catch {prey} with its rear."
+        ]
+      },
+      "offscreen_vore": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud gulp.",
+          "[placeholder] From elsewhere, you hear a swallowing sound."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a wet slurping sound.",
+          "[placeholder] From elsewhere, you hear a strange squelching noise."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a squishing sound.",
+          "[placeholder] From elsewhere, you hear a muffled squelch."
+        ]
+      },
+      "offscreen_digest": {
+        "OV": [
+          "[placeholder] From elsewhere, you hear a loud belch.",
+          "[placeholder] From elsewhere, you hear a low gurgle."
+        ],
+        "CV": [
+          "[placeholder] From elsewhere, you hear a splattering sound.",
+          "[placeholder] From elsewhere, you hear a wet spurt."
+        ],
+        "AV": [
+          "[placeholder] From elsewhere, you hear a low gurgle.",
+          "[placeholder] From elsewhere, you hear a soft rumble."
+        ]
+      },
+      "digestion_player_modal": {
+        "OV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s belly.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "CV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s ballsack.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ],
+        "AV": [
+          {
+            "phases": [
+              "[placeholder] You are digested inside {predator}'s lower gut.",
+              "[placeholder] {predator} appears satisfied as the process finishes."
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# User-writable data (saves, settings, logs, past runs) lives outside the repo
+# under the per-user application data directory — see src/user_data.py.
+
+# Local build artifacts
+/build/
+/dist/
+*.spec
+__pycache__/
+*.py[cod]

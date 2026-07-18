@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "throwables": [
+    {
+      "id": "rock",
+      "display_name": "rock",
+      "glyph": ".",
+      "fg": [
+        190,
+        150,
+        90
+      ],
+      "examine": "A plain stone, good for throwing.",
+      "min_damage": 1,
+      "max_damage": 2,
+      "accuracy_bonus": 0.0,
+      "spawn_weight": 4,
+      "spawn_min_depth": 1,
+      "spawn_max_depth": 3,
+      "abilities": [],
+      "spawn_stack_min": 3,
+      "spawn_stack_max": 4
+    },
+    {
+      "id": "brick",
+      "display_name": "brick",
+      "glyph": "=",
+      "fg": [
+        150,
+        110,
+        75
+      ],
+      "examine": "A fired clay brick, heavier than a loose stone.",
+      "min_damage": 2,
+      "max_damage": 4,
+      "accuracy_bonus": 0.0,
+      "spawn_weight": 3,
+      "spawn_min_depth": 2,
+      "spawn_max_depth": 6,
+      "abilities": [],
+      "spawn_stack_min": 3,
+      "spawn_stack_max": 4
+    },
+    {
+      "id": "dart",
+      "display_name": "dart",
+      "glyph": "'",
+      "fg": [
+        190,
+        190,
+        210
+      ],
+      "examine": "A light throwing dart with a needle point.",
+      "min_damage": 1,
+      "max_damage": 3,
+      "accuracy_bonus": 0.25,
+      "spawn_weight": 2,
+      "spawn_min_depth": 3,
+      "spawn_max_depth": 8,
+      "abilities": [],
+      "spawn_stack_min": 3,
+      "spawn_stack_max": 4
+    },
+    {
+      "id": "throwing_knife",
+      "display_name": "throwing knife",
+      "glyph": "/",
+      "fg": [
+        200,
+        200,
+        215
+      ],
+      "examine": "A balanced blade made to leave the hand.",
+      "min_damage": 3,
+      "max_damage": 5,
+      "accuracy_bonus": 0.1,
+      "spawn_weight": 2,
+      "spawn_min_depth": 5,
+      "spawn_max_depth": 11,
+      "abilities": [],
+      "spawn_stack_min": 3,
+      "spawn_stack_max": 4
+    },
+    {
+      "id": "throwing_axe",
+      "display_name": "throwing axe",
+      "glyph": "P",
+      "fg": [
+        170,
+        100,
+        55
+      ],
+      "examine": "A compact axe head on a short haft.",
+      "min_damage": 4,
+      "max_damage": 7,
+      "accuracy_bonus": 0.05,
+      "spawn_weight": 2,
+      "spawn_min_depth": 6,
+      "spawn_max_depth": 12,
+      "abilities": [],
+      "spawn_stack_min": 3,
+      "spawn_stack_max": 4
+    },
+    {
+      "id": "shuriken",
+      "display_name": "shuriken",
+      "glyph": "*",
+      "fg": [
+        180,
+        185,
+        200
+      ],
+      "examine": "A star-shaped throwing blade.",
+      "min_damage": 2,
+      "max_damage": 5,
+      "accuracy_bonus": 0.3,
+      "spawn_weight": 2,
+      "spawn_min_depth": 8,
+      "spawn_max_depth": 14,
+      "abilities": [],
+      "spawn_stack_min": 3,
+      "spawn_stack_max": 4
+    },
+    {
+      "id": "javelin",
+      "display_name": "javelin",
+      "glyph": "|",
+      "fg": [
+        185,
+        165,
+        130
+      ],
+      "examine": "A long spear meant for a single cast.",
+      "min_damage": 5,
+      "max_damage": 8,
+      "accuracy_bonus": 0.12,
+      "spawn_weight": 1,
+      "spawn_min_depth": 10,
+      "spawn_max_depth": 16,
+      "abilities": [],
+      "spawn_stack_min": 3,
+      "spawn_stack_max": 4
+    },
+    {
+      "id": "chakram",
+      "display_name": "chakram",
+      "glyph": "(",
+      "fg": [
+        220,
+        185,
+        90
+      ],
+      "examine": "A sharpened metal ring that cuts on the spin.",
+      "min_damage": 4,
+      "max_damage": 7,
+      "accuracy_bonus": 0.22,
+      "spawn_weight": 1,
+      "spawn_min_depth": 12,
+      "spawn_max_depth": 18,
+      "abilities": [],
+      "spawn_stack_min": 3,
+      "spawn_stack_max": 4
+    },
+    {
+      "id": "ceramic_pot",
+      "display_name": "ceramic pot",
+      "glyph": "0",
+      "fg": [
+        205,
+        130,
+        85
+      ],
+      "examine": "A heavy clay pot that shatters on impact.",
+      "min_damage": 6,
+      "max_damage": 10,
+      "accuracy_bonus": -0.05,
+      "spawn_weight": 1,
+      "spawn_min_depth": 14,
+      "spawn_max_depth": 20,
+      "abilities": [],
+      "spawn_stack_min": 3,
+      "spawn_stack_max": 4
+    }
+  ]
+}

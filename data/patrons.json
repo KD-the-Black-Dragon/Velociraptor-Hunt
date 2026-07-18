@@ -1,0 +1,97 @@
+{
+  "patrons": [
+    {
+      "id": "vex",
+      "name": "Lady Vex",
+      "epithet": "the Blood Sport",
+      "tone": "cruel"
+    },
+    {
+      "id": "halm",
+      "name": "Patron Halm",
+      "epithet": "of the Mercy Seat",
+      "tone": "measured"
+    },
+    {
+      "id": "rusk",
+      "name": "Gold-Finger Rusk",
+      "epithet": "of the Coin Pit",
+      "tone": "greedy"
+    }
+  ],
+  "objectives": [
+    {
+      "id": "win_any",
+      "label": "Win the bout",
+      "bonus_gold": 25,
+      "kind": "win",
+      "requires_kind": null,
+      "requires_allies": false,
+      "max_aut": null
+    },
+    {
+      "id": "win_red",
+      "label": "Win a red match",
+      "bonus_gold": 35,
+      "kind": "win",
+      "requires_kind": "red",
+      "requires_allies": false,
+      "max_aut": null
+    },
+    {
+      "id": "win_green",
+      "label": "Win a green match",
+      "bonus_gold": 20,
+      "kind": "win",
+      "requires_kind": "green",
+      "requires_allies": false,
+      "max_aut": null
+    },
+    {
+      "id": "win_fast",
+      "label": "Win before 14 AUT",
+      "bonus_gold": 40,
+      "kind": "win_under_aut",
+      "requires_kind": null,
+      "requires_allies": false,
+      "max_aut": 14
+    },
+    {
+      "id": "win_no_collapse",
+      "label": "Win without collapsing (0 stamina)",
+      "bonus_gold": 30,
+      "kind": "win_no_pc_down",
+      "requires_kind": null,
+      "requires_allies": false,
+      "max_aut": null
+    },
+    {
+      "id": "win_allies_safe",
+      "label": "Win with all deployed allies still standing",
+      "bonus_gold": 35,
+      "kind": "win_allies_alive",
+      "requires_kind": null,
+      "requires_allies": true,
+      "max_aut": null
+    },
+    {
+      "id": "win_after_talk",
+      "label": "Issue a Talk order, then win",
+      "bonus_gold": 22,
+      "kind": "win_after_talk",
+      "requires_kind": null,
+      "requires_allies": true,
+      "max_aut": null
+    },
+    {
+      "id": "no_surrender_win",
+      "label": "Win (do not surrender)",
+      "bonus_gold": 18,
+      "kind": "win",
+      "requires_kind": "green",
+      "requires_allies": false,
+      "max_aut": null
+    }
+  ],
+  "comment": "Thin patrons: one objective per match, extra gold on hit, miss = no bonus only."
+}
