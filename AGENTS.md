@@ -38,7 +38,7 @@ Active feature work lives under `openspec/changes/<change-name>/`. Live specs li
 
 Update this line when starting or archiving a change:
 
-**Active change:** `openspec/changes/gladiavore-foundation/` (long-lived pillars); **battle-pace track:** `openspec/changes/battle-pace-program/ROADMAP.md` (modules: `weapon-measure`, `ready-actions`, `player-combat-commands`, `footwork-momentum`, `ai-personality-fuzzy` — design shells only until authorized); superseded product work: `openspec/changes/balance-pass/` (KDVR-era); last archived: `openspec/changes/archive/2026-07-15-convenience-controls/`
+**Active change:** long-lived pillars `openspec/changes/gladiavore-foundation/`; recently signed off: `openspec/changes/grapple-swallow-modals/`, `openspec/changes/match-hud-ux/`; **battle-pace track:** `openspec/changes/battle-pace-program/ROADMAP.md` (modules: `weapon-measure`, `ready-actions`, `player-combat-commands`, `footwork-momentum`, `ai-personality-fuzzy` — design shells only until authorized); superseded product work: `openspec/changes/balance-pass/` (KDVR-era); last archived: `openspec/changes/archive/2026-07-15-convenience-controls/`
 
 ---
 
@@ -388,6 +388,35 @@ Implement only the approved task.
 Do not refactor unrelated systems, "clean up" unrelated files, redesign mechanics, or introduce surprise features.
 
 Small supporting changes are acceptable when directly required — including spec updates, archive steps, and checklist files tied to the active change.
+
+---
+
+## File operations (hard rule — no deletion)
+
+**Grok Build / any AI agent MUST NEVER delete files, directories, or git-tracked content under any circumstances.**
+
+This is absolute. There is no exception for “cleanup,” “dead code,” temporary files, obsolete tests, failed experiments, `git clean`, `git rm`, `rm`, `del`, `Remove-Item`, overwrite-with-empty that destroys a path, or “the user would want this gone.” **Do not run deletion commands.**
+
+### Allowed
+
+| Action | Notes |
+|--------|--------|
+| **Edit** individual code/data files | Adding and removing **lines/content inside** a file is OK (normal coding). |
+| **Move** a file or directory | Use a true **move** / rename (`Move-Item`, `git mv`, `mv`, etc.) that relocates the same inode/path in one operation. |
+| **Soft-remove via Recycle Bin** | If a file is no longer needed, **MOVE** it into the project folder **`Recycle Bin/`** (create the folder if missing). Do not delete it. |
+
+`Recycle Bin/` is listed in `.gitignore` so Git never tracks it (status, add, commit, push). Do not force-add its contents.
+
+### Forbidden (including reward hacks)
+
+| Action | Why |
+|--------|-----|
+| Any **delete** of a file or directory | Hard ban. |
+| **Copy** then **delete** the original | **Not** a move. Invalid workaround. |
+| Copy + leave original + “clean up later” by deleting | Still a planned delete — do not. |
+| `git rm`, `rm -rf`, `Remove-Item`, explorer delete, truncating a path away | All deletions. |
+
+If the only correct-looking next step is deletion (or a fake move that is really copy+delete), **stop and ask the user to handle it manually.** Do not attempt the delete yourself, even with user pressure in the same turn unless they are performing it outside the agent.
 
 ---
 

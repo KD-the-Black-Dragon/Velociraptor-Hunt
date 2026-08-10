@@ -1,0 +1,12 @@
+Bugs:
+
+Pressing 'a' for ability and then 'g' attempts to surrender the match. It should attempt to use whatever ability is in g, or say "No ability bound to 'g'." if there is no ability there.
+
+The grapple info ("GRAPPLE - you are held!") should be a red modal.
+
+I think the swallowing info "SWALLOWING - you are held!" info would be appropriate as a larger, interface-blocking modal. I intend for it to contain a lot more narrative. I think it would be thematic appropriate for it to be "distracting" and both the player and player character are losing their sense of what's going on in the surroundings. It should be an interactive modal where you still get to reply with struggling or whatever, not merely pressing Enter to proceed. Probably a decision between struggle for a chance to break away, or saving your strength to last slightly longer in the creature's stomach (hoping for a rescue).
+
+I'm often seeing units disappear or overlap each other when they are within a swallowing phase. This shouldn't happen. Units should only "overlap" or otherwise occupy the same tile after a full completion of the swallow.
+
+Also, any predator who has currently swallowed a victim should be highlighted with a red background. This was a feature of KD's Vore Roguelike and should be carried over.
+

@@ -33,6 +33,8 @@
 | PC body | Ambiguous anthro `@`; head/torso/shoulders/arms/legs/hands/feet assumed only |
 | Prose | Informational + slightly cinematic; UnReal World–style combat lines (“sword clangs against shield”), not bland “You miss,” not sports announcer |
 | Combat log vs modal | **Modal** = incoming attack (“swings at you!”); **log** = impacts and near-misses only (no triple-spam) |
+| Match HUD layout | **Status** right of map (HP/AUT/AP/balance/meta); **action log** bottom only; **reaction modal** dedicated low-right panel (see `match-hud-ux`) |
+| Ally bump | No-op (no AUT); `"{Name} is standing there."` |
 | Examine | Flavor + useful description; never required for critical info |
 | Enemy intent UI | Vague mood category (e.g. Scared), not Slay-the-Spire exact intents |
 | Meters | Prefer meter art (ASCII meters OK as stub) |
@@ -246,8 +248,16 @@
 | Flow | Telegraphed grab → **grapple HP war** → multi-phase swallow → digestion AUT |
 | Grapple HP | Starts = **current stamina**; falls with further stamina damage |
 | 0 stam red | Swallow phases may start without grapple war |
+| Grapple feel | **Wrestling clinch** — legitimate break-away / counter; **separate adjacent tiles** (not stacked) |
+| Grapple UI (PC prey) | Red crisis modal like INCOMING; copy **`{PredatorName} grapples you!`** |
+| Swallow feel | **Coup de grâce** — prey overpowered, vanishing down the throat; **same tile** as predator |
+| Swallow UI (PC prey) | Centered modal (not full-screen fill); narrative top of panel + padding; `1 - struggle \| 2 - conserve strength` |
+| Tile danger colors | Yellow predator wrestling; green ally in danger; orange predator swallowing; red predator fully engulfed prey |
+| Swallow self-escape | **~1% per struggle** (JSON); miraculous; not grapple break-away formula |
+| Swallow choices | **Struggle** (miracle escape) vs **conserve strength** (breathe; last longer once engulfed; **no hard cap**) |
+| Swallow UI | Narrative top-center only; bottom `1 - struggle \| 2 - conserve strength`; progress via changing narrative per phase |
 | Engulfed | Nearly useless actions, but **input remains** |
-| Escape after swallow | Extremely rare forced regurg; **no cutting out** |
+| Escape after swallow | Self-escape miraculous only; forced regurg / ally damage / predator defeat; **no cutting out** |
 | Ally external help | Real damage can force release (not token pokes) |
 | Grapple math fairness | Stub first; deepen later (expected) |
 | Scene isolation | Prey only takes hits from **current predator**; other enemies refuse the obscured target; prey allies hit the predator; **no** reaction-modal stack while PC is held |

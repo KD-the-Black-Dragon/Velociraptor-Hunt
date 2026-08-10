@@ -456,6 +456,39 @@ def present_downtime_frame(
     )
 
 
+def _draw_help_lines_on_image(
+    draw: object,
+    lines: tuple,
+    *,
+    font: object,
+    panel_w: int,
+    panel_h: int,
+    pad_x: int,
+    pad_y: int,
+    row_h: int,
+    blank_advance: float,
+    max_y: float | None = None,
+) -> None:
+    """Draw HelpTextLine-like entries into a PIL Draw context."""
+    y = float(pad_y)
+    limit = float(panel_h - pad_y) if max_y is None else max_y
+    for entry in lines:
+        if y + row_h > limit:
+            break
+        text = getattr(entry, "text", "") or ""
+        if not text:
+            y += blank_advance
+            continue
+        fg = getattr(entry, "fg", (220, 220, 220))
+        draw.text(  # type: ignore[attr-defined]
+            (float(pad_x), y),
+            text,
+            font=font,
+            fill=(*fg, 255),
+        )
+        y += row_h
+
+
 def present_match_frame(
     context: tcod.context.Context,
     console: tcod.console.Console,
@@ -470,13 +503,20 @@ def present_match_frame(
 ) -> None:
     """Match present: tile map/glyphs only; all other text uses the log font.
 
+    Fight layout: status right of map, action log bottom, reaction modal low-right.
     *session* is a ``MatchSession`` (typed loosely to avoid import cycles).
     """
+    from src.match_hud_layout import match_hud_bands, region_pixel_size
     from src.match_session import (
         AbilityUiMode,
         MatchPhase,
         match_footer_text,
-        match_text_lines,
+        match_fullscreen_text_lines,
+        match_log_lines,
+        match_low_right_crisis_lines,
+        match_status_lines,
+        match_swallow_narrative_text,
+        match_swallow_options_line,
         render_match_cp437_fallback,
     )
     from src.systems.render import MESSAGE_LOG_BACKGROUND
@@ -529,20 +569,28 @@ def present_match_frame(
     )
     clear_renderer(renderer, clear_color)
     footer = match_footer_text(session)
-    lines = match_text_lines(session)
+    font = log_font.font
+    row_h = line_height_px(font)
+    blank_advance = row_h * 0.45
+    pad_x = LOG_HORIZONTAL_PADDING_PX
+    pad_y = LOG_VERTICAL_PADDING_PX
+    panel_w, panel_h = overlay_panel_pixel_size(layout)
+    crisis_bg = (48, 28, 32)
+    crisis_border = (220, 100, 90)
 
     if text_only:
+        lines = match_fullscreen_text_lines(session)
         hub_tex = render_proportional_help_texture(
             renderer,
             lines,
-            font=log_font.font,
+            font=font,
             layout=layout,
             footer_text=footer,
             footer_fg=HELP_FOOTER_FG,
         )
         renderer.copy(hub_tex, dest=(dest_x, dest_y, dest_w, dest_h))
     else:
-        # Fight: tile map top-left; log-font HUD fills remaining space (and right of map).
+        # Fight: tile map top-left; regional log-font chrome (status / log / crisis).
         main_atlas = context.sdl_atlas
         if main_atlas is not None:
             if _main_console_render is None or _main_console_render.atlas is not main_atlas:
@@ -550,56 +598,158 @@ def present_match_frame(
             main_tex = _main_console_render.render(console)
             renderer.copy(main_tex, dest=(dest_x, dest_y, dest_w, dest_h))
 
-        cell = layout.tile_px * layout.tile_scale
-        map_h_cells = int(session.game_map.height)
-        map_h_px_unscaled = map_h_cells * cell
-        panel_w, panel_h = overlay_panel_pixel_size(layout)
-        # HUD texture: full panel height but we only blit the lower band on screen.
-        # Draw HUD text into a full-size image starting below the map band.
-        font = log_font.font
-        image = Image.new("RGBA", (panel_w, panel_h), (*MESSAGE_LOG_BACKGROUND, 0))
-        draw = ImageDraw.Draw(image)
-        row_h = line_height_px(font)
-        y = float(map_h_px_unscaled + LOG_VERTICAL_PADDING_PX)
-        footer_reserve = row_h + LOG_VERTICAL_PADDING_PX
-        blank_advance = row_h * 0.45
-        for entry in lines:
-            if y + row_h > panel_h - footer_reserve:
-                break
-            if not entry.text:
-                y += blank_advance
-                continue
-            draw.text(
-                (float(LOG_HORIZONTAL_PADDING_PX), y),
-                entry.text,
-                font=font,
-                fill=(*entry.fg, 255),
+        swallow_narrative = match_swallow_narrative_text(session)
+        if swallow_narrative is not None:
+            # Centered modal (prior size) over dimmed fight; narrative top of modal,
+            # options bottom — not full-screen fill.
+            from src.ui.proportional_log import wrap_log_text_pixels
+
+            cell_px = layout.tile_px * layout.tile_scale
+            # Dim the arena under the modal
+            dim = Image.new("RGBA", (panel_w, panel_h), (0, 0, 0, 140))
+            dim_tex = renderer.upload_texture(np.asarray(dim, dtype=np.uint8))
+            try:
+                dim_tex.blend_mode = tcod.sdl.render.BlendMode.BLEND
+            except (AttributeError, TypeError):
+                pass
+            renderer.copy(dim_tex, dest=(dest_x, dest_y, dest_w, dest_h))
+
+            modal_w = min(max(cell_px * 40, panel_w * 2 // 3), panel_w - 2 * pad_x)
+            # Compact height: top pad + ~3 narrative lines + options + secondary
+            modal_h = min(
+                panel_h - 2 * pad_y,
+                int(row_h * 8 + pad_y * 4),
             )
-            y += row_h
-        footer_y = panel_h - row_h - LOG_VERTICAL_PADDING_PX
-        footer_w = measure_text(font, footer)
-        footer_x = max(LOG_HORIZONTAL_PADDING_PX, (panel_w - footer_w) / 2)
-        draw.text(
-            (footer_x, footer_y),
-            footer,
-            font=font,
-            fill=(*HELP_FOOTER_FG, 255),
-        )
-        # Opaque fill behind HUD so map doesn't show through text area
-        hud_bg = Image.new(
-            "RGBA",
-            (panel_w, max(1, panel_h - map_h_px_unscaled)),
-            (*MESSAGE_LOG_BACKGROUND, 255),
-        )
-        composed = Image.new("RGBA", (panel_w, panel_h), (0, 0, 0, 0))
-        composed.paste(hud_bg, (0, map_h_px_unscaled))
-        composed = Image.alpha_composite(composed, image)
-        hud_tex = renderer.upload_texture(np.asarray(composed, dtype=np.uint8))
-        try:
-            hud_tex.blend_mode = tcod.sdl.render.BlendMode.BLEND
-        except (AttributeError, TypeError):
-            pass
-        renderer.copy(hud_tex, dest=(dest_x, dest_y, dest_w, dest_h))
+            modal_h = max(modal_h, int(row_h * 6 + pad_y * 3))
+            modal_img = Image.new("RGBA", (modal_w, modal_h), (*crisis_bg, 255))
+            mdraw = ImageDraw.Draw(modal_img)
+            mdraw.rectangle(
+                [0, 0, modal_w - 1, modal_h - 1],
+                outline=(*crisis_border, 255),
+                width=max(2, cell_px // 6),
+            )
+            inner_pad_x = pad_x + 6
+            top_pad = pad_y + 10  # keep narrative off the border
+            max_text_w = max(1, modal_w - inner_pad_x * 2)
+            wrapped = wrap_log_text_pixels(
+                swallow_narrative, font=font, max_width_px=max_text_w
+            )
+            y = float(top_pad)
+            for line in wrapped[:4]:
+                tw = measure_text(font, line)
+                mdraw.text(
+                    (max(inner_pad_x, (modal_w - tw) / 2), y),
+                    line,
+                    font=font,
+                    fill=(235, 210, 205, 255),
+                )
+                y += row_h
+            options = match_swallow_options_line()
+            ow = measure_text(font, options)
+            opt_y = modal_h - row_h - pad_y - 6
+            mdraw.text(
+                (max(inner_pad_x, (modal_w - ow) / 2), opt_y),
+                options,
+                font=font,
+                fill=(*HELP_FOOTER_FG, 255),
+            )
+            modal_tex = renderer.upload_texture(np.asarray(modal_img, dtype=np.uint8))
+            try:
+                modal_tex.blend_mode = tcod.sdl.render.BlendMode.BLEND
+            except (AttributeError, TypeError):
+                pass
+            mx = dest_x + int((dest_w - modal_w * scale) / 2)
+            my = dest_y + int((dest_h - modal_h * scale) / 2)
+            renderer.copy(
+                modal_tex,
+                dest=(mx, my, modal_w * scale, modal_h * scale),
+            )
+        else:
+            crisis_lines = match_low_right_crisis_lines(session)
+            bands = match_hud_bands(
+                map_w=int(session.game_map.width),
+                map_h=int(session.game_map.height),
+                root_w=console.width,
+                root_h=console.height,
+                reaction_active=crisis_lines is not None,
+            )
+            composed = Image.new("RGBA", (panel_w, panel_h), (0, 0, 0, 0))
+            cell = layout.tile_px * layout.tile_scale
+
+            def _paste_band(
+                region: object,
+                lines: tuple,
+                *,
+                bg: tuple[int, int, int],
+                border: tuple[int, int, int] | None = None,
+            ) -> None:
+                nonlocal composed
+                from src.ui.layout import RegionRect
+
+                assert isinstance(region, RegionRect)
+                bw, bh = region_pixel_size(region, layout=layout)
+                if bw < 1 or bh < 1:
+                    return
+                band_img = Image.new("RGBA", (bw, bh), (*bg, 255))
+                draw = ImageDraw.Draw(band_img)
+                if border is not None:
+                    draw.rectangle(
+                        [0, 0, bw - 1, bh - 1],
+                        outline=(*border, 255),
+                        width=max(1, cell // 8),
+                    )
+                _draw_help_lines_on_image(
+                    draw,
+                    lines,
+                    font=font,
+                    panel_w=bw,
+                    panel_h=bh,
+                    pad_x=pad_x,
+                    pad_y=pad_y,
+                    row_h=row_h,
+                    blank_advance=blank_advance,
+                )
+                px = region.x * cell
+                py = region.y * cell
+                composed.paste(band_img, (px, py))
+
+            # Status — right of map
+            _paste_band(bands.status, match_status_lines(session), bg=MESSAGE_LOG_BACKGROUND)
+            # Action log — bottom
+            _paste_band(bands.log, match_log_lines(session), bg=MESSAGE_LOG_BACKGROUND)
+            # Reaction / grapple crisis modal — low-right
+            if crisis_lines is not None and bands.reaction is not None:
+                _paste_band(
+                    bands.reaction,
+                    crisis_lines,
+                    bg=crisis_bg,
+                    border=crisis_border,
+                )
+
+            # Footer keys along bottom edge
+            footer_layer = Image.new("RGBA", (panel_w, panel_h), (0, 0, 0, 0))
+            fdraw = ImageDraw.Draw(footer_layer)
+            footer_y = panel_h - row_h - LOG_VERTICAL_PADDING_PX
+            fdraw.rectangle(
+                [0, footer_y - 2, panel_w, panel_h],
+                fill=(*MESSAGE_LOG_BACKGROUND, 230),
+            )
+            footer_w = measure_text(font, footer)
+            footer_x = max(pad_x, (panel_w - footer_w) / 2)
+            fdraw.text(
+                (footer_x, footer_y),
+                footer,
+                font=font,
+                fill=(*HELP_FOOTER_FG, 255),
+            )
+            composed = Image.alpha_composite(composed, footer_layer)
+
+            hud_tex = renderer.upload_texture(np.asarray(composed, dtype=np.uint8))
+            try:
+                hud_tex.blend_mode = tcod.sdl.render.BlendMode.BLEND
+            except (AttributeError, TypeError):
+                pass
+            renderer.copy(hud_tex, dest=(dest_x, dest_y, dest_w, dest_h))
 
     if dialog_img is not None:
         dialog_tex = renderer.upload_texture(np.asarray(dialog_img, dtype=np.uint8))

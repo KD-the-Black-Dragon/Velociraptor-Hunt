@@ -7,6 +7,14 @@
   "break_away_aut": 1.0,
   "break_away_base_chance": 0.35,
   "break_away_bonus_per_grapple_hp_fraction": 0.4,
+  "swallow_struggle_escape_chance": 0.01,
+  "swallow_struggle_aut": 1.0,
+  "swallow_conserve_aut": 1.0,
+  "swallow_narrative": [
+    "The world narrows to heat, pressure, and the wet rush of being pulled under.",
+    "Sand, sky, and the roar of the crowd smear into a single roaring dark.",
+    "Your limbs feel leaden; the hold is past wrestling — this is the finishing gulp."
+  ],
   "counter_grapple_aut": 1.0,
   "counter_grapple_damage_min": 1,
   "counter_grapple_damage_max": 3,

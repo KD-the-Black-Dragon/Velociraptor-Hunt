@@ -79,9 +79,12 @@ from src.match_vore import (
     VoreConfig,
     VorePhase,
     break_away_chance,
+    effective_digest_strikes_to_end,
     grab_chance,
     load_vore_config,
     pick_flaunt,
+    swallow_narrative_line,
+    swallow_struggle_escape_chance,
 )
 from src.match_map import (
     SAND_PIT_HEIGHT,
@@ -99,12 +102,18 @@ from src.match_tactics import (
     resolve_pushback,
 )
 from src.message_log import MessageCategory, MessageLog
+from src import messages as msg
 from src.roster import AllyRecord, deployed_allies, load_roster_tuning, remove_ally_digest
 from src.match_spawn import spawn_match_entity
 from src.match_combat_resolve import resolve_attack
 from src.match_movement import can_entity_enter_tile
 from src.match_naming import entity_log_name
-from src.match_render import render_map
+from src.match_hud_layout import MATCH_LOG_MAX_LINES
+from src.match_render import (
+    apply_grapple_tile_highlights,
+    draw_match_entities,
+    render_map,
+)
 from src.text import cp437_safe
 
 _WAIT_KEYS = frozenset({KeySym.PERIOD, KeySym.KP_5, KeySym.SPACE})
@@ -874,6 +883,14 @@ class MatchSession:
         pos = self.player.components[Position]
         tx, ty = pos.x + dx, pos.y + dy
         target = self._blocker_at(tx, ty)
+        # Ally bump: no-op (no AUT) — never smart-melee friendlies
+        if target is not None and target is not self.player and self.is_ally(target):
+            name = entity_log_name(target, sentence_start=True)
+            self.message_log.add(
+                msg.ally_standing_there(name),
+                category=MessageCategory.ROUTINE,
+            )
+            return
         if cst.downed:
             # Crawl only — no attacks while down
             if target is not None:
@@ -1069,13 +1086,15 @@ class MatchSession:
         return None
 
     def _handle_grapple_prey_input(self, sym: KeySym) -> None:
-        """PC options while grappled (not yet engulfed): 1 break away, 2 counter."""
+        """PC options while grappled/swallowing (stub wrestling; swallow is modal)."""
         g = self.grapple
         assert g is not None and g.prey is self.player
         if g.phase is VorePhase.SWALLOW:
-            # During swallow, thrash is low-value; still may break rarely
-            if sym in _WAIT_KEYS or sym in DIRECTION_KEYS or sym in _REACT_DODGE:
-                self._prey_break_away(spend_aut=True)
+            # Interactive swallow modal only — no free direction thrash
+            if sym in _REACT_DODGE or sym == KeySym.N1 or sym == KeySym.KP_1:
+                self._prey_swallow_struggle()
+            elif sym in _REACT_PARRY or sym == KeySym.N2 or sym == KeySym.KP_2:
+                self._prey_swallow_conserve()
             return
         if sym in _REACT_DODGE or sym == KeySym.N1 or sym == KeySym.KP_1:
             self._prey_break_away(spend_aut=True)
@@ -1089,36 +1108,75 @@ class MatchSession:
                 self.combat_cfg.maneuver("wait").aut_cost,
             )
             self.message_log.add(
-                "You brace in their grip.",
+                msg.you_brace_in_grip(),
                 category=MessageCategory.ROUTINE,
             )
             self.awaiting_player = False
             self.process_npc_until_player()
 
     def _prey_break_away(self, *, spend_aut: bool) -> None:
+        """Grapple-phase wrestling escape (stub odds). Not used for swallow."""
         g = self.grapple
         assert g is not None
         cfg = self.vore_cfg
+        if g.phase is VorePhase.SWALLOW:
+            self._prey_swallow_struggle()
+            return
         chance = break_away_chance(
             grapple_hp=g.grapple_hp,
             grapple_hp_max=g.grapple_hp_max,
             cfg=cfg,
         )
-        if g.phase is VorePhase.SWALLOW:
-            chance *= 0.35
         if spend_aut:
             self.scheduler.commit_action(g.prey, cfg.break_away_aut)
         if self.rng.random() < chance:
             self.message_log.add(
-                "You wrench free!",
+                msg.you_wrench_free(),
                 category=MessageCategory.POSITIVE,
             )
             self._end_grapple(released=True)
         else:
             self.message_log.add(
-                "You struggle, but the grip holds.",
+                msg.struggle_grip_holds(),
                 category=MessageCategory.CAUTION,
             )
+        if self.phase is MatchPhase.FIGHT:
+            self.awaiting_player = False
+            self.process_npc_until_player()
+
+    def _prey_swallow_struggle(self) -> None:
+        """Coup de grâce thrash: ~1% miracle escape (JSON)."""
+        g = self.grapple
+        assert g is not None and g.phase is VorePhase.SWALLOW
+        cfg = self.vore_cfg
+        chance = swallow_struggle_escape_chance(cfg)
+        self.scheduler.commit_action(g.prey, cfg.swallow_struggle_aut)
+        if self.rng.random() < chance:
+            self.message_log.add(
+                msg.swallow_struggle_miracle(),
+                category=MessageCategory.POSITIVE,
+            )
+            self._end_grapple(released=True)
+        else:
+            self.message_log.add(
+                msg.swallow_struggle_fails(),
+                category=MessageCategory.CAUTION,
+            )
+        if self.phase is MatchPhase.FIGHT:
+            self.awaiting_player = False
+            self.process_npc_until_player()
+
+    def _prey_swallow_conserve(self) -> None:
+        """Focus on breathing: no escape roll; each conserve extends later endurance (no cap)."""
+        g = self.grapple
+        assert g is not None and g.phase is VorePhase.SWALLOW
+        cfg = self.vore_cfg
+        g.conserved_strength += 1
+        self.scheduler.commit_action(g.prey, cfg.swallow_conserve_aut)
+        self.message_log.add(
+            msg.swallow_conserve_strength(),
+            category=MessageCategory.ROUTINE,
+        )
         if self.phase is MatchPhase.FIGHT:
             self.awaiting_player = False
             self.process_npc_until_player()
@@ -1164,21 +1222,32 @@ class MatchSession:
             self.process_npc_until_player()
 
     def _ally_grapple_prey_act(self, entity: Entity) -> None:
-        """Ally held: auto attempt break-away."""
+        """Ally held: auto attempt break-away (grapple) or rare thrash (swallow)."""
         g = self.grapple
         assert g is not None
         cfg = self.vore_cfg
-        chance = break_away_chance(
-            grapple_hp=g.grapple_hp,
-            grapple_hp_max=max(1, g.grapple_hp_max),
-            cfg=cfg,
-        )
-        self.scheduler.commit_action(entity, cfg.break_away_aut)
         name = (
             entity.components[DisplayName].name
             if DisplayName in entity.components
             else "Ally"
         )
+        if g.phase is VorePhase.SWALLOW:
+            chance = swallow_struggle_escape_chance(cfg)
+            self.scheduler.commit_action(entity, cfg.swallow_struggle_aut)
+        elif g.phase is VorePhase.ENGULFED:
+            self.scheduler.commit_action(entity, cfg.break_away_aut)
+            self.message_log.add(
+                f"{name} thrashes inside!",
+                category=MessageCategory.CAUTION,
+            )
+            return
+        else:
+            chance = break_away_chance(
+                grapple_hp=g.grapple_hp,
+                grapple_hp_max=max(1, g.grapple_hp_max),
+                cfg=cfg,
+            )
+            self.scheduler.commit_action(entity, cfg.break_away_aut)
         if self.rng.random() < chance:
             self.message_log.add(
                 f"{name} breaks free!",
@@ -1215,10 +1284,8 @@ class MatchSession:
             prey_is_player=Player in prey.tags,
             prey_ally_id=ally_id,
         )
-        # Co-locate prey on predator for display
-        if Position in predator.components and Position in prey.components:
-            pp = predator.components[Position]
-            prey.components[Position] = Position(pp.x, pp.y)
+        # Wrestling clinch: separate tiles (adjacent). Swallow is when they share a tile.
+        self._ensure_grapple_adjacent_positions(predator, prey)
         pname = entity_log_name(predator, sentence_start=True)
         if Player in prey.tags:
             self.message_log.add(
@@ -1239,7 +1306,63 @@ class MatchSession:
             self._begin_swallow()
 
     def _end_grapple(self, *, released: bool) -> None:
+        g = self.grapple
+        if g is not None and released:
+            self._separate_grapple_participants(
+                g.predator,  # type: ignore[arg-type]
+                g.prey,  # type: ignore[arg-type]
+            )
         self.grapple = None
+
+    def _ensure_grapple_adjacent_positions(
+        self, predator: Entity, prey: Entity
+    ) -> None:
+        """Keep wrestling participants on different adjacent tiles."""
+        if Position not in predator.components or Position not in prey.components:
+            return
+        pp = predator.components[Position]
+        pr = prey.components[Position]
+        if (pp.x, pp.y) != (pr.x, pr.y):
+            return
+        # Same tile (e.g. legacy): nudge prey to a free adjacent cell
+        for dx, dy in (
+            (1, 0),
+            (-1, 0),
+            (0, 1),
+            (0, -1),
+            (1, 1),
+            (1, -1),
+            (-1, 1),
+            (-1, -1),
+        ):
+            nx, ny = pp.x + dx, pp.y + dy
+            if not can_entity_enter_tile(self.game_map, nx, ny, prey):
+                continue
+            if self._blocker_at(nx, ny) is not None:
+                continue
+            prey.components[Position] = Position(nx, ny)
+            return
+
+    def _co_locate_prey_on_predator(self, predator: Entity, prey: Entity) -> None:
+        """Swallow finisher: prey vanishes onto predator's tile."""
+        if Position not in predator.components:
+            return
+        if Position not in prey.components:
+            return
+        pp = predator.components[Position]
+        prey.components[Position] = Position(pp.x, pp.y)
+
+    def _separate_grapple_participants(
+        self, predator: Entity, prey: Entity
+    ) -> None:
+        """After release from same tile, place prey on a free adjacent tile."""
+        if Position not in predator.components or Position not in prey.components:
+            return
+        pp = predator.components[Position]
+        pr = prey.components[Position]
+        if (pp.x, pp.y) != (pr.x, pr.y):
+            return
+        self._ensure_grapple_adjacent_positions(predator, prey)
 
     def _sync_grapple_hp_from_stamina(self, prey: Entity, *, damage: int) -> None:
         """Stamina damage while grappled also reduces grapple HP; cap to remaining HP."""
@@ -1256,6 +1379,11 @@ class MatchSession:
         assert g is not None
         g.phase = VorePhase.SWALLOW
         g.swallow_phase_index = 0
+        # Finisher: prey lifted / vanishing — share the predator's tile
+        self._co_locate_prey_on_predator(
+            g.predator,  # type: ignore[arg-type]
+            g.prey,  # type: ignore[arg-type]
+        )
         self.message_log.add(
             "They start to force you down!",
             category=MessageCategory.DANGER,
@@ -1356,14 +1484,17 @@ class MatchSession:
                 return
             g.digest_strikes += 1
             self.scheduler.commit_action(predator, cfg.digest_strike_aut)
+            need = effective_digest_strikes_to_end(
+                cfg, conserved_strength=g.conserved_strength
+            )
             self.message_log.add(
-                f"Digestion presses in… ({g.digest_strikes}/{cfg.digest_strikes_to_end})",
+                f"Digestion presses in… ({g.digest_strikes}/{need})",
                 category=MessageCategory.DANGER,
             )
             prey_f = prey.components.get(Fighter)
             if prey_f is not None and prey_f.hp > 0:
                 prey_f.hp = max(0, prey_f.hp - 2)
-            if g.digest_strikes >= cfg.digest_strikes_to_end:
+            if g.digest_strikes >= need:
                 self._complete_digestion()
 
     def _complete_digestion(self) -> None:
@@ -2241,11 +2372,12 @@ def render_match(
     if session.ability_ui is AbilityUiMode.FULL_LIST:
         return
     render_map(console, session.game_map)
-    for entity in session.world.Q.all_of(components=[Position, Renderable]):
-        pos = entity.components[Position]
-        ren = entity.components[Renderable]
-        if 0 <= pos.x < console.width and 0 <= pos.y < console.height:
-            console.print(pos.x, pos.y, chr(ren.ch), fg=ren.fg)
+    apply_grapple_tile_highlights(
+        console,
+        grapple=session.grapple,
+        is_ally=session.is_ally,
+    )
+    draw_match_entities(console, session)
 
 
 def match_footer_text(session: MatchSession) -> str:
@@ -2264,7 +2396,8 @@ def match_footer_text(session: MatchSession) -> str:
         if g.phase is VorePhase.ENGULFED:
             return f"Engulfed: . or move thrash (low odds){surr}  |  Ctrl+Q"
         if g.phase is VorePhase.SWALLOW:
-            return f"Swallowing: 1 struggle  |  . brace{surr}  |  Ctrl+Q"
+            # Swallow modal owns chrome — keep footer to choices only (no Ctrl+Q noise)
+            return match_swallow_options_line()
         return f"Grappled: 1 Break away  |  2 Counter  |  . brace{surr}  |  Ctrl+Q"
     if session.pending_reaction is not None:
         if session.pending_reaction.awaiting_dodge_dir:
@@ -2286,22 +2419,28 @@ def match_footer_text(session: MatchSession) -> str:
     return base + "  |  Ctrl+Q"
 
 
-def match_text_lines(session: MatchSession) -> tuple:
-    """Proportional log-font content (everything except map/glyphs)."""
-    from src.ui.help_overlay import (
-        HELP_BODY_FG,
-        HELP_SECTION_FG,
-        HELP_TITLE_FG,
-        HelpTextLine,
-    )
+def _match_palette() -> dict[str, tuple[int, int, int]]:
+    from src.ui.help_overlay import HELP_BODY_FG, HELP_SECTION_FG, HELP_TITLE_FG
 
-    body = HELP_BODY_FG
-    title = HELP_TITLE_FG
-    section = HELP_SECTION_FG
-    dim = (160, 160, 170)
-    meter_fg = (180, 220, 255)
-    green = (120, 220, 140)
-    red = (240, 120, 100)
+    return {
+        "body": HELP_BODY_FG,
+        "title": HELP_TITLE_FG,
+        "section": HELP_SECTION_FG,
+        "dim": (160, 160, 170),
+        "meter": (180, 220, 255),
+        "green": (120, 220, 140),
+        "red": (240, 120, 100),
+        "gold": (220, 200, 120),
+        "injury": (255, 200, 120),
+    }
+
+
+def match_fullscreen_text_lines(session: MatchSession) -> tuple:
+    """Recap or full ability list (full-screen log-font panels)."""
+    from src.ui.help_overlay import HelpTextLine
+
+    pal = _match_palette()
+    body, title, section = pal["body"], pal["title"], pal["section"]
 
     if session.phase is MatchPhase.RECAP:
         lines: list = []
@@ -2322,12 +2461,31 @@ def match_text_lines(session: MatchSession) -> tuple:
             lines.append(HelpTextLine("", body))
         return tuple(lines)
 
-    # Fight HUD + recent log
+    return ()
+
+
+def match_status_lines(session: MatchSession) -> tuple:
+    """Right-of-map status: meters, card meta, grapple/talk/ability prompts (no log, no reaction)."""
+    from src.ui.help_overlay import HelpTextLine
+
+    if session.phase is not MatchPhase.FIGHT:
+        return ()
+    if session.ability_ui is AbilityUiMode.FULL_LIST:
+        return ()
+
+    pal = _match_palette()
+    body = pal["body"]
+    title = pal["title"]
+    dim = pal["dim"]
+    meter_fg = pal["meter"]
+    green = pal["green"]
+    red = pal["red"]
+
     session._sync_ap()
     pf = session.player.components[Fighter]
     pc = session.combatants[session.player]
     kind_fg = green if session.card.kind == "green" else red
-    lines = [
+    lines: list = [
         HelpTextLine(
             f"HP {pf.hp}/{pf.max_hp}    AUT {session.scheduler.world_aut:.1f}",
             body,
@@ -2341,7 +2499,7 @@ def match_text_lines(session: MatchSession) -> tuple:
         lines.append(
             HelpTextLine(
                 session.patron_objective.short_line(),
-                (220, 200, 120),
+                pal["gold"],
             )
         )
     lines.append(
@@ -2373,63 +2531,32 @@ def match_text_lines(session: MatchSession) -> tuple:
     )
     if pc.injuries:
         lines.append(
-            HelpTextLine("; ".join(format_injury_list(pc.injuries)), (255, 200, 120))
+            HelpTextLine("; ".join(format_injury_list(pc.injuries)), pal["injury"])
         )
-    lines.append(HelpTextLine("", body))
+
     g = session.grapple
-    pc_held = g is not None and g.prey is session.player
-    if session.pending_reaction is not None and not pc_held:
-        pr = session.pending_reaction
-        lines.append(HelpTextLine("INCOMING!", title))
-        lines.append(HelpTextLine(pr.announce, red))
-        lines.append(HelpTextLine("", body))
-        if pr.awaiting_dodge_dir:
-            lines.append(
-                HelpTextLine(
-                    "Dodge which way? (8 directions — must be open)",
-                    section,
-                )
-            )
-        else:
-            lines.append(HelpTextLine("1  Dodge (then direction)", body))
-            lines.append(HelpTextLine("2  Parry / Block", body))
-            lines.append(HelpTextLine("3  Counterattack", body))
-            lines.append(HelpTextLine("4  Ignore", body))
-        lines.append(HelpTextLine("", body))
     if g is not None:
-        phase_label = {
-            VorePhase.GRAPPLE: "GRAPPLE",
-            VorePhase.SWALLOW: "SWALLOWING",
-            VorePhase.ENGULFED: "ENGULFED",
-        }.get(g.phase, "GRAPPLE")
+        # PC-held grapple/swallow owned by dedicated modals (not status chrome).
+        # Engulfed stays a short status note; ally-as-prey stays here for rescuer awareness.
         if g.prey is session.player:
-            lines.append(HelpTextLine(f"{phase_label} — you are held!", title))
-            if g.phase is VorePhase.GRAPPLE:
-                lines.append(
-                    HelpTextLine(
-                        f"Grapple HP {g.grapple_hp}/{g.grapple_hp_max}",
-                        red,
-                    )
+            if g.phase is VorePhase.ENGULFED:
+                lines.append(HelpTextLine("", body))
+                need = effective_digest_strikes_to_end(
+                    session.vore_cfg, conserved_strength=g.conserved_strength
                 )
-                lines.append(HelpTextLine("1  Break away", body))
-                lines.append(HelpTextLine("2  Counter-strike", body))
-            elif g.phase is VorePhase.SWALLOW:
                 lines.append(
                     HelpTextLine(
-                        f"Phase {g.swallow_phase_index}/{session.vore_cfg.swallow_phases}"
-                        " — struggle (1) for a slim chance",
-                        red,
-                    )
-                )
-            else:
-                lines.append(
-                    HelpTextLine(
-                        f"Digest strikes {g.digest_strikes}/{session.vore_cfg.digest_strikes_to_end}"
-                        " — thrash (. or move)",
+                        f"ENGULFED  Digest {g.digest_strikes}/{need}  — thrash (. or move)",
                         red,
                     )
                 )
         else:
+            lines.append(HelpTextLine("", body))
+            phase_label = {
+                VorePhase.GRAPPLE: "GRAPPLE",
+                VorePhase.SWALLOW: "SWALLOWING",
+                VorePhase.ENGULFED: "ENGULFED",
+            }.get(g.phase, "GRAPPLE")
             prey_nm = (
                 g.prey.components[DisplayName].name
                 if isinstance(g.prey, Entity) and DisplayName in g.prey.components
@@ -2446,8 +2573,9 @@ def match_text_lines(session: MatchSession) -> tuple:
                         red,
                     )
                 )
-        lines.append(HelpTextLine("", body))
+
     if session.talk_ui is TalkUiMode.PICK_ALLY:
+        lines.append(HelpTextLine("", body))
         lines.append(HelpTextLine("TALK — Who?", title))
         for i, e in enumerate(session.living_allies()):
             nm = (
@@ -2459,54 +2587,280 @@ def match_text_lines(session: MatchSession) -> tuple:
             order = session.ally_order.get(aid, "attack")
             lines.append(HelpTextLine(f"{i + 1}) {nm}  (now: {order})", body))
         lines.append(HelpTextLine("0) All allies", body))
-        lines.append(HelpTextLine("", body))
     elif session.talk_ui is TalkUiMode.PICK_ORDER:
+        lines.append(HelpTextLine("", body))
         lines.append(HelpTextLine("TALK — Order?", title))
         lines.append(HelpTextLine("1) Attack (aggressive)", body))
         lines.append(HelpTextLine("2) Defend (stay near you)", body))
-        lines.append(HelpTextLine("", body))
     if session.ability_ui is AbilityUiMode.PICK_LETTER:
+        lines.append(HelpTextLine("", body))
         lines.append(
             HelpTextLine(
                 "Ability: press letter (a/b/c), or ? for list — Esc cancel",
                 title,
             )
         )
-        lines.append(HelpTextLine("", body))
-    lines.append(HelpTextLine("Log", section))
-    for entry in session.message_log.entries()[-8:]:
-        lines.append(HelpTextLine(entry.text, body))
     return tuple(lines)
+
+
+def match_log_lines(session: MatchSession, *, max_lines: int = MATCH_LOG_MAX_LINES) -> tuple:
+    """Bottom action log only (recent message_log entries)."""
+    from src.ui.help_overlay import HelpTextLine
+
+    if session.phase is not MatchPhase.FIGHT:
+        return ()
+    if session.ability_ui is AbilityUiMode.FULL_LIST:
+        return ()
+    body = _match_palette()["body"]
+    entries = session.message_log.entries()[-max_lines:]
+    return tuple(HelpTextLine(e.text, body) for e in entries)
+
+
+def match_reaction_modal_lines(session: MatchSession) -> tuple | None:
+    """Incoming-attack modal content, or None when inactive / PC grappled."""
+    from src.ui.help_overlay import HelpTextLine
+
+    if session.phase is not MatchPhase.FIGHT:
+        return None
+    g = session.grapple
+    pc_held = g is not None and g.prey is session.player
+    if session.pending_reaction is None or pc_held:
+        return None
+
+    pal = _match_palette()
+    body = pal["body"]
+    title = pal["title"]
+    section = pal["section"]
+    red = pal["red"]
+    pr = session.pending_reaction
+    lines: list = [
+        HelpTextLine("INCOMING!", title),
+        HelpTextLine(pr.announce, red),
+        HelpTextLine("", body),
+    ]
+    if pr.awaiting_dodge_dir:
+        lines.append(
+            HelpTextLine(
+                "Dodge which way? (8 directions — must be open)",
+                section,
+            )
+        )
+    else:
+        lines.append(HelpTextLine("1  Dodge (then direction)", body))
+        lines.append(HelpTextLine("2  Parry / Block", body))
+        lines.append(HelpTextLine("3  Counterattack", body))
+        lines.append(HelpTextLine("4  Ignore", body))
+    return tuple(lines)
+
+
+def match_grapple_modal_lines(session: MatchSession) -> tuple | None:
+    """Red low-right grapple crisis modal (PC prey, GRAPPLE phase only; stub)."""
+    from src.ui.help_overlay import HelpTextLine
+
+    if session.phase is not MatchPhase.FIGHT:
+        return None
+    g = session.grapple
+    if g is None or g.prey is not session.player or g.phase is not VorePhase.GRAPPLE:
+        return None
+
+    pal = _match_palette()
+    body = pal["body"]
+    title = pal["title"]
+    red = pal["red"]
+    pred = g.predator
+    pname = (
+        entity_log_name(pred, sentence_start=True)  # type: ignore[arg-type]
+        if isinstance(pred, Entity)
+        else "The predator"
+    )
+    return (
+        HelpTextLine(msg.predator_grapples_you(pname), title),
+        HelpTextLine(f"Grapple HP {g.grapple_hp}/{g.grapple_hp_max}", red),
+        HelpTextLine("", body),
+        HelpTextLine("1  Break away", body),
+        HelpTextLine("2  Counter-strike", body),
+        HelpTextLine(".  Brace", body),
+    )
+
+
+def match_swallow_narrative_text(session: MatchSession) -> str | None:
+    """Phase narrative only — progress is implied by which snippet shows."""
+    if session.phase is not MatchPhase.FIGHT:
+        return None
+    g = session.grapple
+    if g is None or g.prey is not session.player or g.phase is not VorePhase.SWALLOW:
+        return None
+    return swallow_narrative_line(
+        session.vore_cfg, phase_index=g.swallow_phase_index
+    )
+
+
+def match_swallow_options_line() -> str:
+    """Single-line choices; no explanations."""
+    return "1 - struggle | 2 - conserve strength"
+
+
+def match_swallow_modal_lines(session: MatchSession) -> tuple | None:
+    """Minimal swallow modal payload: narrative + one options line (for tests/CP437)."""
+    from src.ui.help_overlay import HelpTextLine
+
+    narrative = match_swallow_narrative_text(session)
+    if narrative is None:
+        return None
+    pal = _match_palette()
+    return (
+        HelpTextLine(narrative, pal["body"]),
+        HelpTextLine("", pal["body"]),
+        HelpTextLine(match_swallow_options_line(), pal["section"]),
+    )
+
+
+def match_low_right_crisis_lines(session: MatchSession) -> tuple | None:
+    """Low-right red panel: reaction or grapple (not swallow)."""
+    reaction = match_reaction_modal_lines(session)
+    if reaction is not None:
+        return reaction
+    return match_grapple_modal_lines(session)
+
+
+def match_text_lines(session: MatchSession) -> tuple:
+    """Compatibility aggregate: fullscreen text, or status+reaction+log for fight."""
+    from src.ui.help_overlay import HelpTextLine
+
+    full = match_fullscreen_text_lines(session)
+    if full:
+        return full
+    body = _match_palette()["body"]
+    parts: list = list(match_status_lines(session))
+    crisis = match_low_right_crisis_lines(session)
+    if crisis:
+        parts.append(HelpTextLine("", body))
+        parts.extend(crisis)
+    swallow = match_swallow_modal_lines(session)
+    if swallow:
+        parts.append(HelpTextLine("", body))
+        parts.extend(swallow)
+    parts.append(HelpTextLine("", body))
+    parts.extend(match_log_lines(session))
+    return tuple(parts)
 
 
 def render_match_cp437_fallback(
     console: tcod.console.Console,
     session: MatchSession,
 ) -> None:
-    """Full CP437 draw when log font is unavailable (map + text)."""
+    """Full CP437 draw when log font is unavailable (map + regional text)."""
+    from src.match_hud_layout import match_hud_bands
     from src.ui.help_overlay import HelpTextLine
 
     render_match(console, session)
     if session.phase is MatchPhase.RECAP or session.ability_ui is AbilityUiMode.FULL_LIST:
         console.clear()
-    y = 0 if session.phase is not MatchPhase.FIGHT else session.game_map.height + 1
-    if session.phase is MatchPhase.FIGHT and session.ability_ui is not AbilityUiMode.FULL_LIST:
-        pass
-    else:
         y = 1
-    for entry in match_text_lines(session):
-        if not isinstance(entry, HelpTextLine):
-            continue
-        if y >= console.height - 2:
-            break
-        if entry.text:
+        for entry in match_fullscreen_text_lines(session):
+            if not isinstance(entry, HelpTextLine):
+                continue
+            if y >= console.height - 2:
+                break
+            if entry.text:
+                console.print(
+                    2,
+                    y,
+                    cp437_safe(entry.text[: console.width - 4]),
+                    fg=entry.fg,
+                )
+            y += 1
+    elif session.phase is MatchPhase.FIGHT:
+        swallow_narrative = match_swallow_narrative_text(session)
+        if swallow_narrative is not None:
+            # CP437: keep map; overlay a compact centered panel
+            max_w = min(50, console.width - 4)
+            words = swallow_narrative.split()
+            narr_lines: list[str] = []
+            cur = ""
+            for w in words:
+                trial = f"{cur} {w}".strip()
+                if len(trial) <= max_w - 2:
+                    cur = trial
+                else:
+                    if cur:
+                        narr_lines.append(cur)
+                    cur = w
+            if cur:
+                narr_lines.append(cur)
+            panel_h = min(8, 2 + len(narr_lines[:3]) + 3)
+            panel_w = max_w
+            px = max(0, (console.width - panel_w) // 2)
+            py = max(1, (console.height - panel_h) // 2)
+            for row in range(panel_h):
+                console.print(
+                    px,
+                    py + row,
+                    " " * panel_w,
+                    bg=(48, 28, 32),
+                )
+            y = py + 1  # top padding inside panel
+            for line in narr_lines[:3]:
+                x = px + max(1, (panel_w - len(line)) // 2)
+                console.print(x, y, cp437_safe(line[: panel_w - 2]), fg=(235, 210, 205))
+                y += 1
+            opt = match_swallow_options_line()
+            ox = px + max(1, (panel_w - len(opt)) // 2)
             console.print(
-                0 if session.phase is MatchPhase.FIGHT else 2,
-                y,
-                cp437_safe(entry.text[: console.width - 2]),
-                fg=entry.fg,
+                ox,
+                py + panel_h - 2,
+                cp437_safe(opt[: panel_w - 2]),
+                fg=(180, 180, 190),
             )
-        y += 1
+        else:
+            crisis_lines = match_low_right_crisis_lines(session)
+            bands = match_hud_bands(
+                map_w=session.game_map.width,
+                map_h=session.game_map.height,
+                root_w=console.width,
+                root_h=console.height,
+                reaction_active=crisis_lines is not None,
+            )
+            # Status — right of map
+            y = bands.status.y
+            for entry in match_status_lines(session):
+                if y >= bands.status.y + bands.status.h:
+                    break
+                if entry.text:
+                    console.print(
+                        bands.status.x,
+                        y,
+                        cp437_safe(entry.text[: bands.status.w]),
+                        fg=entry.fg,
+                    )
+                y += 1
+            # Action log — bottom
+            y = bands.log.y
+            for entry in match_log_lines(session):
+                if y >= bands.log.y + bands.log.h:
+                    break
+                if entry.text:
+                    console.print(
+                        bands.log.x,
+                        y,
+                        cp437_safe(entry.text[: bands.log.w]),
+                        fg=entry.fg,
+                    )
+                y += 1
+            # Reaction / grapple modal — low-right
+            if crisis_lines is not None and bands.reaction is not None:
+                y = bands.reaction.y
+                for entry in crisis_lines:
+                    if y >= bands.reaction.y + bands.reaction.h:
+                        break
+                    if entry.text:
+                        console.print(
+                            bands.reaction.x,
+                            y,
+                            cp437_safe(entry.text[: bands.reaction.w]),
+                            fg=entry.fg,
+                        )
+                    y += 1
     console.print(
         0,
         console.height - 1,

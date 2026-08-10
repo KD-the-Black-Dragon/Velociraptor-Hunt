@@ -34,6 +34,12 @@ class VoreConfig:
     break_away_aut: float = 1.0
     break_away_base_chance: float = 0.35
     break_away_bonus_per_grapple_hp_fraction: float = 0.4
+    # Coup de grâce: self-escape during swallow is miraculous (~1%)
+    swallow_struggle_escape_chance: float = 0.01
+    swallow_struggle_aut: float = 1.0
+    swallow_conserve_aut: float = 1.0
+    # Each conserve adds +1 digest endurance; no hard cap (player is already winded).
+    swallow_narrative: tuple[str, ...] = ()
     counter_grapple_aut: float = 1.0
     counter_grapple_damage_min: int = 1
     counter_grapple_damage_max: int = 3
@@ -67,6 +73,7 @@ class GrappleState:
     phase: VorePhase = VorePhase.GRAPPLE
     swallow_phase_index: int = 0  # 0..swallow_phases-1 while SWALLOW
     digest_strikes: int = 0
+    conserved_strength: int = 0  # adds to digest endurance when engulfed
     assist_damage_accumulated: float = 0.0
     prey_is_player: bool = True
     prey_ally_id: str | None = None
@@ -107,6 +114,14 @@ def _parse(raw: dict[str, Any]) -> VoreConfig:
         break_away_base_chance=float(raw.get("break_away_base_chance", 0.35)),
         break_away_bonus_per_grapple_hp_fraction=float(
             raw.get("break_away_bonus_per_grapple_hp_fraction", 0.4)
+        ),
+        swallow_struggle_escape_chance=float(
+            raw.get("swallow_struggle_escape_chance", 0.01)
+        ),
+        swallow_struggle_aut=float(raw.get("swallow_struggle_aut", 1.0)),
+        swallow_conserve_aut=float(raw.get("swallow_conserve_aut", 1.0)),
+        swallow_narrative=tuple(
+            str(x) for x in (raw.get("swallow_narrative") or []) if str(x).strip()
         ),
         counter_grapple_aut=float(raw.get("counter_grapple_aut", 1.0)),
         counter_grapple_damage_min=int(raw.get("counter_grapple_damage_min", 1)),
@@ -157,6 +172,7 @@ def grab_chance(
 
 
 def break_away_chance(*, grapple_hp: int, grapple_hp_max: int, cfg: VoreConfig) -> float:
+    """Grapple-phase wrestling escape (stub numbers; not used mid-swallow)."""
     if grapple_hp_max <= 0:
         return cfg.break_away_base_chance
     frac = grapple_hp / grapple_hp_max
@@ -164,6 +180,25 @@ def break_away_chance(*, grapple_hp: int, grapple_hp_max: int, cfg: VoreConfig) 
         0.95,
         cfg.break_away_base_chance + frac * cfg.break_away_bonus_per_grapple_hp_fraction,
     )
+
+
+def swallow_struggle_escape_chance(cfg: VoreConfig) -> float:
+    """Miraculous self-escape while being swallowed (~1% default)."""
+    return max(0.0, min(1.0, cfg.swallow_struggle_escape_chance))
+
+
+def swallow_narrative_line(cfg: VoreConfig, *, phase_index: int) -> str:
+    lines = cfg.swallow_narrative
+    if not lines:
+        return (
+            "The world narrows — heat, pressure, and the sense that the arena is gone."
+        )
+    return lines[phase_index % len(lines)]
+
+
+def effective_digest_strikes_to_end(cfg: VoreConfig, *, conserved_strength: int) -> int:
+    """Base digest strikes plus one per conserve (uncapped)."""
+    return cfg.digest_strikes_to_end + max(0, conserved_strength)
 
 
 def pick_flaunt(rng: random.Random, cfg: VoreConfig) -> str:

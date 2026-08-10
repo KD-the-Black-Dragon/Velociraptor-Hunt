@@ -548,6 +548,40 @@ def good_ally_shouts_alarm(name: str) -> str:
     return f"{name} shouts in alarm!"
 
 
+def ally_standing_there(name: str) -> str:
+    """Match: player bumped a friendly ally (no-op, no AUT)."""
+    return f"{name} is standing there."
+
+
+def predator_grapples_you(predator_name: str) -> str:
+    """Match grapple modal headline (PC prey)."""
+    return f"{predator_name} grapples you!"
+
+
+def you_wrench_free() -> str:
+    return "You wrench free!"
+
+
+def struggle_grip_holds() -> str:
+    return "You struggle, but the grip holds."
+
+
+def swallow_struggle_fails() -> str:
+    return "You thrash with everything left — the gullet still claims you."
+
+
+def swallow_struggle_miracle() -> str:
+    return "Against all odds, you force a gap and spill free!"
+
+
+def swallow_conserve_strength() -> str:
+    return "You stop fighting and focus on breathing."
+
+
+def you_brace_in_grip() -> str:
+    return "You brace in their grip."
+
+
 def autoexplore_start() -> str:
     return "You begin exploring."
 
