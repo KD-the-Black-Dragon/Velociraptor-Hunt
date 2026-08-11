@@ -1,10 +1,11 @@
 # Battle pace program — multi-module OpenSpec roadmap
 
-**Status:** Design plan only. No implementation until the designer authorizes a **named PR** inside an **accepted** module change.  
+**Status:** **Design frozen 2026-08-10.** Hard freeze: **`BATTLE_SPORT_SPEC.md`**. Live requirements: `openspec/specs/battle-sport/spec.md`. Module `design.md` files exist.  
+**Implementation:** Designer may authorize the **whole Battle Sport batch** at once (phases in freeze doc). Automated tests per phase; one manual playtest at end. Until authorization: **docs only**.  
 **Parent pillars:** `openspec/changes/gladiavore-foundation/` + `DESIGN_CANON.md`  
-**Session origin:** 2026-07-17 battle-pace design (Chivalry-style measure, footwork, optimistic intent, CK2-like AI attrs).
+**Session origin:** 2026-07-17 battle-pace design; freeze completed 2026-08-10.
 
-This file is the **long-term map**. Individual modules live as sibling change folders under `openspec/changes/`. Open a module’s own `proposal.md` / `design.md` / `tasks.md` when that module is the active design focus; do not implement from this roadmap alone.
+This file is the **dependency map**. Do not invent mechanics that contradict **`BATTLE_SPORT_SPEC.md`**.
 
 ---
 
@@ -384,11 +385,11 @@ openspec/changes/
 
 ---
 
-## Immediate next step (no code)
+## Immediate next step
 
-1. Designer reviews this roadmap (amend module splits / PR granularity).  
-2. When approved: flesh **BP-W `weapon-measure`** `design.md` + `tasks.md` first (weapons are the root dependency for attack behavior).  
-3. Implement only after “implement W1” (or equivalent) authorization.
+1. ~~Design freeze~~ — done (`BATTLE_SPORT_SPEC.md` + module `design.md` + `openspec/specs/battle-sport/spec.md`).  
+2. Designer authorizes **whole Battle Sport batch** (or asks for doc amendments).  
+3. Implement phases 1→7 per freeze; no interim manual playtest gates.
 
 ---
 
@@ -397,3 +398,4 @@ openspec/changes/
 | Date | Note |
 |------|------|
 | 2026-07-17 | Initial program roadmap from battle-pace design session. |
+| 2026-08-10 | Design freeze; point at `BATTLE_SPORT_SPEC.md`; whole-batch process. |

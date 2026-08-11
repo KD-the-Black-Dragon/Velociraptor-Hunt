@@ -1,14 +1,14 @@
 # Tasks: weapon-measure
 
-**Do not implement any PR until the designer authorizes that PR by name.**
+**Battle Sport batch:** implement only after designer authorizes the **whole batch** (see `../battle-pace-program/BATTLE_SPORT_SPEC.md`). Design is frozen in `design.md`.
 
-Design artifacts: complete `design.md` before W1 auth. Program map: `../battle-pace-program/ROADMAP.md`.
+Program map: `../battle-pace-program/ROADMAP.md`.
 
 ## Setup (design)
 
-- [ ] Write `design.md` (bands, geometry, seed weapons, JSON shape, open numbers)
-- [ ] Designer accept design
-- [ ] PR checklists below match design
+- [x] Write `design.md` (bands, geometry, seed weapons, JSON shape, open numbers)
+- [x] Designer accept design (2026-08-10 freeze)
+- [x] PR checklists below match design
 
 ## PR W1 — Schema + geometry
 

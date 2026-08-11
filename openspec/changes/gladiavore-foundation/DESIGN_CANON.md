@@ -8,7 +8,7 @@
 | **Product** | Gladiavore (not K.D.'s Vore Roguelike) |
 | **Change** | `openspec/changes/gladiavore-foundation/` |
 | **Also see** | `design.md` (full narrative design), `proposal.md`, `tasks.md`, `KDVR_REFERENCE.md`, `AGENTS.md` |
-| **Last consolidated** | 2026-07-17 (battle-pace program + prior foundation) |
+| **Last consolidated** | 2026-08-10 (Battle Sport design freeze; prior foundation + battle-pace) |
 
 ---
 
@@ -286,11 +286,14 @@
 
 ---
 
-## 12. Battle pace program (locked 2026-07-17 — implement via modules)
+## 12. Battle Sport / battle pace (locked 2026-08-10 freeze)
 
-**Roadmap:** `openspec/changes/battle-pace-program/ROADMAP.md`  
-**Modules:** `weapon-measure` → `ready-actions` → `player-combat-commands` → `footwork-momentum` → `ai-personality-fuzzy`  
-**Do not implement from chat alone;** open each module’s design.md, then auth named PRs.
+**Authoritative freeze:** `openspec/changes/battle-pace-program/BATTLE_SPORT_SPEC.md`  
+**Live requirements:** `openspec/specs/battle-sport/spec.md`  
+**Roadmap / deps:** `openspec/changes/battle-pace-program/ROADMAP.md`  
+**Module designs:** `weapon-measure`, `ready-actions`, `player-combat-commands`, `footwork-momentum`, `ai-personality-fuzzy` each have `design.md`.
+
+**Process for this batch:** designer may authorize the **whole batch** at once; automated tests per phase; **one** manual playtest at end. Do **not** invent mechanics from chat if they contradict the freeze files.
 
 ### Sport & philosophy
 
@@ -301,46 +304,70 @@
 | Intent keys | Optimistic resolution; never “swing at air and look foolish”; invalid → **no-op** / Esc cancel |
 | Fairness vs vore | Core steel is fair/readable; oppression reserved for overpowering digest / game-over fantasy |
 
-### Weapon measure
+### Balance severity
 
 | Decision | Detail |
 |----------|--------|
-| Sword (gladius-like) | **R1** in-fighting fully/near-fully effective; **R2** out-fighting (thrust/jab) comfortable |
-| Spear | **R2** detrimental; **R1** near-useless; wants longer measure |
-| Other weapons | Per-weapon curves in JSON (axes, etc.) |
-| R3–4 | Feint / false-lunge threat space (not steel for many weapons) |
-| R5+ | Too far for useful basic combat intent → no-op |
-| Basic attack AUT | Weapon **attack delay** (DCSS-like); same delay across reach for basics |
+| Shape | −5…+5 tame; past ±5 escalates steeply (exp/log-inspired) |
+| +10 accuracy | ~**5%** land rate vs balance 0 (feel target) |
+| Overextended | Hard accuracy tank; slight damage up; sweet spot ~**+5** (not worth going higher) |
+| Cowering | Damage tanks; slight AC/block up; **accuracy unaffected** by low balance |
+| ±6+ | Overall bad; ±9/±10 terrible |
+| AI homes | Prefer band by Ferocity (JSON); **never prefer +9/+10**; +6…+8 OK as aggressive style |
+| Reset sloppiness | **Ferocity**, not Cunning |
 
-### Player commands (target keys)
+### Weapon measure & armament
+
+| Decision | Detail |
+|----------|--------|
+| Always armed | Natural weapons OK; **no** unarmed; **no disarm**; swap only; **`swappable`** flag |
+| Sword (gladius-like) | **R1** full; **R2** comfortable |
+| Spear | **R1** near-useless; wants proper longer measure (JSON) |
+| R3–4 | Feint / false-lunge space |
+| R5+ | No-op for basic combat intent |
+| Basic attack AUT | Weapon **attack delay**; same delay across reach for basics |
+
+### Player commands
 
 | Key / input | Intent |
 |-------------|--------|
-| Numpad/arrows step | Normal move; **very slight** aggressive balance lean |
-| Numpad **5** | **Keep watch / stand ready** — near-neutral; tiny defensive only from inactivity (not turtle dump) |
-| **`d`** | **Brace** — raise shield, become more timid (real defensive commitment) |
-| **`f`** | **Footwork** — targeting mode; 2 straight **or knight-move**; AP + aggression; compound spam cost; Esc/invalid cancel |
-| Directed attack (e.g. ctrl+dir) | Cone/homing basic attack at measure; easy — not buried in ability menu |
-| Reaction modal dodge | **Emergency evade** (blow already coming) — distinct from footwork |
-| Footwork → evade | Same-direction OK; reverse direction **very hard** (momentum buffs/debuffs) |
+| Step | Very slight aggressive lean |
+| **`.`** and Numpad **5** | **Same:** keep watch (near-neutral; not turtle dump) |
+| **`d`** | Brace (real defensive commitment) |
+| **`f`** | Footwork: 2-straight or knight; AP + aggression; compound; Esc cancel |
+| **ctrl+dir** | Directed basic attack at measure |
+| Reaction dodge | Emergency evade; momentum from footwork (same dir OK; reverse very hard) |
 
-### AI (direction)
+### AI attributes (0–10, 5 neutral; per-entity min/max roll)
+
+| Attr | Role |
+|------|------|
+| **Ferocity** | Close pressure; 10 = roguelike charger; 5 = baseline maneuver; 0 = watch/brace, hang −6…−8, brace on approach |
+| **Cunning** | Ability + footwork **frequency** only; 0 = never; 1–2 rare; high F + low C = “walk up and punch” |
+| **Tenacity** | Morale shock under % stamina lost since last shock; shock forces Ferocity 0–2 for 8–16 AUT |
+| **Appetite** | Vore recklessness if capable; 0 = downed/helpless only; no-op if non-vore |
+
+### Ally AI & orders
 
 | Decision | Detail |
 |----------|--------|
-| Model | **1–10 personality attributes** + fuzzy weighted choice (CK2 *method*, small attr set) |
-| Not | Finite hard archetype enum only (“this is a Berserker type” as sole system) |
-| Starter attrs (draft) | Ferocity, Intelligence, Tenacity, Bloodlust — finalize in `ai-personality-fuzzy` design |
-| Footwork | Enemies may footwork when personality + situation warrant |
-| Quality | Roleplay / imperfect — not perfect play |
+| System | Full fuzzy; **different** scorer from enemies |
+| Orders | `T` → ally/all → **Attack!** (free play, default) / **Help me!** / **Stay close!** |
+| Help me! | Prefer recent **aggressive** acts on PC (incl. feints); ~3–5 AUT; else Stay close behavior |
+| Stay close! | Chebyshev ≤ 2 |
+| Memory | ~10 AUT solid; then rising forget chance |
+| Obedience | Always (this batch); Disobedient later |
+| Crisis help | Downed/grapple: Talk→Help me; swallow modal option 3 (advances phase, no escape/conserve); full swallow: Talk again; **50%** hear if swallowing/fully swallowed |
+| Green digest | Digestion **damage** always OK; 0 stam = defeated → **immediate** regurgitate (no permanent green digest) |
 
 ### Implementation order (hard deps)
 
-1. `weapon-measure`  
-2. `ready-actions` (may parallel weapons; recommended before player-commands “done”)  
-3. `player-combat-commands` (intent, footwork, directed attack, feint)  
-4. `footwork-momentum`  
-5. `ai-personality-fuzzy` (last among these — needs move vocabulary)
+1. Balance severity  
+2. `weapon-measure`  
+3. `ready-actions`  
+4. `player-combat-commands`  
+5. `footwork-momentum`  
+6. `ai-personality-fuzzy` (enemy + ally)
 
 ---
 
@@ -349,6 +376,7 @@
 | ID | Topic |
 |----|--------|
 | Q-GRAPPLE-MATH | Fair Wrestling / grip / breakaway economy details |
+| Q-CLINCH-MERCY | Re-grab mercy timers (deferred; inevitable later) |
 | Q-ZOC-LATER | Whether ZoC returns after MVP |
 | Q-COUNTER-MATRIX | Full ability counter web content |
 | Q-ALLY-RECOVERY | Allies use same recovery bank UI? (default yes when implemented) |
@@ -356,8 +384,7 @@
 | Q-CROWD | Meaningful mechanical crowd when un-stubbed |
 | Q-BACKGROUND-VICTORY | WWAATD-style end goals per start |
 | Q-DIFFICULTY-REIMAGINE | Four tiers retuned for arena career |
-| Q-PACE-NUMBERS | Exact AP/AUT/balance/feint/momentum magnitudes (iterate in module JSON) |
-| Q-AI-ATTR-FINAL | Final personality attribute list and weight tables |
+| Q-PACE-NUMBERS | Exact AP/AUT/balance/feint/momentum/AI weight magnitudes (iterate in JSON after playtest) |
 
 ---
 
@@ -388,7 +415,7 @@
 ## 15. How to use this file
 
 1. After compact or new chat: read **AGENTS.md** → this file → `design.md` as needed → `tasks.md` for next PR.  
-2. For measure/footwork/AI work: also read **`openspec/changes/battle-pace-program/ROADMAP.md`** and the active module folder.  
+2. For measure/footwork/AI work: read **`openspec/changes/battle-pace-program/BATTLE_SPORT_SPEC.md`** first, then `ROADMAP.md`, `openspec/specs/battle-sport/spec.md`, and module `design.md` files.  
 3. **Never** reverse a locked row without designer confirmation.  
 4. New chat agreements: append to this file **and** `design.md` Resolved decisions.  
 5. If code and this file disagree, **stop and ask** — do not silently pick.

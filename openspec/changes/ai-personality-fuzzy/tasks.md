@@ -1,13 +1,13 @@
 # Tasks: ai-personality-fuzzy
 
-**Do not implement any PR until the designer authorizes that PR by name.**
+**Battle Sport batch:** implement only after whole-batch authorization (`../battle-pace-program/BATTLE_SPORT_SPEC.md`). Design frozen in `design.md` (2026-08-10). Includes **enemy and ally** fuzzy AI, orders, morale, crisis help.
 
-**Do not start implementation PRs until BP-W and BP-P footwork + measure attacks are playable.**
+**Hard deps in batch order:** weapon-measure + player-combat-commands (footwork + measure attacks) before AI phase.
 
 ## Setup (design)
 
-- [ ] Write `design.md` (final attr list, candidate intents, weight tables, noise)
-- [ ] Designer accept design
+- [x] Write `design.md` (final attr list, candidate intents, orders, morale, noise)
+- [x] Designer accept design (freeze)
 
 ## PR A1 — Attribute schema
 

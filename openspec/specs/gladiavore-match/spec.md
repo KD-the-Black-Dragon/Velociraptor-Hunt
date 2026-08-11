@@ -4,6 +4,8 @@
 
 Turn-based AUT combat in curated sand-pit arenas for Gladiavore career matches.
 
+**Battle Sport (measure, steep balance, footwork, fuzzy AI):** accepted design contract lives in `openspec/specs/battle-sport/spec.md` and `openspec/changes/battle-pace-program/BATTLE_SPORT_SPEC.md`. Those requirements supersede adjacent-bump-only pace once implemented.
+
 ## Requirements
 
 ### AUT

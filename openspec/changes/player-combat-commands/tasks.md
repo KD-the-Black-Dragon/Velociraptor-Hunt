@@ -1,13 +1,13 @@
 # Tasks: player-combat-commands
 
-**Do not implement any PR until the designer authorizes that PR by name.**
+**Battle Sport batch:** implement only after whole-batch authorization (`../battle-pace-program/BATTLE_SPORT_SPEC.md`). Design frozen in `design.md` (2026-08-10).
 
-**Prerequisite:** `weapon-measure` accepted for P3+. Footwork P1–P2 may design/implement after intent core even if weapons still landing—attack PR waits on BP-W.
+**Prerequisite:** `weapon-measure` for directed-attack work. Footwork may land after intent core; attack resolution waits on BP-W.
 
 ## Setup (design)
 
-- [ ] Write `design.md` (keymap, footwork legality, cone rules, feint effects, costs)
-- [ ] Designer accept design
+- [x] Write `design.md` (keymap, footwork legality, cone rules, feint effects, costs)
+- [x] Designer accept design (freeze)
 
 ## PR P1 — Intent resolver core
 

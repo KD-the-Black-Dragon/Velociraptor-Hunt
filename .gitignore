@@ -4,6 +4,5 @@
 # Local build artifacts
 /build/
 /dist/
-*.spec
 __pycache__/
 *.py[cod]

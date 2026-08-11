@@ -38,7 +38,7 @@ Active feature work lives under `openspec/changes/<change-name>/`. Live specs li
 
 Update this line when starting or archiving a change:
 
-**Active change:** long-lived pillars `openspec/changes/gladiavore-foundation/`; recently signed off: `openspec/changes/grapple-swallow-modals/`, `openspec/changes/match-hud-ux/`; **battle-pace track:** `openspec/changes/battle-pace-program/ROADMAP.md` (modules: `weapon-measure`, `ready-actions`, `player-combat-commands`, `footwork-momentum`, `ai-personality-fuzzy` — design shells only until authorized); superseded product work: `openspec/changes/balance-pass/` (KDVR-era); last archived: `openspec/changes/archive/2026-07-15-convenience-controls/`
+**Active change:** long-lived pillars `openspec/changes/gladiavore-foundation/`; recently signed off: `openspec/changes/grapple-swallow-modals/`, `openspec/changes/match-hud-ux/`; **Battle Sport (design frozen, not implemented):** `openspec/changes/battle-pace-program/BATTLE_SPORT_SPEC.md` + `openspec/specs/battle-sport/spec.md` + module `design.md` files (`weapon-measure`, `ready-actions`, `player-combat-commands`, `footwork-momentum`, `ai-personality-fuzzy`) — implement only after designer authorizes whole batch; superseded product work: `openspec/changes/balance-pass/` (KDVR-era); last archived: `openspec/changes/archive/2026-07-15-convenience-controls/`
 
 ---
 
