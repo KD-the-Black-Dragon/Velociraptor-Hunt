@@ -1,0 +1,19 @@
+---
+pid: 19964
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_sim_threat.py::test_lethal_risk_active_when_multiple_evils_visible tests/test_sim_threat.py::test_bail_latches_without_heal_and_low_hp -v --tb=short"
+started_at: 2026-07-12T11:50:37.971Z
+running_for_ms: 5690008  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 2 items
+
+tests/test_sim_threat.py::test_lethal_risk_active_when_multiple_evils_visible PASSED [ 50%]
+tests/test_sim_threat.py::test_bail_latches_without_heal_and_low_hp PASSED [100%]
+
+======================== 2 passed in 153.51s (0:02:33) ========================

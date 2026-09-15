@@ -1,0 +1,2 @@
+[console_scripts]
+kds-roguelike = src.main:main

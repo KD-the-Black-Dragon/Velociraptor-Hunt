@@ -1,0 +1,16 @@
+---
+pid: 18848
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cmd /c \"cd /d C:\\VS Code Projects\\kds-vore-roguelike && python -m pytest tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_seed -v --tb=short\""
+started_at: 2026-07-11T23:15:08.713Z
+running_for_ms: 104998   
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 1 item
+
+tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_seed 

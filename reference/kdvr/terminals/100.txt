@@ -1,0 +1,32 @@
+---
+pid: 3800
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -c \"
+import time
+from src.constants import MAP_WIDTH, MAP_HEIGHT
+from src.map_gen import generate_dungeon, count_land_tiles, validate_min_land_tiles
+
+t0=time.time()
+for seed in range(10):
+    d=generate_dungeon(MAP_WIDTH, MAP_HEIGHT, seed=seed)
+    print(seed, count_land_tiles(d), validate_min_land_tiles(d))
+print('10 seeds elapsed', time.time()-t0)
+\""
+started_at: 2026-07-03T13:01:40.134Z
+running_for_ms: 35440013 
+---
+[map_gen] rejected attempt 1: too_few_land_tiles
+0 370 False
+1 370 False
+2 399 False
+3 500 True
+4 605 True
+5 619 True
+[map_gen] rejected attempt 1: too_few_land_tiles
+[map_gen] rejected attempt 2: disconnected_land_after_water
+6 606 True
+[map_gen] rejected attempt 1: disconnected_land_after_water
+7 606 True
+8 606 True
+9 384 False
+10 seeds elapsed 74.17401266098022

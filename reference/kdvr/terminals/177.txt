@@ -1,0 +1,37 @@
+---
+pid: 4428
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python tools/profile_turn.py --scenario default --action consume --iterations 30 --profile"
+started_at: 2026-07-05T19:44:28.931Z
+running_for_ms: 11815005 
+---
+Profiling action=consume  seed=42  iterations=30
+------------------------------------------------------------------------------------------
+default       npcs= 10  action=consume   mean= 461.45ms  median= 496.31ms  p95= 571.81ms  max= 576.68ms
+  Top functions (cumulative):
+    100.0%   16.6595s  ncalls=    30  profile_turn.py:236(_consume_player_turn)
+    100.0%   16.6594s  ncalls=    30  engine.py:855(_consume_player_turn)
+     99.8%   16.6217s  ncalls=    30  engine.py:629(_run_world_turn)
+     99.7%   16.6172s  ncalls=    30  ai.py:2778(run_monster_turns)
+     99.6%   16.5947s  ncalls=   280  ai.py:2640(_run_monster_visit)
+     97.6%   16.2644s  ncalls=   280  ai.py:2410(_execute_intent_pipeline)
+     91.3%   15.2175s  ncalls=   821  map_gen.py:373(bfs_path_distances)
+     80.6%   13.4270s  ncalls=1431869  ai.py:457(entity_explore_can_traverse)
+     62.8%   10.4664s  ncalls=   555  ai.py:473(explore_reachable_distances)
+     61.4%   10.2216s  ncalls=   408  ai.py:1224(pick_evil_chase)
+     56.2%    9.3640s  ncalls=956755  ai.py:482(<lambda>)
+     47.2%    7.8573s  ncalls=   408  ai.py:241(_sanitize_unreachable_memory_targets)
+     41.6%    6.9303s  ncalls=   278  ai.py:1956(_resolve_monster_move_direction)
+     37.0%    6.1612s  ncalls=1434259  movement.py:31(entity_mobility)
+     33.3%    5.5498s  ncalls=1948903  entity.py:531(get)
+     30.2%    5.0269s  ncalls=   266  ai.py:560(explore_distances_to_goal)
+     30.0%    4.9961s  ncalls=1961916  entity.py:417(__getitem__)
+     27.0%    4.4957s  ncalls=475114  ai.py:569(<lambda>)
+     24.6%    4.1057s  ncalls=   278  ai.py:2143(_try_monster_move)
+     24.3%    4.0481s  ncalls=    77  ai.py:699(_complete_explore_step)
+     24.3%    4.0427s  ncalls=   201  ai.py:575(_explore_path_distance_to_goal)
+     23.5%    3.9206s  ncalls=1434259  map_gen.py:110(can_enter_tile)
+     15.7%    2.6182s  ncalls=   145  ai.py:657(_ensure_explore_goal)
+     15.4%    2.5589s  ncalls=1434259  map_gen.py:91(tile_at)
+     14.7%    2.4541s  ncalls=489036  ai.py:446(_entity_has_hands_ability)
+

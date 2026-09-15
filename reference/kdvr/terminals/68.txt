@@ -1,0 +1,95 @@
+---
+pid: 13624
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q"
+started_at: 2026-07-01T19:49:29.028Z
+running_for_ms: 17300011 
+---
+........................................................................ [ 16%]
+........................................................................ [ 33%]
+........................................................................ [ 50%]
+........................................................................ [ 66%]
+...........F............................................................ [ 83%]
+.......................................................................  [100%]
+================================== FAILURES ===================================
+_________________ test_load_game_data_includes_item_registry __________________
+
+    def test_load_game_data_includes_item_registry() -> None:
+        data = load_game_data()
+        assert len(data.entities.entities) == 4
+>       assert len(data.items.weapons) == 1
+E       AssertionError: assert 12 == 1
+E        +  where 12 = len((WeaponDefinition(id='dagger', display_name='dagger', glyph=')', fg=(200, 200, 200), examine='A short blade, easy to p...ccuracy_bonus=0.2, durability_max=120, spawn=ItemSpawnConfig(weight=1.0, min_depth=5, max_depth=28, spawn_min=0)), ...))
+E        +    where (WeaponDefinition(id='dagger', display_name='dagger', glyph=')', fg=(200, 200, 200), examine='A short blade, easy to p...ccuracy_bonus=0.2, durability_max=120, spawn=ItemSpawnConfig(weight=1.0, min_depth=5, max_depth=28, spawn_min=0)), ...) = ItemRegistry(schema_version=1, weapons=(WeaponDefinition(id='dagger', display_name='dagger', glyph=')', fg=(200, 200, ...ax_damage=6, accuracy=1.0, spawn=ItemSpawnConfig(weight=3.0, min_depth=1, max_depth=1000, spawn_min=0)),), warnings=()).weapons
+E        +      where ItemRegistry(schema_version=1, weapons=(WeaponDefinition(id='dagger', display_name='dagger', glyph=')', fg=(200, 200, ...ax_damage=6, accuracy=1.0, spawn=ItemSpawnConfig(weight=3.0, min_depth=1, max_depth=1000, spawn_min=0)),), warnings=()) = GameData(entities=EntityRegistry(schema_version=1, entities=(EntityDefinition(id='wolf', display_name='wolf', glyph='o...x_damage=6, accuracy=1.0, spawn=ItemSpawnConfig(weight=3.0, min_depth=1, max_depth=1000, spawn_min=0)),), warnings=())).items
+
+tests\test_npc_data_pr1.py:70: AssertionError
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:245: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:244: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_inventory_items_pr3.py::test_hud_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:279: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_inventory_items_pr3.py::test_hud_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:278: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_inventory_items_pr4.py::test_player_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr4.py:143: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr5.py:291: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:71: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:163: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+  C:\VS Code Projects\kds-vore-roguelike\src\systems\fov.py:23: RuntimeWarning: Given pov index (52, 27) is outside the array of shape (44, 80).
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_npc_data_pr1.py::test_load_game_data_includes_item_registry
+1 failed, 430 passed, 21 warnings in 90.56s (0:01:30)

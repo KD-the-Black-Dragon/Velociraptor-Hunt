@@ -94,6 +94,7 @@ def test_swallow_modal_minimal_copy() -> None:
     assert "SWALLOWING" not in joined
     assert "miracle" not in joined.lower()
     assert "1 - struggle | 2 - conserve strength" in joined
+    assert "3 - call for help" in joined
     foot = match_footer_text(session)
     assert "1 - struggle" in foot
     assert "2 - conserve strength" in foot

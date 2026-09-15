@@ -125,7 +125,41 @@ On each NPC digestion tick, **good** prey SHALL have a **10%** chance to log a p
 
 ### Requirement: Predator While Holding
 
-A predator with `Predator` SHALL sync engulfed prey position, MAY perform **one adjacent bump-attack** per world phase, and SHALL NOT move, chase, or initiate vore. Holding predators SHALL NOT take a full AI turn after digest completes in the same world phase.
+A predator with `Predator` SHALL sync engulfed prey position, MAY perform **one adjacent bump-attack** per world phase (evil never melee-damages evil), and SHALL NOT move, chase, or initiate vore. Holding predators SHALL NOT take a full AI turn after digest completes in the same world phase.
+
+### Requirement: NPC Dazed
+
+NPCs MAY carry a **`Dazed(remaining)`** component (never the player). While dazed, the entity's visible tile background SHALL be blue (holding-predator dark-red BG takes precedence while `Predator` is present). On each AI opportunity, a dazed NPC SHALL skip its action, decrement `remaining` by 1, and if `remaining` reaches ≤ 0 clear Dazed. The turn that expires daze is still skipped; the NPC MAY act on a later turn.
+
+Applying daze with positive turns: if not already dazed, set `remaining` and — when the entity is in player FOV — log *"{Name} appears dazed."* (sentence-capitalized name). If already dazed, **add** the new turns to `remaining` without a second “appears” line. On expire in FOV, log *"{Name} is no longer dazed."*
+
+`Dazed` SHALL persist in autosaves. Stock difficulty profiles provide `cv_daze_min_turns` / `cv_daze_max_turns` (default **5**/**5** if omitted) used by Alternate CV (see `vore` spec).
+
+#### Scenario: Dazed NPC skips then recovers
+
+- GIVEN a visible wolf with `Dazed(remaining=1)`
+- WHEN its AI turn runs
+- THEN it takes no action
+- AND Dazed is cleared
+- AND the log shows it is no longer dazed (FOV-gated)
+
+### Requirement: Alternate CV NPC digest-complete daze
+
+When Alternate CV Mechanics is snapshotted **Yes** on the run and `complete_npc_digestion` clears a **CV** hold, the predator SHALL gain **Dazed** for a rolled duration from the run difficulty profile (stacking add). OV/AV digest-complete and Alternate CV **No** SHALL NOT apply this daze. Same-phase `skip_turn_entities` after digest SHALL remain.
+
+#### Scenario: CV NPC digest dazes under Alternate CV
+
+- GIVEN Alternate CV **Yes** on the run
+- AND a wolf finishes digesting a rabbit with `narrative_type` **CV**
+- WHEN digestion completes
+- THEN the wolf has `Dazed` with remaining in the profile range
+
+#### Scenario: OV NPC digest does not daze under Alternate CV
+
+- GIVEN Alternate CV **Yes** on the run
+- AND a wolf finishes digesting prey with `narrative_type` **OV**
+- WHEN digestion completes
+- THEN the wolf is not dazed from that completion
 
 ### Requirement: NPC Vore Mercy
 

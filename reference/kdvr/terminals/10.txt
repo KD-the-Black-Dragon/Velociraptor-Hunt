@@ -1,0 +1,155 @@
+---
+pid: 14692
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q"
+started_at: 2026-06-30T21:59:59.140Z
+running_for_ms: 11135012 
+---
+........................................................................ [ 24%]
+........................................................................ [ 49%]
+........................................................................ [ 74%]
+...........................F................................F.......F... [ 99%]
+.                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_third_monster_bumps_predator_not_engulfed_player ____________
+
+    def test_third_monster_bumps_predator_not_engulfed_player() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        predator = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Fighter]))[0]
+        pos = player.components[Position]
+        predator.components[Position] = Position(pos.x + 1, pos.y)
+        engulf_player(
+            engine.world, player, predator, engine.message_log, narrative_type="OV"
+        )
+        pred_pos = predator.components[Position]
+        third = spawn_test_npc(
+            engine.world,
+            x=pred_pos.x + 1,
+            y=pred_pos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+            power=3,
+        )
+        update_fov(engine.game_map, pos.x, pos.y)
+    
+        player_hp_before = player.components[Fighter].hp
+        predator_hp_before = predator.components[Fighter].hp
+        direction = (pred_pos.x - third.components[Position].x, pred_pos.y - third.components[Position].y)
+        try_action(engine.world, engine.game_map, third, direction, engine.message_log)
+    
+        assert player.components[Fighter].hp == player_hp_before
+>       assert predator.components[Fighter].hp < predator_hp_before
+E       assert 24 < 24
+E        +  where 24 = Fighter(hp=24, max_hp=24, power=6, defense=0).hp
+
+tests\test_vore_engulfed.py:122: AssertionError
+____________________ test_directional_escape_moves_player _____________________
+
+    def test_directional_escape_moves_player() -> None:
+        engine = GameEngine()
+        player, wolf = _engulf_player_on_wolf(engine)
+        pred_pos = wolf.components[Position]
+        expected = Position(pred_pos.x, pred_pos.y - 1)
+        rng = random.Random(0)
+        with patch.object(rng, "random", return_value=0.0):
+            try_struggle(engine.world, engine.game_map, player, (0, -1), engine.message_log, rng)
+>       assert player.components[Position] == expected
+E       AssertionError: assert Position(x=54, y=38) == Position(x=55, y=36)
+E         
+E         Differing attributes:
+E         ['x', 'y']
+E         
+E         Drill down into differing attribute x:
+E           x: 54 != 55
+E         
+E         Drill down into differing attribute y:
+E           y: 38 != 36
+
+tests\test_vore_struggle.py:137: AssertionError
+___________________ test_miss_resumes_at_next_monster_index ___________________
+
+    def test_miss_resumes_at_next_monster_index() -> None:
+        engine = GameEngine()
+        _move_non_wolves_away(engine)
+        _stun_player(engine)
+        player = engine.player
+        assert player is not None
+        player_pos = player.components[Position]
+        monsters = _sorted_wolves(engine)
+        assert len(monsters) >= 2
+    
+        for index, wolf in enumerate(monsters):
+            if index == 0:
+                _place_wolf_at(engine, wolf, player_pos.x + 1, player_pos.y)
+            elif index == 1:
+                _place_wolf_at(engine, wolf, player_pos.x + 3, player_pos.y)
+            else:
+                _place_wolf_at(engine, wolf, player_pos.x + 20, player_pos.y + 20)
+        update_fov(engine.game_map, player_pos.x, player_pos.y)
+    
+        acted: list[object] = []
+        original = run_monster_turns.__globals__["try_action"]
+    
+        def _track_try_action(world, game_map, actor, direction, message_log, **kwargs):
+            acted.append(actor)
+            return original(world, game_map, actor, direction, message_log, **kwargs)
+    
+        opener = monsters[0]
+        runner_up = monsters[1]
+        with patch("src.systems.ai.try_action", side_effect=_track_try_action):
+            with patch("src.systems.vore.resolve_vore_hit", return_value=False):
+                engine._consume_player_turn()
+                assert engine.vore_modal.active
+                assert engine.vore_modal.resume_monster_index == _monster_index(engine, opener)
+                assert engine.vore_modal.predator is opener
+                _resolve_miss_modal(engine)
+    
+        assert opener not in acted
+>       assert runner_up in acted
+E       assert <Entity(uid=object at 0x14D90C3BA20)> in [<Entity(uid=object at 0x14D90C3BA60)>, <Entity(uid=object at 0x14D90C3BAC0)>, <Entity(uid=object at 0x14D90C3BAD0)>, <Entity(uid=object at 0x14D90C3BAF0)>, <Entity(uid=object at 0x14D90C3BA80)>, <Entity(uid=object at 0x14D90C3A800)>, ...]
+
+tests\test_vore_turn_order.py:116: AssertionError
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:114: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:68: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:159: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:73: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_vore_engulfed.py::test_third_monster_bumps_predator_not_engulfed_player
+FAILED tests/test_vore_struggle.py::test_directional_escape_moves_player - As...
+FAILED tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+3 failed, 286 passed, 14 warnings in 37.93s

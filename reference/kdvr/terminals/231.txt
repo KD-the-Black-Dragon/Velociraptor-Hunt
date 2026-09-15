@@ -1,0 +1,20 @@
+---
+pid: 15744
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -c \"
+from src.sim.data_loader import install_stock_game_data
+install_stock_game_data()
+from src.engine import GameEngine
+from src.components import FloorRune, Position
+
+for seed in [7, 4242]:
+    e = GameEngine(save_coordinator=None, skip_new_game=True)
+    e.new_game(seed=seed, log_session_milestones=False)
+    runes = [(ent.components[Position].x, ent.components[Position].y) for ent in e.world.Q.all_of(components=[FloorRune, Position])]
+    print('seed', seed, 'runes_on_map', len(runes), 'quota', e.runes_per_floor(), 'explored', int(e.game_map.explored.sum()))
+\""
+started_at: 2026-07-11T23:50:29.346Z
+running_for_ms: 39480011 
+---
+seed 7 runes_on_map 0 quota 3 explored 30
+seed 4242 runes_on_map 3 quota 3 explored 109

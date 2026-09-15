@@ -19,7 +19,7 @@ from src.ui.help_overlay import (
     HelpTextLine,
 )
 
-CREDITS_TITLE = "Gladiavore"
+CREDITS_TITLE = "Velociraptor Hunt"
 
 
 class CreditsAction(Enum):

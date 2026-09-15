@@ -1,0 +1,57 @@
+---
+pid: 8160
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_projectile_anim.py tests/test_inventory_items_pr5.py tests/test_npc_abilities_smite.py -v 2>&1"
+started_at: 2026-07-11T14:09:46.290Z
+running_for_ms: 32824999 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 40 items
+
+tests/test_projectile_anim.py::test_advance_projectile_frame_walks_beam_tiles PASSED [  2%]
+tests/test_projectile_anim.py::test_projectile_queue_reset_and_take PASSED [  5%]
+tests/test_projectile_anim.py::test_player_throw_defers_world_turn_until_projectile_finishes PASSED [  7%]
+tests/test_projectile_anim.py::test_smite_projectile_flashes_source_then_target PASSED [ 10%]
+tests/test_projectile_anim.py::test_render_smite_shows_only_current_flash_tile PASSED [ 12%]
+tests/test_projectile_anim.py::test_path_projectile_beam_spans_full_shot_distance PASSED [ 15%]
+tests/test_projectile_anim.py::test_render_projectile_draws_trail_through_current_tile PASSED [ 17%]
+tests/test_projectile_anim.py::test_path_projectile_uses_cyan_asterisk PASSED [ 20%]
+tests/test_inventory_items_pr5.py::test_no_wands_message PASSED          [ 22%]
+tests/test_inventory_items_pr5.py::test_wands_with_zero_charges_excluded_from_list PASSED [ 25%]
+tests/test_inventory_items_pr5.py::test_default_evoke_target_is_nearest_evil PASSED [ 27%]
+tests/test_inventory_items_pr5.py::test_evoke_target_step_has_no_modal_text PASSED [ 30%]
+tests/test_inventory_items_pr5.py::test_evoke_pick_opens_target_step PASSED [ 32%]
+tests/test_inventory_items_pr5.py::test_evoke_decrements_charges_and_consumes_turn PASSED [ 35%]
+tests/test_inventory_items_pr5.py::test_evoke_at_zero_charges_removes_wand_with_red_break_message PASSED [ 37%]
+tests/test_inventory_items_pr5.py::test_evoke_escape_aborts_without_turn PASSED [ 40%]
+tests/test_inventory_items_pr5.py::test_no_valid_targets_when_only_good_in_range PASSED [ 42%]
+tests/test_inventory_items_pr5.py::test_not_the_best_target_rejects_good_npc PASSED [ 45%]
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile PASSED [ 47%]
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[2] PASSED [ 50%]
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[3] PASSED [ 52%]
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[4] PASSED [ 55%]
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[5] PASSED [ 57%]
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[6] PASSED [ 60%]
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[7] PASSED [ 62%]
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[8] PASSED [ 65%]
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[9] PASSED [ 67%]
+tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[2] PASSED [ 70%]
+tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[3] PASSED [ 72%]
+tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[5] PASSED [ 75%]
+tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[9] PASSED [ 77%]
+tests/test_npc_abilities_smite.py::test_wolf_smites_player_at_max_range[2] PASSED [ 80%]
+tests/test_npc_abilities_smite.py::test_wolf_smites_player_at_max_range[3] PASSED [ 82%]
+tests/test_npc_abilities_smite.py::test_wolf_smites_player_at_max_range[5] PASSED [ 85%]
+tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_player_beyond_max_range[2] PASSED [ 87%]
+tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_player_beyond_max_range[3] PASSED [ 90%]
+tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_player_beyond_max_range[5] PASSED [ 92%]
+tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_adjacent_player PASSED [ 95%]
+tests/test_npc_abilities_smite.py::test_no_smite_stunned_knight_in_range PASSED [ 97%]
+tests/test_npc_abilities_smite.py::test_primary_at_three_preferred_over_neutral_at_two_for_smite_pick PASSED [100%]
+
+======================= 40 passed in 102.80s (0:01:42) ========================

@@ -1,0 +1,34 @@
+---
+pid: 9580
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_sim_isolation.py tests/test_sim_scoring.py tests/test_sim_aggregator.py -v"
+started_at: 2026-07-12T14:07:32.011Z
+running_for_ms: 13079998 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 17 items
+
+tests/test_sim_isolation.py::test_isolation_seed_is_deterministic PASSED [  5%]
+tests/test_sim_isolation.py::test_apply_loadout_profile_wields_closest_weapon PASSED [ 11%]
+tests/test_sim_isolation.py::test_start_isolation_floor_at_depth_three PASSED [ 17%]
+tests/test_sim_isolation.py::test_sim_isolation_run_returns_snapshot PASSED [ 23%]
+tests/test_sim_isolation.py::test_merge_isolation_into_rows_populates_iso_runs PASSED [ 29%]
+tests/test_sim_isolation.py::test_balance_analysis_includes_isolation_runs PASSED [ 35%]
+tests/test_sim_scoring.py::test_digest_scores_100 PASSED                 [ 41%]
+tests/test_sim_scoring.py::test_perfect_floor_scores_zero PASSED         [ 47%]
+tests/test_sim_scoring.py::test_runes_missed_scales_with_quota PASSED    [ 52%]
+tests/test_sim_scoring.py::test_upgrade_not_improved_adds_ten_per_slot PASSED [ 58%]
+tests/test_sim_scoring.py::test_early_bail_overlay_when_below_quota PASSED [ 64%]
+tests/test_sim_scoring.py::test_consumable_weights_cap_at_25 PASSED      [ 70%]
+tests/test_sim_aggregator.py::test_aggregate_floor_visits_digest_and_descend_rates PASSED [ 76%]
+tests/test_sim_aggregator.py::test_aggregate_floor_weapon_take_rate_conditional PASSED [ 82%]
+tests/test_sim_aggregator.py::test_aggregate_floor_digest_when_weapon_spawned PASSED [ 88%]
+tests/test_sim_aggregator.py::test_build_loadout_bank_median_and_fallback PASSED [ 94%]
+tests/test_sim_aggregator.py::test_collect_visits_by_floor_from_run_results PASSED [100%]
+
+======================= 17 passed in 145.25s (0:02:25) ========================

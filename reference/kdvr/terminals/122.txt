@@ -1,0 +1,62 @@
+---
+pid: 13988
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_dungeon_layout_pr0.py tests/test_dungeon_layout_pr1.py tests/test_dungeon_layout_pr2.py tests/test_dungeon_layout_pr3.py tests/test_floor_prefetch.py tests/test_dungeon_pr2.py tests/test_floor_runes_pr3.py tests/test_acceptance.py -q"
+started_at: 2026-07-03T22:34:00.269Z
+running_for_ms: 1100000  
+---
+.................................F...................................... [ 97%]
+..                                                                       [100%]
+================================== FAILURES ===================================
+_________ test_initialize_floor_regenerates_on_rune_placement_failure _________
+
+    def test_initialize_floor_regenerates_on_rune_placement_failure() -> None:
+        calls = {"spawn": 0, "dungeon": 0}
+        original_spawn = GameEngine._spawn_floor_population_and_runes
+        original_generate = generate_dungeon
+    
+        def counting_generate(*args, **kwargs):
+            calls["dungeon"] += 1
+            return original_generate(*args, **kwargs)
+    
+        def flaky_spawn(self, floor_depth, *, followers=None):
+            calls["spawn"] += 1
+            if calls["spawn"] == 1:
+                raise RunePlacementError("mock failure")
+            return original_spawn(self, floor_depth, followers=followers)
+    
+        engine = GameEngine.__new__(GameEngine)
+        engine.water_testing_mode = False
+        engine.layout_archetype_force = None
+        engine.player_turn_count = 0
+        engine.floor_depth = 1
+        engine.rng = __import__("random").Random(0)
+    
+        with (
+            patch("src.engine.generate_dungeon", side_effect=counting_generate),
+            patch.object(GameEngine, "_spawn_floor_population_and_runes", flaky_spawn),
+        ):
+>           engine.initialize_floor(seed=0, mode="new")
+
+tests\test_dungeon_layout_pr3.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:408: in initialize_floor
+    self._initialize_floor_new(seed=seed)
+src\engine.py:424: in _initialize_floor_new
+    self._take_or_generate_dungeon(seed=seed)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <src.engine.GameEngine object at 0x000001A69E234D60>, seed = 0
+
+    def _take_or_generate_dungeon(self, *, seed: int | None = None) -> GameMap:
+        """Consume a prefetched map when params match; otherwise generate synchronously."""
+        params = self._prefetch_params(seed=seed)
+>       if self.floor_prefetch is not None:
+           ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'GameEngine' object has no attribute 'floor_prefetch'
+
+src\engine.py:324: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_layout_pr3.py::test_initialize_floor_regenerates_on_rune_placement_failure
+1 failed, 73 passed in 196.04s (0:03:16)
+[prefetch] ready depth=2

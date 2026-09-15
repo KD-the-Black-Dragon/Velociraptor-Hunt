@@ -1,0 +1,9 @@
+---
+pid: 26492
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_save_snapshot.py tests/test_enhancements_3.py -q --tb=short -x"
+started_at: 2026-07-05T20:26:33.287Z
+running_for_ms: 9290001  
+---
+.....................................................                    [100%]
+53 passed in 39.03s

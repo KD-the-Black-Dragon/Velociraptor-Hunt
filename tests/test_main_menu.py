@@ -34,27 +34,27 @@ def _key(sym: KeySym, *, mod: Modifier = Modifier.NONE) -> tcod.event.KeyDown:
 def test_menu_starts_with_new_game_highlighted() -> None:
     state = MainMenuState()
     assert state.highlight == 0
-    assert state.highlighted_option == "New Game"
+    assert state.highlighted_option == "New Hunt"
 
 
 def test_menu_moves_highlight_down_and_wraps() -> None:
     state = MainMenuState()
     for _ in range(len(state.options) - 1):
         state.move_down()
-    assert state.highlighted_option == "Exit"
+    assert state.highlighted_option == "Quit"
     state.move_down()
-    assert state.highlighted_option == "New Game"
+    assert state.highlighted_option == "New Hunt"
 
 
 def test_menu_moves_highlight_up_and_wraps() -> None:
     state = MainMenuState()
     state.move_up()
-    assert state.highlighted_option == "Exit"
+    assert state.highlighted_option == "Quit"
 
 
 def test_enter_on_exit_requests_exit() -> None:
     state = MainMenuState()
-    while state.highlighted_option != "Exit":
+    while state.highlighted_option != "Quit":
         state.move_down()
     action = handle_main_menu_event(state, _key(KeySym.RETURN))
     assert action is MenuAction.EXIT
@@ -63,7 +63,7 @@ def test_enter_on_exit_requests_exit() -> None:
 def test_enter_on_new_game_requests_play() -> None:
     state = MainMenuState()
     action = handle_main_menu_event(state, _key(KeySym.RETURN))
-    assert action is MenuAction.NEW_GAME
+    assert action is MenuAction.NEW_HUNT
 
 
 def test_enter_on_options_opens_options() -> None:
@@ -74,38 +74,20 @@ def test_enter_on_options_opens_options() -> None:
     assert action is MenuAction.OPTIONS
 
 
-def test_enter_on_credits_opens_credits() -> None:
+def test_enter_on_stats() -> None:
     state = MainMenuState()
-    while state.highlighted_option != "Credits":
+    while state.highlighted_option != "Stats":
         state.move_down()
     action = handle_main_menu_event(state, _key(KeySym.RETURN))
-    assert action is MenuAction.CREDITS
+    assert action is MenuAction.STATS
 
 
-def test_credits_always_above_exit() -> None:
-    options = build_menu_options(load_available=False, past_runs_available=False)
-    assert options[-2:] == ("Credits", "Exit")
-    options = build_menu_options(load_available=True, past_runs_available=True)
-    assert options[-2:] == ("Credits", "Exit")
-
-
-def test_enter_on_load_game_and_past_runs() -> None:
-    state = MainMenuState(
-        options=build_menu_options(load_available=True, past_runs_available=True),
+def test_hunt_menu_options_are_fixed() -> None:
+    options = build_menu_options()
+    assert options == ("New Hunt", "Training Mode", "Stats", "Options", "Quit")
+    assert build_menu_options(continue_available=True) == (
+        "Continue Hunt", "New Hunt", "Training Mode", "Stats", "Options", "Quit",
     )
-    while state.highlighted_option != "Load Game":
-        state.move_down()
-    assert handle_main_menu_event(state, _key(KeySym.RETURN)) is MenuAction.LOAD_GAME
-    while state.highlighted_option != "Past Runs":
-        state.move_down()
-    assert handle_main_menu_event(state, _key(KeySym.RETURN)) is MenuAction.PAST_RUNS
-
-
-def test_menu_without_load_omits_load_game_option() -> None:
-    state = MainMenuState(options=build_menu_options(load_available=False))
-    assert "Load Game" not in state.options
-    state.move_down()
-    assert state.highlighted_option == "Options"
 
 
 def test_ctrl_q_on_menu_is_no_op() -> None:
@@ -148,13 +130,13 @@ def test_app_new_game_opens_name_entry(tmp_path) -> None:
         career_store=CareerStore(Path(tmp_path) / "career"),
     )
     assert not app.handle_event(_key(KeySym.RETURN))
-    assert app.phase is AppPhase.NAME_ENTRY
+    assert app.phase is AppPhase.WEAPON_SELECT
     assert app.engine is None
 
 
 def test_app_exit_from_menu_quits(tmp_path) -> None:
     app = App(settings=_onboarded_settings(tmp_path))
-    while app.menu.highlighted_option != "Exit":
+    while app.menu.highlighted_option != "Quit":
         app.menu.move_down()
     assert app.handle_event(_key(KeySym.RETURN))
 
@@ -190,16 +172,16 @@ def test_render_main_menu_clears_to_title_and_options() -> None:
     render_main_menu(console, state)
 
     options_y = SCREEN_HEIGHT - len(state.options) - 3
-    title_y = max(2, (options_y - TITLE_BANNER_HEIGHT) // 2)
+    title_y = max(2, (options_y - TITLE_BANNER_HEIGHT - 2) // 2)
     banner_top = _row_text(console, title_y)
     assert "____" in banner_top
     banner_mid = _row_text(console, title_y + 2)
-    assert "GLADIAVORE" not in banner_mid  # FIGlet art, not plain text
-    assert "_" in banner_mid or "|" in banner_mid
+    assert "GLADIAVORE" not in banner_mid
+    assert "_" in banner_mid or "|" in banner_mid or "\\" in banner_mid
     banner_bottom = _row_text(console, title_y + TITLE_BANNER_HEIGHT - 1)
-    assert "___" in banner_bottom
+    assert "_" in banner_bottom or "\\" in banner_bottom
 
-    assert _row_text(console, options_y) == "> New Game"
+    assert _row_text(console, options_y) == "> New Hunt"
 
 
 def _banner_print_x(width: int, row_offset: int) -> int:
@@ -264,5 +246,5 @@ def test_render_main_menu_options_fit_layout_console_height() -> None:
     state = MainMenuState()
     options_y = rows - len(state.options) - 3
     assert options_y + len(state.options) - 1 < rows
-    assert _row_text(console, options_y) == "> New Game"
-    assert "Exit" in _row_text(console, options_y + len(state.options) - 1)
+    assert _row_text(console, options_y) == "> New Hunt"
+    assert "Quit" in _row_text(console, options_y + len(state.options) - 1)

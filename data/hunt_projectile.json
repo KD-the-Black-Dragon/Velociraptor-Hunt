@@ -1,0 +1,6 @@
+{
+  "glyph": "*",
+  "fg": [0, 255, 255],
+  "frames_per_tile": 1,
+  "frame_sleep_seconds": 0.024
+}

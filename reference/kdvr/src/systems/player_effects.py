@@ -93,6 +93,29 @@ def _clear_player_engulfment(
     return predator
 
 
+def resolve_maturing_delayed_teleport(
+    player: Entity,
+    world: Registry,
+    game_map: GameMap,
+    rng: random.Random,
+    message_log: MessageLog | None = None,
+) -> bool:
+    """Fire delayed teleport if it matures this turn; clear pending so tick won't re-fire.
+
+    Called **before** the player digestion tick so a maturing teleport can escape
+    engulfment (including clearing ``DigestionStrikes``) before a final digest
+    strike opens the game-over modal on the same turn.
+    """
+    effects = player.components.get(PlayerEffects)
+    if effects is None or effects.teleport_pending_turns is None:
+        return False
+    if effects.teleport_pending_turns > 1:
+        return False
+    effects.teleport_pending_turns = None
+    fire_delayed_teleport(player, world, game_map, rng, message_log)
+    return True
+
+
 def fire_delayed_teleport(
     player: Entity,
     world: Registry,
@@ -103,7 +126,8 @@ def fire_delayed_teleport(
     """
     Displace the player to a random legal land tile.
 
-    If engulfed, clears predator links (teleport escape) first.
+    If engulfed, clears predator links, ``DigestionStrikes``, and related engulf
+    state (teleport escape) first.
     Returns True when position changed.
     """
     if Player not in player.tags:

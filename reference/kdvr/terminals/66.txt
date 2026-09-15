@@ -1,0 +1,151 @@
+---
+pid: 6196
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q"
+started_at: 2026-07-01T19:09:18.612Z
+running_for_ms: 19709996 
+---
+........................................................................ [ 17%]
+........................................................................ [ 34%]
+........................................................................ [ 51%]
+........................................................................ [ 69%]
+........................................................................ [ 86%]
+.......FF..F............................................                 [100%]
+================================== FAILURES ===================================
+_______________________ test_engulf_after_success_modal _______________________
+
+    def test_engulf_after_success_modal() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        _engulf_via_successful_vore(engine)
+        predator = list(engine.world.Q.all_of(components=[Predator]))[0]
+>       assert predator.components[Predator].prey is player
+E       AssertionError: assert <Entity(uid=object at 0x1E84B462F40)> is <Entity(uid=object at 0x1E84B462BE0)>
+E        +  where <Entity(uid=object at 0x1E84B462F40)> = Predator(prey=<Entity(uid=object at 0x1E84B462F40)>, narrative_type='AV', failed_struggles=0).prey
+
+tests\test_vore_engulfed.py:75: AssertionError
+_______________ test_engulf_co_locates_player_on_predator_tile ________________
+
+    def test_engulf_co_locates_player_on_predator_tile() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        _engulf_via_successful_vore(engine)
+        predator = list(engine.world.Q.all_of(components=[Predator]))[0]
+>       assert player.components[Position] == predator.components[Position]
+E       AssertionError: assert Position(x=44, y=31) == Position(x=65, y=7)
+E         
+E         Differing attributes:
+E         ['x', 'y']
+E         
+E         Drill down into differing attribute x:
+E           x: 44 != 65
+E         
+E         Drill down into differing attribute y:
+E           y: 31 != 7
+
+tests\test_vore_engulfed.py:85: AssertionError
+___________________ test_predator_frozen_while_holding_prey ___________________
+
+    def test_predator_frozen_while_holding_prey() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        _engulf_via_successful_vore(engine)
+        predator = list(engine.world.Q.all_of(components=[Predator]))[0]
+        before = predator.components[Position]
+        run_monster_turns(
+            engine.world,
+            engine.game_map,
+            player,
+            engine.message_log,
+            rng=random.Random(0),
+            modal=engine.vore_modal,
+        )
+        after = predator.components[Position]
+        assert before == after
+>       assert player.components[Position] == after
+E       AssertionError: assert Position(x=30, y=28) == Position(x=65, y=7)
+E         
+E         Differing attributes:
+E         ['x', 'y']
+E         
+E         Drill down into differing attribute x:
+E           x: 30 != 65
+E         
+E         Drill down into differing attribute y:
+E           y: 28 != 7
+
+tests\test_vore_engulfed.py:154: AssertionError
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:245: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:244: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_inventory_items_pr3.py::test_hud_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:272: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_inventory_items_pr3.py::test_hud_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:271: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_inventory_items_pr4.py::test_player_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr4.py:143: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr5.py:291: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:71: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:163: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+  C:\VS Code Projects\kds-vore-roguelike\src\systems\fov.py:23: RuntimeWarning: Given pov index (59, 57) is outside the array of shape (44, 80).
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_vore_engulfed.py::test_engulf_after_success_modal - Asserti...
+FAILED tests/test_vore_engulfed.py::test_engulf_co_locates_player_on_predator_tile
+FAILED tests/test_vore_engulfed.py::test_predator_frozen_while_holding_prey
+3 failed, 413 passed, 21 warnings in 93.21s (0:01:33)

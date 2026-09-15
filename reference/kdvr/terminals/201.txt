@@ -1,0 +1,28 @@
+---
+pid: 7104
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_inventory_items_pr5.py -v"
+started_at: 2026-07-11T01:27:21.199Z
+running_for_ms: 379994   
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 11 items
+
+tests/test_inventory_items_pr5.py::test_no_wands_message PASSED          [  9%]
+tests/test_inventory_items_pr5.py::test_wands_with_zero_charges_excluded_from_list PASSED [ 18%]
+tests/test_inventory_items_pr5.py::test_default_evoke_target_is_nearest_evil PASSED [ 27%]
+tests/test_inventory_items_pr5.py::test_evoke_target_step_has_no_modal_text PASSED [ 36%]
+tests/test_inventory_items_pr5.py::test_evoke_pick_opens_target_step PASSED [ 45%]
+tests/test_inventory_items_pr5.py::test_evoke_decrements_charges_and_consumes_turn PASSED [ 54%]
+tests/test_inventory_items_pr5.py::test_evoke_at_zero_charges_removes_wand_with_red_break_message PASSED [ 63%]
+tests/test_inventory_items_pr5.py::test_evoke_escape_aborts_without_turn PASSED [ 72%]
+tests/test_inventory_items_pr5.py::test_no_valid_targets_when_only_good_in_range PASSED [ 81%]
+tests/test_inventory_items_pr5.py::test_not_the_best_target_rejects_good_npc PASSED [ 90%]
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile PASSED [100%]
+
+======================== 11 passed in 73.49s (0:01:13) ========================

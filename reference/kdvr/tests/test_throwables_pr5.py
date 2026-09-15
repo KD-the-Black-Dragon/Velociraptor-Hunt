@@ -42,8 +42,9 @@ def test_throwables_json_loads_rock() -> None:
     registry = load_item_registry()
     rock = registry.get_throwable("rock")
     assert rock.display_name == "rock"
-    assert rock.min_damage == 1
-    assert rock.max_damage == 2
+    # Stock rock damage after throwables rebalance (was 1–2).
+    assert rock.min_damage == 2
+    assert rock.max_damage == 4
     assert rock.fg == (190, 150, 90)
 
 
@@ -94,8 +95,13 @@ def test_throwable_pickup_stacks_in_inventory(tmp_path: Path) -> None:
     player.components[Inventory] = Inventory()
     apply_starter_loadout(player)
 
-    first = spawn_item_entity(world, ItemCategory.THROWABLE, STARTER_THROWABLE_ID, 1, 1)
-    second = spawn_item_entity(world, ItemCategory.THROWABLE, STARTER_THROWABLE_ID, 1, 1)
+    # Explicit stack sizes — floor piles use spawn_stack_min/max from data, not 1.
+    first = spawn_item_entity(
+        world, ItemCategory.THROWABLE, STARTER_THROWABLE_ID, 1, 1, stack_count=1
+    )
+    second = spawn_item_entity(
+        world, ItemCategory.THROWABLE, STARTER_THROWABLE_ID, 1, 1, stack_count=1
+    )
     log = MessageLog()
     assert try_pickup_floor_entity(world, player, first, log)
     assert try_pickup_floor_entity(world, player, second, log)

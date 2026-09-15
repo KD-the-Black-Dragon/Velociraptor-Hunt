@@ -1,0 +1,13 @@
+---
+pid: 12920
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python tools/profile_turn.py --scenario default --action world --iterations 30; python tools/profile_turn.py --scenario default --action monsters --iterations 30"
+started_at: 2026-07-05T19:47:51.202Z
+running_for_ms: 11609996 
+---
+Profiling action=world  seed=42  iterations=30
+------------------------------------------------------------------------------------------
+default       npcs= 10  action=world     mean= 464.79ms  median= 475.71ms  p95= 574.41ms  max= 675.80ms
+Profiling action=monsters  seed=42  iterations=30
+------------------------------------------------------------------------------------------
+default       npcs= 10  action=monsters  mean= 510.90ms  median= 473.11ms  p95=1082.54ms  max=1254.34ms

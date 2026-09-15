@@ -1,0 +1,39 @@
+---
+pid: 5908
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_chase_pursuit_momentum.py::test_evil_still_targets_last_known_primary_while_pathing tests/test_enhancements_3.py::test_engulfed_good_npc_invisible_to_evil_ai tests/test_entity_abilities_content_pr6.py::test_wolf_playtest_overrides_reverted tests/test_player_effects_pr1.py::test_haste_skips_monster_phase tests/test_save_coordinator.py::test_engine_post_turn_hook_invokes_coordinator tests/test_sim_isolation.py::test_start_isolation_floor_at_depth_three tests/test_sim_isolation.py::test_sim_isolation_run_returns_snapshot tests/test_sim_isolation.py::test_balance_analysis_includes_isolation_runs tests/test_ui_modals.py::test_vore_modal_drawn_on_root_console_over_sidebar tests/test_vore_turn_order.py::test_after_miss_complete_next_player_turn_starts_from_zero tests/test_onboarding_pr1.py -v 2>&1"
+started_at: 2026-07-12T16:25:04.937Z
+running_for_ms: 4825003  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 22 items
+
+tests/test_chase_pursuit_momentum.py::test_evil_still_targets_last_known_primary_while_pathing PASSED [  4%]
+tests/test_enhancements_3.py::test_engulfed_good_npc_invisible_to_evil_ai PASSED [  9%]
+tests/test_entity_abilities_content_pr6.py::test_wolf_playtest_overrides_reverted PASSED [ 13%]
+tests/test_player_effects_pr1.py::test_haste_skips_monster_phase PASSED  [ 18%]
+tests/test_save_coordinator.py::test_engine_post_turn_hook_invokes_coordinator PASSED [ 22%]
+tests/test_sim_isolation.py::test_start_isolation_floor_at_depth_three PASSED [ 27%]
+tests/test_sim_isolation.py::test_sim_isolation_run_returns_snapshot PASSED [ 31%]
+tests/test_sim_isolation.py::test_balance_analysis_includes_isolation_runs PASSED [ 36%]
+tests/test_ui_modals.py::test_vore_modal_drawn_on_root_console_over_sidebar PASSED [ 40%]
+tests/test_vore_turn_order.py::test_after_miss_complete_next_player_turn_starts_from_zero PASSED [ 45%]
+tests/test_onboarding_pr1.py::test_prompt_no_selection_until_arrow PASSED [ 50%]
+tests/test_onboarding_pr1.py::test_app_boots_to_tutorial_prompt PASSED   [ 54%]
+tests/test_onboarding_pr1.py::test_app_boots_to_vore_prefs_when_prompt_done PASSED [ 59%]
+tests/test_onboarding_pr1.py::test_app_boots_to_menu_when_onboarding_complete PASSED [ 63%]
+tests/test_onboarding_pr1.py::test_no_path_shows_notice_then_vore_prefs PASSED [ 68%]
+tests/test_onboarding_pr1.py::test_yes_path_runs_tutorial_pages_then_vore_prefs PASSED [ 72%]
+tests/test_onboarding_pr1.py::test_vore_prefs_confirm_shows_all_set_then_menu PASSED [ 77%]
+tests/test_onboarding_pr1.py::test_vore_prefs_enter_no_op_without_selection PASSED [ 81%]
+tests/test_onboarding_pr1.py::test_options_tutorial_two_pages_esc_back PASSED [ 86%]
+tests/test_onboarding_pr1.py::test_tutorial_content_includes_key_topics PASSED [ 90%]
+tests/test_onboarding_pr1.py::test_onboarding_notice_advances_on_enter PASSED [ 95%]
+tests/test_onboarding_pr1.py::test_options_tutorial_row PASSED           [100%]
+
+======================= 22 passed in 162.42s (0:02:42) ========================

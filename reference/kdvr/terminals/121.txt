@@ -1,0 +1,19 @@
+---
+pid: 21272
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -c \"
+from unittest.mock import patch
+from src.floor_prefetch import FloorPrefetch, PrefetchParams
+from src.map_gen import GameMap
+params = PrefetchParams(20, 12, False, None, None, 1)
+expected = GameMap(20, 12)
+pf = FloorPrefetch()
+with patch('src.floor_prefetch.generate_dungeon', return_value=expected):
+    pf.schedule(params)
+    r = pf.take(params)
+    print('ok', r is expected)
+pf.shutdown()
+\""
+started_at: 2026-07-03T16:33:01.683Z
+running_for_ms: 22755010 
+---

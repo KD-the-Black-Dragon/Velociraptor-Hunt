@@ -1,7 +1,7 @@
 [project]
-name = "gladiavore"
+name = "velociraptor-hunt"
 version = "0.1.0"
-description = "Gladiavore — career roguelike: arena matches, downtime hub, beast-pit combat"
+description = "Velociraptor Hunt — one-hunt 7DRL"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -10,11 +10,12 @@ dependencies = [
     "numpy>=1.26",
     "Pillow>=10.0",
     "platformdirs>=4.0",
+    "miniaudio>=1.71",
 ]
 
 [project.scripts]
+velociraptor-hunt = "src.main:main"
 gladiavore = "src.main:main"
-# Legacy alias from KDVR clone lineage
 kds-roguelike = "src.main:main"
 
 [project.optional-dependencies]

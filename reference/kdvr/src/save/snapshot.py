@@ -60,6 +60,7 @@ def build_run_snapshot(engine: GameEngine) -> dict[str, Any]:
         "level_warped": bool(engine.level_warped),
         "difficulty_id": engine.difficulty_id,
         "vore_content_prefs": encode_vore_content_prefs(engine.vore_content_prefs),
+        "alternate_cv_mechanics": bool(engine.alternate_cv_mechanics),
         "ui_preset": engine.ui_layout.preset_id,
         "rng_state": encode_rng_state(engine.rng.getstate()),
         "close_door_pending": engine.close_door_pending,
@@ -102,6 +103,7 @@ def apply_run_snapshot(engine: GameEngine, run: dict[str, Any]) -> None:
     )
     engine.difficulty_id = validated
     engine.vore_content_prefs = decode_vore_content_prefs(run["vore_content_prefs"])
+    engine.alternate_cv_mechanics = bool(run.get("alternate_cv_mechanics", False))
     engine.close_door_pending = bool(run.get("close_door_pending", False))
     engine.run_stats = decode_run_stats(run.get("run_stats"))
 
@@ -159,6 +161,7 @@ def apply_run_snapshot(engine: GameEngine, run: dict[str, Any]) -> None:
     engine.game_over.reset()
     engine.skipped_this_phase.clear()
     engine.examine_state.reset()
+    engine.dismiss_state.reset()
     engine.ground_pickup_modal.reset()
     engine.inventory_modal.reset()
     engine.macguffin_discovery = decode_macguffin_discovery(

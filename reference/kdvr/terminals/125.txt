@@ -1,0 +1,988 @@
+---
+pid: 23384
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q"
+started_at: 2026-07-03T23:04:33.030Z
+running_for_ms: 14994997 
+---
+........................................................................ [  9%]
+........................................................................ [ 19%]
+...................F...................................F................ [ 29%]
+....................................................................F... [ 39%]
+..................[prefetch] ready depth=1
+...................................................... [ 49%]
+....F................................................................... [ 59%]
+........................................................................ [ 69%]
+........................................................................ [ 79%]
+........................................................................ [ 89%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+================================== FAILURES ===================================
+_____________________ test_valid_spawn_tile_distribution ______________________
+
+    def test_valid_spawn_tile_distribution() -> None:
+        """Measure candidate tiles on stock maps to inform density_pct tuning (PR2 playtest)."""
+        counts: list[int] = []
+        water_map_count = 0
+        for seed in range(50):
+            game_map = generate_dungeon(
+                MAP_WIDTH,
+                MAP_HEIGHT,
+                max_rooms=MAX_ROOMS,
+                room_min_size=ROOM_MIN_SIZE,
+                room_max_size=ROOM_MAX_SIZE,
+                seed=seed,
+            )
+            counts.append(_valid_spawn_tile_count(game_map))
+            if water_positions(game_map):
+                water_map_count += 1
+    
+        median_tiles = int(statistics.median(counts))
+        config = load_dungeon_spawn_config(DUNGEON_SPAWN_PATH)
+        band = config.resolve_band(1)
+        expected_at_median = round(median_tiles * band.density_pct)
+    
+        print(
+            f"spawn_tile_distribution: median={median_tiles} "
+            f"min={min(counts)} max={max(counts)} "
+            f"water_floors={water_map_count}/50 "
+            f"depth1_nominal_target~{expected_at_median}"
+        )
+    
+        assert median_tiles > 100
+>       assert 12 <= expected_at_median <= 24
+E       assert 26 <= 24
+
+tests\test_dungeon_spawn_config.py:170: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: disconnected_land_after_water
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 7: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 8: layout_carve_failed
+[map_gen] rejected attempt 9: layout_carve_failed
+[map_gen] rejected attempt 10: layout_carve_failed
+[map_gen] rejected attempt 11: layout_carve_failed
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: disconnected_land_after_water
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 6: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[map_gen] rejected attempt 9: layout_carve_failed
+[map_gen] rejected attempt 10: layout_carve_failed
+[map_gen] rejected attempt 1: disconnected_land_after_water
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[map_gen] rejected attempt 9: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 1: rune_sites_infeasible
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_placement_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+spawn_tile_distribution: median=736 min=391 max=1175 water_floors=29/50 depth1_nominal_target~26
+______________________ test_good_chases_evil_not_player _______________________
+
+    def test_good_chases_evil_not_player() -> None:
+        engine = _make_wolf_engine(seed=5)
+        player = engine.player
+        assert player is not None
+        wolf = first_wolf(engine)
+        player_pos = player.components[Position]
+        knight = spawn_test_npc(
+            engine.world,
+            x=player_pos.x,
+            y=player_pos.y + 2,
+            species="knight",
+            alignment=Alignment.GOOD,
+        )
+        wolf.components[Position] = Position(player_pos.x + 3, player_pos.y + 2)
+        update_fov(engine.game_map, knight.components[Position].x, knight.components[Position].y)
+        knight_pos_before = knight.components[Position]
+        run_monster_turns(
+            engine.world,
+            engine.game_map,
+            player,
+            engine.message_log,
+            rng=random.Random(0),
+        )
+>       assert knight.components[Position] != knight_pos_before
+E       assert Position(x=34, y=20) != Position(x=34, y=20)
+
+tests\test_enhancements_2.py:388: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[prefetch] miss -> sync
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[prefetch] miss -> sync
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 1: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 2: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 3: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 4: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 5: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 6: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 7: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 8: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 9: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 10: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 11: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 12: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 13: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 14: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 15: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 16: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 17: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 18: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 19: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 20: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 21: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 22: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 23: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 24: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 25: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 26: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 27: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 28: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 29: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 30: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 31: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 32: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 33: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 34: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 35: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 36: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 37: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 38: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 39: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 40: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 41: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 42: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 43: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 44: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 45: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 46: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 47: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 48: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 49: rune_placement_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] rejected attempt 50: rune_placement_failed
+[floor_init] using best-effort rune placement after failed attempts
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[floor_init] warning: incomplete rune placement on fallback
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+____________________ test_spawn_three_distinct_rune_tiles _____________________
+
+    def test_spawn_three_distinct_rune_tiles() -> None:
+        world = Registry()
+        game_map = rune_placement_arena(width=50, height=12)
+        registry = parse_floor_rune_registry(minimal_floor_runes_payload())
+>       runes = spawn_floor_rune(
+            world,
+            game_map,
+            floor_depth=1,
+            rng=random.Random(9),
+            registry=registry,
+            min_distance=3,
+            count=RUNES_PER_FLOOR,
+        )
+
+tests\test_floor_runes_pr4.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x2106A7A6E20)>: {<class 'src.compon... at 0x00000210643D2B90>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={})
+game_map = GameMap(width=50, height=12, tiles=array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0... False, False, False, False, False,
+        False, False, False, False, False]]), enter_xy=(2, 6), layout_archetype='')
+floor_depth = 1, rng = <random.Random object at 0x0000021064FF9350>
+registry = FloorRuneRegistry(schema_version=1, runes=(FloorRuneDefinition(id='test_rune', display_name='test rune', glyph='0', fg...epth=1, max_depth=1000, effect=RuneEffect(type='max_hp', amount=5, accuracy=None, min_damage=None, max_damage=None)),))
+min_distance = 3, min_pairwise = 20, count = 3
+
+    def spawn_floor_rune(
+        world: Registry,
+        game_map: GameMap,
+        floor_depth: int,
+        *,
+        rng: random.Random | None = None,
+        registry: FloorRuneRegistry | None = None,
+        min_distance: int = RUNE_SPAWN_MIN_DISTANCE,
+        min_pairwise: int = MIN_PAIRWISE_SPREAD_BFS,
+        count: int = RUNES_PER_FLOOR,
+    ) -> list[Entity]:
+        """Place floor runes for this depth on distinct, spread tiles."""
+        rng = rng or random.Random()
+        reg = registry or default_floor_rune_registry()
+        eligible = reg.eligible_at_depth(floor_depth)
+        if not eligible:
+            raise RunePlacementError(f"no runes eligible at depth {floor_depth}")
+    
+        placed: list[Entity] = []
+        placed_positions: list[tuple[int, int]] = []
+        for index in range(count):
+            candidates = rune_candidates_with_path_distance(
+                game_map,
+                world,
+                game_map.enter_xy,
+            )
+            candidates = [
+                (x, y, dist)
+                for x, y, dist in candidates
+                if (x, y) not in placed_positions
+            ]
+            candidates = filter_candidates_by_entrance_distance(
+                candidates,
+                minimum=min_pairwise,
+            )
+            if not candidates:
+                raise RunePlacementError("no valid rune tiles")
+    
+            definition = _weighted_rune_choice(eligible, rng)
+            if index == 0:
+                x, y, _achieved = choose_rune_placement(
+                    candidates,
+                    min_distance=min_distance,
+                    min_relax_to=min_pairwise,
+                    rng=rng,
+                )
+            else:
+                spread_pool = filter_candidates_by_pairwise_spread(
+                    candidates,
+                    placed_positions,
+                    game_map,
+                    minimum=min_pairwise,
+                )
+                if not spread_pool:
+>                   raise RunePlacementError("insufficient pairwise spread for rune placement")
+E                   src.systems.floor_runes.RunePlacementError: insufficient pairwise spread for rune placement
+
+src\systems\floor_runes.py:268: RunePlacementError
+_______________ test_evoke_decrements_charges_and_consumes_turn _______________
+
+    def test_evoke_decrements_charges_and_consumes_turn() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        instance = make_wand_instance(charges=2)
+        player.components[Inventory].slots["a"] = instance
+        wolf = _place_evil_adjacent(engine)
+        turns_before = engine.player_turn_count
+    
+        def _biased_randint(low: int, high: int) -> int:
+            if high > low:
+                return high
+            return low
+    
+        with patch.object(engine.rng, "randint", side_effect=_biased_randint):
+            engine.handle_event(_key(KeySym.v))
+            engine.handle_event(_key(KeySym.a))
+            engine.handle_event(_key(KeySym.RETURN))
+    
+        assert instance.charges == 1
+        assert player.components[Inventory].slots["a"] is instance
+        assert engine.player_turn_count == turns_before + 1
+        assert not engine.inventory_modal.active
+>       assert wolf.components[Fighter].hp < 20
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_inventory_items_pr5.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = EntityComponents(entity=<Entity(uid=object at 0x2106EBD3870)>, traverse=(<class 'tcod.ecs.constants.IsA'>,))
+key = <class 'src.components.Fighter'>
+
+    def __getitem__(self, key: ComponentKey[T]) -> T:
+        """Return a component belonging to this entity, or an indirect parent."""
+        assert self.__assert_key(key)
+        _components_by_entity = self.entity.registry._components_by_entity
+        for entity in _traverse_entities(self.entity, self.traverse):
+            try:
+                return _components_by_entity[entity][key]  # type: ignore[no-any-return]
+            except KeyError:  # noqa: PERF203
+                pass
+>       raise KeyError(key)
+E       KeyError: <class 'src.components.Fighter'>
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\tcod\ecs\entity.py:426: KeyError
+---------------------------- Captured stdout call -----------------------------
+[prefetch] miss -> sync
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: stairs_too_clustered_after_doors
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_dungeon_pr3.py::test_status_corner_shows_floor_depth
+tests/test_ui_status_corner.py::test_engine_render_shows_depth_in_status_corner
+tests/test_ui_status_corner.py::test_engine_render_shows_engulfed_in_status_corner
+tests/test_ui_status_corner.py::test_engine_render_shows_stun_in_status_corner
+tests/test_vore_render.py::test_status_corner_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:64: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_floor_runes_pr4.py::test_screen_flash_only_tints_player_vicinity
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_floor_runes_pr4.py:278: FutureWarning: This attribute has been renamed to `rgba`.
+    tile = console.tiles[y, x]
+
+tests/test_inventory_items_pr3.py::test_sidebar_no_inventory_summary
+tests/test_name_entry.py::test_sidebar_shows_player_name_not_game_title
+tests/test_ui_sidebar.py::test_engine_render_shows_player_in_sidebar
+tests/test_ui_sidebar.py::test_engine_render_sidebar_omits_engulfed_flag
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:50: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_inventory_items_pr4.py::test_player_glyph_renders_over_floor_item_on_same_tile
+tests/test_ui_camera.py::test_player_appears_on_screen_when_centered
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:121: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[map_r.x + screen[0], map_r.y + screen[1]]["ch"])
+
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr5.py:290: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+tests/test_main_menu.py::test_render_main_menu_options_fit_layout_console_height
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:206: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x, row_y]["ch"])) in "> "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:207: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 1, row_y]["ch"])) == " "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:208: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 2, row_y]["ch"])) == option[0]
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:144: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_options_menu.py::test_render_options_menu_shows_ui_layout_row
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_options_menu.py:125: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_ui_bootstrap.py: 29 warnings
+  C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\tcod\tileset.py:237: DeprecationWarning: Assign to a tile using 'tileset[codepoint] = tile' instead.
+    return self.set_tile(codepoint, full_tile)
+
+tests/test_ui_camera.py::test_render_map_with_camera_shows_subset
+tests/test_ui_camera.py::test_render_examine_cursor_respects_camera
+tests/test_ui_camera.py::test_render_entities_off_viewport_are_omitted
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_camera.py:24: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_message_log.py::test_render_message_log_shows_configured_line_count
+tests/test_ui_message_log.py::test_render_message_log_panel_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_message_log.py:22: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_message_log.py::test_render_message_log_panel_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_message_log.py:66: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(log_console.tiles[0, 0]["bg"][:3])
+
+tests/test_ui_message_log.py::test_engine_render_shows_messages_in_message_log_region
+tests/test_ui_regions.py::test_engine_render_uses_region_pipeline
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:36: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_ui_modals.py::test_render_modal_centered_on_root_console
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:24: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(console.tiles[x, y]["bg"][:3])
+
+tests/test_ui_modals.py::test_vore_modal_drawn_on_root_console_over_sidebar
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:53: FutureWarning: This attribute has been renamed to `rgba`.
+    tuple(console.tiles[x, y]["bg"][:3]) == MODAL_BACKGROUND
+
+tests/test_ui_modals.py::test_name_entry_uses_console_height
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:66: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, prompt_y + 2]["ch"])) if int(console.tiles[x, prompt_y + 2]["ch"]) else " "
+
+tests/test_ui_modals.py::test_quit_confirm_centered_on_root_console
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:79: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, prompt_y]["ch"])) if int(console.tiles[x, prompt_y]["ch"]) else " "
+
+tests/test_ui_regions.py::test_blit_region_copies_map_tile_to_root
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_regions.py:22: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_sidebar.py::test_blit_sidebar_copies_player_block_to_root
+tests/test_ui_sidebar.py::test_render_sidebar_player_shows_name_and_hp_on_separate_rows
+tests/test_ui_sidebar.py::test_render_sidebar_player_omits_ailment_flags
+tests/test_ui_sidebar.py::test_sidebar_shows_visible_evil_below_player
+tests/test_ui_sidebar.py::test_sidebar_shows_visible_good_at_bottom
+tests/test_ui_sidebar.py::test_sidebar_omits_neutral_and_out_of_fov_npcs
+tests/test_ui_sidebar.py::test_sidebar_evil_sorted_nearest_first
+tests/test_ui_sidebar.py::test_sidebar_good_nearest_at_bottom_edge
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_sidebar.py:23: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_sidebar.py::test_render_sidebar_player_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_sidebar.py:131: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(side_console.tiles[0, 0]["bg"][:3])
+
+tests/test_ui_status_corner.py::test_render_status_corner_shows_depth
+tests/test_ui_status_corner.py::test_render_status_corner_shows_stun_and_engulfed
+tests/test_ui_status_corner.py::test_render_status_corner_supports_extra_rows
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_status_corner.py:19: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_status_corner.py::test_render_status_corner_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_status_corner.py:68: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(corner.tiles[0, 0]["bg"][:3])
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:164: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.x + 1, pos.y + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:81: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[x, y]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_spawn_config.py::test_valid_spawn_tile_distribution
+FAILED tests/test_enhancements_2.py::test_good_chases_evil_not_player - asser...
+FAILED tests/test_floor_runes_pr4.py::test_spawn_three_distinct_rune_tiles - ...
+FAILED tests/test_inventory_items_pr5.py::test_evoke_decrements_charges_and_consumes_turn
+4 failed, 717 passed, 86 warnings in 1480.70s (0:24:40)

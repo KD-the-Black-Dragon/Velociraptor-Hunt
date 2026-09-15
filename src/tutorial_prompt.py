@@ -22,7 +22,7 @@ from src.ui.proportional_log import (
     overlay_panel_pixel_size,
 )
 
-WELCOME_LINE_1 = "Welcome to Gladiavore."
+WELCOME_LINE_1 = "Welcome to Velociraptor Hunt."
 WELCOME_LINE_2 = "Would you like a tutorial?"
 TUTORIAL_OPTION_YES = "Yes, please!"
 TUTORIAL_OPTION_NO = "No, I'm good."

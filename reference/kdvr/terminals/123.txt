@@ -1,0 +1,10 @@
+---
+pid: 16004
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q --ignore=tests/test_ui_modals.py --ignore=tests/test_vore_render.py"
+started_at: 2026-07-03T22:44:50.480Z
+running_for_ms: 450002   
+---
+........................................................................ [ 10%]
+........................................................................ [ 20%]
+...................F...........................

@@ -1,0 +1,409 @@
+---
+pid: 19176
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q"
+started_at: 2026-06-30T21:53:25.110Z
+running_for_ms: 11530003 
+---
+........................................................................ [ 24%]
+........................FF.............................................. [ 49%]
+........................................................................ [ 74%]
+....................................................................F... [ 99%]
+.                                                                        [100%]
+================================== FAILURES ===================================
+______________________ test_player_swap_with_neutral_npc ______________________
+
+    def test_player_swap_with_neutral_npc() -> None:
+        engine = _make_wolf_engine()
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        villager = spawn_test_npc(
+            engine.world,
+            x=pos.x + 1,
+            y=pos.y,
+            species="villager",
+            alignment=Alignment.NEUTRAL,
+        )
+        villager_pos = villager.components[Position]
+        player_pos_before = Position(pos.x, pos.y)
+        skip_set: set = set()
+>       assert try_action(
+            engine.world,
+            engine.game_map,
+            player,
+            (1, 0),
+            engine.message_log,
+            skip_turn_entities=skip_set,
+        )
+E       AssertionError: assert False
+E        +  where False = try_action(Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1C720222BB0)>: {<class 'src.compon... at 0x000001C71EBF07D0>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}), GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ........, False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(60, 40)), <Entity(uid=object at 0x1C720222BB0)>, (1, 0), <src.message_log.MessageLog object at 0x000001C720655770>, skip_turn_entities=set())
+E        +    where Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1C720222BB0)>: {<class 'src.compon... at 0x000001C71EBF07D0>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}) = <src.engine.GameEngine object at 0x000001C71EED37D0>.world
+E        +    and   GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ........, False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(60, 40)) = <src.engine.GameEngine object at 0x000001C71EED37D0>.game_map
+E        +    and   <src.message_log.MessageLog object at 0x000001C720655770> = <src.engine.GameEngine object at 0x000001C71EED37D0>.message_log
+
+tests\test_enhancements_2.py:505: AssertionError
+______________________ test_player_swap_uses_proper_name ______________________
+
+    def test_player_swap_uses_proper_name() -> None:
+        engine = _make_wolf_engine()
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        knight = spawn_test_npc(
+            engine.world,
+            x=pos.x + 1,
+            y=pos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+        )
+        knight.components[ProperName] = ProperName(name="Sir Aldric")
+        try_action(engine.world, engine.game_map, player, (1, 0), engine.message_log)
+>       assert messages.player_swap_places("Sir Aldric") in engine.message_log.lines()
+E       assert 'You swap places with Sir Aldric.' in ["Welcome to KD's Vore Roguelike."]
+E        +  where 'You swap places with Sir Aldric.' = <function player_swap_places at 0x000001C7081F8BF0>('Sir Aldric')
+E        +    where <function player_swap_places at 0x000001C7081F8BF0> = messages.player_swap_places
+E        +  and   ["Welcome to KD's Vore Roguelike."] = lines()
+E        +    where lines = <src.message_log.MessageLog object at 0x000001C72069ADA0>.lines
+E        +      where <src.message_log.MessageLog object at 0x000001C72069ADA0> = <src.engine.GameEngine object at 0x000001C71EED3A10>.message_log
+
+tests\test_enhancements_2.py:533: AssertionError
+___________________ test_miss_resumes_at_next_monster_index ___________________
+
+    def test_miss_resumes_at_next_monster_index() -> None:
+        engine = GameEngine()
+        _move_non_wolves_away(engine)
+        _stun_player(engine)
+        player = engine.player
+        assert player is not None
+        player_pos = player.components[Position]
+        monsters = _sorted_wolves(engine)
+        assert len(monsters) >= 2
+    
+        for index, wolf in enumerate(monsters):
+            if index == 0:
+                _place_wolf_at(engine, wolf, player_pos.x + 1, player_pos.y)
+            elif index == 1:
+                _place_wolf_at(engine, wolf, player_pos.x + 3, player_pos.y)
+            else:
+                _place_wolf_at(engine, wolf, player_pos.x + 20, player_pos.y + 20)
+        update_fov(engine.game_map, player_pos.x, player_pos.y)
+    
+        acted: list[object] = []
+        original = run_monster_turns.__globals__["try_action"]
+    
+        def _track_try_action(world, game_map, actor, direction, message_log, **kwargs):
+            acted.append(actor)
+            return original(world, game_map, actor, direction, message_log, **kwargs)
+    
+        opener = monsters[0]
+        runner_up = monsters[1]
+        with patch("src.systems.ai.try_action", side_effect=_track_try_action):
+            with patch("src.systems.vore.resolve_vore_hit", return_value=False):
+                engine._consume_player_turn()
+                assert engine.vore_modal.active
+                assert engine.vore_modal.resume_monster_index == _monster_index(engine, opener)
+                assert engine.vore_modal.predator is opener
+                _resolve_miss_modal(engine)
+    
+        assert opener not in acted
+>       assert runner_up in acted
+E       assert <Entity(uid=object at 0x1C720D13960)> in []
+
+tests\test_vore_turn_order.py:112: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {93, 43} is out of bounds.
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:114: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:68: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:159: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:73: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+  C:\VS Code Projects\kds-vore-roguelike\src\systems\fov.py:23: RuntimeWarning: Given pov index (43, 93) is outside the array of shape (44, 80).
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_enhancements_2.py::test_player_swap_with_neutral_npc - Asse...
+FAILED tests/test_enhancements_2.py::test_player_swap_uses_proper_name - asse...
+FAILED tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+3 failed, 286 passed, 15 warnings in 38.91s

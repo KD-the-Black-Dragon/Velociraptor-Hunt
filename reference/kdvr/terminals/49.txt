@@ -1,0 +1,102 @@
+---
+pid: 1252
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_npc_data_pr2.py tests/test_dungeon_pr2.py tests/test_dungeon_pr3.py tests/test_vore_constants.py tests/test_enhancements_3.py::test_spawn_fixed_population_counts tests/test_enhancements_3.py::test_wolf_outdamages_knight_at_spawn -v --tb=short 2>&1"
+started_at: 2026-07-01T13:31:42.426Z
+running_for_ms: 18884990 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+collecting ... collected 47 items
+
+tests/test_npc_data_pr2.py::test_spawn_weight_parity_with_legacy_counts PASSED [  2%]
+tests/test_npc_data_pr2.py::test_spawn_from_definition_uses_json_combat_stats PASSED [  4%]
+tests/test_npc_data_pr2.py::test_resolve_attack_miss_when_evade_roll_meets_accuracy PASSED [  6%]
+tests/test_npc_data_pr2.py::test_resolve_attack_hit_when_evade_roll_below_accuracy PASSED [  8%]
+tests/test_npc_data_pr2.py::test_resolve_attack_damage_floors_at_zero PASSED [ 10%]
+tests/test_npc_data_pr2.py::test_resolve_attack_fixed_damage_when_min_equals_max FAILED [ 12%]
+tests/test_npc_data_pr2.py::test_spawn_floor_population_land_only_without_water FAILED [ 14%]
+tests/test_npc_data_pr2.py::test_spawn_floor_population_includes_sharks_when_water_present FAILED [ 17%]
+tests/test_npc_data_pr2.py::test_good_follower_reduction_removes_knight_slots FAILED [ 19%]
+tests/test_npc_data_pr2.py::test_generated_dungeon_spawns_expected_ai_total PASSED [ 21%]
+tests/test_dungeon_pr2.py::test_generated_map_has_connected_land PASSED  [ 23%]
+tests/test_dungeon_pr2.py::test_three_stairs_all_reachable PASSED        [ 25%]
+tests/test_dungeon_pr2.py::test_many_seeds_produce_valid_maps PASSED     [ 27%]
+tests/test_dungeon_pr2.py::test_water_features_are_shaped_when_present PASSED [ 29%]
+tests/test_dungeon_pr2.py::test_water_testing_mode_increases_coverage PASSED [ 31%]
+tests/test_dungeon_pr2.py::test_stairs_are_land_traversable PASSED       [ 34%]
+tests/test_dungeon_pr2.py::test_adequate_spawn_space_from_entrance PASSED [ 36%]
+tests/test_dungeon_pr2.py::test_land_count_matches_reachable PASSED      [ 38%]
+tests/test_dungeon_pr3.py::test_new_game_starts_at_depth_one PASSED      [ 40%]
+tests/test_dungeon_pr3.py::test_new_game_resets_depth PASSED             [ 42%]
+tests/test_dungeon_pr3.py::test_unshifted_period_still_waits PASSED      [ 44%]
+tests/test_dungeon_pr3.py::test_descend_not_on_stairs_no_turn PASSED     [ 46%]
+tests/test_dungeon_pr3.py::test_descend_engulfed_no_turn PASSED          [ 48%]
+tests/test_dungeon_pr3.py::test_descend_from_stairs_advances_depth_and_regenerates_map PASSED [ 51%]
+tests/test_dungeon_pr3.py::test_descend_preserves_player_hp_and_inventory PASSED [ 53%]
+tests/test_dungeon_pr3.py::test_visible_knight_follows_on_descent PASSED [ 55%]
+tests/test_dungeon_pr3.py::test_hidden_knight_does_not_follow PASSED     [ 57%]
+tests/test_dungeon_pr3.py::test_followers_reduce_fresh_knight_spawns PASSED [ 59%]
+tests/test_dungeon_pr3.py::test_descend_respawns_monsters_and_items PASSED [ 61%]
+tests/test_dungeon_pr3.py::test_depth_caps_at_maximum PASSED             [ 63%]
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth PASSED      [ 65%]
+tests/test_dungeon_pr3.py::test_player_on_stairs_tile PASSED             [ 68%]
+tests/test_vore_constants.py::test_hp_fraction_clamps PASSED             [ 70%]
+tests/test_vore_constants.py::test_is_vore_eligible_at_threshold PASSED  [ 72%]
+tests/test_vore_constants.py::test_vore_decision_chance_boundaries PASSED [ 74%]
+tests/test_vore_constants.py::test_vore_hit_chance_boundaries PASSED     [ 76%]
+tests/test_vore_constants.py::test_vore_escape_constants_defaults PASSED [ 78%]
+tests/test_vore_constants.py::test_disabled_prefs_respect_enabled_set PASSED [ 80%]
+tests/test_vore_constants.py::test_default_prefs_enable_all_types PASSED [ 82%]
+tests/test_vore_constants.py::test_pick_narrative_type_equal_weight PASSED [ 85%]
+tests/test_vore_constants.py::test_get_narrative_phases_wolf_ov PASSED   [ 87%]
+tests/test_vore_constants.py::test_spawn_tags_wolf_vore_capable PASSED   [ 89%]
+tests/test_vore_constants.py::test_new_game_seeded_rng PASSED            [ 91%]
+tests/test_vore_constants.py::test_f2_debug_weakens_monsters PASSED      [ 93%]
+tests/test_vore_constants.py::test_f2_before_inventory_routing PASSED    [ 95%]
+tests/test_enhancements_3.py::test_spawn_fixed_population_counts PASSED  [ 97%]
+tests/test_enhancements_3.py::test_wolf_outdamages_knight_at_spawn PASSED [100%]
+
+================================== FAILURES ===================================
+____________ test_resolve_attack_fixed_damage_when_min_equals_max _____________
+tests\test_npc_data_pr2.py:86: in test_resolve_attack_fixed_damage_when_min_equals_max
+    assert damage == 6
+E   assert 3 == 6
+_____________ test_spawn_floor_population_land_only_without_water _____________
+tests\test_npc_data_pr2.py:108: in test_spawn_floor_population_land_only_without_water
+    assert len(spawned) == expected_floor_npc_count(has_water=False)
+E   assert 0 == 17
+E    +  where 0 = len([])
+E    +  and   17 = expected_floor_npc_count(has_water=False)
+_______ test_spawn_floor_population_includes_sharks_when_water_present ________
+tests\test_npc_data_pr2.py:128: in test_spawn_floor_population_includes_sharks_when_water_present
+    assert len(spawned) == expected_floor_npc_count(has_water=True)
+E   assert 2 == 19
+E    +  where 2 = len([<Entity(uid=object at 0x1E1EEDE1C00)>, <Entity(uid=object at 0x1E1EEDE1BB0)>])
+E    +  and   19 = expected_floor_npc_count(has_water=True)
+______________ test_good_follower_reduction_removes_knight_slots ______________
+tests\test_npc_data_pr2.py:146: in test_good_follower_reduction_removes_knight_slots
+    assert species.count("knight") == spawn_weight("knight") - 1
+E   AssertionError: assert 0 == (5 - 1)
+E    +  where 0 = <built-in method count of list object at 0x000001E1FF266F40>('knight')
+E    +    where <built-in method count of list object at 0x000001E1FF266F40> = [].count
+E    +  and   5 = spawn_weight('knight')
+============================== warnings summary ===============================
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:242: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:241: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_npc_data_pr2.py::test_resolve_attack_fixed_damage_when_min_equals_max
+FAILED tests/test_npc_data_pr2.py::test_spawn_floor_population_land_only_without_water
+FAILED tests/test_npc_data_pr2.py::test_spawn_floor_population_includes_sharks_when_water_present
+FAILED tests/test_npc_data_pr2.py::test_good_follower_reduction_removes_knight_slots
+================== 4 failed, 43 passed, 2 warnings in 29.75s ==================

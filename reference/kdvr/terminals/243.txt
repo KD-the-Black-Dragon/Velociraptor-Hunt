@@ -1,0 +1,22 @@
+---
+pid: 16872
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -u -c \"
+import time
+from src.sim.data_loader import install_stock_game_data
+install_stock_game_data()
+from src.engine import GameEngine
+from src.components import FloorRune, Position
+for seed in [3,4,5]:
+    t0=time.perf_counter()
+    e=GameEngine(save_coordinator=None, skip_new_game=True)
+    e.new_game(seed=seed, log_session_milestones=False)
+    n=len(list(e.world.Q.all_of(components=[FloorRune, Position])))
+    print('seed', seed, 'runes', n, 'elapsed', round(time.perf_counter()-t0,1), flush=True)
+\""
+started_at: 2026-07-12T00:34:43.304Z
+running_for_ms: 36825012 
+---
+seed 3 runes 0 elapsed 78.7
+seed 4 runes 0 elapsed 63.4
+seed 5 runes 0 elapsed 58.8

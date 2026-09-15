@@ -11,6 +11,7 @@ from tcod.event import KeySym
 
 from src import messages
 from src.components import EquipState, Inventory, InventoryItemInstance, Item, ItemCategory, Player, Position
+from src.constants import VoreContentPreferences
 from src.data.item_registry import ItemRegistry
 from src.input_handlers import DIRECTION_KEYS, MODAL_ADVANCE_KEYS
 from src.map_gen import GameMap
@@ -103,9 +104,9 @@ def occupied_slots(inventory: Inventory) -> list[tuple[str, InventoryItemInstanc
 def _plural_display_name(display_name: str, count: int) -> str:
     if count == 1:
         return display_name
-    if display_name.endswith("s"):
-        return display_name
-    return f"{display_name}s"
+    from src.text import pluralize_item_display_name
+
+    return pluralize_item_display_name(display_name)
 
 
 def _stack_label(instance: InventoryItemInstance, display_name: str) -> str:
@@ -157,9 +158,10 @@ def format_item_detail_text(
     lines: list[str] = []
 
     title = display
-    if slot_letter == wielded_slot:
+    # Require an explicit slot — ``None == None`` must not mark floor items wielded.
+    if slot_letter is not None and slot_letter == wielded_slot:
         title = f"{display} (wielded)"
-    elif slot_letter == worn_slot:
+    elif slot_letter is not None and slot_letter == worn_slot:
         title = f"{display} (worn)"
     lines.append(title)
 
@@ -219,9 +221,32 @@ def format_floor_item_detail_text(floor_item: Item, registry: ItemRegistry | Non
         category=floor_item.category,
         durability=floor_item.durability,
         charges=floor_item.charges,
-        stack_count=1,
+        stack_count=max(1, int(floor_item.stack_count)),
     )
+    # No inventory slot → never show (wielded)/(worn).
     return format_item_detail_text(instance, reg)
+
+
+def format_floor_items_list_text(
+    floor_items: list[Item],
+    registry: ItemRegistry | None = None,
+) -> str:
+    """Multi-item ground examine: names only (stacks counted as one entry)."""
+    from src import messages
+
+    reg = registry or item_registry()
+    lines = [messages.examine_items_on_floor_header()]
+    for floor_item in floor_items:
+        display = reg.display_name_for(floor_item.item_id, floor_item.category)
+        instance = InventoryItemInstance(
+            item_id=floor_item.item_id,
+            category=floor_item.category,
+            durability=floor_item.durability,
+            charges=floor_item.charges,
+            stack_count=max(1, int(floor_item.stack_count)),
+        )
+        lines.append(_stack_label(instance, display))
+    return "\n".join(lines)
 
 
 def _list_modal_text(
@@ -725,6 +750,7 @@ def handle_inventory_modal_letter(
     floor_depth: int = 1,
     difficulty_id: str | None = None,
     rng: random.Random | None = None,
+    vore_prefs: VoreContentPreferences | None = None,
 ) -> bool:
     """
     Handle a letter key in an inventory modal.
@@ -777,6 +803,7 @@ def handle_inventory_modal_letter(
             floor_depth=floor_depth,
             difficulty_id=difficulty_id,
             rng=rng,
+            vore_prefs=vore_prefs,
         ):
             modal.reset()
             return True

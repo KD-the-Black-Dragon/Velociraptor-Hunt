@@ -280,13 +280,27 @@ def test_player_hit_wolf_uses_species_name() -> None:
 
 
 def test_wolf_hit_player_uses_species_name() -> None:
+    import random
+
     engine = _make_wolf_engine()
     player = engine.player
     assert player is not None
     wolf = first_wolf(engine)
     pos = player.components[Position]
     wolf.components[Position] = Position(pos.x - 1, pos.y)
-    try_action(engine.world, engine.game_map, wolf, (1, 0), engine.message_log)
+    # Seeded + retry: high stock player evade can miss unseeded single bump.
+    rng = random.Random(0)
+    for _ in range(20):
+        try_action(
+            engine.world,
+            engine.game_map,
+            wolf,
+            (1, 0),
+            engine.message_log,
+            rng=rng,
+        )
+        if any("The wolf hits you for" in line for line in engine.message_log.lines()):
+            break
     assert any("The wolf hits you for" in line for line in engine.message_log.lines())
 
 

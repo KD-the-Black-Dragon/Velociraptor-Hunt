@@ -1,1 +1,1 @@
-"""Gladiavore — career roguelike (arena matches + downtime)."""
+"""Velociraptor Hunt — one-hunt 7DRL (Gladiavore donor snapshot)."""

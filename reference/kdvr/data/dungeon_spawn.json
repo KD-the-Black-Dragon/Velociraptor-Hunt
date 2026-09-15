@@ -2,14 +2,14 @@
   "schema_version": 1,
   "defaults": {
     "density_pct": 0.02,
-    "density_variance": 0.25,
+    "density_variance": 0.20,
     "min_npcs": 10,
     "max_npcs": 15
   },
   "depth_bands": [
-    { "min_depth": 1, "max_depth": 4, "density_pct": 0.036, "density_variance": 0.35 },
-    { "min_depth": 5, "max_depth": 9, "density_pct": 0.048, "density_variance": 0.30 },
-    { "min_depth": 10, "max_depth": 19, "density_pct": 0.060, "density_variance": 0.25 },
-    { "min_depth": 20, "max_depth": 1000, "density_pct": 0.072, "density_variance": 0.20 }
+    { "min_depth": 1, "max_depth": 4, "density_pct": 0.02, "density_variance": 0.20 },
+    { "min_depth": 5, "max_depth": 9, "density_pct": 0.02, "density_variance": 0.20 },
+    { "min_depth": 10, "max_depth": 19, "density_pct": 0.02, "density_variance": 0.20 },
+    { "min_depth": 20, "max_depth": 1000, "density_pct": 0.02, "density_variance": 0.20 }
   ]
 }

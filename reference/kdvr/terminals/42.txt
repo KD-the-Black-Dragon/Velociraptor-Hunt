@@ -1,0 +1,7 @@
+---
+pid: 3892
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; foreach ($n in 1..30) { python -m pytest tests/test_enhancements_3.py::test_rabbit_stunned_not_removed -q --tb=no 2>&1 | Select-String 'FAILED'; if ($LASTEXITCODE -ne 0) { Write-Output \"fail $n\" } }"
+started_at: 2026-07-01T11:58:19.566Z
+running_for_ms: 24484993 
+---

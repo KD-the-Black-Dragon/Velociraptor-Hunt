@@ -1,0 +1,9 @@
+---
+pid: 9948
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_explore_frustration.py tests/test_explore_reachable_goals.py tests/test_neutral_explore_antistuck.py -q --tb=short"
+started_at: 2026-07-05T10:32:31.247Z
+running_for_ms: 44929991 
+---
+...................                                                      [100%]
+19 passed in 14.86s

@@ -11,12 +11,12 @@ from src.input_handlers import MODAL_ADVANCE_KEYS
 from src.menu_title import TITLE_BANNER_HEIGHT, render_title_banner
 
 _ALL_MENU_OPTION_LABELS: tuple[str, ...] = (
-    "New Game",
-    "Load Game",
-    "Past Runs",
+    "Continue Hunt",
+    "New Hunt",
+    "Training Mode",
+    "Stats",
     "Options",
-    "Credits",
-    "Exit",
+    "Quit",
 )
 
 MENU_LINE_WIDTH = max(len(f"> {option}") for option in _ALL_MENU_OPTION_LABELS)
@@ -34,38 +34,39 @@ _MENU_NAV_DOWN: frozenset[KeySym] = frozenset({
 
 def build_menu_options(
     *,
-    load_available: bool,
+    load_available: bool = False,
     past_runs_available: bool = False,
+    continue_available: bool = False,
 ) -> tuple[str, ...]:
-    """Build visible main-menu options (conditional Load Game and Past Runs)."""
-    options: list[str] = ["New Game"]
-    if load_available:
-        options.append("Load Game")
-    if past_runs_available:
-        options.append("Past Runs")
-    options.extend(["Options", "Credits", "Exit"])
-    return tuple(options)
+    """Build visible main-menu options (hunt shell)."""
+    del load_available, past_runs_available
+    if continue_available:
+        return ("Continue Hunt", "New Hunt", "Training Mode", "Stats", "Options", "Quit")
+    return ("New Hunt", "Training Mode", "Stats", "Options", "Quit")
 
 
 class MenuAction(Enum):
     """Outcome of main-menu input handling."""
 
     NONE = auto()
-    NEW_GAME = auto()
+    CONTINUE_HUNT = auto()
+    NEW_HUNT = auto()
+    TRAINING = auto()
+    STATS = auto()
+    OPTIONS = auto()
+    EXIT = auto()
+    # Donor aliases kept so leftover tests that still name them fail clearly.
+    NEW_GAME = NEW_HUNT
     LOAD_GAME = auto()
     PAST_RUNS = auto()
-    OPTIONS = auto()
     CREDITS = auto()
-    EXIT = auto()
 
 
 @attrs.define
 class MainMenuState:
     """Highlight index for the root main menu."""
 
-    options: tuple[str, ...] = attrs.field(
-        factory=lambda: build_menu_options(load_available=True),
-    )
+    options: tuple[str, ...] = attrs.field(factory=build_menu_options)
     highlight: int = 0
 
     def move_up(self) -> None:
@@ -130,17 +131,17 @@ def handle_main_menu_event(
         state.move_down()
     elif sym in MODAL_ADVANCE_KEYS:
         option = state.highlighted_option
-        if option == "New Game":
-            return MenuAction.NEW_GAME
-        if option == "Load Game":
-            return MenuAction.LOAD_GAME
-        if option == "Past Runs":
-            return MenuAction.PAST_RUNS
+        if option == "Continue Hunt":
+            return MenuAction.CONTINUE_HUNT
+        if option == "New Hunt":
+            return MenuAction.NEW_HUNT
+        if option == "Training Mode":
+            return MenuAction.TRAINING
+        if option == "Stats":
+            return MenuAction.STATS
         if option == "Options":
             return MenuAction.OPTIONS
-        if option == "Credits":
-            return MenuAction.CREDITS
-        if option == "Exit":
+        if option == "Quit":
             return MenuAction.EXIT
     return MenuAction.NONE
 
@@ -155,8 +156,17 @@ def render_main_menu(console: tcod.console.Console, state: MainMenuState) -> Non
     console.clear()
 
     options_start_y = console.height - len(state.options) - 3
-    title_y = max(2, (options_start_y - TITLE_BANNER_HEIGHT) // 2)
+    title_y = max(2, (options_start_y - TITLE_BANNER_HEIGHT - 2) // 2)
     render_title_banner(console, y=title_y, width=console.width)
+    hunt_label = "HUNT"
+    hunt_y = title_y + TITLE_BANNER_HEIGHT + 1
+    if hunt_y < options_start_y:
+        console.print(
+            max(0, (console.width - len(hunt_label)) // 2),
+            hunt_y,
+            hunt_label,
+            fg=(255, 220, 120),
+        )
     menu_x = _menu_block_x(console)
     for index, option in enumerate(state.options):
         prefix = "> " if index == state.highlight else "  "

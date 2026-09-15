@@ -1,0 +1,56 @@
+{
+  "cycle_aut": 40.0,
+  "audio_fade": 0.3,
+  "layer_crossfade_seconds": 3.0,
+  "loop_crossfade_seconds": 6.0,
+  "levels": [
+    {
+      "id": "light",
+      "label": "light rain",
+      "hunter_vision_penalty": 0,
+      "raptor_vision_penalty": 3,
+      "hunter_grass_see": 2,
+      "raptor_grass_see": 2,
+      "hear_range": 10,
+      "hide_sound_chance": 0.15,
+      "false_alarm_chance": 0.05,
+      "prints_outside_fov": false,
+      "print_ttl": 12.0,
+      "audio": 0.25
+    },
+    {
+      "id": "medium",
+      "label": "rain",
+      "hunter_vision_penalty": 4,
+      "raptor_vision_penalty": 0,
+      "hunter_grass_see": 2,
+      "raptor_grass_see": 2,
+      "hear_range": 7,
+      "hide_sound_chance": 0.4,
+      "false_alarm_chance": 0.28,
+      "prints_outside_fov": false,
+      "print_ttl": 18.0,
+      "audio": 0.55
+    },
+    {
+      "id": "heavy",
+      "label": "heavy rain",
+      "hunter_vision_penalty": 7,
+      "raptor_vision_penalty": 0,
+      "hunter_grass_see": 1,
+      "raptor_grass_see": 2,
+      "hear_range": 4,
+      "hide_sound_chance": 0.7,
+      "false_alarm_chance": 0.55,
+      "prints_outside_fov": true,
+      "print_ttl": 26.0,
+      "audio": 1.0
+    }
+  ],
+  "gait_hide_adjust": {
+    "walk": 0.0,
+    "quick": -0.1,
+    "sneak": 0.25,
+    "run": -0.25
+  }
+}

@@ -24,16 +24,21 @@ def test_stock_alliance_loads() -> None:
     assert pot.effect == "summon_ally"
 
 
-def test_good_pool_includes_knight_at_depth_1() -> None:
+def test_good_pool_includes_depth_eligible_allies() -> None:
+    """Stock goods: dog_squire 2–4, knight 5–7; floor 1 has no goods."""
     from src.data.entity_loader import load_entity_registry, reset_entity_registry_cache
 
     reset_entity_registry_cache()
     reg = load_entity_registry()
-    pool = good_summon_pool(reg, floor_depth=1)
-    ids = {d.id for d in pool}
-    assert "knight" in ids
-    assert all(d.alignment == Alignment.GOOD for d in pool)
-    assert all(d.spawn.weight > 0 for d in pool)
+    pool_3 = good_summon_pool(reg, floor_depth=3)
+    ids_3 = {d.id for d in pool_3}
+    assert "dog_squire" in ids_3
+    assert "knight" not in ids_3
+    assert all(d.alignment == Alignment.GOOD for d in pool_3)
+    assert all(d.spawn.weight > 0 for d in pool_3)
+    pool_6 = good_summon_pool(reg, floor_depth=6)
+    assert "knight" in {d.id for d in pool_6}
+    assert "dog_squire" not in {d.id for d in good_summon_pool(reg, floor_depth=1)}
 
 
 def test_quaff_alliance_spawns_good_ally() -> None:
@@ -42,6 +47,7 @@ def test_quaff_alliance_spawns_good_ally() -> None:
     isolate_other_ais(engine)
     player = engine.player
     assert player is not None
+    engine.floor_depth = 3  # knight eligible
     before = sum(
         1
         for e in engine.world.Q.all_of(components=[NPCAlignment])
@@ -88,7 +94,7 @@ def test_try_summon_places_adjacent_when_free() -> None:
         player,
         engine.world,
         engine.game_map,
-        floor_depth=1,
+        floor_depth=3,
         rng=random.Random(0),
     )
     assert ally is not None

@@ -1,0 +1,81 @@
+---
+pid: 28804
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_floor_runes_pr3.py tests/test_dungeon_layout_pr3.py -q"
+started_at: 2026-07-03T16:11:57.818Z
+running_for_ms: 24019990 
+---
+....F.............                                                       [100%]
+================================== FAILURES ===================================
+____________________ test_rune_placed_on_floor_not_stairs _____________________
+
+    def test_rune_placed_on_floor_not_stairs() -> None:
+        world = Registry()
+        game_map = rune_placement_arena()
+        stairs_x, stairs_y = 10, game_map.height // 2
+        game_map.tiles[stairs_y, stairs_x] = Tile.STAIRS_DOWN
+        registry = load_floor_rune_registry(FLOOR_RUNES_PATH)
+>       rune = spawn_floor_rune(
+            world,
+            game_map,
+            floor_depth=1,
+            rng=random.Random(0),
+            registry=registry,
+            min_distance=5,
+            count=1,
+        )[0]
+
+tests\test_floor_runes_pr3.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = Registry(_components_by_entity=defaultdict(<class 'dict'>, {}), _components_by_type=defaultdict(<class 'dict'>, {}), _... at 0x000002ACA3CE2B90>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={})
+game_map = GameMap(width=40, height=20, tiles=array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0...False, False, False, False, False, False,
+        False, False, False, False]]), enter_xy=(2, 10), layout_archetype='')
+floor_depth = 1, rng = <random.Random object at 0x000002AC8B9A68B0>
+registry = FloorRuneRegistry(schema_version=1, runes=(FloorRuneDefinition(id='vitality_rune', display_name='rune of vitality', gl...h=1, max_depth=1000, effect=RuneEffect(type='natural_ac', amount=1, accuracy=None, min_damage=None, max_damage=None))))
+min_distance = 5, min_pairwise = 20, count = 1
+
+    def spawn_floor_rune(
+        world: Registry,
+        game_map: GameMap,
+        floor_depth: int,
+        *,
+        rng: random.Random | None = None,
+        registry: FloorRuneRegistry | None = None,
+        min_distance: int = RUNE_SPAWN_MIN_DISTANCE,
+        min_pairwise: int = MIN_PAIRWISE_SPREAD_BFS,
+        count: int = RUNES_PER_FLOOR,
+    ) -> list[Entity]:
+        """Place floor runes for this depth on distinct, spread tiles."""
+        rng = rng or random.Random()
+        reg = registry or default_floor_rune_registry()
+        eligible = reg.eligible_at_depth(floor_depth)
+        if not eligible:
+            raise RunePlacementError(f"no runes eligible at depth {floor_depth}")
+    
+        placed: list[Entity] = []
+        placed_positions: list[tuple[int, int]] = []
+        for index in range(count):
+            candidates = rune_candidates_with_path_distance(
+                game_map,
+                world,
+                game_map.enter_xy,
+            )
+            candidates = [
+                (x, y, dist)
+                for x, y, dist in candidates
+                if (x, y) not in placed_positions
+            ]
+            candidates = filter_candidates_by_entrance_distance(
+                candidates,
+                minimum=min_pairwise,
+            )
+            if not candidates:
+>               raise RunePlacementError("no valid rune tiles")
+E               src.systems.floor_runes.RunePlacementError: no valid rune tiles
+
+src\systems\floor_runes.py:250: RunePlacementError
+=========================== short test summary info ===========================
+FAILED tests/test_floor_runes_pr3.py::test_rune_placed_on_floor_not_stairs - ...
+1 failed, 17 passed in 35.80s

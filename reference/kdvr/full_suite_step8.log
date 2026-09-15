@@ -1,0 +1,54 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+created: 4/4 workers
+4 workers [1653 items]
+
+........................................................................ [  4%]
+......................................................................F. [  8%]
+........................................................................ [ 13%]
+........................................................................ [ 17%]
+........................................................................ [ 21%]
+........................................................................ [ 26%]
+........................................................................ [ 30%]
+........................................................................ [ 34%]
+........................................................................ [ 39%]
+........................................................................ [ 43%]
+........................................................................ [ 47%]
+........................................................................ [ 52%]
+........................................................................ [ 56%]
+........................................................................ [ 60%]
+...ss................................................................... [ 65%]
+........................................................................ [ 69%]
+........................................................................ [ 74%]
+.....................F.................................................. [ 78%]
+........................................................................ [ 82%]
+........................................................................ [ 87%]
+........................................................................ [ 91%]
+........................................................................ [ 95%]
+.....................................................................    [100%]
+================================== FAILURES ===================================
+[gw3] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Programs\Python\Python314\python.exe
+E   assert False
+     +  where False = any(<generator object test_wolf_hit_player_uses_species_name.<locals>.<genexpr> at 0x00000153E1104A00>)
+C:\VS Code Projects\kds-vore-roguelike\tests\test_enhancements_2.py:290: assert False
+[gw2] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Programs\Python\Python314\python.exe
+E   AssertionError: assert 0.7503396000247449 <= 0.6
+     +  where 0.7503396000247449 = TrajectoryPassResult(runs=[SimTrajectoryRunResult(seed=1, difficulty_id='normal', termination=<SimTerminationReason.TI...apon_damage_sum=8, armor_ac=1, heal_potions=0, might_potions=0, haste_potions=0, teleport_potions=0, wand_charges=0)})).wall_seconds
+C:\VS Code Projects\kds-vore-roguelike\tests\test_sim_runner.py:210: AssertionError: assert 0.7503396000247449 <= 0.6
+============================== warnings summary ===============================
+tests/test_log_font.py::test_load_log_font_state_missing_path_falls_back
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_log_font.py:51: UserWarning: message log TTF not found at C:\Users\hybri\AppData\Local\Temp\pytest-of-hybri\pytest-32\popen-gw1\test_load_log_font_state_missi0\missing.ttf; using CP437 for the log panel
+    state = load_log_font_state(tile_px=12, tile_scale=2, font_path=missing)
+
+tests/test_ui_bootstrap.py: 29 warnings
+  C:\Users\hybri\AppData\Local\Programs\Python\Python314\Lib\site-packages\tcod\tileset.py:237: DeprecationWarning: Assign to a tile using 'tileset[codepoint] = tile' instead.
+    return self.set_tile(codepoint, full_tile)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_enhancements_2.py::test_wolf_hit_player_uses_species_name
+FAILED tests/test_sim_runner.py::test_trajectory_pass_respects_time_budget - ...
+===== 2 failed, 1649 passed, 2 skipped, 30 warnings in 1139.97s (0:18:59) =====

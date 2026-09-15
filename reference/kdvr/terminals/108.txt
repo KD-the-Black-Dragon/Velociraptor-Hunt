@@ -1,0 +1,9 @@
+---
+pid: 22588
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_dungeon_layout_pr2.py tests/test_dungeon_layout_pr0.py -q"
+started_at: 2026-07-03T14:36:34.966Z
+running_for_ms: 29745009 
+---
+.......................                                                  [100%]
+23 passed in 22.35s

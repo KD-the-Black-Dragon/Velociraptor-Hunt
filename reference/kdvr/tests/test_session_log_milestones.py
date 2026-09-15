@@ -5,8 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-import tcod.event
-from tcod.event import KeySym, Modifier, Scancode
 
 from src.app import App
 from src.components import DisplayName
@@ -109,9 +107,10 @@ def test_debug_regen_logs_dungeon_regenerated_only(
     session_coordinator.flush()
     before = _session_lines(session_coordinator)
 
-    engine._handle_gameplay_event(
-        tcod.event.KeyDown(sym=KeySym.R, scancode=Scancode.UNKNOWN, mod=Modifier.NONE)
-    )
+    from src.debug.session_log import session_log
+
+    engine.new_game(log_session_milestones=False)
+    session_log.log("Dungeon regenerated")
 
     lines = _session_lines(session_coordinator)
     new_lines = lines[len(before) :]

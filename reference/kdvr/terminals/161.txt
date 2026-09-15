@@ -1,0 +1,55 @@
+---
+pid: 17376
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "C:\\Users\\hybri\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe -m pytest \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_save_game_over_pr5.py\" \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_save_snapshot.py\" \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_save_store.py\" \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_save_coordinator.py\" \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_save_menu_pr4.py\" \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_save_write_failure.py\" -v --tb=short"
+started_at: 2026-07-05T15:19:38.034Z
+running_for_ms: 27704999 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+collecting ... collected 39 items
+
+tests/test_save_game_over_pr5.py::test_game_over_open_deletes_all_save_files PASSED [  2%]
+tests/test_save_game_over_pr5.py::test_menu_omits_load_after_game_over_recap PASSED [  5%]
+tests/test_save_snapshot.py::test_round_trip_player_position_and_turn_count PASSED [  7%]
+tests/test_save_snapshot.py::test_round_trip_map_explored PASSED         [ 10%]
+tests/test_save_snapshot.py::test_round_trip_inventory_and_progression PASSED [ 12%]
+tests/test_save_snapshot.py::test_round_trip_npc_ai_state PASSED         [ 15%]
+tests/test_save_snapshot.py::test_round_trip_predator_prey_link PASSED   [ 17%]
+tests/test_save_snapshot.py::test_round_trip_message_log_and_metadata PASSED [ 20%]
+tests/test_save_store.py::test_probe_false_when_directory_empty PASSED   [ 23%]
+tests/test_save_store.py::test_probe_true_after_valid_save PASSED        [ 25%]
+tests/test_save_store.py::test_write_and_rotate_produces_backup_chain PASSED [ 28%]
+tests/test_save_store.py::test_corrupt_primary_falls_back_to_bak1 PASSED [ 30%]
+tests/test_save_store.py::test_delete_all_removes_slot_files PASSED      [ 33%]
+tests/test_save_store.py::test_load_best_raises_when_no_valid_files PASSED [ 35%]
+tests/test_save_store.py::test_round_trip_engine_snapshot_through_store PASSED [ 38%]
+tests/test_save_store.py::test_compute_payload_sha256_is_stable PASSED   [ 41%]
+tests/test_save_coordinator.py::test_coalesces_pending_snapshots_while_save_in_flight PASSED [ 43%]
+tests/test_save_coordinator.py::test_autosave_skipped_when_vore_modal_blocks_idle_gate PASSED [ 46%]
+tests/test_save_coordinator.py::test_autosave_skipped_during_rest PASSED [ 48%]
+tests/test_save_coordinator.py::test_turn_interval_triggers_autosave PASSED [ 51%]
+tests/test_save_coordinator.py::test_time_interval_triggers_autosave PASSED [ 53%]
+tests/test_save_coordinator.py::test_engulfed_triggers_autosave_every_turn PASSED [ 56%]
+tests/test_save_coordinator.py::test_descend_floor_triggers_autosave PASSED [ 58%]
+tests/test_save_coordinator.py::test_engine_post_turn_hook_invokes_coordinator PASSED [ 61%]
+tests/test_save_coordinator.py::test_can_issue_idle_command_matches_modal_and_rest PASSED [ 64%]
+tests/test_save_menu_pr4.py::test_menu_omits_load_game_when_no_save PASSED [ 66%]
+tests/test_save_menu_pr4.py::test_menu_includes_load_game_when_save_exists PASSED [ 69%]
+tests/test_save_menu_pr4.py::test_load_game_enters_play_with_restored_state PASSED [ 71%]
+tests/test_save_menu_pr4.py::test_new_game_with_existing_save_requires_overwrite_confirm PASSED [ 74%]
+tests/test_save_menu_pr4.py::test_new_game_overwrite_confirm_y_then_name_deletes_save PASSED [ 76%]
+tests/test_save_menu_pr4.py::test_new_game_name_cancel_preserves_existing_save PASSED [ 79%]
+tests/test_save_menu_pr4.py::test_ctrl_q_queues_save_and_quit_cancel_keeps_save PASSED [ 82%]
+tests/test_save_menu_pr4.py::test_ctrl_s_sync_save_adds_message PASSED   [ 84%]
+tests/test_save_menu_pr4.py::test_ctrl_s_blocked_during_vore_modal PASSED [ 87%]
+tests/test_save_menu_pr4.py::test_new_game_confirm_handler_matches_quit_pattern PASSED [ 89%]
+tests/test_save_menu_pr4.py::test_build_menu_options_shapes PASSED       [ 92%]
+tests/test_save_write_failure.py::test_save_now_survives_permission_error PASSED [ 94%]
+tests/test_save_write_failure.py::test_ctrl_s_shows_danger_message_when_save_locked PASSED [ 97%]
+tests/test_save_write_failure.py::test_background_save_failure_surfaces_on_poll PASSED [100%]
+
+============================= 39 passed in 48.13s =============================

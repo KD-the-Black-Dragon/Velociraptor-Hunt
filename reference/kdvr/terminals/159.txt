@@ -1,0 +1,136 @@
+---
+pid: 21760
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "C:\\Users\\hybri\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe -m pytest \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_save_menu_pr4.py\" \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_main_menu.py\" \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_flow_pr4.py\" -v"
+started_at: 2026-07-05T15:05:57.444Z
+running_for_ms: 28525000 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+collecting ... collected 44 items
+
+tests/test_save_menu_pr4.py::test_menu_omits_load_game_when_no_save PASSED [  2%]
+tests/test_save_menu_pr4.py::test_menu_includes_load_game_when_save_exists PASSED [  4%]
+tests/test_save_menu_pr4.py::test_load_game_enters_play_with_restored_state PASSED [  6%]
+tests/test_save_menu_pr4.py::test_new_game_with_existing_save_requires_overwrite_confirm PASSED [  9%]
+tests/test_save_menu_pr4.py::test_new_game_overwrite_confirm_y_then_name_deletes_save FAILED [ 11%]
+tests/test_save_menu_pr4.py::test_new_game_name_cancel_preserves_existing_save PASSED [ 13%]
+tests/test_save_menu_pr4.py::test_ctrl_q_queues_save_and_quit_cancel_keeps_save PASSED [ 15%]
+tests/test_save_menu_pr4.py::test_ctrl_s_sync_save_adds_message PASSED   [ 18%]
+tests/test_save_menu_pr4.py::test_ctrl_s_blocked_during_vore_modal PASSED [ 20%]
+tests/test_save_menu_pr4.py::test_new_game_confirm_handler_matches_quit_pattern PASSED [ 22%]
+tests/test_save_menu_pr4.py::test_build_menu_options_shapes PASSED       [ 25%]
+tests/test_main_menu.py::test_menu_starts_with_new_game_highlighted PASSED [ 27%]
+tests/test_main_menu.py::test_menu_moves_highlight_down_and_wraps PASSED [ 29%]
+tests/test_main_menu.py::test_menu_moves_highlight_up_and_wraps PASSED   [ 31%]
+tests/test_main_menu.py::test_enter_on_exit_requests_exit PASSED         [ 34%]
+tests/test_main_menu.py::test_enter_on_new_game_requests_play PASSED     [ 36%]
+tests/test_main_menu.py::test_enter_on_options_opens_options PASSED      [ 38%]
+tests/test_main_menu.py::test_enter_on_load_game_and_high_scores PASSED  [ 40%]
+tests/test_main_menu.py::test_menu_without_load_omits_load_game_option PASSED [ 43%]
+tests/test_main_menu.py::test_ctrl_q_on_menu_is_no_op PASSED             [ 45%]
+tests/test_main_menu.py::test_app_boots_to_menu_without_engine PASSED    [ 47%]
+tests/test_main_menu.py::test_app_new_game_opens_name_entry PASSED       [ 50%]
+tests/test_main_menu.py::test_app_exit_from_menu_quits PASSED            [ 52%]
+tests/test_main_menu.py::test_app_window_quit_exits PASSED               [ 54%]
+tests/test_main_menu.py::test_app_ctrl_q_on_menu_does_not_exit PASSED    [ 56%]
+tests/test_main_menu.py::test_title_banner_row_offsets PASSED            [ 59%]
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options PASSED [ 61%]
+tests/test_main_menu.py::test_title_banner_rows_share_block_anchor_across_widths PASSED [ 63%]
+tests/test_main_menu.py::test_menu_options_share_x_across_widths PASSED  [ 65%]
+tests/test_main_menu.py::test_render_main_menu_options_fit_layout_console_height PASSED [ 68%]
+tests/test_flow_pr4.py::test_quit_confirm_y_and_n PASSED                 [ 70%]
+tests/test_flow_pr4.py::test_quit_confirm_rejects_invalid_keys PASSED    [ 72%]
+tests/test_flow_pr4.py::test_quit_confirm_bare_shift_does_not_show_error PASSED [ 75%]
+tests/test_flow_pr4.py::test_ctrl_q_in_play_opens_quit_confirm PASSED    [ 77%]
+tests/test_flow_pr4.py::test_quit_confirm_y_returns_to_menu PASSED       [ 79%]
+tests/test_flow_pr4.py::test_quit_confirm_n_resumes_play PASSED          [ 81%]
+tests/test_flow_pr4.py::test_ctrl_q_during_vore_modal_is_no_op PASSED    [ 84%]
+tests/test_flow_pr4.py::test_ctrl_q_during_digestion_modal_is_no_op PASSED [ 86%]
+tests/test_flow_pr4.py::test_ctrl_q_during_game_over_recap_is_no_op PASSED [ 88%]
+tests/test_flow_pr4.py::test_game_over_enter_returns_to_menu_via_app PASSED [ 90%]
+tests/test_flow_pr4.py::test_engine_recap_dismiss_result PASSED          [ 93%]
+tests/test_flow_pr4.py::test_engine_ctrl_q_no_longer_exits PASSED        [ 95%]
+tests/test_flow_pr4.py::test_load_game_requires_save_file PASSED         [ 97%]
+tests/test_flow_pr4.py::test_high_scores_stub_enter_back PASSED          [100%]
+
+================================== FAILURES ===================================
+__________ test_new_game_overwrite_confirm_y_then_name_deletes_save ___________
+
+tmp_path = WindowsPath('C:/Users/hybri/AppData/Local/Temp/pytest-of-hybri/pytest-197/test_new_game_overwrite_confir0')
+
+    def test_new_game_overwrite_confirm_y_then_name_deletes_save(tmp_path: Path) -> None:
+        _write_save(tmp_path, player_name="OldRun")
+        app = _app_with_store(tmp_path)
+        console = make_console()
+    
+        app.handle_event(_key(KeySym.RETURN), console=console)
+        app.handle_event(_key(KeySym.Y, mod=Modifier.SHIFT), console=console)
+        assert app.phase is AppPhase.NAME_ENTRY
+        assert app.pending_new_game_overwrite
+    
+        for ch in "Alex":
+            app.handle_event(_key(getattr(KeySym, ch.upper())), console=console)
+        app.handle_event(_key(KeySym.RETURN), console=console)
+    
+        assert app.phase is AppPhase.PLAY
+        assert app.engine is not None
+        assert app.engine.player_name == "alex"
+>       assert app.save_coordinator.store.probe()
+E       AssertionError: assert False
+E        +  where False = probe()
+E        +    where probe = <src.save.store.SaveStore object at 0x0000026049EA7E50>.probe
+E        +      where <src.save.store.SaveStore object at 0x0000026049EA7E50> = <src.save.coordinator.SaveCoordinator object at 0x0000026049CA3360>.store
+E        +        where <src.save.coordinator.SaveCoordinator object at 0x0000026049CA3360> = App(settings=SettingsStore(vore_content=VoreContentPreferences(enabled=frozenset({'CV', 'AV', 'OV'})), ui_preset='standard', path=WindowsPath('C:/VS Code Projects/kds-vore-roguelike/data/settings.json')), baseline_layout=UILayout(preset_id='standard', tile_px=12, tile_scale=2, root_cols=80, root_rows=44, regions={'map_viewport': RegionRect(x=0, y=0, w=57, h=34), 'sidebar': RegionRect(x=57, y=0, w=23, h=34), 'message_log': RegionRect(x=0, y=34, w=70, h=10), 'status_corner': RegionRect(x=70, y=34, w=10, h=10)}, map_viewport_tiles=MapViewportTiles(w=57, h=34), message_log_lines=8, sidebar=SidebarLayout(hp_bar_width=9, npc_hp_bar_width=6, max_evil=4, max_good=3, player_top_pad=1, player_bottom_pad=1, good_bottom_pad=2, rows_per_npc=3)), ui_layout=UILayout(preset_id='standard', tile_px=12, tile_scale=2, root_cols=80, root_rows=44, regions={'map_viewport': RegionRect(x=0, y=0, w=57, h=34), 'sidebar': RegionRect(x=57, y=0, w=23, h=34), 'message_log': RegionRect(x=0, y=34, w=70, h=10), 'status_corner': RegionRect(x=70, y=34, w=10, h=10)}, map_viewport_tiles=MapViewportTiles(w=57, h=34), message_log_lines=8, sidebar=SidebarLayout(hp_bar_width=9, npc_hp_bar_width=6, max_evil=4, max_good=3, player_top_pad=1, player_bottom_pad=1, good_bottom_pad=2, rows_per_npc=3)), phase=<AppPhase.PLAY: 5>, menu=MainMenuState(options=('New Game', 'Load Game', 'High Scores', 'Options', 'Exit'), highlight=0), name_entry=NameEntryState(buffer='alex'), options=OptionsMenuState(highlight=0), quit_confirm=None, new_game_confirm=None, pending_new_game_overwrite=False, engine=<src.engine.GameEngine object at 0x0000026049C13E00>, floor_prefetch=<src.floor_prefetch.FloorPrefetch object at 0x0000026049CA2D70>, log_font=LogFontState(enabled=False, tile_px=12, tile_scale=2, font_size_px=16, font_path=None, font=None), save_coordinator=<src.save.coordinator.SaveCoordinator object at 0x0000026049CA3360>).save_coordinator
+
+tests\test_save_menu_pr4.py:113: AssertionError
+============================== warnings summary ===============================
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+tests/test_main_menu.py::test_render_main_menu_options_fit_layout_console_height
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:142: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:219: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x, row_y]["ch"])) in "> "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:220: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 1, row_y]["ch"])) == " "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:221: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 2, row_y]["ch"])) == option[0]
+
+tests/test_flow_pr4.py::test_engine_recap_dismiss_result
+  C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread save-coordinator
+  
+  Traceback (most recent call last):
+    File "C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\VS Code Projects\kds-vore-roguelike\src\save\coordinator.py", line 138, in _worker_loop
+      self.store.save_run(snapshot)
+      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\VS Code Projects\kds-vore-roguelike\src\save\store.py", line 134, in save_run
+      self._rotate(data)
+      ~~~~~~~~~~~~^^^^^^
+    File "C:\VS Code Projects\kds-vore-roguelike\src\save\store.py", line 168, in _rotate
+      os.replace(primary, bak1)
+      ~~~~~~~~~~^^^^^^^^^^^^^^^
+  PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\hybri\\AppData\\Local\\Temp\\pytest-of-hybri\\pytest-197\\test_game_over_enter_returns_t0\\autosave.json' -> 'C:\\Users\\hybri\\AppData\\Local\\Temp\\pytest-of-hybri\\pytest-197\\test_game_over_enter_returns_t0\\autosave.bak1.json'
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_save_menu_pr4.py::test_new_game_overwrite_confirm_y_then_name_deletes_save
+================== 1 failed, 43 passed, 6 warnings in 24.64s ==================

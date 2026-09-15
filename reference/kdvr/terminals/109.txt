@@ -1,0 +1,147 @@
+---
+pid: 23660
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -c \"
+from src.map_gen import generate_dungeon, door_positions
+from src.constants import MAP_WIDTH, MAP_HEIGHT
+counts = []
+for seed in range(50):
+    d = generate_dungeon(MAP_WIDTH, MAP_HEIGHT, seed=seed)
+    counts.append(len(door_positions(d)))
+print('doors: min', min(counts), 'max', max(counts), 'median', sorted(counts)[25], 'mean', round(sum(counts)/len(counts),1))
+\""
+started_at: 2026-07-03T14:38:00.326Z
+running_for_ms: 29659999 
+---
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: disconnected_land_after_water
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 7: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 8: layout_carve_failed
+[map_gen] rejected attempt 9: layout_carve_failed
+[map_gen] rejected attempt 10: layout_carve_failed
+[map_gen] rejected attempt 11: layout_carve_failed
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: disconnected_land_after_water
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 6: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[map_gen] rejected attempt 9: layout_carve_failed
+[map_gen] rejected attempt 10: layout_carve_failed
+[map_gen] rejected attempt 1: disconnected_land_after_water
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[map_gen] rejected attempt 9: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 1: rune_sites_infeasible
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: layout_carve_failed
+[map_gen] rejected attempt 8: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: layout_carve_failed
+[map_gen] rejected attempt 7: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: layout_carve_failed
+[map_gen] rejected attempt 6: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 5: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_placement_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: stairs_too_clustered_after_doors
+doors: min 2 max 41 median 7 mean 9.8

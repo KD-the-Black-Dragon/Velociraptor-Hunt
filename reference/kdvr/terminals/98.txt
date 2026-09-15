@@ -1,0 +1,27 @@
+---
+pid: 24204
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -c \"
+from src.constants import MAP_WIDTH, MAP_HEIGHT
+from src.map_gen import generate_dungeon, land_positions, _spawn_candidate_count
+from src.constants import MONSTER_SPAWN_MIN_DISTANCE
+
+lands = []
+spawns = []
+for seed in range(100):
+    d = generate_dungeon(MAP_WIDTH, MAP_HEIGHT, seed=seed)
+    lands.append(len(land_positions(d)))
+    spawns.append(_spawn_candidate_count(d, min_distance=MONSTER_SPAWN_MIN_DISTANCE))
+
+print('land tiles: min', min(lands), 'median', sorted(lands)[50], 'max', max(lands))
+print('spawn candidates: min', min(spawns), 'median', sorted(spawns)[50], 'max', max(spawns))
+print('seeds with spawn<30:', sum(1 for s in spawns if s < 30))
+print('seeds with land<', min(lands)*3, ':', sum(1 for l in lands if l < min(lands)*3))
+\""
+started_at: 2026-07-03T12:41:34.727Z
+running_for_ms: 36644998 
+---
+land tiles: min 176 median 482 max 866
+spawn candidates: min 134 median 436 max 801
+seeds with spawn<30: 0
+seeds with land< 528 : 62

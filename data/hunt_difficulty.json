@@ -1,0 +1,38 @@
+{
+  "easier": {
+    "raptor_speed_mult": 1.5,
+    "hunter_aut_mult": 1.0,
+    "rain_cycle_aut": 40.0,
+    "raptor_cone_bonus": 0,
+    "los_hot_aut": 5.0,
+    "stalk_watch": 8,
+    "rain_lead_aut": 8.0
+  },
+  "normal": {
+    "raptor_speed_mult": 2.0,
+    "hunter_aut_mult": 1.0,
+    "rain_cycle_aut": 40.0,
+    "raptor_cone_bonus": 0,
+    "los_hot_aut": 6.0,
+    "stalk_watch": 6,
+    "rain_lead_aut": 8.0
+  },
+  "hard": {
+    "raptor_speed_mult": 2.4,
+    "hunter_aut_mult": 1.0,
+    "rain_cycle_aut": 48.0,
+    "raptor_cone_bonus": 1,
+    "los_hot_aut": 8.0,
+    "stalk_watch": 5,
+    "rain_lead_aut": 10.0
+  },
+  "nightmare": {
+    "raptor_speed_mult": 3.0,
+    "hunter_aut_mult": 1.0,
+    "rain_cycle_aut": 56.0,
+    "raptor_cone_bonus": 2,
+    "los_hot_aut": 10.0,
+    "stalk_watch": 4,
+    "rain_lead_aut": 12.0
+  }
+}

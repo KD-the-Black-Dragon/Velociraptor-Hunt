@@ -11,7 +11,7 @@ from src.constants import PROJECT_ROOT
 
 def get_game_version() -> str:
     """Resolve version: installed package metadata, then pyproject.toml, else dev."""
-    for dist_name in ("gladiavore", "kds-vore-roguelike"):
+    for dist_name in ("velociraptor-hunt", "gladiavore", "kds-vore-roguelike"):
         try:
             return version(dist_name)
         except PackageNotFoundError:

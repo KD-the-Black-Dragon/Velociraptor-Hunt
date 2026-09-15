@@ -124,8 +124,29 @@ def _notify_npc_took_damage(entity: Entity, amount: int) -> None:
     clear_spawn_ai_freeze(entity)
 
 
+def raw_melee_damage(attacker: Fighter, rng: random.Random) -> int:
+    """Roll attack damage in [min_damage, max_damage] with no hit check or AC."""
+    if attacker.min_damage >= attacker.max_damage:
+        return max(0, attacker.min_damage)
+    return max(0, rng.randint(attacker.min_damage, attacker.max_damage))
+
+
+def compute_struggle_damage(player: Entity, rng: random.Random) -> int:
+    """
+    Struggle damage: half of the player's normal melee damage roll.
+
+    Uses weapon, rune (+progression), and temporary might bonuses via
+    ``effective_fighter``. Always hits; no evade or AC mitigation.
+    """
+    from src.systems.inventory import effective_fighter
+
+    attacker = effective_fighter(player)
+    raw = raw_melee_damage(attacker, rng)
+    return max(0, raw // 2)
+
+
 def apply_struggle_damage(predator: Entity, amount: int) -> None:
-    """Flat damage to predator during engulfed struggle (PR 6 uses this)."""
+    """Apply struggle damage to a predator (no hit/AC; amount already resolved)."""
     fighter = predator.components.get(Fighter)
     if fighter is None or amount <= 0:
         return
@@ -138,6 +159,31 @@ def _npc_alignment(entity: Entity) -> Alignment | None:
     if alignment is None:
         return None
     return alignment.alignment
+
+
+def actor_can_melee_damage(actor: Entity, defender: Entity) -> bool:
+    """True when ``actor`` may deal melee damage to ``defender`` (alignment).
+
+    **Evil never damages Evil.** Evil may harm the player, good, or neutral.
+    Good/neutral may harm evil. Engulfed defenders are never valid melee targets.
+    """
+    if Engulfed in defender.tags:
+        return False
+    if Player in actor.tags:
+        return _npc_alignment(defender) == Alignment.EVIL
+    actor_alignment = _npc_alignment(actor)
+    if actor_alignment is None:
+        return False
+    if Player in defender.tags:
+        return actor_alignment == Alignment.EVIL
+    defender_alignment = _npc_alignment(defender)
+    if defender_alignment is None:
+        return False
+    if actor_alignment == Alignment.EVIL:
+        return defender_alignment in (Alignment.GOOD, Alignment.NEUTRAL)
+    if actor_alignment in (Alignment.GOOD, Alignment.NEUTRAL):
+        return defender_alignment == Alignment.EVIL
+    return False
 
 
 def _is_npc_only_combat(attacker: Entity, defender: Entity) -> bool:
@@ -724,6 +770,8 @@ def try_action(
             if skip_turn_entities is not None:
                 skip_turn_entities.add(defender)
             return True
+        if not actor_can_melee_damage(actor, defender):
+            return False
         _perform_attack(
             actor,
             defender,

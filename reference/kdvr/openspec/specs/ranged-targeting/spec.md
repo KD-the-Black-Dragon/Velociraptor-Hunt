@@ -24,6 +24,8 @@
 - Throwable recovery / durability
 - Friendly fire (same-alignment on path cancels shot)
 - Item `abilities[]` on weapons/armor JSON
+- NPC Path/Smite **magazine** / reload AI (see `npc-abilities` + `balance` `good_ranged_shots` / `evil_ranged_shots`)
+- Player ammo limits
 
 ## Requirements
 
@@ -37,6 +39,8 @@
 Entities between shooter and target SHALL be ignored. Walls and closed doors that break LoS SHALL prevent the shot.
 
 **Used by:** `SmiteN` NPC abilities, wand `magic_missile` evoke.
+
+**NPC magazine:** NPC `SmiteN` shots SHALL obey the Path/Smite magazine rules in `npc-abilities` (spend one shot per fired attempt). Player wand Smite SHALL NOT use that magazine.
 
 **Logs:** `npc_smites_target`, `npc_smites_target_no_damage`, `npc_smites_at_target_miss` for NPCs; player wand templates use *smite* verbs. Smite SHALL NOT use `npc_shoots_*` templates.
 
@@ -95,6 +99,8 @@ Player cancel message: `Something is in the way.` (no turn consumed).
 On fire, Path SHALL walk the bresenham line and strike the **first `Fighter`** the shooter **may** damage. Hit, miss, and damage use `resolve_attack()`. The intended cursor target MAY differ from the entity actually struck.
 
 **NPC distance:** Chebyshev ∈ `[2, N]` for `RangeN` abilities. At distance 1, NPCs use melee (or flee / other non-ranged intents — not forced to melee for Coward).
+
+**NPC magazine:** NPC `RangeN` shots SHALL obey the Path/Smite magazine rules in `npc-abilities`. Player throwables SHALL NOT use that magazine.
 
 **Player throwables:** No Chebyshev cap beyond **player LoS** (`can_see`); **distance 1 allowed**. Accuracy = `PLAYER_ACCURACY + accuracy_bonus`; damage from item `min_damage` / `max_damage`.
 

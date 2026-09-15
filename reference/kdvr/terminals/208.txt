@@ -1,0 +1,58 @@
+---
+pid: 20316
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cmd /c \"cd /d C:\\VS Code Projects\\kds-vore-roguelike && python -m pytest tests/ -v -n 4 --tb=no -q 2>&1\""
+started_at: 2026-07-11T19:45:30.300Z
+running_for_ms: 12679996 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+created: 4/4 workers
+4 workers [1531 items]
+
+........................................................................ [  4%]
+....................................................................F... [  9%]
+........................................................................ [ 14%]
+........................................................................ [ 18%]
+........................................................................ [ 23%]
+........................................................................ [ 28%]
+........................................................................ [ 32%]
+........................................................................ [ 37%]
+........................................................................ [ 42%]
+...............................F........................................ [ 47%]
+........................................................................ [ 51%]
+........................................................................ [ 56%]
+........................................................................ [ 61%]
+.......ss............................................................... [ 65%]
+....................................F................................... [ 70%]
+........................................................................ [ 75%]
+........................................................................ [ 79%]
+......................................................................F. [ 84%]
+........................................................................ [ 89%]
+........................................................................ [ 94%]
+........................................................................ [ 98%]
+...................                                                      [100%]
+============================== warnings summary ===============================
+tests/test_log_font.py::test_load_log_font_state_missing_path_falls_back
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_log_font.py:51: UserWarning: message log TTF not found at C:\Users\hybri\AppData\Local\Temp\pytest-of-hybri\pytest-627\popen-gw0\test_load_log_font_state_missi0\missing.ttf; using CP437 for the log panel
+    state = load_log_font_state(tile_px=12, tile_scale=2, font_path=missing)
+
+tests/test_ui_bootstrap.py: 29 warnings
+  C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\tcod\tileset.py:237: DeprecationWarning: Assign to a tile using 'tileset[codepoint] = tile' instead.
+    return self.set_tile(codepoint, full_tile)
+
+tests/test_macguffins_pr3.py::test_decline_macguffin_victory_consumes_turn
+  C:\VS Code Projects\kds-vore-roguelike\src\systems\fov.py:23: RuntimeWarning: Given pov index (40, 70) is outside the array of shape (10, 45).
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_digestion.py::test_engulfed_player_immune_to_combat_damage
+FAILED tests/test_enhancements_3.py::test_engulfed_neutral_invisible_to_evil_ai
+FAILED tests/test_save_coordinator.py::test_engine_post_turn_hook_invokes_coordinator
+FAILED tests/test_ui_modals.py::test_vore_modal_drawn_on_root_console_over_sidebar
+===== 4 failed, 1525 passed, 2 skipped, 31 warnings in 768.33s (0:12:48) ======

@@ -1,0 +1,119 @@
+---
+pid: 15876
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q"
+started_at: 2026-06-30T22:54:16.924Z
+running_for_ms: 7880003  
+---
+....................................................................F... [ 22%]
+............F........................................................... [ 45%]
+........................................................................ [ 68%]
+........................................................................ [ 90%]
+.............................                                            [100%]
+================================== FAILURES ===================================
+__________________ test_descend_respawns_monsters_and_items ___________________
+
+    def test_descend_respawns_monsters_and_items() -> None:
+        engine = GameEngine()
+        engine.new_game(seed=17)
+        _place_player_on_stairs(engine)
+        _press_descend(engine)
+>       assert len(list(engine.world.Q.all_of(components=[AI]))) == SPAWN_NPC_TOTAL
+E       AssertionError: assert 19 == 17
+E        +  where 19 = len([<Entity(uid=object at 0x17A6EA05530)>, <Entity(uid=object at 0x17A6EA05580)>, <Entity(uid=object at 0x17A6EA055F0)>, <Entity(uid=object at 0x17A6EA05550)>, <Entity(uid=object at 0x17A6EA05630)>, <Entity(uid=object at 0x17A6EA05560)>, ...])
+E        +    where [<Entity(uid=object at 0x17A6EA05530)>, <Entity(uid=object at 0x17A6EA05580)>, <Entity(uid=object at 0x17A6EA055F0)>, <Entity(uid=object at 0x17A6EA05550)>, <Entity(uid=object at 0x17A6EA05630)>, <Entity(uid=object at 0x17A6EA05560)>, ...] = list(BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x17A6EA05390)>:...s 'src.components.AI'>), _traverse_keys=(<class 'tcod.ecs.constants.IsA'>,), _max_depth=None)}), _none_of=frozenset())))
+E        +      where BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x17A6EA05390)>:...s 'src.components.AI'>), _traverse_keys=(<class 'tcod.ecs.constants.IsA'>,), _max_depth=None)}), _none_of=frozenset())) = all_of(components=[<class 'src.components.AI'>])
+E        +        where all_of = BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x17A6EA05390)>:...et'>, {}), _names_by_name={}, _names_by_entity={}), _query=_QueryLogicalAnd(_all_of=frozenset(), _none_of=frozenset())).all_of
+E        +          where BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x17A6EA05390)>:...et'>, {}), _names_by_name={}, _names_by_entity={}), _query=_QueryLogicalAnd(_all_of=frozenset(), _none_of=frozenset())) = Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x17A6EA05390)>: {<class 'src.compon... at 0x0000017A6D400BF0>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}).Q
+E        +            where Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x17A6EA05390)>: {<class 'src.compon... at 0x0000017A6D400BF0>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}) = <src.engine.GameEngine object at 0x0000017A6E70CC50>.world
+
+tests\test_dungeon_pr3.py:213: AssertionError
+______________ test_holding_shark_shore_attacks_adjacent_knight _______________
+
+    def test_holding_shark_shore_attacks_adjacent_knight() -> None:
+        from src.components import Alignment, Predator, Stunned
+        from src.message_log import MessageLog
+        from src.systems.ai import _try_predator_holding_attack, spawn_test_npc
+    
+        from tcod.ecs import Registry
+    
+        world = Registry()
+        game_map = _arena_with_shore()
+        log = MessageLog()
+        shark = _spawn_shark_on(world, game_map, *_shore_shark_pos())
+>       prey = world[object]()
+               ^^^^^^^^^^^^^
+
+tests\test_dungeon_pr4.py:282: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x17A6EA056B0)>: {<class 'src.compon... at 0x0000017A6D400BF0>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={})
+uid = <class 'object'>
+
+    def __getitem__(self, uid: object) -> Entity:
+        """Return an entity associated with a unique id.
+    
+        Example::
+    
+            >>> registry = Registry()
+            >>> foo = registry["foo"]  # Referencing a new entity returns a new empty entity
+            >>> foo is registry["foo"]
+            True
+            >>> entity = registry.new_entity()
+            >>> registry[entity.uid] is entity  # Anonymous entities can be referred to by their uid
+            True
+        """
+>       assert uid is not object, "This is reserved."
+               ^^^^^^^^^^^^^^^^^
+E       AssertionError: This is reserved.
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\tcod\ecs\registry.py:257: AssertionError
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:128: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:233: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:232: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:71: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:163: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_pr3.py::test_descend_respawns_monsters_and_items - ...
+FAILED tests/test_dungeon_pr4.py::test_holding_shark_shore_attacks_adjacent_knight
+2 failed, 315 passed, 16 warnings in 44.06s

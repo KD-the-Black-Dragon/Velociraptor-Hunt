@@ -1,0 +1,32 @@
+---
+pid: 21756
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python tools/profile_turn.py --all --action consume --iterations 80 --warmup 10"
+started_at: 2026-07-05T19:40:57.996Z
+running_for_ms: 12025000 
+---
+Profiling action=consume  seed=42  iterations=80
+------------------------------------------------------------------------------------------
+default       npcs= 10  action=consume   mean= 304.65ms  median= 284.00ms  p95= 482.39ms  max= 522.48ms
+sparse        npcs= 10  action=consume   mean=  15.75ms  median=  15.17ms  p95=  19.16ms  max=  20.71ms
+Traceback (most recent call last):
+  File "C:\VS Code Projects\kds-vore-roguelike\tools\profile_turn.py", line 364, in <module>
+    main()
+    ~~~~^^
+  File "C:\VS Code Projects\kds-vore-roguelike\tools\profile_turn.py", line 348, in main
+    result, entries = run_scenario(
+                      ~~~~~~~~~~~~^
+        name,
+        ^^^^^
+    ...<4 lines>...
+        profile=args.profile and name == profile_for,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\VS Code Projects\kds-vore-roguelike\tools\profile_turn.py", line 283, in run_scenario
+    SCENARIOS[name](engine)
+    ~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\VS Code Projects\kds-vore-roguelike\tools\profile_turn.py", line 146, in _setup_isolated_1
+    del engine.world[entity]
+        ~~~~~~~~~~~~^^^^^^^^
+TypeError: 'Registry' object does not support item deletion

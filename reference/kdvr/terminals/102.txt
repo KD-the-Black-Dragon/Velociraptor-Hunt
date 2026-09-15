@@ -1,0 +1,18 @@
+---
+pid: 21744
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_dungeon_layout_pr1.py tests/test_dungeon_layout_pr0.py tests/test_dungeon_pr2.py -q --tb=short 2>&1"
+started_at: 2026-07-03T13:36:12.528Z
+running_for_ms: 33365000 
+---
+..F....................                                                  [100%]
+================================== FAILURES ===================================
+__________________ test_organic_carves_at_least_four_regions __________________
+tests\test_dungeon_layout_pr1.py:38: in test_organic_carves_at_least_four_regions
+    assert region.floor_count(game_map) > 0
+E   AssertionError: assert 0 > 0
+E    +  where 0 = floor_count(GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, .....False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(0, 0), layout_archetype=''))
+E    +    where floor_count = LayoutRegion(center=(56, 16), x1=49, y1=10, x2=64, y2=22).floor_count
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_layout_pr1.py::test_organic_carves_at_least_four_regions
+1 failed, 22 passed in 109.92s (0:01:49)

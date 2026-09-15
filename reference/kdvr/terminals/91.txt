@@ -1,0 +1,64 @@
+---
+pid: 10396
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -c \"
+from src.main import main
+import pytest
+try:
+    main()
+except SystemExit:
+    pass
+print('startup ok')
+\""
+started_at: 2026-07-02T13:35:00.065Z
+running_for_ms: 45879993 
+---
+SYSTEM:App name: SDL Application
+SYSTEM:App version: <unspecified>
+SYSTEM:App ID: <unspecified>
+SYSTEM:SDL revision: release-3.2.16-0-gc9a6709bd (libsdl.org)
+RENDER:Created renderer: direct3d11
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+The wolf snarls at the rabbit - the rabbit is blocking the way to the knight!
+startup ok

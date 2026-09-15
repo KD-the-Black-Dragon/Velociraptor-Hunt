@@ -48,43 +48,29 @@ def _record(
     )
 
 
-def test_build_menu_options_omits_past_runs_when_empty() -> None:
+def test_build_menu_options_is_hunt_shell() -> None:
     assert build_menu_options(load_available=False, past_runs_available=False) == (
-        "New Game",
+        "New Hunt",
+        "Stats",
         "Options",
-        "Credits",
-        "Exit",
+        "Quit",
+    )
+    assert build_menu_options(load_available=True, past_runs_available=True) == (
+        "New Hunt",
+        "Stats",
+        "Options",
+        "Quit",
     )
 
 
-def test_build_menu_options_includes_past_runs_when_available() -> None:
-    options = build_menu_options(load_available=True, past_runs_available=True)
-    assert options == (
-        "New Game",
-        "Load Game",
-        "Past Runs",
-        "Options",
-        "Credits",
-        "Exit",
-    )
-
-
-def test_menu_enter_on_past_runs_opens_screen(tmp_path: Path) -> None:
+def test_hunt_menu_omits_past_runs(tmp_path: Path) -> None:
     store = PastRunsStore(tmp_path / "past_runs.json")
     store.append(_record(name="Morgan", depth=9))
     app = App(
         save_coordinator=SaveCoordinator(SaveStore(tmp_path / "saves")),
         past_runs_store=store,
     )
-    assert "Past Runs" in app.menu.options
-
-    while app.menu.highlighted_option != "Past Runs":
-        app.menu.move_down()
-    app.handle_event(_key(KeySym.RETURN))
-
-    assert app.phase is AppPhase.PAST_RUNS
-    assert len(app.past_runs_display) == 1
-    assert app.past_runs_display[0].character_name == "Morgan"
+    assert "Past Runs" not in app.menu.options
 
 
 def test_past_runs_escape_returns_to_menu(tmp_path: Path) -> None:
@@ -94,9 +80,8 @@ def test_past_runs_escape_returns_to_menu(tmp_path: Path) -> None:
         save_coordinator=SaveCoordinator(SaveStore(tmp_path / "saves")),
         past_runs_store=store,
     )
-    while app.menu.highlighted_option != "Past Runs":
-        app.menu.move_down()
-    app.handle_event(_key(KeySym.RETURN))
+    app.phase = AppPhase.PAST_RUNS
+    app.past_runs_display = sorted_for_display(store.load_runs())
     app.handle_event(_key(KeySym.ESCAPE))
     assert app.phase is AppPhase.MENU
 
@@ -171,12 +156,9 @@ def test_render_past_runs_screen_shows_two_row_entry() -> None:
     assert "Name |" not in body
 
 
-def test_handle_main_menu_past_runs_action() -> None:
+def test_handle_main_menu_has_no_past_runs_action() -> None:
     from src.menu import MainMenuState
 
-    state = MainMenuState(
-        options=build_menu_options(load_available=False, past_runs_available=True),
-    )
-    while state.highlighted_option != "Past Runs":
-        state.move_down()
-    assert handle_main_menu_event(state, _key(KeySym.RETURN)) is MenuAction.PAST_RUNS
+    state = MainMenuState()
+    assert "Past Runs" not in state.options
+    assert handle_main_menu_event(state, _key(KeySym.RETURN)) is MenuAction.NEW_HUNT

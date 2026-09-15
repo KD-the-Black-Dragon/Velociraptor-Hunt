@@ -1,0 +1,18 @@
+---
+pid: 11128
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "C:\\Users\\hybri\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe -m pytest -q"
+started_at: 2026-07-05T15:34:51.126Z
+running_for_ms: 26804988 
+---
+At line:1 char:47
++ (cd "C:\\VS Code Projects\\kds-vore-roguelike" ; C:\Users\hybri\AppDa ...
++                                               ~
+Missing closing ')' in expression.
+At line:1 char:128
++ ... ybri\AppData\Local\Python\pythoncore-3.14-64\python.exe -m pytest -q)
++                                                                         ~
+Unexpected token ')' in expression or statement.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingEndParenthesisInExpression
+ 

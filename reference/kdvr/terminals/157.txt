@@ -1,0 +1,25 @@
+---
+pid: 27332
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_explore_reachable_goals.py tests/test_explore_frustration.py tests/test_explore_bfs_steps.py tests/test_neutral_explore.py tests/test_chase_pursuit_momentum.py tests/test_debug_omniscient_vision.py tests/test_enhancements_3.py -q"
+started_at: 2026-07-05T13:57:41.207Z
+running_for_ms: 32620005 
+---
+........................................................................ [ 78%]
+...............F....                                                     [100%]
+================================== FAILURES ===================================
+_________________ test_engulfed_neutral_invisible_to_evil_ai __________________
+
+    def test_engulfed_neutral_invisible_to_evil_ai() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        wolves = list(iter_wolves(engine))
+>       predator, hunter = wolves[0], wolves[1]
+                           ^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_enhancements_3.py:1207: IndexError
+=========================== short test summary info ===========================
+FAILED tests/test_enhancements_3.py::test_engulfed_neutral_invisible_to_evil_ai
+1 failed, 91 passed in 67.63s (0:01:07)

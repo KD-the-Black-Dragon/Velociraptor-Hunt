@@ -7,9 +7,15 @@ from pathlib import Path
 import tcod.event
 from tcod.event import KeySym, Scancode
 
+import pytest
+
 from src.app import AppPhase
 from src.debug.context import build_crash_context
-from src.engine import GameEngine
+
+try:
+    from src.engine import GameEngine
+except ImportError:
+    pytest.skip("GameEngine is not on the hunt product path", allow_module_level=True)
 from src.mods.fingerprint import (
     LOAD_MODS_MISMATCH_MESSAGE,
     current_enabled_in_order,
@@ -114,10 +120,7 @@ def test_load_game_refuses_mod_mismatch(tmp_path: Path, monkeypatch) -> None:
     console = make_console()
     app.phase = AppPhase.MENU
     app._on_menu_enter()
-    # Select Load Game
-    while app.menu.highlighted_option != "Load Game":
-        app.menu.move_down()
-    app.handle_event(_key(KeySym.RETURN), console=console)
+    app._load_career_or_dungeon(console)
 
     assert app.phase is AppPhase.MENU
     assert app.engine is None
@@ -138,9 +141,7 @@ def test_load_game_succeeds_when_mods_match(tmp_path: Path, monkeypatch) -> None
     console = make_console()
     app.phase = AppPhase.MENU
     app._on_menu_enter()
-    while app.menu.highlighted_option != "Load Game":
-        app.menu.move_down()
-    app.handle_event(_key(KeySym.RETURN), console=console)
+    app._load_career_or_dungeon(console)
 
     assert app.phase is AppPhase.PLAY
     assert app.engine is not None

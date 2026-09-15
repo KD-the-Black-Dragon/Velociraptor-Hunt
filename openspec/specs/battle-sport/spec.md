@@ -4,7 +4,7 @@
 
 Define **behavioral requirements** for Gladiavore’s measure-first arena sport: steep balance, weapon measure, ready/brace/footwork/directed attack, footwork momentum, and personality-weighted enemy **and** ally AI.
 
-**Implementation status:** Design frozen in `openspec/changes/battle-pace-program/BATTLE_SPORT_SPEC.md`. Requirements below are **binding once the Battle Sport batch is implemented**; until then they are the accepted contract for that work (not yet all true in code).
+**Implementation status:** **Implemented** (Battle Sport batch 2026-08-10). Design freeze: `openspec/changes/battle-pace-program/BATTLE_SPORT_SPEC.md`.
 
 **Related:** `openspec/specs/gladiavore-match/spec.md` (base match AUT, HUD, grapple UX). On ship, that file must not contradict this one; prefer extending match spec or keeping cross-links.
 
@@ -43,14 +43,15 @@ Define **behavioral requirements** for Gladiavore’s measure-first arena sport:
 
 ### Ready actions
 
-- **`.`** and **Numpad 5** are the **same** command: **keep watch** (near-neutral; not a turtle dump).
-- **`d`** is **brace** (real defensive commitment).
-- Normal steps apply only a **slight** aggressive balance lean (data).
+- **`.`** and **Numpad 5** are **keep watch**: sliding defensive lean with **floor −5**.
+- **`d`** is **brace**: stronger defensive slide with **floor −10**.
+- Normal steps are slow walk (AUT 1.0) with sliding aggression and **ceiling +5**.
+- Status HUD shows balance-driven Acc/Dmg/Eva/AC deltas under the balance bar (**green** buffs, **orange** debuffs).
 
 ### Player combat commands
 
 - Invalid intents and cancelled targeting are **no-ops** (no AUT/AP/balance).
-- **`f`** footwork: targeting; legal 2-straight or knight-move; AP + aggressive balance; compound cost on spam; Esc cancels.
+- **`f`** footwork: cursor targeting; legal any open tile within **Chebyshev 1..2** (1-tile valid); **Enter** confirms; Esc cancels; **Shift+dir** quick 1-tile; AP + aggression with action **ceiling**.
 - **ctrl+direction** issues a directed basic attack using weapon delay + measure.
 - Footwork is a practiced burst technique, not a free faster step.
 - Emergency reaction dodge is distinct from footwork.

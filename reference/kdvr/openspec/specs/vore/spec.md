@@ -4,7 +4,7 @@
 
 The **vore** domain extends the shipped core roguelike and **Enhancements 1** with predator pressure when the player is weakened: monsters may attempt vore attacks, **multi-phase modal narratives** pace outcomes, and a successful hit places the player in an **engulfed** struggle state with blindness, damage-based escape, and immunity from other attackers.
 
-**Scope**: vore attempts, narrative modals, engulfed struggle, escape, and mercy. **Digestion** (damage, strikes, NPC removal, player game over) is specified in `openspec/specs/digestion/spec.md`.
+**Scope**: vore attempts, narrative modals, engulfed struggle, escape, mercy, and optional **engulfed flavor** log lines. **Digestion** (damage, strikes, NPC removal, player game over) is specified in `openspec/specs/digestion/spec.md`.
 
 **Terminology (inherits core policy)**
 
@@ -15,6 +15,7 @@ The **vore** domain extends the shipped core roguelike and **Enhancements 1** wi
 | Engulfed | Player swallowed by a predator; co-located, blind, struggling |
 | Vore mercy | Brief post-escape immunity: predators cannot target, damage, or vore the player for one world phase |
 | Digested | Prey removed (NPC) or player game over after three digestion strikes — see `digestion` spec |
+| Dazed | NPC-only timed skip status (blue tile BG); see `digestion` spec / Alternate CV |
 
 Avoid *death*, *kill*, and *die* in specs, UI, and log messages.
 
@@ -26,11 +27,17 @@ Vore logic lives in `src/systems/vore.py` and optional ECS components. Core move
 
 Narrative type IDs are an **extensible string list**. v1 ships `"OV"`, `"CV"`, and `"AV"`. Monsters declare which types they support. **Initiation** (new vore attempts) SHALL select modal and log narrative only from types that are both supported by the monster and enabled in the run's content preferences (snapshot from global settings at new game — see `main-menu` spec). Disabled types are **absent from new vore attempts** but do **not** change digestion follow-through for prey already engulfed under a locked `Predator.narrative_type`.
 
+The same run prefs snapshot also drives optional **spawn eligibility** and **initiation filtering** via `spawn.requires_vore_types` (see `npc-data` spec): when non-empty, that list is the species’ capability set — spawn only if at least one listed type is enabled, and new attempts pick only from capability ∩ prefs (among the predator’s narrative types). That spawn gate does not despawn NPCs restored from save; attempt filtering still applies to living predators via species id.
+
+When the attempt pool is empty, initiation SHALL use the internal prefs-immune type `GENERIC` (not in Options / `VORE_NARRATIVE_TYPES_V1`) with hardcoded minimal player modal, player digestion, NPC hit/miss, and off-screen vore/digest copy. Digestion for `GENERIC` SHALL use the standard (non-alternate-CV) path.
+
+**Reachability note:** With prefs snapshotted at New Game (immutable mid-run) and spawn OR excluding species with no capability∩prefs intersection, the empty-pool / `GENERIC` path is **unlikely in normal play**. It remains as a stub for odd save/mod edges or a future prefs-contract change.
+
 ## Requirements
 
 ### Requirement: Narrative Content Types and Initiation Filtering
 
-V1 SHALL support narrative types as distinct string labels (`OV`, `CV`, `AV` initially). Each monster SHALL declare its supported types in an open-ended tuple. On **vore initiation**, narrative SHALL be selected with **equal probability** among types that are both on the monster **and** enabled in the run's content preferences. Preferences are a **global initiation filter** snapshotted at new game; they SHALL NOT re-filter digestion or other engulf follow-through (see `main-menu` spec).
+V1 SHALL support narrative types as distinct string labels (`OV`, `CV`, `AV` initially). Each monster SHALL declare its supported types in an open-ended tuple. On **vore initiation**, narrative SHALL be selected with **equal probability** among types that are on the monster, allowed by non-empty `spawn.requires_vore_types` when set, **and** enabled in the run's content preferences. Preferences are a **global initiation filter** snapshotted at new game; they SHALL NOT re-filter digestion or other engulf follow-through (see `main-menu` spec).
 
 #### Scenario: Disabled types are skipped at initiation
 
@@ -40,12 +47,21 @@ V1 SHALL support narrative types as distinct string labels (`OV`, `CV`, `AV` ini
 - THEN only `OV` narrative content may be shown in attempt/success modals and initiation logs
 - AND no `CV` or `AV` initiation text appears
 
-#### Scenario: Predator cannot initiate when no types overlap
+#### Scenario: Capability list further restricts initiation
 
-- GIVEN a wolf with narrative types `OV` and `CV`
-- AND the run's preferences enable only `AV`
-- WHEN the wolf would otherwise attempt vore
-- THEN no vore attempt is initiated
+- GIVEN a predator whose definition has `spawn.requires_vore_types: ["CV", "AV"]`
+- AND narrative types include `OV`, `CV`, and `AV`
+- AND the run enables all three types
+- WHEN the predator initiates a vore attempt
+- THEN only `CV` or `AV` may be selected (never `OV`)
+
+#### Scenario: Empty attempt pool uses GENERIC stub
+
+- GIVEN a living predator whose attempt pool (narrative types ∩ capability ∩ prefs) is empty
+- WHEN the predator would otherwise attempt vore
+- THEN initiation uses narrative type `GENERIC` with hardcoded minimal copy
+- AND `GENERIC` is not offered in Options
+- AND (normal play) this case is unlikely because New Game prefs are fixed for the run and spawn OR already gates zero-intersection species
 
 #### Scenario: Engulfed follow-through uses locked type
 
@@ -188,6 +204,7 @@ On successful vore, the player SHALL enter an engulfed state: co-located on the 
 #### Scenario: Struggle deals damage
 
 - GIVEN an engulfed player with HP above 0
+- AND the run does **not** use Alternate CV zero-damage for this hold (see Alternate CV Mechanics)
 - WHEN the player presses a movement key
 - THEN the message log shows a random struggle line (e.g. *"You struggle to break free."*)
 - AND the predator loses a fixed amount of HP
@@ -200,6 +217,76 @@ On successful vore, the player SHALL enter an engulfed state: co-located on the 
 - AND the entered direction leads to a valid escape tile
 - THEN the player is placed in that direction from the predator
 - AND engulfed state is cleared
+
+### Requirement: Alternate CV Mechanics
+
+Options SHALL provide **Alternate CV Mechanics** as **No** / **Yes** (default **No**; missing/null settings → No). The value SHALL be snapshotted onto the run at **New Game** (and arena / depth-jump starts) as `GameEngine.alternate_cv_mechanics`, persisted in autosaves, and restored on Load (missing → No). Changing Options mid-run SHALL affect the **next** New Game only.
+
+When the run snapshot is **No**, CV struggle, escape, and NPC digest-complete SHALL behave identically to OV/AV (and to stock CV before this feature).
+
+When the run snapshot is **Yes** and `Predator.narrative_type` is **`CV`**:
+
+1. Player struggle SHALL deal **0** damage to the predator (struggle log and escape chance / fail escalation unchanged).
+2. On successful **player escape** from that CV hold (not when the predator is defeated/cleared via struggle damage), the predator SHALL gain **Dazed** for an inclusive RNG roll of turns from the run difficulty profile's `cv_daze_min_turns` / `cv_daze_max_turns` (see `depth_scaling` / `digestion` Dazed rules). New applications **add** to remaining daze.
+3. When the predator **finishes digesting an NPC** via CV, the predator SHALL gain **Dazed** the same way (same-phase skip after digest retained).
+
+When the snapshot is **Yes** but the hold type is **OV** or **AV**, struggle damage and escape/digest SHALL NOT use the zero-damage or CV-daze rules.
+
+#### Scenario: Alternate CV off — CV struggle damages
+
+- GIVEN a run with Alternate CV Mechanics snapshotted **No**
+- AND the player is engulfed with `narrative_type` **CV**
+- WHEN the player struggles and does not escape
+- THEN the predator loses normal struggle HP
+
+#### Scenario: Alternate CV on — CV struggle deals zero damage
+
+- GIVEN a run with Alternate CV Mechanics snapshotted **Yes**
+- AND the player is engulfed with `narrative_type` **CV**
+- WHEN the player struggles and the escape roll fails
+- THEN the predator's HP is unchanged by that struggle
+- AND `failed_struggles` increments as usual
+
+#### Scenario: Alternate CV on — CV escape dazes predator
+
+- GIVEN a run with Alternate CV Mechanics snapshotted **Yes**
+- AND the player is engulfed with `narrative_type` **CV**
+- WHEN the escape roll succeeds
+- THEN the player is freed
+- AND the living predator has `Dazed` with remaining turns in the profile min..max range
+
+#### Scenario: Alternate CV on — OV escape does not daze
+
+- GIVEN a run with Alternate CV Mechanics snapshotted **Yes**
+- AND the player is engulfed with `narrative_type` **OV**
+- WHEN the escape roll succeeds
+- THEN the predator is not dazed from that escape
+
+### Requirement: Engulfed flavor text
+
+Each entity MAY define optional `engulfed_flavor`: an object keyed by narrative type (`OV` / `CV` / `AV`) whose values are string arrays. Omit the field, omit a type key, or use an empty array → that type has **no** flavor lines. Missing/empty pools SHALL be a silent no-op (SHALL NOT log a blank line). See `data/SCHEMA.md`.
+
+While the **player** is engulfed, after each **completed world phase** (`run_world_turn`), the holding predator's `engulfed_flavor_phases` counter SHALL increment. When the counter is a positive multiple of **3** (phases 3, 6, 9, … of this hold), the game SHALL pick one random line from the holder's pool for `Predator.narrative_type` (if any), format optional `{predator}` / `{prey}` placeholders, and add it to the message log with **`MessageCategory.SPEECH`** (bright white). World phases that are skipped (e.g. digest modal before world) SHALL NOT increment the counter. Re-engulf SHALL reset the counter. Flavor SHALL stop when engulfment ends.
+
+#### Scenario: Flavor on third world phase
+
+- GIVEN the player is engulfed by a wolf with non-empty `engulfed_flavor.OV`
+- AND `Predator.narrative_type` is `OV`
+- WHEN three world phases complete while still engulfed
+- THEN exactly one SPEECH-category flavor line from that pool appears in the log by the third phase
+
+#### Scenario: Empty flavor is silent
+
+- GIVEN the player is engulfed by a predator with no `engulfed_flavor` (or empty pools for the hold type)
+- WHEN three or more world phases complete while engulfed
+- THEN no blank or flavor line is added from this system
+
+#### Scenario: Type gate
+
+- GIVEN a predator with only `engulfed_flavor.OV` filled
+- AND the player is held with `narrative_type` `CV`
+- WHEN world phases complete
+- THEN OV flavor lines are not used for that hold
 
 #### Scenario: Escape falls back when direction blocked
 
@@ -396,7 +483,7 @@ Core movement, FOV, inventory, and stunned recovery SHALL remain functional when
 | `VORE_HIT_MAX` | 1.0 | Hit chance at 0 HP |
 | `VORE_ESCAPE_BASE` | 0.15 | Initial escape chance per struggle |
 | `VORE_ESCAPE_PER_FAIL` | 0.05 | Bonus per failed struggle during current engulfment |
-| `VORE_STRUGGLE_DAMAGE` | 2 | Flat damage to predator per struggle |
+| Struggle damage | half melee | Player's normal attack damage roll (weapon + runes + might) ÷ 2; no hit check, evade, or AC |
 | `VoreMercy` tag | — | Post-escape immunity for one world phase |
 | Engulfed overlay | `#` at `(100,20,20)` | Decorative ring on eight adjacent tiles while blind |
 | Content prefs (v1) | OV+CV+AV on | Global settings from Options; snapshotted at new game |

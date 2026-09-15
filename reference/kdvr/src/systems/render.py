@@ -6,6 +6,7 @@ from tcod import libtcodpy
 from tcod.ecs import Entity, Registry
 
 from src.components import (
+    Dazed,
     Engulfed,
     EquipState,
     Fighter,
@@ -46,6 +47,7 @@ HUD_MESSAGE_LINES = 5
 HP_BAR_WIDTH = 18
 ENGULFED_OVERLAY_FG = (100, 20, 20)
 PREDATOR_ENGULFED_BG = (80, 10, 10)
+DAZED_BG = (20, 50, 140)
 
 def _tile_glyph_and_fg(tile: int, visible: bool) -> tuple[str, tuple[int, int, int]]:
     if tile == Tile.WALL:
@@ -151,7 +153,12 @@ def render_entities(
         else:
             draw_x, draw_y = pos.x, pos.y
         renderable = entity.components[Renderable]
-        bg = PREDATOR_ENGULFED_BG if _predator_holding_prey(entity) else None
+        if _predator_holding_prey(entity):
+            bg = PREDATOR_ENGULFED_BG
+        elif entity.components.get(Dazed) is not None:
+            bg = DAZED_BG
+        else:
+            bg = None
         console.print(draw_x, draw_y, chr(renderable.ch), fg=renderable.fg, bg=bg)
 
 

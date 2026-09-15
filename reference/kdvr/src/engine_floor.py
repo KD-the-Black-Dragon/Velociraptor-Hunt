@@ -40,14 +40,14 @@ from src.constants import (
     ROOM_MAX_SIZE,
     ROOM_MIN_SIZE,
 )
-from src.data.entity_loader import load_entity_registry
 from src.debug.session_log import session_log
 from src.debug_log import debug_print
 from src.floor_prefetch import PrefetchParams
-from src.map_gen import GameMap, generate_dungeon, water_positions
-from src.spawn import good_aligned_weight_at_depth, spawn_floor_population, spawn_items
+from src.map_gen import GameMap, generate_dungeon
+from src.spawn import spawn_floor_population, spawn_items
 from src.systems.come_here import clear_all_come_here
 from src.systems.descent import (
+    # apply_good_follower_descent_buffs,  # disabled: allies no longer buff on descend
     clear_floor_entities,
     collect_descent_followers,
     place_descent_followers,
@@ -83,6 +83,7 @@ def new_game(
     engine.run_stats.reset()
     engine.skipped_this_phase.clear()
     engine.examine_state.reset()
+    engine.dismiss_state.reset()
     engine.ground_pickup_modal.reset()
     engine.inventory_modal.reset()
     engine.macguffin_discovery.reset()
@@ -109,12 +110,16 @@ def descend_floor(engine: GameEngine) -> None:
         engine.game_map,
         engine.player,
     )
+    # Once per successful descend intent (not per map-gen retry).
+    # Disabled: good allies no longer get permanent combat buffs when following downstairs.
+    # apply_good_follower_descent_buffs(followers)
     clear_all_come_here(engine.world)
     engine.initialize_floor(mode="descend", followers=followers)
     engine.vore_modal.reset()
     engine.digestion_modal.reset()
     engine.skipped_this_phase.clear()
     engine.examine_state.reset()
+    engine.dismiss_state.reset()
     engine.ground_pickup_modal.reset()
     engine.inventory_modal.reset()
     engine.macguffin_victory_confirm.reset()
@@ -265,18 +270,6 @@ def spawn_floor_population_and_runes(
         raise RunePlacementError("no player")
 
     pos = engine.player.components[Position]
-    good_reduction = 0
-    if followers:
-        reg = load_entity_registry()
-        map_has_water = bool(water_positions(engine.game_map))
-        good_reduction = min(
-            len(followers),
-            good_aligned_weight_at_depth(
-                reg,
-                floor_depth,
-                map_has_water=map_has_water,
-            ),
-        )
     spawn_floor_population(
         engine.world,
         engine.game_map,
@@ -284,8 +277,9 @@ def spawn_floor_population_and_runes(
         pos.y,
         floor_depth,
         rng=engine.rng,
-        good_follower_reduction=good_reduction,
+        good_followers_brought=len(followers) if followers else 0,
         difficulty_id=engine.difficulty_id,
+        vore_prefs=engine.vore_content_prefs,
     )
     spawn_items(
         engine.world,

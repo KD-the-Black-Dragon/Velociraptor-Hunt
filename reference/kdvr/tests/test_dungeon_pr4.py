@@ -8,10 +8,13 @@ from unittest.mock import patch
 from src.components import (
     AI,
     DisplayName,
+    EquipState,
     Fighter,
+    Inventory,
     Mobility,
     MobilityType,
     NPCAlignment,
+    Player,
     Position,
     VoreCapable,
 )
@@ -72,8 +75,11 @@ def test_aquatic_shore_attack_hits_land_target() -> None:
     game_map = _arena_with_shore()
     shark = _spawn_shark_on(world, game_map, *_shore_shark_pos())
     player = world[object()]
+    player.tags.add(Player)
     player.components[Position] = Position(*_shore_land_pos())
     player.components[Fighter] = Fighter(hp=30, max_hp=30, accuracy=10.0, evade=0, ac=1, min_damage=4, max_damage=4)
+    player.components[Inventory] = Inventory()
+    player.components[EquipState] = EquipState()
     log = MessageLog()
     hp_before = player.components[Fighter].hp
     assert try_action(world, game_map, shark, (-1, 0), log)
@@ -146,7 +152,7 @@ def test_sharks_spawn_on_water_tiles_when_drawn() -> None:
         game_map,
         6,
         6,
-        floor_depth=1,
+        floor_depth=4,  # shark min_depth is 4 (not F1)
         rng=random.Random(0),
         spawn_config=config,
     )

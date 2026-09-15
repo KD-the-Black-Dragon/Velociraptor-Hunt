@@ -4,21 +4,28 @@ schema: spec-driven
 workflow: AGENTS.md
 
 context: |
-  Project: KD's Vore Roguelike
+  Project: Velociraptor Hunt
+  This folder is a copy of Gladiavore (KDVR spinoff) used as donor code.
+  Gladiavore and KDVR originals live in other folders — do not treat this tree as those games.
   Workflow: see AGENTS.md (OpenSpec discipline, one PR at a time, manual checklists, spec updates)
   Language: Python 3.11+
   Engine: libtcod 16.x
   Architecture: lightweight ECS (tcod.ecs or thin custom registry)
-  Terminology: monsters are "defeated" (never killed); player at 0 HP is "stunned";
-    player "digested" only via future vore module (not core combat)
-  Scope: minimal turn-based dungeon crawler first; vore mechanics as modular extensions
-  Modding: planned core feature; not implemented yet (see openspec/changes/deferred-add-modding-support/)
+  Terminology: tranquilized / finished / swallowed / digested; never kill/die/death
+  Scope: one-hunt 7DRL-style park hunt vs a clever velociraptor; weather and obscuring terrain
+  Active change: none (hunt-deferred archived 2026-09-12-hunt-deferred; foundation archived 2026-09-04-velociraptor-hunt)
+  Canon: openspec/changes/archive/2026-09-04-velociraptor-hunt/DESIGN_CANON.md plus openspec/changes/archive/2026-09-12-hunt-deferred/DESIGN_CANON.md
+  Live spec: openspec/specs/hunt/spec.md
+  Modding: donor leftover; do not expand unless the active change says so
 
 rules:
   specs:
     - Use GIVEN/WHEN/THEN scenario format
-    - Avoid death/kill/die terminology; use defeated, stunned, digested
+    - Avoid death/kill/die terminology; use defeated, stunned, digested/devoured
     - Keep requirements behavioral; put implementation detail in design.md for changes
+    - Do not invent hunt mechanics; record open questions and wait for the designer
   design:
-    - Prefer ECS components over inheritance
-    - Design vore hooks as optional components, not core dependencies
+    - Prefer ECS components over inheritance where it stays simple
+    - Dedicated raptor AI is allowed (this game is one predator, not a bestiary)
+    - Design vore as the hunt-loss path (engulfment / abdominal crushing)
+    - Do not continue Gladiavore career/match or KDVR dungeon as the product loop

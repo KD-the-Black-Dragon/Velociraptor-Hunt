@@ -17,10 +17,6 @@ class DepthEntryState:  # noqa: D101
     pass
 
 
-class EntityEntryState:  # noqa: D101
-    pass
-
-
 class InventoryModalMode:  # noqa: D101
     pass
 
@@ -178,8 +174,40 @@ from src.background_pick import (
     background_pick_lines,
     handle_background_pick_event,
 )
+from src.weapon_select import (
+    WeaponSelectAction,
+    WeaponSelectState,
+    handle_weapon_select_event,
+    weapon_select_footer,
+    weapon_select_lines,
+)
+from src.hunt_session import (
+    HuntAction,
+    HuntMode,
+    HuntSession,
+    handle_hunt_event,
+    render_hunt_stub,
+)
+from src.hunt_log import present_hunt_with_log
+from src.hunt_stats import (
+    HuntStatsAction,
+    HuntStatsScreenState,
+    HuntStatsStore,
+    handle_hunt_stats_event,
+    hunt_stats_footer,
+    hunt_stats_lines,
+    render_hunt_stats,
+)
 from src.backgrounds import apply_background_to_career
 from src.match_session import MatchEndKind, MatchSession, render_match, start_match
+from src.instant_action import (
+    InstantActionResult,
+    InstantActionState,
+    handle_instant_action_event,
+    render_instant_action,
+    start_instant_match,
+)
+from src import messages as msg
 
 EXAMINE_DESCRIPTION_FOOTER = "Esc: close"
 
@@ -193,9 +221,12 @@ class AppPhase(Enum):
     VORE_PREFS_ONBOARDING = auto()
     MENU = auto()
     NAME_ENTRY = auto()
+    WEAPON_SELECT = auto()
+    HUNT = auto()
+    STATS = auto()
     BACKGROUND_PICK = auto()
     DEPTH_ENTRY = auto()
-    ENTITY_ENTRY = auto()
+    INSTANT_ACTION = auto()
     OPTIONS = auto()
     MODS = auto()
     PAST_RUNS = auto()
@@ -223,9 +254,11 @@ class App:
     )
     menu: MainMenuState = attrs.Factory(MainMenuState)
     name_entry: NameEntryState = attrs.Factory(NameEntryState)
+    weapon_select: WeaponSelectState = attrs.field(factory=WeaponSelectState)
+    hunt: HuntSession | None = None
     background_pick: BackgroundPickState = attrs.field(factory=BackgroundPickState)
     depth_entry: DepthEntryState = attrs.Factory(DepthEntryState)
-    entity_entry: EntityEntryState = attrs.Factory(EntityEntryState)
+    instant_action: InstantActionState = attrs.field(factory=InstantActionState)
     pending_depth_jump: bool = False
     pending_display_name: str = ""
     options: OptionsMenuState = attrs.Factory(OptionsMenuState)
@@ -247,6 +280,8 @@ class App:
     past_runs_store: PastRunsStore = attrs.field(factory=PastRunsStore)
     past_runs_screen: PastRunsScreenState = attrs.field(factory=PastRunsScreenState)
     past_runs_display: tuple = attrs.field(factory=tuple)
+    hunt_stats_store: HuntStatsStore = attrs.field(factory=HuntStatsStore)
+    stats_screen: HuntStatsScreenState = attrs.field(factory=HuntStatsScreenState)
 
     def __attrs_post_init__(self) -> None:
         if self.window_controller is None:
@@ -317,20 +352,52 @@ class App:
     def _on_menu_enter(self) -> None:
         self.floor_prefetch.cancel()
         self.floor_prefetch.schedule(menu_prefetch_params(seed=None))
-        load_available = self._has_continuable_save()
-        past_runs_available = self.past_runs_store.probe()
         self.menu = MainMenuState(
             options=build_menu_options(
-                load_available=load_available,
-                past_runs_available=past_runs_available,
+                continue_available=self.save_coordinator.has_hunt_save(),
             ),
         )
         self.new_game_confirm = None
         self.pending_new_game_overwrite = False
-        # load_game_error is set by failed Load Game; clear only on successful navigation
+        self.hunt = None
+
+    def _commit_or_save_hunt(self) -> None:
+        hunt = self.hunt
+        if hunt is None:
+            return
+        if getattr(hunt, "training", False):
+            return
+        if hunt.outcome:
+            try:
+                self.hunt_stats_store.record_session(hunt)
+            except OSError:
+                pass
+            self.save_coordinator.wipe_saves()
+            return
+        self.save_coordinator.save_hunt(hunt)
+
+    def _abandon_saved_hunt(self) -> None:
+        session = self.save_coordinator.load_hunt()
+        if session is not None:
+            if not session.outcome:
+                session.outcome = "abandoned"
+            try:
+                self.hunt_stats_store.record_session(session)
+            except OSError:
+                pass
+        self.save_coordinator.wipe_saves()
+
+    def _autosave_open_hunt(self) -> None:
+        if self.phase is AppPhase.HUNT and self.hunt is not None and not self.hunt.outcome:
+            if getattr(self.hunt, "training", False):
+                return
+            if self.hunt.projectile_in_progress():
+                return
+            self.save_coordinator.save_hunt(self.hunt)
 
     def _return_to_menu(self) -> None:
         session_log.log("Quit to menu")
+        self._commit_or_save_hunt()
         if self.career is not None:
             try:
                 self.career_store.save(self.career)
@@ -341,6 +408,8 @@ class App:
         self.engine = None
         self.career = None
         self.match_session = None
+        self._stop_hunt_rain()
+        self.hunt = None
         self.downtime_hub = DowntimeHubState()
         self.quit_confirm = None
         self.mods_menu = None
@@ -378,10 +447,22 @@ class App:
         self.phase = AppPhase.MATCH
 
     def _finish_match_to_hub(self) -> None:
-        """After recap, save career and return to downtime (or end career if digested)."""
+        """After recap, save career and return to downtime (or end career if digested).
+
+        Instant action: discard ephemeral career and return to main menu (no store write).
+        """
         ms = self.match_session
+        instant = ms is not None and ms.instant_action
         digested = ms is not None and ms.end_kind is MatchEndKind.DIGESTED
         self.match_session = None
+        if instant:
+            session_log.log("Instant action ended — return to menu")
+            self.career = None
+            self.downtime_hub = DowntimeHubState()
+            self.instant_action.reset()
+            self.phase = AppPhase.MENU
+            self._on_menu_enter()
+            return
         if digested:
             session_log.log("Career ended — PC digested")
             self.career = None
@@ -404,6 +485,21 @@ class App:
             f"Returned to downtime (round {self.career.round_index}, gold {self.career.gold})",
         )
 
+    def _start_instant_match_from_ui(self) -> None:
+        """Begin solo practice match from Instant Action card pick."""
+        card = self.instant_action.selected_card
+        if card is None:
+            return
+        session_log.log(
+            f"Instant action {card.card_id} ({card.kind})",
+        )
+        self.match_session = start_instant_match(
+            card,
+            difficulty_id=self.settings.difficulty_id,
+        )
+        self.career = self.match_session.career
+        self.phase = AppPhase.MATCH
+
     def _start_new_career(
         self,
         display_name: str,
@@ -421,6 +517,63 @@ class App:
         if background_id:
             apply_background_to_career(career, background_id)
         self._enter_downtime(career)
+
+    def _start_new_hunt(self, weapon: WeaponSelectState) -> None:
+        sel = weapon.selected
+        if sel is None:
+            return
+        session_log.log(f"Started hunt ({sel.weapon_id})")
+        self.hunt = HuntSession(
+            hunter_name="",
+            weapon_id=sel.weapon_id,
+            weapon_name=sel.name,
+            difficulty_id=self.settings.difficulty_id,
+        )
+        self.engine = None
+        self.career = None
+        self.match_session = None
+        self.phase = AppPhase.HUNT
+        self.save_coordinator.save_hunt(self.hunt)
+        self._start_hunt_rain()
+
+    def _start_training(self) -> None:
+        session_log.log("Started training mode")
+        self.hunt = HuntSession(
+            hunter_name="",
+            weapon_id="rifle",
+            weapon_name="Bolt-action rifle",
+            difficulty_id=self.settings.difficulty_id,
+            training=True,
+        )
+        self.engine = None
+        self.career = None
+        self.match_session = None
+        self.phase = AppPhase.HUNT
+        self._start_hunt_rain()
+
+    def _start_hunt_rain(self) -> None:
+        if self.hunt is None:
+            return
+        from src.hunt_rain_audio import start_hunt_rain
+
+        start_hunt_rain(self.hunt.rain().level_id)
+
+    def _stop_hunt_rain(self) -> None:
+        from src.hunt_rain_audio import stop_hunt_rain
+
+        stop_hunt_rain()
+
+    def tick_hunt_rain(self) -> None:
+        if self.phase is not AppPhase.HUNT or self.hunt is None:
+            return
+        from src.hunt_rain_audio import tick_hunt_rain
+
+        tick_hunt_rain(self.hunt.rain().level_id)
+
+    def hunt_rain_ticking(self) -> bool:
+        from src.hunt_rain_audio import hunt_rain_active
+
+        return self.phase is AppPhase.HUNT and self.hunt is not None and hunt_rain_active()
 
     def _load_career_or_dungeon(self, console: tcod.console.Console) -> None:
         """Prefer Gladiavore career; fall back to legacy dungeon autosave."""
@@ -645,11 +798,30 @@ class App:
         )
 
     def projectile_in_progress(self) -> bool:
+        if self.phase is AppPhase.HUNT and self.hunt is not None:
+            return self.hunt.projectile_in_progress()
         return (
             self.phase is AppPhase.PLAY
             and self.engine is not None
             and self.engine.projectile_in_progress()
         )
+
+    def advance_projectile_animation(self) -> None:
+        if self.phase is AppPhase.HUNT and self.hunt is not None:
+            flying = self.hunt.projectile_in_progress()
+            self.hunt.advance_projectile()
+            if flying and not self.hunt.projectile_in_progress():
+                self._autosave_open_hunt()
+            return
+        if self.engine is not None:
+            self.engine.advance_projectile_animation()
+
+    def projectile_frame_sleep_seconds(self) -> float:
+        if self.phase is AppPhase.HUNT and self.hunt is not None:
+            from src.hunt_projectile import load_hunt_projectile
+
+            return load_hunt_projectile().frame_sleep_seconds
+        return 0.0
 
     def _font_ready(self) -> bool:
         return self.log_font.enabled and self.log_font.font is not None
@@ -693,6 +865,36 @@ class App:
         if self.phase is AppPhase.NAME_ENTRY:
             render_name_entry(console, self.name_entry)
             return
+        if self.phase is AppPhase.WEAPON_SELECT:
+            if not self._font_ready():
+                console.clear()
+                y = 1
+                for line in weapon_select_lines(self.weapon_select):
+                    if y >= console.height - 2:
+                        break
+                    console.print(2, y, line.text[: console.width - 4], fg=line.fg)
+                    y += 1
+                console.print(
+                    2,
+                    console.height - 1,
+                    weapon_select_footer()[: console.width - 4],
+                    fg=(140, 140, 140),
+                )
+            return
+        if self.phase is AppPhase.STATS:
+            if not self._font_ready():
+                did = self.stats_screen.difficulty_id
+                render_hunt_stats(
+                    console,
+                    self.hunt_stats_store.load(did),
+                    difficulty_id=did,
+                )
+            return
+        if self.phase is AppPhase.HUNT and self.hunt is not None:
+            render_hunt_stub(console, self.hunt)
+            if self.quit_confirm is not None and not font_ready:
+                render_quit_confirm(console, self.quit_confirm)
+            return
         if self.phase is AppPhase.BACKGROUND_PICK:
             # Full-screen text; proportional path uses present_downtime_frame.
             if not self._font_ready():
@@ -713,8 +915,8 @@ class App:
         if self.phase is AppPhase.DEPTH_ENTRY:
             render_depth_entry(console, self.depth_entry)
             return
-        if self.phase is AppPhase.ENTITY_ENTRY:
-            render_entity_entry(console, self.entity_entry)
+        if self.phase is AppPhase.INSTANT_ACTION:
+            render_instant_action(console, self.instant_action)
             return
         if self.phase is AppPhase.OPTIONS:
             render_options_menu(console, self.options, settings=self.settings)
@@ -1074,6 +1276,35 @@ class App:
                 align=(0, 0),
             )
             return
+        if self.phase is AppPhase.WEAPON_SELECT:
+            present_downtime_frame(
+                context,
+                console,
+                layout=self.active_layout(),
+                lines=weapon_select_lines(self.weapon_select),
+                footer_text=weapon_select_footer(),
+                log_font=self.log_font,
+                dialog_img=None,
+                integer_scaling=True,
+                align=(0, 0),
+            )
+            return
+        if self.phase is AppPhase.STATS:
+            present_downtime_frame(
+                context,
+                console,
+                layout=self.active_layout(),
+                lines=hunt_stats_lines(
+                    self.hunt_stats_store.load(self.stats_screen.difficulty_id),
+                    difficulty_id=self.stats_screen.difficulty_id,
+                ),
+                footer_text=hunt_stats_footer(),
+                log_font=self.log_font,
+                dialog_img=None,
+                integer_scaling=True,
+                align=(0, 0),
+            )
+            return
         if self.phase is AppPhase.BACKGROUND_PICK:
             present_downtime_frame(
                 context,
@@ -1238,6 +1469,29 @@ class App:
                 align=(0, 0),
             )
             return
+        if (
+            self.phase is AppPhase.HUNT
+            and self.hunt is not None
+            and self.log_font.enabled
+            and self.log_font.font is not None
+            and not self.hunt.help_open
+            and self.hunt.training_menu is None
+            and self.hunt.mode
+            not in (
+                HuntMode.SWALLOW,
+                HuntMode.BELLY,
+                HuntMode.DIGEST,
+                HuntMode.GAME_OVER,
+            )
+        ):
+            present_hunt_with_log(
+                context,
+                console,
+                log_entries=self.hunt.message_log.entries(),
+                font=self.log_font.font,
+                layout=self.active_layout(),
+            )
+            return
         present_frame(context, console, integer_scaling=True, align=(0, 0))
 
     def handle_event(
@@ -1249,6 +1503,18 @@ class App:
     ) -> bool:
         """Return True when the application should exit."""
         if isinstance(event, tcod.event.Quit):
+            if self.phase is AppPhase.HUNT and self.hunt is not None:
+                if getattr(self.hunt, "training", False):
+                    pass
+                elif self.hunt.outcome:
+                    try:
+                        self.hunt_stats_store.record_session(self.hunt)
+                    except OSError:
+                        pass
+                    self.save_coordinator.wipe_saves()
+                else:
+                    self.hunt.flush_projectile()
+                    self.save_coordinator.save_hunt(self.hunt)
             return True
 
         if self.phase is AppPhase.TUTORIAL_PROMPT and self.tutorial_prompt is not None:
@@ -1304,9 +1570,10 @@ class App:
                 if action is NewGameConfirmAction.CONFIRM:
                     self.new_game_confirm = None
                     self.load_game_error = None
-                    self.pending_new_game_overwrite = True
-                    self.name_entry = NameEntryState()
-                    self.phase = AppPhase.NAME_ENTRY
+                    self._abandon_saved_hunt()
+                    self.pending_new_game_overwrite = False
+                    self.weapon_select = WeaponSelectState()
+                    self.phase = AppPhase.WEAPON_SELECT
                 elif action is NewGameConfirmAction.CANCEL:
                     self.new_game_confirm = None
                 return False
@@ -1314,44 +1581,40 @@ class App:
                 # Any key dismisses the notice; menu stays ready for New Game / Options.
                 self.load_game_error = None
                 return False
-            if is_ctrl_g(event):
-                self.pending_depth_jump = True
-                self.load_game_error = None
-                if self._has_continuable_save():
-                    self.new_game_confirm = NewGameConfirmState()
-                else:
-                    self.name_entry = NameEntryState()
-                    self.phase = AppPhase.NAME_ENTRY
-                return False
-            if is_ctrl_b(event):
-                self.load_game_error = None
-                self.entity_entry = EntityEntryState()
-                self.phase = AppPhase.ENTITY_ENTRY
+            if is_ctrl_g(event) or is_ctrl_b(event):
                 return False
             action = handle_main_menu_event(self.menu, event)
             if action is MenuAction.EXIT:
                 return True
-            if action is MenuAction.NEW_GAME:
+            if action is MenuAction.CONTINUE_HUNT:
+                loaded = self.save_coordinator.load_hunt()
+                if loaded is None:
+                    self.load_game_error = "Could not load the saved hunt."
+                else:
+                    self.hunt = loaded
+                    self.phase = AppPhase.HUNT
+                    self._start_hunt_rain()
+            elif action is MenuAction.NEW_HUNT:
                 self.pending_depth_jump = False
                 self.load_game_error = None
-                if self._has_continuable_save():
+                if self.save_coordinator.has_hunt_save():
                     self.new_game_confirm = NewGameConfirmState()
                 else:
-                    self.name_entry = NameEntryState()
-                    self.phase = AppPhase.NAME_ENTRY
+                    self.weapon_select = WeaponSelectState()
+                    self.phase = AppPhase.WEAPON_SELECT
+            elif action is MenuAction.TRAINING:
+                self.load_game_error = None
+                self._start_training()
+            elif action is MenuAction.STATS:
+                self.load_game_error = None
+                self.stats_screen = HuntStatsScreenState(
+                    difficulty_id=self.settings.difficulty_id,
+                )
+                self.phase = AppPhase.STATS
             elif action is MenuAction.OPTIONS:
                 self.load_game_error = None
                 self.options = OptionsMenuState()
                 self.phase = AppPhase.OPTIONS
-            elif action is MenuAction.LOAD_GAME:
-                assert console is not None
-                self._load_career_or_dungeon(console)
-            elif action is MenuAction.PAST_RUNS:
-                self.load_game_error = None
-                self._open_past_runs()
-            elif action is MenuAction.CREDITS:
-                self.load_game_error = None
-                self.phase = AppPhase.CREDITS
             return False
 
         if self.phase is AppPhase.NAME_ENTRY:
@@ -1365,13 +1628,48 @@ class App:
                 self._on_menu_enter()
             elif action is NameEntryAction.CONFIRM:
                 self.pending_display_name = resolve_display_name(self.name_entry.buffer)
-                if self.pending_depth_jump:
-                    self.depth_entry = DepthEntryState()
-                    self.phase = AppPhase.DEPTH_ENTRY
-                else:
-                    # Product path: background pick → career hub (not dungeon).
-                    self.background_pick = BackgroundPickState()
-                    self.phase = AppPhase.BACKGROUND_PICK
+                self.weapon_select = WeaponSelectState()
+                self.phase = AppPhase.WEAPON_SELECT
+            return False
+
+        if self.phase is AppPhase.WEAPON_SELECT:
+            if is_ctrl_q(event):
+                return False
+            action = handle_weapon_select_event(self.weapon_select, event)
+            if action is WeaponSelectAction.BACK:
+                self.phase = AppPhase.MENU
+                self._on_menu_enter()
+            elif action is WeaponSelectAction.CONFIRM:
+                self._start_new_hunt(self.weapon_select)
+            return False
+
+        if self.phase is AppPhase.STATS:
+            if is_ctrl_q(event):
+                return False
+            if handle_hunt_stats_event(event, self.stats_screen) is HuntStatsAction.BACK:
+                self.phase = AppPhase.MENU
+                self._on_menu_enter()
+            return False
+
+        if self.phase is AppPhase.HUNT:
+            if self.quit_confirm is not None:
+                action = handle_quit_confirm_event(self.quit_confirm, event)
+                if action is QuitConfirmAction.CONFIRM:
+                    self.quit_confirm = None
+                    self._return_to_menu()
+                elif action is QuitConfirmAction.CANCEL:
+                    self.quit_confirm = None
+                return False
+            if is_ctrl_q(event):
+                if self.hunt is not None:
+                    self.hunt.flush_projectile()
+                self._autosave_open_hunt()
+                self.quit_confirm = QuitConfirmState()
+                return False
+            if self.hunt is not None and handle_hunt_event(self.hunt, event) is HuntAction.LEAVE:
+                self._return_to_menu()
+                return False
+            self._autosave_open_hunt()
             return False
 
         if self.phase is AppPhase.BACKGROUND_PICK:
@@ -1421,23 +1719,16 @@ class App:
                     )
             return False
 
-        if self.phase is AppPhase.ENTITY_ENTRY:
+        if self.phase is AppPhase.INSTANT_ACTION:
             if is_ctrl_q(event):
                 return False
-            action = handle_entity_entry_event(self.entity_entry, event)
-            if action is EntityEntryAction.CANCEL:
+            result = handle_instant_action_event(self.instant_action, event)
+            if result is InstantActionResult.CANCEL_TO_MENU:
+                self.instant_action.reset()
                 self.phase = AppPhase.MENU
                 self._on_menu_enter()
-            elif action is EntityEntryAction.CONFIRM:
-                from src.data.entity_loader import load_entity_registry
-
-                definition, _error = validate_entity_entry(
-                    self.entity_entry.buffer,
-                    load_entity_registry(),
-                )
-                assert definition is not None
-                assert console is not None
-                self._start_arena_game(definition.id, console=console)
+            elif result is InstantActionResult.START_MATCH:
+                self._start_instant_match_from_ui()
             return False
 
         if self.phase is AppPhase.OPTIONS:
@@ -1564,20 +1855,33 @@ class App:
             if self.quit_confirm is not None:
                 action = handle_quit_confirm_event(self.quit_confirm, event)
                 if action is QuitConfirmAction.CONFIRM:
-                    # Abandon match without settlement — return to hub as-is.
                     self.quit_confirm = None
+                    instant = self.match_session.instant_action
                     self.match_session = None
-                    self.phase = AppPhase.DOWNTIME
-                    if self.career is not None:
-                        try:
-                            self.career_store.save(self.career)
-                        except OSError:
-                            pass
+                    if instant:
+                        self.career = None
+                        self.instant_action.reset()
+                        self.phase = AppPhase.MENU
+                        self._on_menu_enter()
+                    else:
+                        # Abandon match without settlement — return to hub as-is.
+                        self.phase = AppPhase.DOWNTIME
+                        if self.career is not None:
+                            try:
+                                self.career_store.save(self.career)
+                            except OSError:
+                                pass
                 elif action is QuitConfirmAction.CANCEL:
                     self.quit_confirm = None
                 return False
             if is_ctrl_q(event):
                 self.quit_confirm = QuitConfirmState()
+                return False
+            if is_ctrl_s(event) and self.match_session.instant_action:
+                self.match_session.message_log.add(
+                    msg.instant_action_not_saved(),
+                    category=MessageCategory.CAUTION,
+                )
                 return False
             if self.match_session.handle_event(event):
                 self._finish_match_to_hub()

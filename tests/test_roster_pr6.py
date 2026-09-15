@@ -8,7 +8,7 @@ import tcod.event
 from tcod.event import KeySym, Scancode
 
 from src.app import AppPhase
-from src.career import new_career
+from src.career import CAMPAIGN_STYLE_COMPANY, new_career
 from src.components import Position
 from src.downtime_hub import (
     HubView,
@@ -59,47 +59,36 @@ def test_try_hire_and_refund() -> None:
     assert gold2 == gold + refund
 
 
-def test_new_career_forces_starter_picks(tmp_path) -> None:
+def test_new_career_solo_skips_starter_picks(tmp_path) -> None:
+    """Solo Duels career construct still skips the ally starter gate."""
     app = app_with_isolated_save(tmp_path)
-    console = make_console()
-    app.handle_event(_key(KeySym.RETURN), console=console)
-    app.handle_event(_key(KeySym.RETURN), console=console)
-    app.handle_event(_key(KeySym.RETURN), console=console)  # background
+    app._enter_downtime(new_career(player_name="Rix"))
     assert app.phase is AppPhase.DOWNTIME
     assert app.career is not None
-    assert app.career.starter_picks_done is False
-    assert app.downtime_hub.view is HubView.STARTER_PICK
-
-
-def test_starter_pick_two_completes(tmp_path) -> None:
-    app = app_with_isolated_save(tmp_path)
-    console = make_console()
-    app.handle_event(_key(KeySym.RETURN), console=console)
-    app.handle_event(_key(KeySym.RETURN), console=console)
-    app.handle_event(_key(KeySym.RETURN), console=console)  # background
-    assert app.downtime_hub.view is HubView.STARTER_PICK
-    # Hire first free
-    app.handle_event(_key(KeySym.RETURN), console=console)
-    # After first pick, still starter or stub then starter
-    if app.downtime_hub.view is HubView.STUB_NOTICE:
-        app.handle_event(_key(KeySym.RETURN), console=console)
-    # May need to re-open market
-    if app.downtime_hub.view is HubView.STARTER_PICK:
-        app.handle_event(_key(KeySym.RETURN), console=console)
-    # Complete second
-    if app.downtime_hub.view is HubView.STUB_NOTICE:
-        app.handle_event(_key(KeySym.RETURN), console=console)
-    if app.downtime_hub.view is HubView.STARTER_PICK:
-        app.handle_event(_key(KeySym.RETURN), console=console)
-    if app.downtime_hub.view is HubView.STUB_NOTICE:
-        app.handle_event(_key(KeySym.RETURN), console=console)
-    assert app.career is not None
-    assert len(app.career.roster) >= 2
+    assert app.career.is_solo()
     assert app.career.starter_picks_done is True
+    assert app.downtime_hub.view is HubView.ROOT
+
+
+def test_company_starter_pick_two_completes() -> None:
+    """Company (on ice) still supports free starter ally picks when constructed."""
+    from src.downtime_hub import DowntimeHubState
+
+    career = new_career(player_name="Boss", campaign_style=CAMPAIGN_STYLE_COMPANY)
+    hub = DowntimeHubState()
+    hub.ensure_starter_gate(career)
+    assert hub.view is HubView.STARTER_PICK
+    # Manually complete starter gate as company would
+    offers = generate_market(random.Random(9), count=2, free=True)
+    career.set_allies(offers[:2])
+    career.starter_picks_done = True
+    hub.reset_to_root()
+    assert career.starter_picks_done is True
+    assert len(career.roster) == 2
 
 
 def test_match_spawns_deployed_allies() -> None:
-    career = new_career(player_name="Boss")
+    career = new_career(player_name="Boss", campaign_style=CAMPAIGN_STYLE_COMPANY)
     career.starter_picks_done = True
     offers = generate_market(random.Random(3), count=2, free=True)
     for o in offers:
@@ -114,7 +103,7 @@ def test_match_spawns_deployed_allies() -> None:
 
 
 def test_talk_sets_order() -> None:
-    career = new_career(player_name="Boss")
+    career = new_career(player_name="Boss", campaign_style=CAMPAIGN_STYLE_COMPANY)
     career.starter_picks_done = True
     offers = generate_market(random.Random(4), count=1, free=True)
     offers[0].deployed = True
@@ -129,14 +118,14 @@ def test_talk_sets_order() -> None:
     assert session.talk_ui is TalkUiMode.PICK_ALLY
     session.handle_event(_key(KeySym.N1))
     assert session.talk_ui is TalkUiMode.PICK_ORDER
-    session.handle_event(_key(KeySym.N2))  # defend
+    session.handle_event(_key(KeySym.N2))  # Help me!
     assert session.talk_ui is TalkUiMode.CLOSED
     aid = session.ally_id_by_entity[session.living_allies()[0]]
-    assert session.ally_order[aid] == "defend"
+    assert session.ally_order[aid] == "help_me"
 
 
 def test_red_ally_down_refunds() -> None:
-    career = new_career(player_name="Boss")
+    career = new_career(player_name="Boss", campaign_style=CAMPAIGN_STYLE_COMPANY)
     career.starter_picks_done = True
     career.gold = 100
     offers = generate_market(random.Random(5), count=1, free=False)

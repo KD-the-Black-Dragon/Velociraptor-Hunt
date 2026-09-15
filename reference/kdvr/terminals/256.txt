@@ -1,0 +1,23 @@
+---
+pid: 14036
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; python -m pytest tests/test_sim_isolation.py -v --tb=short"
+started_at: 2026-07-12T14:08:10.802Z
+running_for_ms: 13040005 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 6 items
+
+tests/test_sim_isolation.py::test_isolation_seed_is_deterministic PASSED [ 16%]
+tests/test_sim_isolation.py::test_apply_loadout_profile_wields_closest_weapon PASSED [ 33%]
+tests/test_sim_isolation.py::test_start_isolation_floor_at_depth_three PASSED [ 50%]
+tests/test_sim_isolation.py::test_sim_isolation_run_returns_snapshot PASSED [ 66%]
+tests/test_sim_isolation.py::test_merge_isolation_into_rows_populates_iso_runs PASSED [ 83%]
+tests/test_sim_isolation.py::test_balance_analysis_includes_isolation_runs PASSED [100%]
+
+======================== 6 passed in 146.97s (0:02:26) ========================

@@ -13,14 +13,18 @@ from tcod.event import KeySym, Modifier
 
 from src import messages
 from src.components import BlocksMovement, Engulfed, Fighter, Position, Stunned
+from src.constants import DEBUG_GAMEPLAY_HOTKEYS_ENABLED
 from src.debug.session_log import session_log
 from src.input_handlers import (
     AUTOEXPLORE_KEY,
     COME_HERE_KEY,
     CLOSE_DOOR_KEY,
+    DESCEND_EXTRA_KEYS,
     DESCEND_KEY,
+
     DIRECTION_KEYS,
     is_ctrl_direction,
+    DISMISS_ALLY_KEY,
     DROP_ITEM_KEY,
     EVOKE_WAND_KEY,
     EXAMINE_KEY,
@@ -43,6 +47,7 @@ from src.macguffin_victory_confirm import (
 )
 from src.systems.come_here import ComeHereResult, try_come_here_shout
 from src.systems.combat import heal, sync_stunned_state, try_action, try_force_attack
+from src.systems.dismiss import try_confirm_dismiss
 from src.systems.examine import description_for_tile, move_examine_cursor
 from src.systems.floor_runes import try_activate_floor_rune
 from src.systems.inventory import (
@@ -190,6 +195,7 @@ def handle_inventory_modal_event(engine: GameEngine, event: tcod.event.Event) ->
             floor_depth=engine.floor_depth,
             difficulty_id=engine.difficulty_id,
             rng=engine.rng,
+            vore_prefs=engine.vore_content_prefs,
         ):
             engine._consume_player_turn()
     return EngineEventResult.CONTINUE
@@ -239,31 +245,78 @@ def handle_examine_cursor_event(engine: GameEngine, event: tcod.event.Event) -> 
         engine.examine_state.showing_description = True
     return EngineEventResult.CONTINUE
 
-def handle_gameplay_event(engine: GameEngine, event: tcod.event.Event) -> EngineEventResult:
+
+def handle_dismiss_cursor_event(engine: GameEngine, event: tcod.event.Event) -> EngineEventResult:
+    if not isinstance(event, tcod.event.KeyDown):
+        return EngineEventResult.CONTINUE
+    if event.sym == KeySym.ESCAPE:
+        engine.dismiss_state.reset()
+        return EngineEventResult.CONTINUE
+    if event.sym in DIRECTION_KEYS:
+        engine.dismiss_state.cursor = move_examine_cursor(
+            engine.dismiss_state.cursor,
+            DIRECTION_KEYS[event.sym],
+            engine.game_map,
+        )
+        return EngineEventResult.CONTINUE
+    if event.sym in MODAL_ADVANCE_KEYS:
+        cursor = engine.dismiss_state.cursor
+        if try_confirm_dismiss(
+            engine.world,
+            engine.message_log,
+            x=cursor.x,
+            y=cursor.y,
+        ):
+            engine.dismiss_state.reset()
+    return EngineEventResult.CONTINUE
+
+def _handle_debug_gameplay_hotkey(
+    engine: GameEngine,
+    event: tcod.event.Event,
+) -> bool:
+    """Apply R/S/F2–F6 dev hotkeys when ``DEBUG_GAMEPLAY_HOTKEYS_ENABLED``."""
+    if not DEBUG_GAMEPLAY_HOTKEYS_ENABLED:
+        return False
     match event:
         case tcod.event.KeyDown(sym=KeySym.R):
             engine.new_game(log_session_milestones=False)
             session_log.log("Dungeon regenerated")
             engine.message_log.add(messages.dungeon_regenerated())
-        case tcod.event.KeyDown(sym=sym, mod=mod) if (
-            sym == DESCEND_KEY and mod & Modifier.SHIFT
-        ):
-            if engine._try_descend():
-                engine._consume_player_turn()
+            return True
         case tcod.event.KeyDown(sym=KeySym.S):
             engine._toggle_stunned_debug()
+            return True
         case tcod.event.KeyDown(sym=KeySym.F2):
             debug_weaken_all_monsters(engine.world, engine.message_log)
+            return True
         case tcod.event.KeyDown(sym=KeySym.F3):
             engine._toggle_water_testing_mode()
+            return True
         case tcod.event.KeyDown(sym=KeySym.F4):
             engine._cycle_layout_archetype_force()
+            return True
         case tcod.event.KeyDown(sym=KeySym.F5):
             engine._toggle_debug_omniscient_vision()
+            return True
         case tcod.event.KeyDown(sym=KeySym.F6):
             from src.debug.force_crash import trigger_force_crash
 
             trigger_force_crash()
+        case _:
+            return False
+    return True
+
+
+def handle_gameplay_event(engine: GameEngine, event: tcod.event.Event) -> EngineEventResult:
+    if _handle_debug_gameplay_hotkey(engine, event):
+        return EngineEventResult.CONTINUE
+    match event:
+        case tcod.event.KeyDown(sym=sym, mod=mod) if (
+            (sym == DESCEND_KEY and mod & Modifier.SHIFT)
+            or sym in DESCEND_EXTRA_KEYS
+        ):
+            if engine._try_descend():
+                engine._consume_player_turn()
         case tcod.event.KeyDown(sym=KeySym.COMMA):
             if engine.player is not None and not engine._pack_blocked_while_engulfed():
                 begin_manual_pickup(
@@ -275,9 +328,17 @@ def handle_gameplay_event(engine: GameEngine, event: tcod.event.Event) -> Engine
         case tcod.event.KeyDown(sym=sym) if sym == INSPECT_INVENTORY_KEY:
             if engine.player is not None and not engine._pack_blocked_while_engulfed():
                 begin_inspect(engine.player, engine.inventory_modal, engine.message_log)
-        case tcod.event.KeyDown(sym=sym) if sym == DROP_ITEM_KEY:
+        case tcod.event.KeyDown(sym=sym, mod=mod) if (
+            sym == DROP_ITEM_KEY and not (mod & Modifier.SHIFT)
+        ):
             if engine.player is not None and not engine._pack_blocked_while_engulfed():
                 begin_drop(engine.player, engine.inventory_modal, engine.message_log)
+        case tcod.event.KeyDown(sym=sym, mod=mod) if (
+            sym == DISMISS_ALLY_KEY and (mod & Modifier.SHIFT)
+        ):
+            if engine.player is not None:
+                engine.close_door_pending = False
+                engine.dismiss_state.enter(engine.player.components[Position])
         case tcod.event.KeyDown(sym=sym, mod=mod) if (
             sym == WIELD_WEAPON_KEY and not (mod & Modifier.SHIFT)
         ):
@@ -388,6 +449,8 @@ def handle_gameplay_event(engine: GameEngine, event: tcod.event.Event) -> Engine
                         engine.message_log,
                         engine.rng,
                         run_stats=engine.run_stats,
+                        alternate_cv_mechanics=engine.alternate_cv_mechanics,
+                        difficulty_profile=engine.difficulty_profile(),
                     )
                 engine._consume_player_turn()
             elif try_force_attack(
@@ -422,6 +485,8 @@ def handle_gameplay_event(engine: GameEngine, event: tcod.event.Event) -> Engine
                             engine.message_log,
                             engine.rng,
                             run_stats=engine.run_stats,
+                            alternate_cv_mechanics=engine.alternate_cv_mechanics,
+                            difficulty_profile=engine.difficulty_profile(),
                         )
                     engine._consume_player_turn()
                 elif Stunned in engine.player.tags:
@@ -493,12 +558,16 @@ def log_overlay_metrics(engine: GameEngine) -> tuple[int, int]:
 
 def handle_meta_overlay_events(engine: GameEngine, event: tcod.event.Event) -> bool:
     line_count, viewport_lines = engine._log_overlay_metrics()
+    from src.ui.proportional_log import help_overlay_viewport_lines
+
+    help_viewport = help_overlay_viewport_lines(engine.ui_layout)
     if handle_help_overlay_event(
         engine.help_overlay,
         engine.log_overlay,
         event,
         log_line_count=line_count,
         log_viewport_lines=viewport_lines,
+        help_viewport_lines=help_viewport,
     ):
         return True
     return handle_log_overlay_event(
@@ -566,6 +635,9 @@ def handle_event(engine: GameEngine, event: tcod.event.Event) -> EngineEventResu
 
     if engine.examine_state.active:
         return engine._handle_examine_cursor_event(event)
+
+    if engine.dismiss_state.active:
+        return engine._handle_dismiss_cursor_event(event)
 
     return engine._handle_gameplay_event(event)
 

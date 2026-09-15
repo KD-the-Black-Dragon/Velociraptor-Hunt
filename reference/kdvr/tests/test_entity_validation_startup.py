@@ -43,6 +43,7 @@ def test_startup_validation_failure_subprocess(tmp_path: Path) -> None:
     env = {
         **os.environ,
         "KDS_SKIP_STARTUP_DIALOG": "1",
+        "KDS_SKIP_SINGLE_INSTANCE": "1",
         "KDS_USER_DATA_DIR": str(tmp_path),
     }
     result = subprocess.run(
@@ -85,6 +86,7 @@ def test_startup_validation_failure_in_process(
     monkeypatch.setattr(entity_validation, "ENTITIES_PATH", broken)
     monkeypatch.setattr(debug_paths, "LOGS_DIR", tmp_path / "logs")
     monkeypatch.setenv("KDS_SKIP_STARTUP_DIALOG", "1")
+    monkeypatch.setenv("KDS_SKIP_SINGLE_INSTANCE", "1")
     reset_quit_milestone_state()
 
     from src.main import main

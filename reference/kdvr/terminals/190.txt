@@ -1,0 +1,16 @@
+---
+pid: 16632
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_macguffins_pr1.py tests/test_macguffins_pr2.py tests/test_macguffins_pr3.py -q"
+started_at: 2026-07-06T12:30:33.871Z
+running_for_ms: 22855010 
+---
+......................................                                   [100%]
+============================== warnings summary ===============================
+tests/test_macguffins_pr3.py::test_decline_macguffin_victory_consumes_turn
+  C:\VS Code Projects\kds-vore-roguelike\src\systems\fov.py:23: RuntimeWarning: Given pov index (40, 70) is outside the array of shape (10, 45).
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+38 passed, 1 warning in 16.98s

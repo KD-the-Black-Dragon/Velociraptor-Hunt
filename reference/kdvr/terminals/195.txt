@@ -1,0 +1,18 @@
+---
+pid: 4664
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "python -m pytest tests/test_user_data.py tests/test_save_store.py tests/test_past_runs_store.py tests/test_settings_store.py tests/test_crash_report.py tests/test_session_log.py tests/test_startup_error.py tests/test_entity_validation_startup.py -q --tb=short"
+started_at: 2026-07-06T16:31:18.280Z
+running_for_ms: 8414994  
+---
+............................................F.                           [100%]
+================================== FAILURES ===================================
+_________________ test_startup_validation_failure_subprocess __________________
+tests\test_entity_validation_startup.py:61: in test_startup_validation_failure_subprocess
+    assert startup_log.is_file()
+E   AssertionError: assert False
+E    +  where False = is_file()
+E    +    where is_file = WindowsPath('C:/Users/hybri/AppData/Local/Temp/pytest-of-hybri/pytest-254/test_startup_validation_failur0/logs/startup_error.log').is_file
+=========================== short test summary info ===========================
+FAILED tests/test_entity_validation_startup.py::test_startup_validation_failure_subprocess
+1 failed, 45 passed in 17.20s

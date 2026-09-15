@@ -1,0 +1,64 @@
+---
+pid: 13664
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; python -m pytest tests/test_rest_until_healed.py tests/test_enhancements_1.py -q"
+started_at: 2026-07-04T12:22:49.434Z
+running_for_ms: 48845012 
+---
+.........F............                                                   [100%]
+================================== FAILURES ===================================
+____________ test_ally_alarm_when_evil_visible_to_ally_not_player _____________
+
+    def test_ally_alarm_when_evil_visible_to_ally_not_player() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 15
+        pos = player.components[Position]
+    
+        ally = spawn_test_npc(
+            engine.world,
+            x=pos.x + 1,
+            y=pos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+            species_id="knight",
+        )
+        ally.components[ProperName] = ProperName(name="Sir Bob")
+    
+        evil = spawn_test_npc(
+            engine.world,
+            x=pos.x + 12,
+            y=pos.y,
+            species="wolf",
+            alignment=Alignment.EVIL,
+            species_id="wolf",
+        )
+        update_fov(engine.game_map, pos.x, pos.y)
+        evil_pos = evil.components[Position]
+        engine.game_map.visible[evil_pos.y, evil_pos.x] = False
+    
+        assert find_good_ally_alarm_shouter(engine.game_map, engine.world, player) is ally
+    
+        with patch("src.engine.run_monster_turns"):
+            result = try_rest_until_healed_or_danger(
+                player=player,
+                game_map=engine.game_map,
+                world=engine.world,
+                message_log=engine.message_log,
+                consume_turn=engine._consume_player_turn,
+                max_turns=1,
+            )
+    
+>       assert result.end_reason == RestEndReason.ALLY_ALARM
+E       AssertionError: assert <RestEndReason.BLOCKED: 'blocked'> == <RestEndReason.ALLY_ALARM: 'ally_alarm'>
+E        +  where <RestEndReason.BLOCKED: 'blocked'> = RestResult(consumed_turns=0, end_reason=<RestEndReason.BLOCKED: 'blocked'>).end_reason
+E        +  and   <RestEndReason.ALLY_ALARM: 'ally_alarm'> = RestEndReason.ALLY_ALARM
+
+tests\test_rest_until_healed.py:259: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[prefetch] miss -> sync
+[map_gen] rejected attempt 1: disconnected_land_after_water
+=========================== short test summary info ===========================
+FAILED tests/test_rest_until_healed.py::test_ally_alarm_when_evil_visible_to_ally_not_player
+1 failed, 21 passed in 20.23s

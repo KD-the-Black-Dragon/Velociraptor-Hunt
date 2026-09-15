@@ -9,6 +9,7 @@ from tcod.event import KeySym, Modifier, Scancode
 from src.app import App, AppPhase
 from src.settings_store import SettingsStore
 from src.ui.credits_screen import CREDITS_TITLE, render_credits_screen
+from tests.save_test_helpers import app_with_isolated_save
 
 
 def _key(sym: KeySym, *, mod: Modifier = Modifier.NONE) -> tcod.event.KeyDown:
@@ -26,35 +27,24 @@ def _onboarded_settings(tmp_path) -> SettingsStore:
     return SettingsStore.load(path)
 
 
-def test_menu_lists_credits_above_exit(tmp_path) -> None:
-    app = App(settings=_onboarded_settings(tmp_path))
-    assert "Credits" in app.menu.options
-    assert app.menu.options[-2:] == ("Credits", "Exit")
-
-
-def test_menu_enter_on_credits_opens_screen(tmp_path) -> None:
-    app = App(settings=_onboarded_settings(tmp_path))
-    while app.menu.highlighted_option != "Credits":
-        app.menu.move_down()
-    app.handle_event(_key(KeySym.RETURN))
-    assert app.phase is AppPhase.CREDITS
+def test_hunt_menu_omits_credits(tmp_path) -> None:
+    app = app_with_isolated_save(tmp_path)
+    assert "Credits" not in app.menu.options
+    assert app.menu.options == ("New Hunt", "Training Mode", "Stats", "Options", "Quit")
 
 
 def test_credits_escape_returns_to_menu(tmp_path) -> None:
     app = App(settings=_onboarded_settings(tmp_path))
-    while app.menu.highlighted_option != "Credits":
-        app.menu.move_down()
-    app.handle_event(_key(KeySym.RETURN))
+    app.phase = AppPhase.CREDITS
     app.handle_event(_key(KeySym.ESCAPE))
     assert app.phase is AppPhase.MENU
 
 
 def test_credits_ctrl_q_is_no_op(tmp_path) -> None:
     app = App(settings=_onboarded_settings(tmp_path))
-    while app.menu.highlighted_option != "Credits":
-        app.menu.move_down()
-    app.handle_event(_key(KeySym.RETURN))
+    app.phase = AppPhase.CREDITS
     assert not app.handle_event(_key(KeySym.Q, mod=Modifier.CTRL))
+    assert app.phase is AppPhase.CREDITS
     assert app.phase is AppPhase.CREDITS
 
 

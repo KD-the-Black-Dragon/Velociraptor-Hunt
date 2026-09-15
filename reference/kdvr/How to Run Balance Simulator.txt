@@ -1,0 +1,230 @@
+What it does (one sentence)
+
+A headless bot plays your game thousands of times within a time budget, records how hard each floor is, and writes CSV you can open in Excel/Calc to compare before vs after balance tweaks.
+
+Each default run has two passes:
+
+┌──────────────────────────┬───────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────────┐
+│ Pass                     │ What it simulates                                             │ Why                                                                │
+├──────────────────────────┼───────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────┤
+│ Trajectory (70% of time) │ Full runs from floor 1                                        │ “How does a real run feel floor by floor?”                         │
+├──────────────────────────┼───────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────┤
+│ Isolation (30% of time)  │ Single floor only, with gear injected from trajectory medians │ “Is floor 7 intrinsically nasty, regardless of how you got there?” │
+└──────────────────────────┴───────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────────┘
+
+It always uses stock data/ (no mods). It does not open a game window.
+
+───
+
+The workflow you described
+
+1. Run baseline   → balance_compare.csv (column "baseline")
+2. Tweak data/    → e.g. wolf damage, spawn weights, depth_scaling.json
+3. Run again      → append column "after_wolf_nerf"
+4. Open CSV       → same rows, two columns side by side
+
+First run (creates the file):
+
+python tools/sim_balance.py --difficulty normal --seconds 300 --label baseline --output balance_compare.csv
+
+After a balance change (adds a column):
+
+python tools/sim_balance.py --difficulty normal --seconds 300 --label after_wolf_nerf --append --output balance_compare.csv
+
+Use --label names you’ll recognize in Excel (baseline, wolf_melee_only, hard_ramp_v2, etc.).
+
+───
+
+Time budget: 5 minutes vs 50 minutes
+
+--seconds is wall-clock time, not “number of runs.” More seconds → more bot runs → stabler numbers (especially on deep floors).
+
+┌────────────────────────┬─────────────────────────────────────────────────────────────┐
+│ Goal                   │ Command                                                     │
+├────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ Quick smoke (~1 min)   │ python tools/sim_balance.py --seconds 60 --label quick      │
+├────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ Default (~5 min)       │ python tools/sim_balance.py --seconds 300 --label baseline  │
+├────────────────────────┼─────────────────────────────────────────────────────────────┤
+│ Long session (~50 min) │ python tools/sim_balance.py --seconds 3000 --label long_run │
+└────────────────────────┴─────────────────────────────────────────────────────────────┘
+
+With defaults, 300 seconds splits roughly as 210s trajectory + 90s isolation. A 3000-second run is ~35 min trajectory + ~15 min isolation.
+
+Tip: Start with --seconds 60 to confirm it finishes; use 300+ when you care about floors 10+.
+
+───
+
+Difficulty: normal vs hard (and others)
+
+python tools/sim_balance.py --difficulty easier   --seconds 300 --label easier_baseline
+python tools/sim_balance.py --difficulty normal --seconds 300 --label normal_baseline
+python tools/sim_balance.py --difficulty hard   --seconds 300 --label hard_baseline
+python tools/sim_balance.py --difficulty nightmare --seconds 300 --label nightmare_baseline
+
+One difficulty per run. It reads that profile from data/depth_scaling.json (spawn density, rune quota, prefix rates, depth scaling).
+
+To compare difficulties, run separately with different --label values and either:
+• use the same --output with --append, or
+• keep separate CSV files per difficulty.
+
+───
+
+All CLI options (cheat sheet)
+
+Run from the project root: C:\VS Code Projects\kds-vore-roguelike
+
+┌───────────────────────┬─────────────────────┬──────────────────────────────────────────────────────────┐
+│ Option                │ Default             │ What it does                                             │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --difficulty          │ normal              │ easier, normal, hard, or nightmare                       │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --seconds             │ 300                 │ Total wall-clock budget (seconds)                        │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --trajectory-fraction │ 0.7                 │ Fraction of budget for trajectory (rest = isolation)     │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --output              │ balance_compare.csv │ Output file path                                         │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --format              │ compare             │ compare = side-by-side columns; wide = one floor per row │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --append              │ off                 │ Add a new column to an existing compare sheet            │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --label               │ auto timestamp      │ Column header name for this run                          │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --curve-output        │ none                │ Also write a chart-friendly wide CSV for this run only   │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --max-turns           │ 50000               │ Safety cap per trajectory run (rarely need to change)    │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --seed                │ random              │ Fix RNG for reproducible reruns                          │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --floors-max          │ 20                  │ Analyze floors 1 through N                               │
+├───────────────────────┼─────────────────────┼──────────────────────────────────────────────────────────┤
+│ --trajectory-only     │ off                 │ Skip isolation pass (faster, trajectory metrics only)    │
+└───────────────────────┴─────────────────────┴──────────────────────────────────────────────────────────┘
+
+───
+
+Compare sheet vs curve file
+
+balance_compare.csv (default) — best for your tweak-and-compare loop:
+
+• Column A: metric (stable keys like traj.f07.digest_rate)
+• Column B: label (human-readable)
+• Column C, D, …: one column per run (baseline, after_tweak, …)
+
+baseline_curve.csv (via --curve-output) — one run, wide table:
+
+• Rows = floors 1–20
+• Columns = traj_difficulty_mean, iso_digest_rate, etc.
+• Good for charting a single run; overwritten each time unless you rename the path
+
+Example — compare sheet and a curve for charting:
+
+python tools/sim_balance.py --seconds 300 --label baseline --output balance_compare.csv --curve-output baseline_curve.csv
+
+After a tweak:
+
+python tools/sim_balance.py --seconds 300 --label after_tweak --append --output balance_compare.csv --curve-output after_tweak_curve.csv
+
+───
+
+What to look at in the CSV
+
+Metadata rows (top of sheet):
+
+┌───────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Row                       │ Meaning                                                                                                        │
+├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ meta.seconds_budget       │ How long you ran                                                                                               │
+├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ meta.trajectory_runs      │ How many full runs completed                                                                                   │
+├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ meta.isolation_runs_total │ Total single-floor runs                                                                                        │
+├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ meta.data_fingerprint     │ Hash of data/ — if this changes between columns, you're comparing different tuning sets (expected after edits) │
+└───────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Per-floor rows (the meat):
+
+┌──────────────────────────┬─────────────────────────────────────────────┐
+│ Prefix                   │ Meaning                                     │
+├──────────────────────────┼─────────────────────────────────────────────┤
+│ traj.f03.digest_rate     │ Fraction digested on floor 3 (trajectory)   │
+├──────────────────────────┼─────────────────────────────────────────────┤
+│ traj.f03.difficulty_mean │ Composite difficulty 0–100 (higher = worse) │
+├──────────────────────────┼─────────────────────────────────────────────┤
+│ traj.f03.runs_reached    │ Sample size — low = noisy                   │
+├──────────────────────────┼─────────────────────────────────────────────┤
+│ iso.f03.runs             │ Isolation sample count for floor 3          │
+├──────────────────────────┼─────────────────────────────────────────────┤
+│ iso.f03.digest_rate      │ Digest rate on floor 3 in isolation         │
+└──────────────────────────┴─────────────────────────────────────────────┘
+
+Rule of thumb: digest_rate near 1.0 means “bot dies here a lot.” Use difficulty_mean and component rows (runes_0, early_bail_rate, consumable means) to see why.
+
+Treat numbers as relative (before vs after your tweak), not as “correct difficulty” until you've calibrated a target curve.
+
+───
+
+Example session (copy-paste)
+
+cd "C:\VS Code Projects\kds-vore-roguelike"
+
+REM Baseline — 5 minutes, normal
+python tools/sim_balance.py --difficulty normal --seconds 300 --label baseline --output balance_compare.csv --curve-output baseline_curve.csv
+
+REM ... edit data/ ...
+
+REM After change — append column
+python tools/sim_balance.py --difficulty normal --seconds 300 --label wolf_nerf_v1 --append --output balance_compare.csv --curve-output wolf_nerf_v1_curve.csv
+
+Same seed for apples-to-apples RNG (still varies run-to-run within the budget):
+
+python tools/sim_balance.py --difficulty normal --seconds 300 --seed 23 --label baseline --output balance_compare.csv
+python tools/sim_balance.py --difficulty normal --seconds 300 --seed 23 --label after_tweak --append --output balance_compare.csv
+
+Hard mode, longer run:
+
+python tools/sim_balance.py --difficulty hard --seconds 3000 --label hard_50min --output balance_hard.csv
+
+Quick trajectory-only check (no iso_* columns):
+
+python tools/sim_balance.py --seconds 120 --trajectory-only --label traj_only_smoke
+
+Shallow floors only (faster feedback while tuning early game):
+
+python tools/sim_balance.py --seconds 180 --floors-max 5 --label early_game_check
+
+───
+
+What you can change in data/ (sim will pick up)
+
+The sim reflects whatever is in stock JSON:
+
+┌─────────────────────────┬─────────────────────────────────────────────────────────────────────┐
+│ File                    │ Examples of tweaks                                                  │
+├─────────────────────────┼─────────────────────────────────────────────────────────────────────┤
+│ data/depth_scaling.json │ Per-difficulty density, runes/floor, prefix spawn, depth stat ramps │
+├─────────────────────────┼─────────────────────────────────────────────────────────────────────┤
+│ data/entities.json      │ HP, damage, AC, abilities, digest time                              │
+├─────────────────────────┼─────────────────────────────────────────────────────────────────────┤
+│ data/dungeon_spawn.json │ What spawns on floors, weights                                      │
+├─────────────────────────┼─────────────────────────────────────────────────────────────────────┤
+│ Item/loot tables        │ Gear the bot can pick up (affects survival)                         │
+├─────────────────────────┼─────────────────────────────────────────────────────────────────────┤
+│ data/npc_prefixes.json  │ Elite/Brute/etc. prefix rates and bonuses                           │
+└─────────────────────────┴─────────────────────────────────────────────────────────────────────┘
+
+Re-run with --append after each deliberate change; diff the columns in Excel.
+
+───
+
+Practical tips
+
+1. Longer --seconds = smoother curves — especially floors 15–20 where few runs reach.
+2. Check traj.f01.runs_reached / iso.f01.runs — if they're tiny, increase time or lower --floors-max while tuning early floors.
+3. --append requires the same compare layout — keep --floors-max the same across appended runs.
+4. Stock normal isn't a locked baseline yet — use the tool for deltas after your edits, not as absolute truth.
+5. Console prints something like: Wrote balance_compare.csv (column 'baseline', 12 trajectory runs, 210.3s trajectory, 45 isolation runs, 87.1s isolation) — that's your sanity check that it actually played.
+
+If you want, we can do a walkthrough on one real CSV you have (e.g. balance_compare.csv) and I'll point at which rows matter most for a specific tweak you're considering.

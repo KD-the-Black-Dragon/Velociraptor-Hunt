@@ -5,13 +5,13 @@ import tcod.console
 from src.constants import SCREEN_WIDTH
 from src.text import cp437_safe
 
-# FIGlet-style "standard" block for GLADIAVORE (single word product title).
+# FIGlet-style "standard" block for VELOCIRAPTOR (HUNT is drawn under the banner).
 TITLE_BANNER_LINES: tuple[str, ...] = (
-    "  ____ _           _ _                     ",
-    " / ___| | __ _  __| (_) __ ___   _____  _ __ ___ ",
-    "| |  _| |/ _` |/ _` | |/ _` \\ \\ / / _ \\| '__/ _ \\",
-    "| |_| | | (_| | (_| | | (_| |\\ V / (_) | | |  __/",
-    " \\____|_|\\__,_|\\__,_|_|\\__,_| \\_/ \\___/|_|  \\___|",
+    " __     _______ _     ___   ____ ___ ____      _    ____ _____ ___  ____  ",
+    " \\ \\   / / ____| |   / _ \\ / ___|_ _|  _ \\    / \\  |  _ \\_   _/ _ \\|  _ \\ ",
+    "  \\ \\ / /|  _| | |  | | | | |    | || |_) |  / _ \\ | |_) || || | | | |_) |",
+    "   \\ V / | |___| |__| |_| | |___ | ||  _ <  / ___ \\|  __/ | || |_| |  _ < ",
+    "    \\_/  |_____|_____\\___/ \\____|___|_| \\_\\/_/   \\_\\_|    |_| \\___/|_| \\_\\",
 )
 
 TITLE_BANNER_HEIGHT = len(TITLE_BANNER_LINES)

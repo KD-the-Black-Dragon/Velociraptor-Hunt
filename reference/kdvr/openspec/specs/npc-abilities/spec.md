@@ -49,6 +49,8 @@ Ranged damage SHALL use `ranged_accuracy`, `ranged_min_damage`, `ranged_max_dama
 
 Smite attempts SHALL log FOV-gated **smite** templates (`npc_smites_target`, `npc_smites_target_no_damage`, `npc_smites_at_target_miss`). Smite SHALL ignore entities between shooter and target.
 
+**Hostility:** Smite SHALL only fire at alignment-hostile targets (same policy as Path `shooter_can_damage`). Chase follow targets that are not hostile (e.g. good ally following the player) SHALL NOT be smited; the shooter SHALL fall through to normal Smite target pick (or skip the shot).
+
 **AI:** When no valid Smite shot, walk toward target (unchanged from legacy ranged engagement). No path simulation.
 
 #### Scenario: Slime smites at range 3 not 1
@@ -57,6 +59,20 @@ Smite attempts SHALL log FOV-gated **smite** templates (`npc_smites_target`, `np
 - WHEN the slime acts
 - THEN a smite attempt may occur
 - AND at distance 1 the slime uses melee instead
+
+#### Scenario: Good Smite does not hit the player while following
+
+- GIVEN a good NPC with `Smite5`, line of sight to the player at Chebyshev distance in `[2, 5]`, and no visible evil
+- WHEN the ally acts (follow / chase target is the player)
+- THEN no Smite attempt targets the player
+- AND the player is not damaged by Smite
+
+#### Scenario: Good Smite still hits evil when available
+
+- GIVEN a good NPC with `Smite5`, a visible evil in Smite range, and the player also in range
+- WHEN the ally acts
+- THEN a Smite attempt may target the evil
+- AND SHALL NOT target the player
 
 ### Requirement: RangeN Path ranged engagement
 
@@ -89,6 +105,52 @@ Path shots SHALL queue cyan projectile animation when FOV-gated at queue time.
 - GIVEN an evil wolf with `Range6` and a good NPC on the beam to the player
 - WHEN the wolf evaluates a Path shot
 - THEN the shot is cancelled (no shoot log, no damage)
+
+### Requirement: NPC Path/Smite magazine (shots)
+
+NPCs with `RangeN` and/or `SmiteN` SHALL carry a **RangedMagazine** (`current`, `maximum`). Maximum SHALL come from the run difficulty profile:
+
+| Alignment | Difficulty field | Stock |
+|-----------|------------------|-------|
+| Good | `good_ranged_shots` | **2** on all difficulties |
+| Evil / neutral | `evil_ranged_shots` | **2** on easier/normal/hard; **3** on nightmare |
+
+Omit → default **2** / **2**. Values MUST be integers **≥ 1**. Current SHALL start at maximum at spawn/summon. Depth bake and prefixes SHALL NOT change `maximum`.
+
+**Spend:** A Path or Smite attempt (hit or miss) SHALL spend **1** shot when the attack actually fires. At `current == 0`, Path/Smite SHALL NOT fire. **`RangedVoreN` SHALL NOT spend** a shot. Player throws / player Smite are out of scope.
+
+**Reload:** A dedicated silent NPC turn recovers **+1** shot (capped at maximum). No message log.
+
+**AI priority (after summon / flee / in-range vore):**
+
+1. **Evil hunger:** While engaging a vore-eligible quarry out of adjacent/`RangedVoreN` range, roll the usual vore decision (`PreferVore` → always). On commit: **step toward** the quarry that turn; **do not** Path/Smite. (In-range vore remains the normal modal/NPC vore path.) Compatible with `NoChase` while quarry is visible.
+2. Adjacent **melee** (and prior in-range **vore**) outrank reload.
+3. At **0** shots: prefer reload unless adjacent melee is available.
+4. If shots remain and a legal Path/Smite exists: shoot.
+5. **Good** RangeN/SmiteN: prefer reload up to maximum whenever **no evil is in sight**.
+6. At **1** shot: reload only when **idle** (no sighted chase target and not memory-chasing). NEVER reload to maximum while seeing or actively chasing a target.
+7. Else existing reposition / chase / explore (including distance-1 no-shoot).
+
+Intentional feel: DCSS centaur-like — strong at range, inefficient, weak once adjacent (existing Chebyshev 1 no-shoot preserved).
+
+#### Scenario: Empty magazine blocks Smite
+
+- GIVEN an NPC with `Smite5` and `RangedMagazine.current == 0`
+- WHEN `try_smite_engagement` would otherwise be legal
+- THEN no Smite fires and current stays 0
+
+#### Scenario: Good ally tops up with no evil visible
+
+- GIVEN a good `Smite5` ally with `current == 1` and no visible evils
+- WHEN the ally acts
+- THEN it reloads to `current == 2` (silent)
+
+#### Scenario: Evil hunger closes instead of shooting
+
+- GIVEN an evil `Range5` predator, PreferVore, and a visible ≤50% HP quarry beyond adjacent range
+- WHEN the predator acts
+- THEN it steps toward the quarry
+- AND does not Path/Smite that turn
 
 ### Requirement: Erratic and ranged incompatibility
 

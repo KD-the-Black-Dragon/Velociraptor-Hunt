@@ -1,0 +1,8 @@
+---
+pid: 19932
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python tools/_sim_smoke_easy.py 25 8000"
+started_at: 2026-07-12T11:50:37.971Z
+running_for_ms: 5690009  
+---
+seed 25 depth 17 runes 0 end TURN_CAP turns 8433 hp 0 bail_floors 17

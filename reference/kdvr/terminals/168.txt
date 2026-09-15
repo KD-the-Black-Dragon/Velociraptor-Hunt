@@ -1,0 +1,9 @@
+---
+pid: 28168
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "python -m pytest tests/test_run_stats.py tests/test_save_coordinator.py -q"
+started_at: 2026-07-05T17:59:05.364Z
+running_for_ms: 18135002 
+---
+..................                                                       [100%]
+18 passed in 14.61s

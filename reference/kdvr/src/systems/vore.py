@@ -17,13 +17,17 @@ from src.components import (
     NPCAlignment,
     Position,
     Predator,
+    SpeciesId,
     VoreCapable,
     VoreMercy,
     VoreNarratives,
 )
+from src.data.entity_loader import get_entity_registry
+from src.data.entity_registry import EntityRegistry
 from src.map_gen import Tile, can_enter_tile
-from src.systems.combat import apply_struggle_damage
+from src.systems.combat import apply_struggle_damage, compute_struggle_damage
 from src.data.ally_content import format_rescue_gratitude, pick_rescue_gratitude_line
+from src.data.depth_scaling_config import DifficultyProfile
 from src.data.narrative_index import get_narrative_index
 from src.data.rescue_gratitude_loader import get_rescue_gratitude_registry
 from src.systems.naming import entity_display_name, entity_log_name, entity_type_id
@@ -37,7 +41,6 @@ from src.constants import (
     VORE_HIT_MAX,
     VORE_HIT_MIN,
     VORE_HP_THRESHOLD,
-    VORE_STRUGGLE_DAMAGE,
     VoreContentPreferences,
 )
 from src.components import Player
@@ -51,6 +54,15 @@ from src.events import (
 from src.map_gen import GameMap
 from src.message_log import MessageCategory, MessageLog
 from src.systems.fov import can_see, entity_visible_to_player
+from src.systems.vore_fallback import (
+    GENERIC_NPC_VORE_HIT,
+    GENERIC_NPC_VORE_MISS,
+    GENERIC_OFFSCREEN_VORE,
+    GENERIC_PLAYER_ATTEMPT,
+    GENERIC_PLAYER_SUCCESS,
+    GENERIC_VORE_TYPE,
+    is_generic_vore_type,
+)
 from src.vore_npc_content import NPC_VORE_HIT_POOL, NPC_VORE_MISS_POOL
 
 
@@ -152,6 +164,54 @@ def enabled_narrative_types(
     return [t for t in monster_types if prefs.is_enabled(t)]
 
 
+def species_vore_capability(
+    monster: Entity,
+    *,
+    registry: EntityRegistry | None = None,
+) -> frozenset[str]:
+    """Return ``spawn.requires_vore_types`` for this species; empty = unrestricted.
+
+    Missing ``SpeciesId``, unknown id, or empty capability → unrestricted.
+    """
+    species = monster.components.get(SpeciesId)
+    if species is None:
+        return frozenset()
+    reg = registry if registry is not None else get_entity_registry()
+    try:
+        definition = reg.get(species.id)
+    except KeyError:
+        return frozenset()
+    return definition.spawn.requires_vore_types
+
+
+def capable_narrative_types(
+    monster_types: tuple[str, ...],
+    capability: frozenset[str],
+) -> tuple[str, ...]:
+    """Intersect narrative types with a non-empty capability set; empty capability = no filter."""
+    if not capability:
+        return monster_types
+    return tuple(t for t in monster_types if t in capability)
+
+
+def attemptable_narrative_types(
+    monster: Entity,
+    prefs: VoreContentPreferences,
+    *,
+    registry: EntityRegistry | None = None,
+) -> list[str]:
+    """Types this predator may initiate: narratives ∩ capability (if set) ∩ prefs.
+
+    Empty result does not block attempts — ``pick_attempt_narrative_type`` uses
+    prefs-immune ``GENERIC`` as a last resort.
+    """
+    base = capable_narrative_types(
+        monster_narrative_types(monster),
+        species_vore_capability(monster, registry=registry),
+    )
+    return enabled_narrative_types(base, prefs)
+
+
 def pick_narrative_type(
     monster_types: tuple[str, ...],
     prefs: VoreContentPreferences,
@@ -163,8 +223,36 @@ def pick_narrative_type(
     return rng.choice(pool)
 
 
+def pick_attempt_narrative_type(
+    monster: Entity,
+    prefs: VoreContentPreferences,
+    rng: random.Random,
+    *,
+    registry: EntityRegistry | None = None,
+) -> str:
+    """Pick a narrative type for a new vore attempt (capability + prefs).
+
+    When the attempt pool is empty, returns prefs-immune ``GENERIC``.
+
+    Note: the empty-pool / GENERIC branch is likely unreachable while prefs are
+    immutable for a run (New Game snapshot) and spawn OR already gates species
+    with no capability∩prefs overlap. Stub retained if that design changes.
+    """
+    pool = attemptable_narrative_types(monster, prefs, registry=registry)
+    if not pool:
+        # Likely dead under current New Game prefs snapshot + spawn OR gate.
+        return GENERIC_VORE_TYPE
+    return rng.choice(pool)
+
+
 def get_narrative_phases(entity_id: str, narrative_type: str, segment: str) -> list[str]:
     """Lookup narrative phases from data index keyed by entity id."""
+    if is_generic_vore_type(narrative_type):
+        if segment == "attempt":
+            return list(GENERIC_PLAYER_ATTEMPT)
+        if segment == "success":
+            return list(GENERIC_PLAYER_SUCCESS)
+        return []
     return list(
         get_narrative_index().narrative_phases(entity_id, narrative_type, segment)
     )
@@ -176,6 +264,8 @@ def pick_vore_narrative_variant(
     rng: random.Random,
 ) -> tuple[list[str], list[str]] | None:
     """Return (attempt phases, success phases) from data, or None if unavailable."""
+    if is_generic_vore_type(narrative_type):
+        return list(GENERIC_PLAYER_ATTEMPT), list(GENERIC_PLAYER_SUCCESS)
     variant = get_narrative_index().pick_vore_variant(
         entity_type_id(monster),
         narrative_type,
@@ -238,9 +328,8 @@ def _vore_base_eligible(
     prey_pos = prey.components[Position]
     if not can_see(game_map, monster_pos.x, monster_pos.y, prey_pos.x, prey_pos.y):
         return False
-    types = monster_narrative_types(monster)
-    if not enabled_narrative_types(types, prefs):
-        return False
+    # Empty OV/CV/AV pool is OK — pick_attempt_narrative_type uses GENERIC
+    # (likely unreachable today; see that helper's note).
     return True
 
 
@@ -271,6 +360,38 @@ def should_attempt_vore(
     prey_pos = prey.components[Position]
     if not is_adjacent(monster_pos, prey_pos):
         return False
+    prey_fighter = prey.components[Fighter]
+    return _vore_decision_committed(monster, prey_fighter, rng)
+
+
+def should_commit_ranged_hunger_approach(
+    monster: Entity,
+    prey: Entity,
+    game_map: GameMap,
+    rng: random.Random,
+    *,
+    prefs: VoreContentPreferences = DEFAULT_VORE_CONTENT_PREFS,
+) -> bool:
+    """True when an evil ranged NPC's hunger roll commits while out of vore range.
+
+    Adjacent / RangedVoreN attempts are handled by the normal vore path; this
+    only covers the "close in instead of shooting" case.
+    """
+    if monster.components.get(Predator) is not None:
+        return False
+    if not _vore_base_eligible(monster, prey, game_map, prefs=prefs):
+        return False
+    monster_pos = monster.components[Position]
+    prey_pos = prey.components[Position]
+    if is_adjacent(monster_pos, prey_pos):
+        return False
+    from src.systems.abilities import max_ranged_vore_range
+
+    max_rv = max_ranged_vore_range(monster)
+    if max_rv is not None:
+        distance = chebyshev_distance(monster_pos, prey_pos)
+        if 2 <= distance <= max_rv:
+            return False
     prey_fighter = prey.components[Fighter]
     return _vore_decision_committed(monster, prey_fighter, rng)
 
@@ -330,20 +451,40 @@ def pick_visible_npc_vore_message(
     hit: bool,
     rng: random.Random,
 ) -> str | None:
-    """On-screen NPC vore log: entity data first, then global pool fallback."""
+    """On-screen NPC vore log: entity data first, then global pool / GENERIC fallback."""
     entity_id = entity_type_id(predator)
     index = get_narrative_index()
     if hit:
         templates = index.npc_vore_hit_lines(entity_id, narrative_type)
         if not templates:
             templates = NPC_VORE_HIT_POOL.get(narrative_type, ())
+        if not templates and is_generic_vore_type(narrative_type):
+            templates = GENERIC_NPC_VORE_HIT
     else:
         templates = index.npc_vore_miss_lines(entity_id, narrative_type)
         if not templates:
             templates = NPC_VORE_MISS_POOL.get(narrative_type, ())
+        if not templates and is_generic_vore_type(narrative_type):
+            templates = GENERIC_NPC_VORE_MISS
     if not templates:
         return None
     return format_npc_vore_line(rng.choice(templates), predator, prey)
+
+
+def pick_offscreen_vore_line_for(
+    predator: Entity,
+    narrative_type: str,
+    rng: random.Random,
+) -> str | None:
+    """Off-screen NPC vore success line; GENERIC when typed content is missing."""
+    template = get_narrative_index().pick_offscreen_vore_line(
+        entity_type_id(predator),
+        narrative_type,
+        rng,
+    )
+    if template is None and is_generic_vore_type(narrative_type):
+        template = rng.choice(GENERIC_OFFSCREEN_VORE)
+    return template
 
 
 def _vore_npc_prey_in_range(
@@ -425,9 +566,7 @@ def try_resolve_npc_vore(
     prey = rng.choice(prey_options)
     if not should_attempt_vore(predator, prey, game_map, rng, prefs=prefs):
         return False
-    narrative_type = pick_narrative_type(monster_narrative_types(predator), prefs, rng)
-    if narrative_type is None:
-        return False
+    narrative_type = pick_attempt_narrative_type(predator, prefs, rng)
     hit = resolve_vore_hit(prey, rng)
     log_visible = entity_visible_to_player(game_map, predator) or entity_visible_to_player(
         game_map, prey
@@ -447,11 +586,7 @@ def try_resolve_npc_vore(
             )
             message_log.add(line, category=category)
     elif hit:
-        template = get_narrative_index().pick_offscreen_vore_line(
-            entity_type_id(predator),
-            narrative_type,
-            rng,
-        )
+        template = pick_offscreen_vore_line_for(predator, narrative_type, rng)
         if template is not None:
             # Offscreen success: heard only — keep routine default.
             message_log.add(format_npc_vore_line(template, predator, prey))
@@ -489,9 +624,7 @@ def try_resolve_npc_ranged_vore(
         predator, prey, game_map, rng, max_n=max_n, prefs=prefs
     ):
         return False
-    narrative_type = pick_narrative_type(monster_narrative_types(predator), prefs, rng)
-    if narrative_type is None:
-        return False
+    narrative_type = pick_attempt_narrative_type(predator, prefs, rng)
     hit = resolve_vore_hit(prey, rng)
     log_visible = entity_visible_to_player(game_map, predator) or entity_visible_to_player(
         game_map, prey
@@ -510,11 +643,7 @@ def try_resolve_npc_ranged_vore(
             )
             message_log.add(line, category=category)
     elif hit:
-        template = get_narrative_index().pick_offscreen_vore_line(
-            entity_type_id(predator),
-            narrative_type,
-            rng,
-        )
+        template = pick_offscreen_vore_line_for(predator, narrative_type, rng)
         if template is not None:
             message_log.add(format_npc_vore_line(template, predator, prey))
     if hit:
@@ -540,9 +669,7 @@ def try_open_vore_modal(
     if not should_attempt_vore(monster, player, game_map, rng, prefs=prefs):
         return False
     name = entity_display_name(monster)
-    narrative_type = pick_narrative_type(monster_narrative_types(monster), prefs, rng)
-    if narrative_type is None:
-        return False
+    narrative_type = pick_attempt_narrative_type(monster, prefs, rng)
     picked = pick_vore_narrative_variant(monster, narrative_type, rng)
     if picked is None:
         return False
@@ -590,9 +717,7 @@ def try_open_ranged_vore_modal(
     ):
         return False
     name = entity_display_name(monster)
-    narrative_type = pick_narrative_type(monster_narrative_types(monster), prefs, rng)
-    if narrative_type is None:
-        return False
+    narrative_type = pick_attempt_narrative_type(monster, prefs, rng)
     picked = pick_vore_narrative_variant(monster, narrative_type, rng)
     if picked is None:
         return False
@@ -975,17 +1100,33 @@ def try_struggle(
     rng: random.Random,
     *,
     run_stats: RunStats | None = None,
+    alternate_cv_mechanics: bool = False,
+    difficulty_profile: DifficultyProfile | None = None,
 ) -> bool:
-    """Struggle while engulfed. Always consumes a player turn when invoked."""
+    """Struggle while engulfed. Always consumes a player turn when invoked.
+
+    When ``alternate_cv_mechanics`` is on and the hold is ``CV``, struggle
+    damage is 0 (escape chance unchanged). A successful CV escape applies
+    daze to the predator; defeating the predator via struggle does not.
+    """
+    from src.data.depth_scaling_loader import default_depth_scaling_config
+    from src.systems.dazed import apply_daze, roll_cv_daze_turns
+
     predator = find_predator_holding_prey(world, player)
     if predator is None:
         return True
+
+    predator_state = predator.components.get(Predator)
+    narrative_type = predator_state.narrative_type if predator_state is not None else ""
+    zero_cv_struggle = bool(alternate_cv_mechanics) and narrative_type == "CV"
 
     message_log.add(
         messages.pick_struggle_message(rng),
         category=MessageCategory.CAUTION,
     )
-    apply_struggle_damage(predator, VORE_STRUGGLE_DAMAGE)
+    damage = 0 if zero_cv_struggle else compute_struggle_damage(player, rng)
+    if damage > 0:
+        apply_struggle_damage(predator, damage)
     fighter = predator.components.get(Fighter)
     if fighter is not None and fighter.hp <= 0:
         release_engulfed(
@@ -1005,7 +1146,6 @@ def try_struggle(
         predator.clear()
         return True
 
-    predator_state = predator.components.get(Predator)
     chance = escape_chance_for_predator(predator)
     if rng.random() < chance:
         release_engulfed(
@@ -1017,6 +1157,16 @@ def try_struggle(
             escape_direction=direction,
             rng=rng,
         )
+        if zero_cv_struggle:
+            profile = difficulty_profile
+            if profile is None:
+                profile = default_depth_scaling_config().profile_for(None)
+            apply_daze(
+                predator,
+                roll_cv_daze_turns(profile, rng),
+                game_map,
+                message_log,
+            )
     elif predator_state is not None:
         predator_state.failed_struggles += 1
     return True

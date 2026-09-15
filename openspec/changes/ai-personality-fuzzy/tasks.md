@@ -11,26 +11,26 @@
 
 ## PR A1 — Attribute schema
 
-- [ ] 1–10 attrs on entities; ranges; spawn roll
-- [ ] Targeted tests + manual checklist
+- [x] 1–10 attrs on entities; ranges; spawn roll
+- [x] Targeted tests + manual checklist (batch OK 2026-08-10)
 
 ## PR A2 — Candidate intents
 
-- [ ] AI may choose existing player-parity actions (footwork, measure attack, etc.)
-- [ ] Targeted tests + manual checklist
+- [x] AI may choose existing player-parity actions (footwork, measure attack, etc.)
+- [x] Targeted tests + manual checklist (batch OK 2026-08-10)
 
 ## PR A3 — Fuzzy scorer
 
-- [ ] Geometry fitness (weapon measure) + attr weights + noise
-- [ ] JSON-driven weights
-- [ ] Targeted tests + manual checklist
+- [x] Geometry fitness (weapon measure) + attr weights + noise
+- [x] JSON-driven weights
+- [x] Targeted tests + manual checklist (batch OK 2026-08-10)
 
 ## PR A4 — Content ranges
 
-- [ ] Current foes get personality ranges; bosses pin values if needed
-- [ ] Targeted tests + manual checklist
+- [x] Current foes get personality ranges; bosses pin values if needed
+- [x] Targeted tests + manual checklist (batch OK 2026-08-10)
 
 ## PR A5 — Playtest tune
 
-- [ ] JSON tuning from designer feedback
-- [ ] Designer sign-off for module
+- [x] JSON tuning from designer feedback
+- [x] Designer sign-off for module (batch 2026-08-10)

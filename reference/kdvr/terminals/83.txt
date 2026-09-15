@@ -1,0 +1,12 @@
+---
+pid: 1324
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q --tb=no 2>&1 | Select-Object -Last 5"
+started_at: 2026-07-02T11:43:12.712Z
+running_for_ms: 52590001 
+---
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_enhancements_3.py::test_memory_cleared_when_reaching_last_known_tile
+FAILED tests/test_vore_turn_order.py::test_hit_skips_remaining_monsters_in_world_phase
+2 failed, 433 passed, 20 warnings in 101.60s (0:01:41)

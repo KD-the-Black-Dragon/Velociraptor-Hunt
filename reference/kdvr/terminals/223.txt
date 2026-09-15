@@ -1,0 +1,18 @@
+---
+pid: 12776
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cmd /c \"taskkill /PID 17600 /F 2>nul & cd /d C:\\VS Code Projects\\kds-vore-roguelike && python tools/_find_sim_seed.py\""
+started_at: 2026-07-11T23:32:03.514Z
+running_for_ms: 40585011 
+---
+SUCCESS: The process with PID 17600 has been terminated.
+1 1 0 TURN_CAP 3500 30
+2 1 0 TURN_CAP 3500 30
+3 1 0 TURN_CAP 3500 30
+4 1 0 TURN_CAP 3500 30
+5 1 0 TURN_CAP 3500 30
+6 1 0 TURN_CAP 3500 30
+7 1 0 TURN_CAP 3500 30
+8 1 0 TURN_CAP 3500 30
+9 1 0 TURN_CAP 3500 30
+10 1 0 TURN_CAP 3500 30

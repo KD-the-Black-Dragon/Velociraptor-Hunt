@@ -1,0 +1,283 @@
+---
+pid: 25604
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "C:\\Users\\hybri\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe -m pytest \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_save_menu_pr4.py\" \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_main_menu.py\" \"C:\\VS Code Projects\\kds-vore-roguelike\\tests\\test_flow_pr4.py\" -v"
+started_at: 2026-07-05T15:05:20.568Z
+running_for_ms: 28560012 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+collecting ... collected 44 items
+
+tests/test_save_menu_pr4.py::test_menu_omits_load_game_when_no_save PASSED [  2%]
+tests/test_save_menu_pr4.py::test_menu_includes_load_game_when_save_exists PASSED [  4%]
+tests/test_save_menu_pr4.py::test_load_game_enters_play_with_restored_state PASSED [  6%]
+tests/test_save_menu_pr4.py::test_new_game_with_existing_save_requires_overwrite_confirm PASSED [  9%]
+tests/test_save_menu_pr4.py::test_new_game_overwrite_confirm_y_then_name_deletes_save FAILED [ 11%]
+tests/test_save_menu_pr4.py::test_new_game_name_cancel_preserves_existing_save PASSED [ 13%]
+tests/test_save_menu_pr4.py::test_ctrl_q_queues_save_and_quit_cancel_keeps_save PASSED [ 15%]
+tests/test_save_menu_pr4.py::test_ctrl_s_sync_save_adds_message FAILED   [ 18%]
+tests/test_save_menu_pr4.py::test_ctrl_s_blocked_during_vore_modal PASSED [ 20%]
+tests/test_save_menu_pr4.py::test_new_game_confirm_handler_matches_quit_pattern PASSED [ 22%]
+tests/test_save_menu_pr4.py::test_build_menu_options_shapes PASSED       [ 25%]
+tests/test_main_menu.py::test_menu_starts_with_new_game_highlighted PASSED [ 27%]
+tests/test_main_menu.py::test_menu_moves_highlight_down_and_wraps PASSED [ 29%]
+tests/test_main_menu.py::test_menu_moves_highlight_up_and_wraps PASSED   [ 31%]
+tests/test_main_menu.py::test_enter_on_exit_requests_exit PASSED         [ 34%]
+tests/test_main_menu.py::test_enter_on_new_game_requests_play PASSED     [ 36%]
+tests/test_main_menu.py::test_enter_on_options_opens_options PASSED      [ 38%]
+tests/test_main_menu.py::test_enter_on_load_game_and_high_scores PASSED  [ 40%]
+tests/test_main_menu.py::test_menu_without_load_omits_load_game_option PASSED [ 43%]
+tests/test_main_menu.py::test_ctrl_q_on_menu_is_no_op PASSED             [ 45%]
+tests/test_main_menu.py::test_app_boots_to_menu_without_engine PASSED    [ 47%]
+tests/test_main_menu.py::test_app_new_game_opens_name_entry FAILED       [ 50%]
+tests/test_main_menu.py::test_app_exit_from_menu_quits PASSED            [ 52%]
+tests/test_main_menu.py::test_app_window_quit_exits PASSED               [ 54%]
+tests/test_main_menu.py::test_app_ctrl_q_on_menu_does_not_exit PASSED    [ 56%]
+tests/test_main_menu.py::test_title_banner_row_offsets PASSED            [ 59%]
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options PASSED [ 61%]
+tests/test_main_menu.py::test_title_banner_rows_share_block_anchor_across_widths PASSED [ 63%]
+tests/test_main_menu.py::test_menu_options_share_x_across_widths PASSED  [ 65%]
+tests/test_main_menu.py::test_render_main_menu_options_fit_layout_console_height PASSED [ 68%]
+tests/test_flow_pr4.py::test_quit_confirm_y_and_n PASSED                 [ 70%]
+tests/test_flow_pr4.py::test_quit_confirm_rejects_invalid_keys PASSED    [ 72%]
+tests/test_flow_pr4.py::test_quit_confirm_bare_shift_does_not_show_error PASSED [ 75%]
+tests/test_flow_pr4.py::test_ctrl_q_in_play_opens_quit_confirm PASSED    [ 77%]
+tests/test_flow_pr4.py::test_quit_confirm_y_returns_to_menu FAILED       [ 79%]
+tests/test_flow_pr4.py::test_quit_confirm_n_resumes_play FAILED          [ 81%]
+tests/test_flow_pr4.py::test_ctrl_q_during_vore_modal_is_no_op FAILED    [ 84%]
+tests/test_flow_pr4.py::test_ctrl_q_during_digestion_modal_is_no_op FAILED [ 86%]
+tests/test_flow_pr4.py::test_ctrl_q_during_game_over_recap_is_no_op FAILED [ 88%]
+tests/test_flow_pr4.py::test_game_over_enter_returns_to_menu_via_app FAILED [ 90%]
+tests/test_flow_pr4.py::test_engine_recap_dismiss_result PASSED          [ 93%]
+tests/test_flow_pr4.py::test_engine_ctrl_q_no_longer_exits PASSED        [ 95%]
+tests/test_flow_pr4.py::test_load_game_requires_save_file PASSED         [ 97%]
+tests/test_flow_pr4.py::test_high_scores_stub_enter_back PASSED          [100%]
+
+================================== FAILURES ===================================
+__________ test_new_game_overwrite_confirm_y_then_name_deletes_save ___________
+
+tmp_path = WindowsPath('C:/Users/hybri/AppData/Local/Temp/pytest-of-hybri/pytest-196/test_new_game_overwrite_confir0')
+
+    def test_new_game_overwrite_confirm_y_then_name_deletes_save(tmp_path: Path) -> None:
+        _write_save(tmp_path, player_name="OldRun")
+        app = _app_with_store(tmp_path)
+        console = make_console()
+    
+        app.handle_event(_key(KeySym.RETURN), console=console)
+        app.handle_event(_key(KeySym.Y, mod=Modifier.SHIFT), console=console)
+        assert app.phase is AppPhase.NAME_ENTRY
+        assert app.pending_new_game_overwrite
+    
+        for ch in "Alex":
+            app.handle_event(_key(getattr(KeySym, ch.upper())), console=console)
+        app.handle_event(_key(KeySym.RETURN), console=console)
+    
+        assert app.phase is AppPhase.PLAY
+        assert app.engine is not None
+>       assert app.engine.player_name == "Alex"
+E       AssertionError: assert 'alex' == 'Alex'
+E         
+E         - Alex
+E         ? ^
+E         + alex
+E         ? ^
+
+tests\test_save_menu_pr4.py:112: AssertionError
+_____________________ test_ctrl_s_sync_save_adds_message ______________________
+
+tmp_path = WindowsPath('C:/Users/hybri/AppData/Local/Temp/pytest-of-hybri/pytest-196/test_ctrl_s_sync_save_adds_mes0')
+
+    def test_ctrl_s_sync_save_adds_message(tmp_path: Path) -> None:
+        app = _app_with_store(tmp_path)
+        _start_play(app)
+        assert app.engine is not None
+        app.engine.player_turn_count = 3
+    
+>       app.handle_event(_key(KeySym.S, mod=Modifier.CTRL))
+
+tests\test_save_menu_pr4.py:160: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\app.py:370: in handle_event
+    if self.save_coordinator.save_now(self.engine):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\save\coordinator.py:99: in save_now
+    self.store.save_run(snapshot)
+src\save\store.py:134: in save_run
+    self._rotate(data)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <src.save.store.SaveStore object at 0x000001F6E405D630>
+data = b'{"payload_sha256":"f00efbbcfcad864143f980878c69509c9a6006fa8b9671b98992b32fe6ca8e5a","run":{"close_door_pending":fal...set":"standard","vore_content_prefs":{"enabled":["AV","CV","OV"]}},"save_format_version":1,"saved_at_unix":1783263928}'
+
+    def _rotate(self, data: bytes) -> None:
+        self.directory.mkdir(parents=True, exist_ok=True)
+        tmp_path = self.path_for(TMP_NAME)
+        primary = self.path_for(PRIMARY_NAME)
+        bak1 = self.path_for(BAK1_NAME)
+        bak2 = self.path_for(BAK2_NAME)
+        bak3 = self.path_for(BAK3_NAME)
+    
+        with tmp_path.open("wb") as handle:
+            handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+    
+        if bak3.is_file():
+            bak3.unlink()
+        if bak2.is_file():
+            os.replace(bak2, bak3)
+        if bak1.is_file():
+            os.replace(bak1, bak2)
+        if primary.is_file():
+            os.replace(primary, bak1)
+>       os.replace(tmp_path, primary)
+E       PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\hybri\\AppData\\Local\\Temp\\pytest-of-hybri\\pytest-196\\test_ctrl_s_sync_save_adds_mes0\\autosave.tmp' -> 'C:\\Users\\hybri\\AppData\\Local\\Temp\\pytest-of-hybri\\pytest-196\\test_ctrl_s_sync_save_adds_mes0\\autosave.json'
+
+src\save\store.py:169: PermissionError
+_____________________ test_app_new_game_opens_name_entry ______________________
+
+    def test_app_new_game_opens_name_entry() -> None:
+        app = App()
+        assert not app.handle_event(_key(KeySym.RETURN))
+>       assert app.phase is AppPhase.NAME_ENTRY
+E       AssertionError: assert <AppPhase.MENU: 1> is <AppPhase.NAME_ENTRY: 2>
+E        +  where <AppPhase.MENU: 1> = App(settings=SettingsStore(vore_content=VoreContentPreferences(enabled=frozenset({'CV', 'AV', 'OV'})), ui_preset='standard', path=WindowsPath('C:/VS Code Projects/kds-vore-roguelike/data/settings.json')), baseline_layout=None, ui_layout=None, phase=<AppPhase.MENU: 1>, menu=MainMenuState(options=('New Game', 'Load Game', 'High Scores', 'Options', 'Exit'), highlight=0), name_entry=NameEntryState(buffer=''), options=OptionsMenuState(highlight=0), quit_confirm=None, new_game_confirm=NewGameConfirmState(error_message=''), pending_new_game_overwrite=False, engine=None, floor_prefetch=<src.floor_prefetch.FloorPrefetch object at 0x000001F6E44895E0>, log_font=LogFontState(enabled=False, tile_px=12, tile_scale=2, font_size_px=16, font_path=None, font=None), save_coordinator=<src.save.coordinator.SaveCoordinator object at 0x000001F6E448A4E0>).phase
+E        +  and   <AppPhase.NAME_ENTRY: 2> = AppPhase.NAME_ENTRY
+
+tests\test_main_menu.py:112: AssertionError
+_____________________ test_quit_confirm_y_returns_to_menu _____________________
+
+    def test_quit_confirm_y_returns_to_menu() -> None:
+        app = App()
+        _start_play(app)
+        app.handle_event(_key(KeySym.Q, mod=Modifier.CTRL))
+        app.handle_event(_key(KeySym.Y, mod=Modifier.SHIFT))
+>       assert app.phase is AppPhase.MENU
+E       AssertionError: assert <AppPhase.NAME_ENTRY: 2> is <AppPhase.MENU: 1>
+E        +  where <AppPhase.NAME_ENTRY: 2> = App(settings=SettingsStore(vore_content=VoreContentPreferences(enabled=frozenset({'CV', 'AV', 'OV'})), ui_preset='standard', path=WindowsPath('C:/VS Code Projects/kds-vore-roguelike/data/settings.json')), baseline_layout=None, ui_layout=None, phase=<AppPhase.NAME_ENTRY: 2>, menu=MainMenuState(options=('New Game', 'Load Game', 'High Scores', 'Options', 'Exit'), highlight=0), name_entry=NameEntryState(buffer=''), options=OptionsMenuState(highlight=0), quit_confirm=None, new_game_confirm=None, pending_new_game_overwrite=True, engine=None, floor_prefetch=<src.floor_prefetch.FloorPrefetch object at 0x000001F6E404D0D0>, log_font=LogFontState(enabled=False, tile_px=12, tile_scale=2, font_size_px=16, font_path=None, font=None), save_coordinator=<src.save.coordinator.SaveCoordinator object at 0x000001F6E404ED50>).phase
+E        +  and   <AppPhase.MENU: 1> = AppPhase.MENU
+
+tests\test_flow_pr4.py:67: AssertionError
+______________________ test_quit_confirm_n_resumes_play _______________________
+
+    def test_quit_confirm_n_resumes_play() -> None:
+        app = App()
+        _start_play(app)
+        app.handle_event(_key(KeySym.Q, mod=Modifier.CTRL))
+        app.handle_event(_key(KeySym.N))
+>       assert app.phase is AppPhase.PLAY
+E       AssertionError: assert <AppPhase.MENU: 1> is <AppPhase.PLAY: 5>
+E        +  where <AppPhase.MENU: 1> = App(settings=SettingsStore(vore_content=VoreContentPreferences(enabled=frozenset({'CV', 'AV', 'OV'})), ui_preset='standard', path=WindowsPath('C:/VS Code Projects/kds-vore-roguelike/data/settings.json')), baseline_layout=None, ui_layout=None, phase=<AppPhase.MENU: 1>, menu=MainMenuState(options=('New Game', 'Load Game', 'High Scores', 'Options', 'Exit'), highlight=0), name_entry=NameEntryState(buffer=''), options=OptionsMenuState(highlight=0), quit_confirm=None, new_game_confirm=None, pending_new_game_overwrite=False, engine=None, floor_prefetch=<src.floor_prefetch.FloorPrefetch object at 0x000001F6E404F110>, log_font=LogFontState(enabled=False, tile_px=12, tile_scale=2, font_size_px=16, font_path=None, font=None), save_coordinator=<src.save.coordinator.SaveCoordinator object at 0x000001F6E404F650>).phase
+E        +  and   <AppPhase.PLAY: 5> = AppPhase.PLAY
+
+tests\test_flow_pr4.py:76: AssertionError
+___________________ test_ctrl_q_during_vore_modal_is_no_op ____________________
+
+    def test_ctrl_q_during_vore_modal_is_no_op() -> None:
+        from tests.test_vore_modal import _open_vore_modal
+    
+        app = App()
+        _start_play(app)
+>       assert app.engine is not None
+E       assert None is not None
+E        +  where None = App(settings=SettingsStore(vore_content=VoreContentPreferences(enabled=frozenset({'CV', 'AV', 'OV'})), ui_preset='standard', path=WindowsPath('C:/VS Code Projects/kds-vore-roguelike/data/settings.json')), baseline_layout=None, ui_layout=None, phase=<AppPhase.MENU: 1>, menu=MainMenuState(options=('New Game', 'Load Game', 'High Scores', 'Options', 'Exit'), highlight=0), name_entry=NameEntryState(buffer=''), options=OptionsMenuState(highlight=0), quit_confirm=None, new_game_confirm=NewGameConfirmState(error_message="Please type capital 'Y' or lowercase 'n' only."), pending_new_game_overwrite=False, engine=None, floor_prefetch=<src.floor_prefetch.FloorPrefetch object at 0x000001F6E4464B50>, log_font=LogFontState(enabled=False, tile_px=12, tile_scale=2, font_size_px=16, font_path=None, font=None), save_coordinator=<src.save.coordinator.SaveCoordinator object at 0x000001F6E43EAA40>).engine
+
+tests\test_flow_pr4.py:86: AssertionError
+_________________ test_ctrl_q_during_digestion_modal_is_no_op _________________
+
+    def test_ctrl_q_during_digestion_modal_is_no_op() -> None:
+        from tests.test_digestion import _engulf_player_on_wolf, _press
+    
+        app = App()
+        _start_play(app)
+>       _engulf_player_on_wolf(app.engine, player_hp=0)
+
+tests\test_flow_pr4.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = None, narrative_type = 'OV', player_hp = 0, digest_time = 3
+
+    def _engulf_player_on_wolf(
+        engine: GameEngine,
+        *,
+        narrative_type: str = "OV",
+        player_hp: int | None = None,
+        digest_time: int = 3,
+    ) -> tuple[object, object]:
+>       player = engine.player
+                 ^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'player'
+
+tests\test_digestion.py:535: AttributeError
+_________________ test_ctrl_q_during_game_over_recap_is_no_op _________________
+
+    def test_ctrl_q_during_game_over_recap_is_no_op() -> None:
+        from tests.test_digestion import _advance_digestion_modal, _engulf_player_on_wolf, _press
+    
+        app = App()
+        _start_play(app)
+>       _engulf_player_on_wolf(app.engine, player_hp=0)
+
+tests\test_flow_pr4.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = None, narrative_type = 'OV', player_hp = 0, digest_time = 3
+
+    def _engulf_player_on_wolf(
+        engine: GameEngine,
+        *,
+        narrative_type: str = "OV",
+        player_hp: int | None = None,
+        digest_time: int = 3,
+    ) -> tuple[object, object]:
+>       player = engine.player
+                 ^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'player'
+
+tests\test_digestion.py:535: AttributeError
+________________ test_game_over_enter_returns_to_menu_via_app _________________
+
+    def test_game_over_enter_returns_to_menu_via_app() -> None:
+        from tests.test_digestion import _advance_digestion_modal, _engulf_player_on_wolf, _press
+    
+        app = App()
+        _start_play(app)
+>       assert app.engine is not None
+E       assert None is not None
+E        +  where None = App(settings=SettingsStore(vore_content=VoreContentPreferences(enabled=frozenset({'CV', 'AV', 'OV'})), ui_preset='standard', path=WindowsPath('C:/VS Code Projects/kds-vore-roguelike/data/settings.json')), baseline_layout=None, ui_layout=None, phase=<AppPhase.MENU: 1>, menu=MainMenuState(options=('New Game', 'Load Game', 'High Scores', 'Options', 'Exit'), highlight=0), name_entry=NameEntryState(buffer=''), options=OptionsMenuState(highlight=0), quit_confirm=None, new_game_confirm=NewGameConfirmState(error_message="Please type capital 'Y' or lowercase 'n' only."), pending_new_game_overwrite=False, engine=None, floor_prefetch=<src.floor_prefetch.FloorPrefetch object at 0x000001F6E43FCC30>, log_font=LogFontState(enabled=False, tile_px=12, tile_scale=2, font_size_px=16, font_path=None, font=None), save_coordinator=<src.save.coordinator.SaveCoordinator object at 0x000001F6E44D4470>).engine
+
+tests\test_flow_pr4.py:126: AssertionError
+============================== warnings summary ===============================
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+tests/test_main_menu.py::test_render_main_menu_options_fit_layout_console_height
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:137: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:214: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x, row_y]["ch"])) in "> "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:215: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 1, row_y]["ch"])) == " "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:216: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 2, row_y]["ch"])) == option[0]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_save_menu_pr4.py::test_new_game_overwrite_confirm_y_then_name_deletes_save
+FAILED tests/test_save_menu_pr4.py::test_ctrl_s_sync_save_adds_message - Perm...
+FAILED tests/test_main_menu.py::test_app_new_game_opens_name_entry - Assertio...
+FAILED tests/test_flow_pr4.py::test_quit_confirm_y_returns_to_menu - Assertio...
+FAILED tests/test_flow_pr4.py::test_quit_confirm_n_resumes_play - AssertionEr...
+FAILED tests/test_flow_pr4.py::test_ctrl_q_during_vore_modal_is_no_op - asser...
+FAILED tests/test_flow_pr4.py::test_ctrl_q_during_digestion_modal_is_no_op - ...
+FAILED tests/test_flow_pr4.py::test_ctrl_q_during_game_over_recap_is_no_op - ...
+FAILED tests/test_flow_pr4.py::test_game_over_enter_returns_to_menu_via_app
+================== 9 failed, 35 passed, 5 warnings in 12.38s ==================

@@ -133,7 +133,6 @@ def run_loop(
             continue
 
         if app.projectile_in_progress():
-            assert app.engine is not None
             for event in tcod.event.get():
                 console, should_exit = _handle_loop_event(
                     event,
@@ -152,14 +151,17 @@ def run_loop(
 
             app.render(console)
             app.present(console, context)
-            app.engine.advance_projectile_animation()
-            time.sleep(PROJECTILE_FRAME_SLEEP_SECONDS)
+            app.advance_projectile_animation()
+            sleep = app.projectile_frame_sleep_seconds()
+            if sleep > 0.0:
+                time.sleep(sleep)
             continue
 
         app.render(console)
         app.present(console, context)
 
-        for event in tcod.event.wait():
+        timeout = 0.05 if app.hunt_rain_ticking() else None
+        for event in tcod.event.wait(timeout):
             console, should_exit = _handle_loop_event(
                 event,
                 app=app,
@@ -168,6 +170,7 @@ def run_loop(
             )
             if should_exit:
                 raise SystemExit()
+        app.tick_hunt_rain()
 
 
 def _initialize_multiprocessing_for_frozen_app() -> None:
@@ -233,6 +236,9 @@ def main() -> None:
                 tile_px=baseline.tile_px,
                 tile_scale=baseline.tile_scale,
             )
+            from src.hunt_rain_audio import preload_hunt_rain
+
+            preload_hunt_rain()
             try:
                 run_loop(console, context, app)
             except BaseException:

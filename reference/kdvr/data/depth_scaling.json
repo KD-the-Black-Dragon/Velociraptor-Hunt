@@ -4,7 +4,9 @@
   "difficulties": {
     "easier": {
       "display_name": "Easier",
-      "apply_to_alignments": ["evil"],
+      "apply_to_alignments": [
+        "evil"
+      ],
       "density_multiplier": 0.85,
       "runes_per_floor_override": 4,
       "rune_pieces_multiplier": 1,
@@ -16,10 +18,10 @@
       },
       "spawn_ai_freeze": {
         "enabled": true,
-        "turns_per_chebyshev": 4,
+        "turns_per_chebyshev": 7,
         "distance_offset": 4,
-        "max_turns": 80,
-        "proximity_unfreeze": 9
+        "max_turns": 300,
+        "proximity_unfreeze": 7
       },
       "stats": {
         "ac": {
@@ -31,7 +33,7 @@
         "max_hp": {
           "per_floor": 0,
           "every_n_floors": 6,
-          "bank_amount": 1,
+          "bank_amount": 2,
           "start_depth": 1
         },
         "min_damage": {
@@ -59,11 +61,18 @@
           "bank_amount": 1,
           "start_depth": 1
         }
-      }
+      },
+      "good_spawn_limit": 3,
+      "cv_daze_min_turns": 5,
+      "cv_daze_max_turns": 5,
+      "good_ranged_shots": 2,
+      "evil_ranged_shots": 2
     },
     "normal": {
       "display_name": "Normal",
-      "apply_to_alignments": ["evil"],
+      "apply_to_alignments": [
+        "evil"
+      ],
       "density_multiplier": 1.0,
       "rune_pieces_multiplier": 1,
       "prefix_spawn": {
@@ -74,10 +83,10 @@
       },
       "spawn_ai_freeze": {
         "enabled": true,
-        "turns_per_chebyshev": 3,
+        "turns_per_chebyshev": 6,
         "distance_offset": 5,
-        "max_turns": 64,
-        "proximity_unfreeze": 7
+        "max_turns": 200,
+        "proximity_unfreeze": 10
       },
       "stats": {
         "ac": {
@@ -89,7 +98,7 @@
         "max_hp": {
           "per_floor": 0,
           "every_n_floors": 4,
-          "bank_amount": 1,
+          "bank_amount": 2,
           "start_depth": 1
         },
         "min_damage": {
@@ -117,12 +126,19 @@
           "bank_amount": 1,
           "start_depth": 1
         }
-      }
+      },
+      "good_spawn_limit": 2,
+      "cv_daze_min_turns": 5,
+      "cv_daze_max_turns": 5,
+      "good_ranged_shots": 2,
+      "evil_ranged_shots": 2
     },
     "hard": {
       "display_name": "Hard",
-      "apply_to_alignments": ["evil"],
-      "density_multiplier": 1.10,
+      "apply_to_alignments": [
+        "evil"
+      ],
+      "density_multiplier": 1.1,
       "rune_pieces_multiplier": 2,
       "prefix_spawn": {
         "base_chance_pct": 3,
@@ -132,10 +148,10 @@
       },
       "spawn_ai_freeze": {
         "enabled": true,
-        "turns_per_chebyshev": 2,
+        "turns_per_chebyshev": 5,
         "distance_offset": 6,
-        "max_turns": 48,
-        "proximity_unfreeze": 6
+        "max_turns": 100,
+        "proximity_unfreeze": 10
       },
       "stats": {
         "ac": {
@@ -147,7 +163,7 @@
         "max_hp": {
           "per_floor": 0,
           "every_n_floors": 4,
-          "bank_amount": 1,
+          "bank_amount": 2,
           "start_depth": 1
         },
         "evade": {
@@ -181,11 +197,18 @@
           "bank_amount": 1,
           "start_depth": 1
         }
-      }
+      },
+      "good_spawn_limit": 2,
+      "cv_daze_min_turns": 5,
+      "cv_daze_max_turns": 5,
+      "good_ranged_shots": 2,
+      "evil_ranged_shots": 2
     },
     "nightmare": {
       "display_name": "Nightmare",
-      "apply_to_alignments": ["evil"],
+      "apply_to_alignments": [
+        "evil"
+      ],
       "density_multiplier": 1.3,
       "runes_per_floor_override": 2,
       "rune_pieces_multiplier": 2,
@@ -200,7 +223,7 @@
         "turns_per_chebyshev": 1,
         "distance_offset": 9,
         "max_turns": 24,
-        "proximity_unfreeze": 5
+        "proximity_unfreeze": 10
       },
       "stats": {
         "ac": {
@@ -210,9 +233,9 @@
           "start_depth": 1
         },
         "max_hp": {
-          "per_floor": 1,
+          "per_floor": 2,
           "every_n_floors": 4,
-          "bank_amount": 1,
+          "bank_amount": 2,
           "start_depth": 1
         },
         "evade": {
@@ -246,7 +269,12 @@
           "bank_amount": 1,
           "start_depth": 1
         }
-      }
+      },
+      "good_spawn_limit": 2,
+      "cv_daze_min_turns": 5,
+      "cv_daze_max_turns": 5,
+      "good_ranged_shots": 2,
+      "evil_ranged_shots": 3
     }
   }
 }

@@ -1,0 +1,45 @@
+---
+pid: 24312
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_autoexplore.py tests/test_rest_until_healed.py -v"
+started_at: 2026-07-16T01:59:12.211Z
+running_for_ms: 2884996  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 28 items
+
+tests/test_autoexplore.py::test_autoexplore_key_is_grave PASSED          [  3%]
+tests/test_autoexplore.py::test_begin_blocked_engulfed PASSED            [  7%]
+tests/test_autoexplore.py::test_begin_blocked_visible_evil PASSED        [ 10%]
+tests/test_autoexplore.py::test_begin_blocked_below_half_hp PASSED       [ 14%]
+tests/test_autoexplore.py::test_begin_allowed_at_half_hp PASSED          [ 17%]
+tests/test_autoexplore.py::test_begin_blocked_stunned PASSED             [ 21%]
+tests/test_autoexplore.py::test_start_message_via_key PASSED             [ 25%]
+tests/test_autoexplore.py::test_complete_on_fully_explored_floor PASSED  [ 28%]
+tests/test_autoexplore.py::test_picks_up_known_item_on_explored_tile PASSED [ 32%]
+tests/test_autoexplore.py::test_danger_interrupt_visible_evil PASSED     [ 35%]
+tests/test_autoexplore.py::test_attack_interrupt PASSED                  [ 39%]
+tests/test_autoexplore.py::test_manual_cancel_silent PASSED              [ 42%]
+tests/test_rest_until_healed.py::test_rest_key_is_main_keyboard_five_not_numpad PASSED [ 46%]
+tests/test_rest_until_healed.py::test_pre_check_full_health_blocks_without_turn PASSED [ 50%]
+tests/test_rest_until_healed.py::test_pre_check_engulfed_blocks_without_turn PASSED [ 53%]
+tests/test_rest_until_healed.py::test_pre_check_visible_evil_blocks_without_turn PASSED [ 57%]
+tests/test_rest_until_healed.py::test_rest_start_message_and_healed_end PASSED [ 60%]
+tests/test_rest_until_healed.py::test_attack_interrupt_ends_rest_with_alert PASSED [ 64%]
+tests/test_rest_until_healed.py::test_rest_cap_ends_with_finish_message PASSED [ 67%]
+tests/test_rest_until_healed.py::test_numpad_five_still_single_wait PASSED [ 71%]
+tests/test_rest_until_healed.py::test_stunned_rest_is_silent_per_turn PASSED [ 75%]
+tests/test_rest_until_healed.py::test_find_good_ally_alarm_shouter_prefers_visible_ally_with_evil_los PASSED [ 78%]
+tests/test_rest_until_healed.py::test_ally_alarm_when_evil_visible_to_ally_not_player PASSED [ 82%]
+tests/test_rest_until_healed.py::test_main_keyboard_five_starts_incremental_rest PASSED [ 85%]
+tests/test_rest_until_healed.py::test_manual_interrupt_cancels_rest_and_waits_one_turn PASSED [ 89%]
+tests/test_rest_until_healed.py::test_manual_interrupt_cancels_rest_and_opens_inventory PASSED [ 92%]
+tests/test_rest_until_healed.py::test_manual_interrupt_cancels_rest_and_moves PASSED [ 96%]
+tests/test_rest_until_healed.py::test_rest_frame_batches_silent_turns_without_dirty_screen PASSED [100%]
+
+============================= 28 passed in 26.13s =============================

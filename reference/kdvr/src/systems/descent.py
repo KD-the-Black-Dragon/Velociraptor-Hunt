@@ -10,11 +10,22 @@ from src.components import (
     AI,
     Alignment,
     Engulfed,
+    Fighter,
     MobilityType,
     NPCAlignment,
     Player,
     Position,
     Predator,
+)
+from src.constants import (
+    GOOD_FOLLOWER_DESCEND_ACCURACY,
+    GOOD_FOLLOWER_DESCEND_HP,
+    GOOD_FOLLOWER_DESCEND_MAX_DAMAGE,
+    GOOD_FOLLOWER_DESCEND_MAX_HP,
+    GOOD_FOLLOWER_DESCEND_MIN_DAMAGE,
+    GOOD_FOLLOWER_DESCEND_RANGED_ACCURACY,
+    GOOD_FOLLOWER_DESCEND_RANGED_MAX_DAMAGE,
+    GOOD_FOLLOWER_DESCEND_RANGED_MIN_DAMAGE,
 )
 from src.map_gen import GameMap, can_enter_tile
 from src.systems.fov import can_see
@@ -79,6 +90,43 @@ def nearest_land_tiles(
             queue.append((nx, ny))
 
     return result
+
+
+def apply_good_follower_descent_buff(fighter: Fighter) -> None:
+    """Stack permanent combat buffs on one good ally that followed downstairs.
+
+    Mutates the instance ``Fighter`` only (not species data). Ranged fields are
+    materialized from pre-buff effective values so melee and ranged each gain
+    their listed bonuses once even when ranged previously fell back to melee.
+    """
+    ranged_min = fighter.effective_ranged_min_damage()
+    ranged_max = fighter.effective_ranged_max_damage()
+    ranged_acc = fighter.effective_ranged_accuracy()
+
+    fighter.max_hp += GOOD_FOLLOWER_DESCEND_MAX_HP
+    fighter.hp = min(fighter.max_hp, fighter.hp + GOOD_FOLLOWER_DESCEND_HP)
+    fighter.min_damage += GOOD_FOLLOWER_DESCEND_MIN_DAMAGE
+    fighter.max_damage += GOOD_FOLLOWER_DESCEND_MAX_DAMAGE
+    if fighter.min_damage > fighter.max_damage:
+        fighter.max_damage = fighter.min_damage
+    fighter.accuracy += GOOD_FOLLOWER_DESCEND_ACCURACY
+
+    new_ranged_min = ranged_min + GOOD_FOLLOWER_DESCEND_RANGED_MIN_DAMAGE
+    new_ranged_max = ranged_max + GOOD_FOLLOWER_DESCEND_RANGED_MAX_DAMAGE
+    if new_ranged_min > new_ranged_max:
+        new_ranged_max = new_ranged_min
+    fighter.ranged_min_damage = new_ranged_min
+    fighter.ranged_max_damage = new_ranged_max
+    fighter.ranged_accuracy = ranged_acc + GOOD_FOLLOWER_DESCEND_RANGED_ACCURACY
+
+
+def apply_good_follower_descent_buffs(followers: list[Entity]) -> None:
+    """Apply one floor of descent buffs to each follower (call once per descend)."""
+    for follower in followers:
+        fighter = follower.components.get(Fighter)
+        if fighter is None:
+            continue
+        apply_good_follower_descent_buff(fighter)
 
 
 def place_descent_followers(

@@ -37,10 +37,13 @@ from src.systems.abilities import (
     erratic_pursuit_suppressed,
     has_path_ability,
     has_wander,
+    try_evil_ranged_hunger_approach,
     try_path_engagement,
     try_smite_engagement,
     try_summon_on_first_sight,
 )
+from src.systems.ranged_magazine import magazine_for, try_ranged_reload
+from src.systems.dazed import tick_daze_on_ai_turn
 from src.systems.digestion import apply_digestion_tick
 from src.systems.naming import entity_log_name
 from src.systems.vore import (
@@ -75,6 +78,7 @@ from src.systems.ai.explore import (
 )
 from src.systems.ai.targeting import (
     _monster_should_act,
+    _visible_good_evils,
     pick_evil_chase,
     pick_good_chase,
 )
@@ -118,6 +122,7 @@ def _execute_erratic_pursuit_step(
     distant_throttle: bool = False,
     floor_depth: int = 1,
     difficulty_id: str | None = None,
+    vore_prefs: VoreContentPreferences | None = None,
 ) -> tuple[StepResult, Position | None]:
     """Intentional first MOVE. Returns (result, tile left behind if moved)."""
     if try_summon_on_first_sight(
@@ -131,6 +136,7 @@ def _execute_erratic_pursuit_step(
         player_engulfed=player_engulfed,
         floor_depth=floor_depth,
         difficulty_id=difficulty_id,
+        vore_prefs=vore_prefs,
     ):
         return "end_visit", None
 
@@ -520,6 +526,7 @@ def _execute_intent_pipeline(
         player_engulfed=player_engulfed,
         floor_depth=floor_depth,
         difficulty_id=difficulty_id,
+        vore_prefs=vore_prefs,
     ):
         return "end_visit"
 
@@ -675,6 +682,34 @@ def _execute_intent_pipeline(
                 ),
                 flush=True,
             )
+        if try_evil_ranged_hunger_approach(
+            monster,
+            world,
+            game_map,
+            player,
+            message_log,
+            rng,
+            entity_target=entity_target,
+            player_engulfed=player_engulfed,
+            blocked=blocked,
+            skipped=skipped,
+            vore_prefs=vore_prefs,
+        ):
+            return "end_visit"
+        mag = magazine_for(monster)
+        if mag is not None and mag.current == 0:
+            adjacent_melee = bool(
+                _adjacent_attack_targets(
+                    monster,
+                    world,
+                    game_map,
+                    player,
+                    alignment=alignment,
+                    player_engulfed=player_engulfed,
+                )
+            )
+            if not adjacent_melee and try_ranged_reload(monster):
+                return "end_visit"
         if try_path_engagement(
             monster,
             world,
@@ -697,6 +732,14 @@ def _execute_intent_pipeline(
             alignment=alignment,
             entity_target=entity_target,
             player_engulfed=player_engulfed,
+        ):
+            return "end_visit"
+        if (
+            mag is not None
+            and mag.current == 1
+            and entity_target is None
+            and pos_target is None
+            and try_ranged_reload(monster)
         ):
             return "end_visit"
         if has_path_ability(monster):
@@ -782,6 +825,20 @@ def _execute_intent_pipeline(
             pos_target,
             chase_mode,
         )
+        mag = magazine_for(monster)
+        if mag is not None and mag.current == 0:
+            adjacent_melee = bool(
+                _adjacent_attack_targets(
+                    monster,
+                    world,
+                    game_map,
+                    player,
+                    alignment=alignment,
+                    player_engulfed=player_engulfed,
+                )
+            )
+            if not adjacent_melee and try_ranged_reload(monster):
+                return "end_visit"
         if try_path_engagement(
             monster,
             world,
@@ -804,6 +861,18 @@ def _execute_intent_pipeline(
             alignment=alignment,
             entity_target=entity_target,
             player_engulfed=player_engulfed,
+        ):
+            return "end_visit"
+        if mag is not None and mag.current < mag.maximum:
+            if not _visible_good_evils(monster, world, game_map):
+                if try_ranged_reload(monster):
+                    return "end_visit"
+        if (
+            mag is not None
+            and mag.current == 1
+            and entity_target is None
+            and pos_target is None
+            and try_ranged_reload(monster)
         ):
             return "end_visit"
         if has_path_ability(monster):
@@ -994,6 +1063,7 @@ def _run_monster_visit(
                     distant_throttle=distant_throttle,
                     floor_depth=floor_depth,
                     difficulty_id=difficulty_id,
+                    vore_prefs=vore_prefs,
                 )
                 if left_from is not None:
                     erratic_forbid_return = left_from
@@ -1061,6 +1131,7 @@ def run_monster_turns(
     player_turn_count: int = 0,
     floor_depth: int = 1,
     difficulty_id: str | None = None,
+    alternate_cv_mechanics: bool = False,
 ) -> bool:
     """Each monster acts once per world phase. Returns True when a vore modal opens."""
     rng = rng or random.Random()
@@ -1080,7 +1151,8 @@ def run_monster_turns(
     player_engulfed = Engulfed in player.tags
     from src.data.depth_scaling_loader import default_depth_scaling_config
 
-    freeze_cfg = default_depth_scaling_config().profile_for(difficulty_id).spawn_ai_freeze
+    difficulty_profile = default_depth_scaling_config().profile_for(difficulty_id)
+    freeze_cfg = difficulty_profile.spawn_ai_freeze
 
     for index in range(start_index, len(monsters)):
         monster = monsters[index]
@@ -1101,10 +1173,15 @@ def run_monster_turns(
                         message_log,
                         rng,
                         skip_turn_entities=skipped,
+                        alternate_cv_mechanics=alternate_cv_mechanics,
+                        difficulty_profile=difficulty_profile,
                     )
             continue
 
         if Stunned in monster.tags:
+            continue
+
+        if tick_daze_on_ai_turn(monster, game_map, message_log):
             continue
 
         if monster.components.get(Predator) is not None:

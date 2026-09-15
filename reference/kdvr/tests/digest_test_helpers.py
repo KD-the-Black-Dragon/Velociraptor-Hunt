@@ -73,7 +73,9 @@ def spawn_evil_from_fixture(
         "entities": [minimal_evil_entity_payload(entity_id, digest_time=digest_time)],
     }
     definition = parse_entity_registry(payload).get(entity_id)
-    return spawn_from_definition(world, definition, x, y)
+    entity = spawn_from_definition(world, definition, x, y)
+    assert entity is not None
+    return entity
 
 
 def expected_default_digest_time() -> int:

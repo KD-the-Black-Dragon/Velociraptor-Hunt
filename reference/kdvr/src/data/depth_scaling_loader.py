@@ -182,6 +182,11 @@ def _parse_difficulty_profile(
         "rune_pieces_multiplier",
         "prefix_spawn",
         "spawn_ai_freeze",
+        "good_spawn_limit",
+        "cv_daze_min_turns",
+        "cv_daze_max_turns",
+        "good_ranged_shots",
+        "evil_ranged_shots",
     }
     for key in entry:
         if key not in allowed:
@@ -232,6 +237,42 @@ def _parse_difficulty_profile(
             entry["spawn_ai_freeze"], context=f"{context}.spawn_ai_freeze"
         )
 
+    good_spawn_limit = 2
+    if "good_spawn_limit" in entry:
+        gsl = entry["good_spawn_limit"]
+        if isinstance(gsl, bool) or not isinstance(gsl, int) or gsl < 0:
+            raise DepthScalingLoadError(
+                f"{context}: 'good_spawn_limit' must be an integer >= 0"
+            )
+        good_spawn_limit = gsl
+
+    cv_daze_min = _optional_int(entry, "cv_daze_min_turns", context=context, default=5)
+    cv_daze_max = _optional_int(entry, "cv_daze_max_turns", context=context, default=5)
+    if cv_daze_min < 0 or cv_daze_max < 0:
+        raise DepthScalingLoadError(
+            f"{context}: cv_daze_min_turns and cv_daze_max_turns must be >= 0"
+        )
+    if cv_daze_min > cv_daze_max:
+        raise DepthScalingLoadError(
+            f"{context}: cv_daze_min_turns ({cv_daze_min}) cannot exceed "
+            f"cv_daze_max_turns ({cv_daze_max})"
+        )
+
+    good_ranged_shots = _optional_int(
+        entry, "good_ranged_shots", context=context, default=2
+    )
+    evil_ranged_shots = _optional_int(
+        entry, "evil_ranged_shots", context=context, default=2
+    )
+    if good_ranged_shots < 1:
+        raise DepthScalingLoadError(
+            f"{context}: good_ranged_shots must be an integer >= 1"
+        )
+    if evil_ranged_shots < 1:
+        raise DepthScalingLoadError(
+            f"{context}: evil_ranged_shots must be an integer >= 1"
+        )
+
     return DifficultyProfile(
         id=difficulty_id,
         display_name=display_name,
@@ -242,6 +283,11 @@ def _parse_difficulty_profile(
         rune_pieces_multiplier=pieces_mult,
         prefix_spawn=prefix_spawn,
         spawn_ai_freeze=spawn_ai_freeze,
+        good_spawn_limit=good_spawn_limit,
+        cv_daze_min_turns=cv_daze_min,
+        cv_daze_max_turns=cv_daze_max,
+        good_ranged_shots=good_ranged_shots,
+        evil_ranged_shots=evil_ranged_shots,
     )
 
 

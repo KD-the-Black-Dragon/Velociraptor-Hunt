@@ -4,7 +4,7 @@ from pathlib import Path
 
 import attrs
 
-GAME_TITLE = "Gladiavore"
+GAME_TITLE = "Velociraptor Hunt"
 
 # Root console width; height stays at legacy map+HUD until sidebar/status panels land.
 # main.py uses runtime_console_dimensions() from src.ui.bootstrap for the real window.

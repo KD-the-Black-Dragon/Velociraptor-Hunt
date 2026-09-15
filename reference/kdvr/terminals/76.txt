@@ -1,0 +1,194 @@
+---
+pid: 13976
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q --tb=line"
+started_at: 2026-07-01T21:28:51.175Z
+running_for_ms: 11339993 
+---
+.....F.................................................................. [ 17%]
+........................F................F.............................. [ 34%]
+....................................FFFFFFF..FFFFFFFFF........FF.FF..FFF [ 51%]
+...F..FFFF.......F........FFFF.FFF..........F........................... [ 68%]
+........................................................................ [ 85%]
+.............................................................            [100%]
+================================== FAILURES ===================================
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   assert []
+C:\VS Code Projects\kds-vore-roguelike\tests\test_enhancements_2.py:252: assert []
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   NameError: name '_weapon_entry' is not defined
+C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:77: NameError: name '_weapon_entry' is not defined
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'dagger'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:94: KeyError: 'dagger'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+E   KeyError: 'health_potion'
+C:\VS Code Projects\kds-vore-roguelike\src\data\item_registry.py:100: KeyError: 'health_potion'
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:245: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:244: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_inventory_items_pr3.py::test_hud_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:358: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_inventory_items_pr3.py::test_hud_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:357: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:71: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:163: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+  C:\VS Code Projects\kds-vore-roguelike\src\systems\fov.py:23: RuntimeWarning: Given pov index (25, 81) is outside the array of shape (44, 80).
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_acceptance.py::test_ac6_stunned_and_potion_while_stunned - ...
+FAILED tests/test_enhancements_1.py::test_stunned_inventory_unchanged - KeyEr...
+FAILED tests/test_enhancements_2.py::test_potion_has_examine_description - as...
+FAILED tests/test_examine.py::test_examine_potion_on_floor - KeyError: 'dagger'
+FAILED tests/test_examine.py::test_examine_engulfed_blocked - KeyError: 'dagger'
+FAILED tests/test_examine.py::test_escape_cancels_examine_not_quit - KeyError...
+FAILED tests/test_examine.py::test_escape_dismisses_description_back_to_cursor
+FAILED tests/test_examine.py::test_escape_does_not_quit_from_gameplay - KeyEr...
+FAILED tests/test_examine.py::test_ctrl_q_does_not_quit_engine_directly - Key...
+FAILED tests/test_examine.py::test_ctrl_q_during_examine_still_non_exit_at_engine
+FAILED tests/test_flow_pr4.py::test_ctrl_q_in_play_opens_quit_confirm - KeyEr...
+FAILED tests/test_flow_pr4.py::test_quit_confirm_y_returns_to_menu - KeyError...
+FAILED tests/test_flow_pr4.py::test_quit_confirm_n_resumes_play - KeyError: '...
+FAILED tests/test_flow_pr4.py::test_ctrl_q_during_vore_modal_is_no_op - KeyEr...
+FAILED tests/test_flow_pr4.py::test_ctrl_q_during_digestion_modal_is_no_op - ...
+FAILED tests/test_flow_pr4.py::test_ctrl_q_during_game_over_recap_is_no_op - ...
+FAILED tests/test_flow_pr4.py::test_game_over_enter_returns_to_menu_via_app
+FAILED tests/test_flow_pr4.py::test_engine_recap_dismiss_result - KeyError: '...
+FAILED tests/test_flow_pr4.py::test_engine_ctrl_q_no_longer_exits - KeyError:...
+FAILED tests/test_inventory_items_pr1.py::test_pickup_assigns_earliest_letter
+FAILED tests/test_inventory_items_pr1.py::test_potion_stacking_reuses_slot - ...
+FAILED tests/test_inventory_items_pr1.py::test_manual_pickup_single_item_no_modal
+FAILED tests/test_inventory_items_pr1.py::test_manual_pickup_multiple_opens_modal
+FAILED tests/test_inventory_items_pr2.py::test_modal_list_rows_are_left_justified
+FAILED tests/test_inventory_items_pr2.py::test_inspect_list_modal_layout_and_plural
+FAILED tests/test_inventory_items_pr2.py::test_item_detail_modal_has_spaced_blocks
+FAILED tests/test_inventory_items_pr2.py::test_drop_potion_reduces_stack - Ke...
+FAILED tests/test_inventory_items_pr2.py::test_examine_potion_shows_full_stats
+FAILED tests/test_inventory_items_pr2.py::test_pack_blocked_for_inspect_while_engulfed
+FAILED tests/test_inventory_items_pr3.py::test_effective_fighter_wielded_weapon_changes_damage
+FAILED tests/test_inventory_items_pr3.py::test_effective_fighter_worn_armor_changes_ac
+FAILED tests/test_inventory_items_pr3.py::test_worn_armor_mitigates_digestion_and_degrades
+FAILED tests/test_inventory_items_pr4.py::test_quaff_heals_from_potion_definition
+FAILED tests/test_inventory_items_pr4.py::test_quaff_consumes_turn - KeyError...
+FAILED tests/test_inventory_items_pr4.py::test_quaff_at_full_health_still_consumes_turn
+FAILED tests/test_inventory_items_pr4.py::test_stunned_player_can_quaff_via_modal
+FAILED tests/test_inventory_items_pr4.py::test_quaff_modal_lists_potions_only
+FAILED tests/test_inventory_items_pr4.py::test_quaff_stacked_potion_decrements_stack
+FAILED tests/test_inventory_items_pr4.py::test_player_glyph_renders_over_floor_item_on_same_tile
+FAILED tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile
+40 failed, 381 passed, 19 warnings in 92.54s (0:01:32)

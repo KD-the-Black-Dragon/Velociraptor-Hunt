@@ -106,6 +106,7 @@ def try_quaff_potion_effect(
         floor_depth=engine.floor_depth,
         difficulty_id=engine.difficulty_id,
         rng=engine.rng,
+        vore_prefs=engine.vore_content_prefs,
     ):
         return False
     _record_potion_use(visit, effect)

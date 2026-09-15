@@ -1,0 +1,17 @@
+---
+pid: 4696
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_dungeon_layout_pr0.py tests/test_dungeon_pr2.py -q --tb=line 2>&1"
+started_at: 2026-07-03T12:50:50.291Z
+running_for_ms: 36090005 
+---
+.......F.........                                                        [100%]
+================================== FAILURES ===================================
+E   assert False
+     +  where False = validate_min_land_tiles(GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ........, False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(68, 20)))
+---------------------------- Captured stdout call -----------------------------
+[map_gen] rejected attempt 1: too_few_land_tiles
+C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_layout_pr0.py:98: assert False
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_layout_pr0.py::test_many_seeds_pass_sanity_gates - ...
+1 failed, 16 passed in 881.96s (0:14:41)

@@ -1,0 +1,1091 @@
+metric,label,baseline
+meta.timestamp,Timestamp (UTC),2026-07-11T22:44:27.095362+00:00
+meta.difficulty_id,Difficulty,normal
+meta.seconds_budget,Seconds budget,60
+meta.trajectory_seconds,Trajectory seconds,42.004
+meta.isolation_seconds,Isolation seconds,18
+meta.trajectory_runs,Trajectory runs,1
+meta.isolation_runs_total,Isolation runs total,0
+meta.data_fingerprint,Data fingerprint,b39d21823df750280e9123f748c6d444b49373e8e8828ec94c686bd8f9658f98
+_section.traj,--- trajectory ---,
+traj.f01.runs_reached,F01 traj runs reached,1
+traj.f01.digest_rate,F01 traj digest rate,0
+traj.f01.descend_rate,F01 traj descend rate,0
+traj.f01.difficulty_mean,F01 traj difficulty mean,0
+traj.f01.difficulty_median,F01 traj difficulty median,0
+traj.f01.difficulty_p10,F01 traj difficulty p10,0
+traj.f01.difficulty_p90,F01 traj difficulty p90,0
+traj.f01.difficulty_stdev,F01 traj difficulty stdev,0
+traj.f01.runes_0,F01 traj runes 0,0
+traj.f01.runes_1,F01 traj runes 1,0
+traj.f01.runes_2,F01 traj runes 2,0
+traj.f01.runes_3,F01 traj runes 3,0
+traj.f01.early_bail_rate,F01 traj early bail rate,0
+traj.f01.consumable_heal_mean,F01 traj consumable heal mean,0
+traj.f01.consumable_might_mean,F01 traj consumable might mean,0
+traj.f01.consumable_haste_mean,F01 traj consumable haste mean,0
+traj.f01.consumable_teleport_mean,F01 traj consumable teleport mean,0
+traj.f01.wand_evoke_mean,F01 traj wand evoke mean,0
+traj.f01.weapon_improve_rate,F01 traj weapon improve rate,0
+traj.f01.armor_improve_rate,F01 traj armor improve rate,0
+traj.f01.weapon_spawn_rate,F01 traj weapon spawn rate,0
+traj.f01.weapon_take_rate,F01 traj weapon take rate,0
+traj.f01.armor_spawn_rate,F01 traj armor spawn rate,0
+traj.f01.armor_take_rate,F01 traj armor take rate,0
+traj.f01.digest_when_weapon_spawned,F01 traj digest when weapon spawned,0
+traj.f01.digest_when_weapon_not_spawned,F01 traj digest when weapon not spawned,0
+traj.f01.stunned_events_mean,F01 traj stunned events mean,0
+traj.f02.runs_reached,F02 traj runs reached,0
+traj.f02.digest_rate,F02 traj digest rate,0
+traj.f02.descend_rate,F02 traj descend rate,0
+traj.f02.difficulty_mean,F02 traj difficulty mean,0
+traj.f02.difficulty_median,F02 traj difficulty median,0
+traj.f02.difficulty_p10,F02 traj difficulty p10,0
+traj.f02.difficulty_p90,F02 traj difficulty p90,0
+traj.f02.difficulty_stdev,F02 traj difficulty stdev,0
+traj.f02.runes_0,F02 traj runes 0,0
+traj.f02.runes_1,F02 traj runes 1,0
+traj.f02.runes_2,F02 traj runes 2,0
+traj.f02.runes_3,F02 traj runes 3,0
+traj.f02.early_bail_rate,F02 traj early bail rate,0
+traj.f02.consumable_heal_mean,F02 traj consumable heal mean,0
+traj.f02.consumable_might_mean,F02 traj consumable might mean,0
+traj.f02.consumable_haste_mean,F02 traj consumable haste mean,0
+traj.f02.consumable_teleport_mean,F02 traj consumable teleport mean,0
+traj.f02.wand_evoke_mean,F02 traj wand evoke mean,0
+traj.f02.weapon_improve_rate,F02 traj weapon improve rate,0
+traj.f02.armor_improve_rate,F02 traj armor improve rate,0
+traj.f02.weapon_spawn_rate,F02 traj weapon spawn rate,0
+traj.f02.weapon_take_rate,F02 traj weapon take rate,0
+traj.f02.armor_spawn_rate,F02 traj armor spawn rate,0
+traj.f02.armor_take_rate,F02 traj armor take rate,0
+traj.f02.digest_when_weapon_spawned,F02 traj digest when weapon spawned,0
+traj.f02.digest_when_weapon_not_spawned,F02 traj digest when weapon not spawned,0
+traj.f02.stunned_events_mean,F02 traj stunned events mean,0
+traj.f03.runs_reached,F03 traj runs reached,0
+traj.f03.digest_rate,F03 traj digest rate,0
+traj.f03.descend_rate,F03 traj descend rate,0
+traj.f03.difficulty_mean,F03 traj difficulty mean,0
+traj.f03.difficulty_median,F03 traj difficulty median,0
+traj.f03.difficulty_p10,F03 traj difficulty p10,0
+traj.f03.difficulty_p90,F03 traj difficulty p90,0
+traj.f03.difficulty_stdev,F03 traj difficulty stdev,0
+traj.f03.runes_0,F03 traj runes 0,0
+traj.f03.runes_1,F03 traj runes 1,0
+traj.f03.runes_2,F03 traj runes 2,0
+traj.f03.runes_3,F03 traj runes 3,0
+traj.f03.early_bail_rate,F03 traj early bail rate,0
+traj.f03.consumable_heal_mean,F03 traj consumable heal mean,0
+traj.f03.consumable_might_mean,F03 traj consumable might mean,0
+traj.f03.consumable_haste_mean,F03 traj consumable haste mean,0
+traj.f03.consumable_teleport_mean,F03 traj consumable teleport mean,0
+traj.f03.wand_evoke_mean,F03 traj wand evoke mean,0
+traj.f03.weapon_improve_rate,F03 traj weapon improve rate,0
+traj.f03.armor_improve_rate,F03 traj armor improve rate,0
+traj.f03.weapon_spawn_rate,F03 traj weapon spawn rate,0
+traj.f03.weapon_take_rate,F03 traj weapon take rate,0
+traj.f03.armor_spawn_rate,F03 traj armor spawn rate,0
+traj.f03.armor_take_rate,F03 traj armor take rate,0
+traj.f03.digest_when_weapon_spawned,F03 traj digest when weapon spawned,0
+traj.f03.digest_when_weapon_not_spawned,F03 traj digest when weapon not spawned,0
+traj.f03.stunned_events_mean,F03 traj stunned events mean,0
+traj.f04.runs_reached,F04 traj runs reached,0
+traj.f04.digest_rate,F04 traj digest rate,0
+traj.f04.descend_rate,F04 traj descend rate,0
+traj.f04.difficulty_mean,F04 traj difficulty mean,0
+traj.f04.difficulty_median,F04 traj difficulty median,0
+traj.f04.difficulty_p10,F04 traj difficulty p10,0
+traj.f04.difficulty_p90,F04 traj difficulty p90,0
+traj.f04.difficulty_stdev,F04 traj difficulty stdev,0
+traj.f04.runes_0,F04 traj runes 0,0
+traj.f04.runes_1,F04 traj runes 1,0
+traj.f04.runes_2,F04 traj runes 2,0
+traj.f04.runes_3,F04 traj runes 3,0
+traj.f04.early_bail_rate,F04 traj early bail rate,0
+traj.f04.consumable_heal_mean,F04 traj consumable heal mean,0
+traj.f04.consumable_might_mean,F04 traj consumable might mean,0
+traj.f04.consumable_haste_mean,F04 traj consumable haste mean,0
+traj.f04.consumable_teleport_mean,F04 traj consumable teleport mean,0
+traj.f04.wand_evoke_mean,F04 traj wand evoke mean,0
+traj.f04.weapon_improve_rate,F04 traj weapon improve rate,0
+traj.f04.armor_improve_rate,F04 traj armor improve rate,0
+traj.f04.weapon_spawn_rate,F04 traj weapon spawn rate,0
+traj.f04.weapon_take_rate,F04 traj weapon take rate,0
+traj.f04.armor_spawn_rate,F04 traj armor spawn rate,0
+traj.f04.armor_take_rate,F04 traj armor take rate,0
+traj.f04.digest_when_weapon_spawned,F04 traj digest when weapon spawned,0
+traj.f04.digest_when_weapon_not_spawned,F04 traj digest when weapon not spawned,0
+traj.f04.stunned_events_mean,F04 traj stunned events mean,0
+traj.f05.runs_reached,F05 traj runs reached,0
+traj.f05.digest_rate,F05 traj digest rate,0
+traj.f05.descend_rate,F05 traj descend rate,0
+traj.f05.difficulty_mean,F05 traj difficulty mean,0
+traj.f05.difficulty_median,F05 traj difficulty median,0
+traj.f05.difficulty_p10,F05 traj difficulty p10,0
+traj.f05.difficulty_p90,F05 traj difficulty p90,0
+traj.f05.difficulty_stdev,F05 traj difficulty stdev,0
+traj.f05.runes_0,F05 traj runes 0,0
+traj.f05.runes_1,F05 traj runes 1,0
+traj.f05.runes_2,F05 traj runes 2,0
+traj.f05.runes_3,F05 traj runes 3,0
+traj.f05.early_bail_rate,F05 traj early bail rate,0
+traj.f05.consumable_heal_mean,F05 traj consumable heal mean,0
+traj.f05.consumable_might_mean,F05 traj consumable might mean,0
+traj.f05.consumable_haste_mean,F05 traj consumable haste mean,0
+traj.f05.consumable_teleport_mean,F05 traj consumable teleport mean,0
+traj.f05.wand_evoke_mean,F05 traj wand evoke mean,0
+traj.f05.weapon_improve_rate,F05 traj weapon improve rate,0
+traj.f05.armor_improve_rate,F05 traj armor improve rate,0
+traj.f05.weapon_spawn_rate,F05 traj weapon spawn rate,0
+traj.f05.weapon_take_rate,F05 traj weapon take rate,0
+traj.f05.armor_spawn_rate,F05 traj armor spawn rate,0
+traj.f05.armor_take_rate,F05 traj armor take rate,0
+traj.f05.digest_when_weapon_spawned,F05 traj digest when weapon spawned,0
+traj.f05.digest_when_weapon_not_spawned,F05 traj digest when weapon not spawned,0
+traj.f05.stunned_events_mean,F05 traj stunned events mean,0
+traj.f06.runs_reached,F06 traj runs reached,0
+traj.f06.digest_rate,F06 traj digest rate,0
+traj.f06.descend_rate,F06 traj descend rate,0
+traj.f06.difficulty_mean,F06 traj difficulty mean,0
+traj.f06.difficulty_median,F06 traj difficulty median,0
+traj.f06.difficulty_p10,F06 traj difficulty p10,0
+traj.f06.difficulty_p90,F06 traj difficulty p90,0
+traj.f06.difficulty_stdev,F06 traj difficulty stdev,0
+traj.f06.runes_0,F06 traj runes 0,0
+traj.f06.runes_1,F06 traj runes 1,0
+traj.f06.runes_2,F06 traj runes 2,0
+traj.f06.runes_3,F06 traj runes 3,0
+traj.f06.early_bail_rate,F06 traj early bail rate,0
+traj.f06.consumable_heal_mean,F06 traj consumable heal mean,0
+traj.f06.consumable_might_mean,F06 traj consumable might mean,0
+traj.f06.consumable_haste_mean,F06 traj consumable haste mean,0
+traj.f06.consumable_teleport_mean,F06 traj consumable teleport mean,0
+traj.f06.wand_evoke_mean,F06 traj wand evoke mean,0
+traj.f06.weapon_improve_rate,F06 traj weapon improve rate,0
+traj.f06.armor_improve_rate,F06 traj armor improve rate,0
+traj.f06.weapon_spawn_rate,F06 traj weapon spawn rate,0
+traj.f06.weapon_take_rate,F06 traj weapon take rate,0
+traj.f06.armor_spawn_rate,F06 traj armor spawn rate,0
+traj.f06.armor_take_rate,F06 traj armor take rate,0
+traj.f06.digest_when_weapon_spawned,F06 traj digest when weapon spawned,0
+traj.f06.digest_when_weapon_not_spawned,F06 traj digest when weapon not spawned,0
+traj.f06.stunned_events_mean,F06 traj stunned events mean,0
+traj.f07.runs_reached,F07 traj runs reached,0
+traj.f07.digest_rate,F07 traj digest rate,0
+traj.f07.descend_rate,F07 traj descend rate,0
+traj.f07.difficulty_mean,F07 traj difficulty mean,0
+traj.f07.difficulty_median,F07 traj difficulty median,0
+traj.f07.difficulty_p10,F07 traj difficulty p10,0
+traj.f07.difficulty_p90,F07 traj difficulty p90,0
+traj.f07.difficulty_stdev,F07 traj difficulty stdev,0
+traj.f07.runes_0,F07 traj runes 0,0
+traj.f07.runes_1,F07 traj runes 1,0
+traj.f07.runes_2,F07 traj runes 2,0
+traj.f07.runes_3,F07 traj runes 3,0
+traj.f07.early_bail_rate,F07 traj early bail rate,0
+traj.f07.consumable_heal_mean,F07 traj consumable heal mean,0
+traj.f07.consumable_might_mean,F07 traj consumable might mean,0
+traj.f07.consumable_haste_mean,F07 traj consumable haste mean,0
+traj.f07.consumable_teleport_mean,F07 traj consumable teleport mean,0
+traj.f07.wand_evoke_mean,F07 traj wand evoke mean,0
+traj.f07.weapon_improve_rate,F07 traj weapon improve rate,0
+traj.f07.armor_improve_rate,F07 traj armor improve rate,0
+traj.f07.weapon_spawn_rate,F07 traj weapon spawn rate,0
+traj.f07.weapon_take_rate,F07 traj weapon take rate,0
+traj.f07.armor_spawn_rate,F07 traj armor spawn rate,0
+traj.f07.armor_take_rate,F07 traj armor take rate,0
+traj.f07.digest_when_weapon_spawned,F07 traj digest when weapon spawned,0
+traj.f07.digest_when_weapon_not_spawned,F07 traj digest when weapon not spawned,0
+traj.f07.stunned_events_mean,F07 traj stunned events mean,0
+traj.f08.runs_reached,F08 traj runs reached,0
+traj.f08.digest_rate,F08 traj digest rate,0
+traj.f08.descend_rate,F08 traj descend rate,0
+traj.f08.difficulty_mean,F08 traj difficulty mean,0
+traj.f08.difficulty_median,F08 traj difficulty median,0
+traj.f08.difficulty_p10,F08 traj difficulty p10,0
+traj.f08.difficulty_p90,F08 traj difficulty p90,0
+traj.f08.difficulty_stdev,F08 traj difficulty stdev,0
+traj.f08.runes_0,F08 traj runes 0,0
+traj.f08.runes_1,F08 traj runes 1,0
+traj.f08.runes_2,F08 traj runes 2,0
+traj.f08.runes_3,F08 traj runes 3,0
+traj.f08.early_bail_rate,F08 traj early bail rate,0
+traj.f08.consumable_heal_mean,F08 traj consumable heal mean,0
+traj.f08.consumable_might_mean,F08 traj consumable might mean,0
+traj.f08.consumable_haste_mean,F08 traj consumable haste mean,0
+traj.f08.consumable_teleport_mean,F08 traj consumable teleport mean,0
+traj.f08.wand_evoke_mean,F08 traj wand evoke mean,0
+traj.f08.weapon_improve_rate,F08 traj weapon improve rate,0
+traj.f08.armor_improve_rate,F08 traj armor improve rate,0
+traj.f08.weapon_spawn_rate,F08 traj weapon spawn rate,0
+traj.f08.weapon_take_rate,F08 traj weapon take rate,0
+traj.f08.armor_spawn_rate,F08 traj armor spawn rate,0
+traj.f08.armor_take_rate,F08 traj armor take rate,0
+traj.f08.digest_when_weapon_spawned,F08 traj digest when weapon spawned,0
+traj.f08.digest_when_weapon_not_spawned,F08 traj digest when weapon not spawned,0
+traj.f08.stunned_events_mean,F08 traj stunned events mean,0
+traj.f09.runs_reached,F09 traj runs reached,0
+traj.f09.digest_rate,F09 traj digest rate,0
+traj.f09.descend_rate,F09 traj descend rate,0
+traj.f09.difficulty_mean,F09 traj difficulty mean,0
+traj.f09.difficulty_median,F09 traj difficulty median,0
+traj.f09.difficulty_p10,F09 traj difficulty p10,0
+traj.f09.difficulty_p90,F09 traj difficulty p90,0
+traj.f09.difficulty_stdev,F09 traj difficulty stdev,0
+traj.f09.runes_0,F09 traj runes 0,0
+traj.f09.runes_1,F09 traj runes 1,0
+traj.f09.runes_2,F09 traj runes 2,0
+traj.f09.runes_3,F09 traj runes 3,0
+traj.f09.early_bail_rate,F09 traj early bail rate,0
+traj.f09.consumable_heal_mean,F09 traj consumable heal mean,0
+traj.f09.consumable_might_mean,F09 traj consumable might mean,0
+traj.f09.consumable_haste_mean,F09 traj consumable haste mean,0
+traj.f09.consumable_teleport_mean,F09 traj consumable teleport mean,0
+traj.f09.wand_evoke_mean,F09 traj wand evoke mean,0
+traj.f09.weapon_improve_rate,F09 traj weapon improve rate,0
+traj.f09.armor_improve_rate,F09 traj armor improve rate,0
+traj.f09.weapon_spawn_rate,F09 traj weapon spawn rate,0
+traj.f09.weapon_take_rate,F09 traj weapon take rate,0
+traj.f09.armor_spawn_rate,F09 traj armor spawn rate,0
+traj.f09.armor_take_rate,F09 traj armor take rate,0
+traj.f09.digest_when_weapon_spawned,F09 traj digest when weapon spawned,0
+traj.f09.digest_when_weapon_not_spawned,F09 traj digest when weapon not spawned,0
+traj.f09.stunned_events_mean,F09 traj stunned events mean,0
+traj.f10.runs_reached,F10 traj runs reached,0
+traj.f10.digest_rate,F10 traj digest rate,0
+traj.f10.descend_rate,F10 traj descend rate,0
+traj.f10.difficulty_mean,F10 traj difficulty mean,0
+traj.f10.difficulty_median,F10 traj difficulty median,0
+traj.f10.difficulty_p10,F10 traj difficulty p10,0
+traj.f10.difficulty_p90,F10 traj difficulty p90,0
+traj.f10.difficulty_stdev,F10 traj difficulty stdev,0
+traj.f10.runes_0,F10 traj runes 0,0
+traj.f10.runes_1,F10 traj runes 1,0
+traj.f10.runes_2,F10 traj runes 2,0
+traj.f10.runes_3,F10 traj runes 3,0
+traj.f10.early_bail_rate,F10 traj early bail rate,0
+traj.f10.consumable_heal_mean,F10 traj consumable heal mean,0
+traj.f10.consumable_might_mean,F10 traj consumable might mean,0
+traj.f10.consumable_haste_mean,F10 traj consumable haste mean,0
+traj.f10.consumable_teleport_mean,F10 traj consumable teleport mean,0
+traj.f10.wand_evoke_mean,F10 traj wand evoke mean,0
+traj.f10.weapon_improve_rate,F10 traj weapon improve rate,0
+traj.f10.armor_improve_rate,F10 traj armor improve rate,0
+traj.f10.weapon_spawn_rate,F10 traj weapon spawn rate,0
+traj.f10.weapon_take_rate,F10 traj weapon take rate,0
+traj.f10.armor_spawn_rate,F10 traj armor spawn rate,0
+traj.f10.armor_take_rate,F10 traj armor take rate,0
+traj.f10.digest_when_weapon_spawned,F10 traj digest when weapon spawned,0
+traj.f10.digest_when_weapon_not_spawned,F10 traj digest when weapon not spawned,0
+traj.f10.stunned_events_mean,F10 traj stunned events mean,0
+traj.f11.runs_reached,F11 traj runs reached,0
+traj.f11.digest_rate,F11 traj digest rate,0
+traj.f11.descend_rate,F11 traj descend rate,0
+traj.f11.difficulty_mean,F11 traj difficulty mean,0
+traj.f11.difficulty_median,F11 traj difficulty median,0
+traj.f11.difficulty_p10,F11 traj difficulty p10,0
+traj.f11.difficulty_p90,F11 traj difficulty p90,0
+traj.f11.difficulty_stdev,F11 traj difficulty stdev,0
+traj.f11.runes_0,F11 traj runes 0,0
+traj.f11.runes_1,F11 traj runes 1,0
+traj.f11.runes_2,F11 traj runes 2,0
+traj.f11.runes_3,F11 traj runes 3,0
+traj.f11.early_bail_rate,F11 traj early bail rate,0
+traj.f11.consumable_heal_mean,F11 traj consumable heal mean,0
+traj.f11.consumable_might_mean,F11 traj consumable might mean,0
+traj.f11.consumable_haste_mean,F11 traj consumable haste mean,0
+traj.f11.consumable_teleport_mean,F11 traj consumable teleport mean,0
+traj.f11.wand_evoke_mean,F11 traj wand evoke mean,0
+traj.f11.weapon_improve_rate,F11 traj weapon improve rate,0
+traj.f11.armor_improve_rate,F11 traj armor improve rate,0
+traj.f11.weapon_spawn_rate,F11 traj weapon spawn rate,0
+traj.f11.weapon_take_rate,F11 traj weapon take rate,0
+traj.f11.armor_spawn_rate,F11 traj armor spawn rate,0
+traj.f11.armor_take_rate,F11 traj armor take rate,0
+traj.f11.digest_when_weapon_spawned,F11 traj digest when weapon spawned,0
+traj.f11.digest_when_weapon_not_spawned,F11 traj digest when weapon not spawned,0
+traj.f11.stunned_events_mean,F11 traj stunned events mean,0
+traj.f12.runs_reached,F12 traj runs reached,0
+traj.f12.digest_rate,F12 traj digest rate,0
+traj.f12.descend_rate,F12 traj descend rate,0
+traj.f12.difficulty_mean,F12 traj difficulty mean,0
+traj.f12.difficulty_median,F12 traj difficulty median,0
+traj.f12.difficulty_p10,F12 traj difficulty p10,0
+traj.f12.difficulty_p90,F12 traj difficulty p90,0
+traj.f12.difficulty_stdev,F12 traj difficulty stdev,0
+traj.f12.runes_0,F12 traj runes 0,0
+traj.f12.runes_1,F12 traj runes 1,0
+traj.f12.runes_2,F12 traj runes 2,0
+traj.f12.runes_3,F12 traj runes 3,0
+traj.f12.early_bail_rate,F12 traj early bail rate,0
+traj.f12.consumable_heal_mean,F12 traj consumable heal mean,0
+traj.f12.consumable_might_mean,F12 traj consumable might mean,0
+traj.f12.consumable_haste_mean,F12 traj consumable haste mean,0
+traj.f12.consumable_teleport_mean,F12 traj consumable teleport mean,0
+traj.f12.wand_evoke_mean,F12 traj wand evoke mean,0
+traj.f12.weapon_improve_rate,F12 traj weapon improve rate,0
+traj.f12.armor_improve_rate,F12 traj armor improve rate,0
+traj.f12.weapon_spawn_rate,F12 traj weapon spawn rate,0
+traj.f12.weapon_take_rate,F12 traj weapon take rate,0
+traj.f12.armor_spawn_rate,F12 traj armor spawn rate,0
+traj.f12.armor_take_rate,F12 traj armor take rate,0
+traj.f12.digest_when_weapon_spawned,F12 traj digest when weapon spawned,0
+traj.f12.digest_when_weapon_not_spawned,F12 traj digest when weapon not spawned,0
+traj.f12.stunned_events_mean,F12 traj stunned events mean,0
+traj.f13.runs_reached,F13 traj runs reached,0
+traj.f13.digest_rate,F13 traj digest rate,0
+traj.f13.descend_rate,F13 traj descend rate,0
+traj.f13.difficulty_mean,F13 traj difficulty mean,0
+traj.f13.difficulty_median,F13 traj difficulty median,0
+traj.f13.difficulty_p10,F13 traj difficulty p10,0
+traj.f13.difficulty_p90,F13 traj difficulty p90,0
+traj.f13.difficulty_stdev,F13 traj difficulty stdev,0
+traj.f13.runes_0,F13 traj runes 0,0
+traj.f13.runes_1,F13 traj runes 1,0
+traj.f13.runes_2,F13 traj runes 2,0
+traj.f13.runes_3,F13 traj runes 3,0
+traj.f13.early_bail_rate,F13 traj early bail rate,0
+traj.f13.consumable_heal_mean,F13 traj consumable heal mean,0
+traj.f13.consumable_might_mean,F13 traj consumable might mean,0
+traj.f13.consumable_haste_mean,F13 traj consumable haste mean,0
+traj.f13.consumable_teleport_mean,F13 traj consumable teleport mean,0
+traj.f13.wand_evoke_mean,F13 traj wand evoke mean,0
+traj.f13.weapon_improve_rate,F13 traj weapon improve rate,0
+traj.f13.armor_improve_rate,F13 traj armor improve rate,0
+traj.f13.weapon_spawn_rate,F13 traj weapon spawn rate,0
+traj.f13.weapon_take_rate,F13 traj weapon take rate,0
+traj.f13.armor_spawn_rate,F13 traj armor spawn rate,0
+traj.f13.armor_take_rate,F13 traj armor take rate,0
+traj.f13.digest_when_weapon_spawned,F13 traj digest when weapon spawned,0
+traj.f13.digest_when_weapon_not_spawned,F13 traj digest when weapon not spawned,0
+traj.f13.stunned_events_mean,F13 traj stunned events mean,0
+traj.f14.runs_reached,F14 traj runs reached,0
+traj.f14.digest_rate,F14 traj digest rate,0
+traj.f14.descend_rate,F14 traj descend rate,0
+traj.f14.difficulty_mean,F14 traj difficulty mean,0
+traj.f14.difficulty_median,F14 traj difficulty median,0
+traj.f14.difficulty_p10,F14 traj difficulty p10,0
+traj.f14.difficulty_p90,F14 traj difficulty p90,0
+traj.f14.difficulty_stdev,F14 traj difficulty stdev,0
+traj.f14.runes_0,F14 traj runes 0,0
+traj.f14.runes_1,F14 traj runes 1,0
+traj.f14.runes_2,F14 traj runes 2,0
+traj.f14.runes_3,F14 traj runes 3,0
+traj.f14.early_bail_rate,F14 traj early bail rate,0
+traj.f14.consumable_heal_mean,F14 traj consumable heal mean,0
+traj.f14.consumable_might_mean,F14 traj consumable might mean,0
+traj.f14.consumable_haste_mean,F14 traj consumable haste mean,0
+traj.f14.consumable_teleport_mean,F14 traj consumable teleport mean,0
+traj.f14.wand_evoke_mean,F14 traj wand evoke mean,0
+traj.f14.weapon_improve_rate,F14 traj weapon improve rate,0
+traj.f14.armor_improve_rate,F14 traj armor improve rate,0
+traj.f14.weapon_spawn_rate,F14 traj weapon spawn rate,0
+traj.f14.weapon_take_rate,F14 traj weapon take rate,0
+traj.f14.armor_spawn_rate,F14 traj armor spawn rate,0
+traj.f14.armor_take_rate,F14 traj armor take rate,0
+traj.f14.digest_when_weapon_spawned,F14 traj digest when weapon spawned,0
+traj.f14.digest_when_weapon_not_spawned,F14 traj digest when weapon not spawned,0
+traj.f14.stunned_events_mean,F14 traj stunned events mean,0
+traj.f15.runs_reached,F15 traj runs reached,0
+traj.f15.digest_rate,F15 traj digest rate,0
+traj.f15.descend_rate,F15 traj descend rate,0
+traj.f15.difficulty_mean,F15 traj difficulty mean,0
+traj.f15.difficulty_median,F15 traj difficulty median,0
+traj.f15.difficulty_p10,F15 traj difficulty p10,0
+traj.f15.difficulty_p90,F15 traj difficulty p90,0
+traj.f15.difficulty_stdev,F15 traj difficulty stdev,0
+traj.f15.runes_0,F15 traj runes 0,0
+traj.f15.runes_1,F15 traj runes 1,0
+traj.f15.runes_2,F15 traj runes 2,0
+traj.f15.runes_3,F15 traj runes 3,0
+traj.f15.early_bail_rate,F15 traj early bail rate,0
+traj.f15.consumable_heal_mean,F15 traj consumable heal mean,0
+traj.f15.consumable_might_mean,F15 traj consumable might mean,0
+traj.f15.consumable_haste_mean,F15 traj consumable haste mean,0
+traj.f15.consumable_teleport_mean,F15 traj consumable teleport mean,0
+traj.f15.wand_evoke_mean,F15 traj wand evoke mean,0
+traj.f15.weapon_improve_rate,F15 traj weapon improve rate,0
+traj.f15.armor_improve_rate,F15 traj armor improve rate,0
+traj.f15.weapon_spawn_rate,F15 traj weapon spawn rate,0
+traj.f15.weapon_take_rate,F15 traj weapon take rate,0
+traj.f15.armor_spawn_rate,F15 traj armor spawn rate,0
+traj.f15.armor_take_rate,F15 traj armor take rate,0
+traj.f15.digest_when_weapon_spawned,F15 traj digest when weapon spawned,0
+traj.f15.digest_when_weapon_not_spawned,F15 traj digest when weapon not spawned,0
+traj.f15.stunned_events_mean,F15 traj stunned events mean,0
+traj.f16.runs_reached,F16 traj runs reached,0
+traj.f16.digest_rate,F16 traj digest rate,0
+traj.f16.descend_rate,F16 traj descend rate,0
+traj.f16.difficulty_mean,F16 traj difficulty mean,0
+traj.f16.difficulty_median,F16 traj difficulty median,0
+traj.f16.difficulty_p10,F16 traj difficulty p10,0
+traj.f16.difficulty_p90,F16 traj difficulty p90,0
+traj.f16.difficulty_stdev,F16 traj difficulty stdev,0
+traj.f16.runes_0,F16 traj runes 0,0
+traj.f16.runes_1,F16 traj runes 1,0
+traj.f16.runes_2,F16 traj runes 2,0
+traj.f16.runes_3,F16 traj runes 3,0
+traj.f16.early_bail_rate,F16 traj early bail rate,0
+traj.f16.consumable_heal_mean,F16 traj consumable heal mean,0
+traj.f16.consumable_might_mean,F16 traj consumable might mean,0
+traj.f16.consumable_haste_mean,F16 traj consumable haste mean,0
+traj.f16.consumable_teleport_mean,F16 traj consumable teleport mean,0
+traj.f16.wand_evoke_mean,F16 traj wand evoke mean,0
+traj.f16.weapon_improve_rate,F16 traj weapon improve rate,0
+traj.f16.armor_improve_rate,F16 traj armor improve rate,0
+traj.f16.weapon_spawn_rate,F16 traj weapon spawn rate,0
+traj.f16.weapon_take_rate,F16 traj weapon take rate,0
+traj.f16.armor_spawn_rate,F16 traj armor spawn rate,0
+traj.f16.armor_take_rate,F16 traj armor take rate,0
+traj.f16.digest_when_weapon_spawned,F16 traj digest when weapon spawned,0
+traj.f16.digest_when_weapon_not_spawned,F16 traj digest when weapon not spawned,0
+traj.f16.stunned_events_mean,F16 traj stunned events mean,0
+traj.f17.runs_reached,F17 traj runs reached,0
+traj.f17.digest_rate,F17 traj digest rate,0
+traj.f17.descend_rate,F17 traj descend rate,0
+traj.f17.difficulty_mean,F17 traj difficulty mean,0
+traj.f17.difficulty_median,F17 traj difficulty median,0
+traj.f17.difficulty_p10,F17 traj difficulty p10,0
+traj.f17.difficulty_p90,F17 traj difficulty p90,0
+traj.f17.difficulty_stdev,F17 traj difficulty stdev,0
+traj.f17.runes_0,F17 traj runes 0,0
+traj.f17.runes_1,F17 traj runes 1,0
+traj.f17.runes_2,F17 traj runes 2,0
+traj.f17.runes_3,F17 traj runes 3,0
+traj.f17.early_bail_rate,F17 traj early bail rate,0
+traj.f17.consumable_heal_mean,F17 traj consumable heal mean,0
+traj.f17.consumable_might_mean,F17 traj consumable might mean,0
+traj.f17.consumable_haste_mean,F17 traj consumable haste mean,0
+traj.f17.consumable_teleport_mean,F17 traj consumable teleport mean,0
+traj.f17.wand_evoke_mean,F17 traj wand evoke mean,0
+traj.f17.weapon_improve_rate,F17 traj weapon improve rate,0
+traj.f17.armor_improve_rate,F17 traj armor improve rate,0
+traj.f17.weapon_spawn_rate,F17 traj weapon spawn rate,0
+traj.f17.weapon_take_rate,F17 traj weapon take rate,0
+traj.f17.armor_spawn_rate,F17 traj armor spawn rate,0
+traj.f17.armor_take_rate,F17 traj armor take rate,0
+traj.f17.digest_when_weapon_spawned,F17 traj digest when weapon spawned,0
+traj.f17.digest_when_weapon_not_spawned,F17 traj digest when weapon not spawned,0
+traj.f17.stunned_events_mean,F17 traj stunned events mean,0
+traj.f18.runs_reached,F18 traj runs reached,0
+traj.f18.digest_rate,F18 traj digest rate,0
+traj.f18.descend_rate,F18 traj descend rate,0
+traj.f18.difficulty_mean,F18 traj difficulty mean,0
+traj.f18.difficulty_median,F18 traj difficulty median,0
+traj.f18.difficulty_p10,F18 traj difficulty p10,0
+traj.f18.difficulty_p90,F18 traj difficulty p90,0
+traj.f18.difficulty_stdev,F18 traj difficulty stdev,0
+traj.f18.runes_0,F18 traj runes 0,0
+traj.f18.runes_1,F18 traj runes 1,0
+traj.f18.runes_2,F18 traj runes 2,0
+traj.f18.runes_3,F18 traj runes 3,0
+traj.f18.early_bail_rate,F18 traj early bail rate,0
+traj.f18.consumable_heal_mean,F18 traj consumable heal mean,0
+traj.f18.consumable_might_mean,F18 traj consumable might mean,0
+traj.f18.consumable_haste_mean,F18 traj consumable haste mean,0
+traj.f18.consumable_teleport_mean,F18 traj consumable teleport mean,0
+traj.f18.wand_evoke_mean,F18 traj wand evoke mean,0
+traj.f18.weapon_improve_rate,F18 traj weapon improve rate,0
+traj.f18.armor_improve_rate,F18 traj armor improve rate,0
+traj.f18.weapon_spawn_rate,F18 traj weapon spawn rate,0
+traj.f18.weapon_take_rate,F18 traj weapon take rate,0
+traj.f18.armor_spawn_rate,F18 traj armor spawn rate,0
+traj.f18.armor_take_rate,F18 traj armor take rate,0
+traj.f18.digest_when_weapon_spawned,F18 traj digest when weapon spawned,0
+traj.f18.digest_when_weapon_not_spawned,F18 traj digest when weapon not spawned,0
+traj.f18.stunned_events_mean,F18 traj stunned events mean,0
+traj.f19.runs_reached,F19 traj runs reached,0
+traj.f19.digest_rate,F19 traj digest rate,0
+traj.f19.descend_rate,F19 traj descend rate,0
+traj.f19.difficulty_mean,F19 traj difficulty mean,0
+traj.f19.difficulty_median,F19 traj difficulty median,0
+traj.f19.difficulty_p10,F19 traj difficulty p10,0
+traj.f19.difficulty_p90,F19 traj difficulty p90,0
+traj.f19.difficulty_stdev,F19 traj difficulty stdev,0
+traj.f19.runes_0,F19 traj runes 0,0
+traj.f19.runes_1,F19 traj runes 1,0
+traj.f19.runes_2,F19 traj runes 2,0
+traj.f19.runes_3,F19 traj runes 3,0
+traj.f19.early_bail_rate,F19 traj early bail rate,0
+traj.f19.consumable_heal_mean,F19 traj consumable heal mean,0
+traj.f19.consumable_might_mean,F19 traj consumable might mean,0
+traj.f19.consumable_haste_mean,F19 traj consumable haste mean,0
+traj.f19.consumable_teleport_mean,F19 traj consumable teleport mean,0
+traj.f19.wand_evoke_mean,F19 traj wand evoke mean,0
+traj.f19.weapon_improve_rate,F19 traj weapon improve rate,0
+traj.f19.armor_improve_rate,F19 traj armor improve rate,0
+traj.f19.weapon_spawn_rate,F19 traj weapon spawn rate,0
+traj.f19.weapon_take_rate,F19 traj weapon take rate,0
+traj.f19.armor_spawn_rate,F19 traj armor spawn rate,0
+traj.f19.armor_take_rate,F19 traj armor take rate,0
+traj.f19.digest_when_weapon_spawned,F19 traj digest when weapon spawned,0
+traj.f19.digest_when_weapon_not_spawned,F19 traj digest when weapon not spawned,0
+traj.f19.stunned_events_mean,F19 traj stunned events mean,0
+traj.f20.runs_reached,F20 traj runs reached,0
+traj.f20.digest_rate,F20 traj digest rate,0
+traj.f20.descend_rate,F20 traj descend rate,0
+traj.f20.difficulty_mean,F20 traj difficulty mean,0
+traj.f20.difficulty_median,F20 traj difficulty median,0
+traj.f20.difficulty_p10,F20 traj difficulty p10,0
+traj.f20.difficulty_p90,F20 traj difficulty p90,0
+traj.f20.difficulty_stdev,F20 traj difficulty stdev,0
+traj.f20.runes_0,F20 traj runes 0,0
+traj.f20.runes_1,F20 traj runes 1,0
+traj.f20.runes_2,F20 traj runes 2,0
+traj.f20.runes_3,F20 traj runes 3,0
+traj.f20.early_bail_rate,F20 traj early bail rate,0
+traj.f20.consumable_heal_mean,F20 traj consumable heal mean,0
+traj.f20.consumable_might_mean,F20 traj consumable might mean,0
+traj.f20.consumable_haste_mean,F20 traj consumable haste mean,0
+traj.f20.consumable_teleport_mean,F20 traj consumable teleport mean,0
+traj.f20.wand_evoke_mean,F20 traj wand evoke mean,0
+traj.f20.weapon_improve_rate,F20 traj weapon improve rate,0
+traj.f20.armor_improve_rate,F20 traj armor improve rate,0
+traj.f20.weapon_spawn_rate,F20 traj weapon spawn rate,0
+traj.f20.weapon_take_rate,F20 traj weapon take rate,0
+traj.f20.armor_spawn_rate,F20 traj armor spawn rate,0
+traj.f20.armor_take_rate,F20 traj armor take rate,0
+traj.f20.digest_when_weapon_spawned,F20 traj digest when weapon spawned,0
+traj.f20.digest_when_weapon_not_spawned,F20 traj digest when weapon not spawned,0
+traj.f20.stunned_events_mean,F20 traj stunned events mean,0
+_section.iso,--- isolation ---,
+iso.f01.runs,F01 iso runs,0
+iso.f01.digest_rate,F01 iso digest rate,0
+iso.f01.descend_rate,F01 iso descend rate,0
+iso.f01.difficulty_mean,F01 iso difficulty mean,0
+iso.f01.difficulty_median,F01 iso difficulty median,0
+iso.f01.difficulty_p10,F01 iso difficulty p10,0
+iso.f01.difficulty_p90,F01 iso difficulty p90,0
+iso.f01.difficulty_stdev,F01 iso difficulty stdev,0
+iso.f01.runes_0,F01 iso runes 0,0
+iso.f01.runes_1,F01 iso runes 1,0
+iso.f01.runes_2,F01 iso runes 2,0
+iso.f01.runes_3,F01 iso runes 3,0
+iso.f01.early_bail_rate,F01 iso early bail rate,0
+iso.f01.consumable_heal_mean,F01 iso consumable heal mean,0
+iso.f01.consumable_might_mean,F01 iso consumable might mean,0
+iso.f01.consumable_haste_mean,F01 iso consumable haste mean,0
+iso.f01.consumable_teleport_mean,F01 iso consumable teleport mean,0
+iso.f01.wand_evoke_mean,F01 iso wand evoke mean,0
+iso.f01.weapon_improve_rate,F01 iso weapon improve rate,0
+iso.f01.armor_improve_rate,F01 iso armor improve rate,0
+iso.f01.weapon_spawn_rate,F01 iso weapon spawn rate,0
+iso.f01.weapon_take_rate,F01 iso weapon take rate,0
+iso.f01.armor_spawn_rate,F01 iso armor spawn rate,0
+iso.f01.armor_take_rate,F01 iso armor take rate,0
+iso.f01.digest_when_weapon_spawned,F01 iso digest when weapon spawned,0
+iso.f01.digest_when_weapon_not_spawned,F01 iso digest when weapon not spawned,0
+iso.f01.stunned_events_mean,F01 iso stunned events mean,0
+iso.f02.runs,F02 iso runs,0
+iso.f02.digest_rate,F02 iso digest rate,0
+iso.f02.descend_rate,F02 iso descend rate,0
+iso.f02.difficulty_mean,F02 iso difficulty mean,0
+iso.f02.difficulty_median,F02 iso difficulty median,0
+iso.f02.difficulty_p10,F02 iso difficulty p10,0
+iso.f02.difficulty_p90,F02 iso difficulty p90,0
+iso.f02.difficulty_stdev,F02 iso difficulty stdev,0
+iso.f02.runes_0,F02 iso runes 0,0
+iso.f02.runes_1,F02 iso runes 1,0
+iso.f02.runes_2,F02 iso runes 2,0
+iso.f02.runes_3,F02 iso runes 3,0
+iso.f02.early_bail_rate,F02 iso early bail rate,0
+iso.f02.consumable_heal_mean,F02 iso consumable heal mean,0
+iso.f02.consumable_might_mean,F02 iso consumable might mean,0
+iso.f02.consumable_haste_mean,F02 iso consumable haste mean,0
+iso.f02.consumable_teleport_mean,F02 iso consumable teleport mean,0
+iso.f02.wand_evoke_mean,F02 iso wand evoke mean,0
+iso.f02.weapon_improve_rate,F02 iso weapon improve rate,0
+iso.f02.armor_improve_rate,F02 iso armor improve rate,0
+iso.f02.weapon_spawn_rate,F02 iso weapon spawn rate,0
+iso.f02.weapon_take_rate,F02 iso weapon take rate,0
+iso.f02.armor_spawn_rate,F02 iso armor spawn rate,0
+iso.f02.armor_take_rate,F02 iso armor take rate,0
+iso.f02.digest_when_weapon_spawned,F02 iso digest when weapon spawned,0
+iso.f02.digest_when_weapon_not_spawned,F02 iso digest when weapon not spawned,0
+iso.f02.stunned_events_mean,F02 iso stunned events mean,0
+iso.f03.runs,F03 iso runs,0
+iso.f03.digest_rate,F03 iso digest rate,0
+iso.f03.descend_rate,F03 iso descend rate,0
+iso.f03.difficulty_mean,F03 iso difficulty mean,0
+iso.f03.difficulty_median,F03 iso difficulty median,0
+iso.f03.difficulty_p10,F03 iso difficulty p10,0
+iso.f03.difficulty_p90,F03 iso difficulty p90,0
+iso.f03.difficulty_stdev,F03 iso difficulty stdev,0
+iso.f03.runes_0,F03 iso runes 0,0
+iso.f03.runes_1,F03 iso runes 1,0
+iso.f03.runes_2,F03 iso runes 2,0
+iso.f03.runes_3,F03 iso runes 3,0
+iso.f03.early_bail_rate,F03 iso early bail rate,0
+iso.f03.consumable_heal_mean,F03 iso consumable heal mean,0
+iso.f03.consumable_might_mean,F03 iso consumable might mean,0
+iso.f03.consumable_haste_mean,F03 iso consumable haste mean,0
+iso.f03.consumable_teleport_mean,F03 iso consumable teleport mean,0
+iso.f03.wand_evoke_mean,F03 iso wand evoke mean,0
+iso.f03.weapon_improve_rate,F03 iso weapon improve rate,0
+iso.f03.armor_improve_rate,F03 iso armor improve rate,0
+iso.f03.weapon_spawn_rate,F03 iso weapon spawn rate,0
+iso.f03.weapon_take_rate,F03 iso weapon take rate,0
+iso.f03.armor_spawn_rate,F03 iso armor spawn rate,0
+iso.f03.armor_take_rate,F03 iso armor take rate,0
+iso.f03.digest_when_weapon_spawned,F03 iso digest when weapon spawned,0
+iso.f03.digest_when_weapon_not_spawned,F03 iso digest when weapon not spawned,0
+iso.f03.stunned_events_mean,F03 iso stunned events mean,0
+iso.f04.runs,F04 iso runs,0
+iso.f04.digest_rate,F04 iso digest rate,0
+iso.f04.descend_rate,F04 iso descend rate,0
+iso.f04.difficulty_mean,F04 iso difficulty mean,0
+iso.f04.difficulty_median,F04 iso difficulty median,0
+iso.f04.difficulty_p10,F04 iso difficulty p10,0
+iso.f04.difficulty_p90,F04 iso difficulty p90,0
+iso.f04.difficulty_stdev,F04 iso difficulty stdev,0
+iso.f04.runes_0,F04 iso runes 0,0
+iso.f04.runes_1,F04 iso runes 1,0
+iso.f04.runes_2,F04 iso runes 2,0
+iso.f04.runes_3,F04 iso runes 3,0
+iso.f04.early_bail_rate,F04 iso early bail rate,0
+iso.f04.consumable_heal_mean,F04 iso consumable heal mean,0
+iso.f04.consumable_might_mean,F04 iso consumable might mean,0
+iso.f04.consumable_haste_mean,F04 iso consumable haste mean,0
+iso.f04.consumable_teleport_mean,F04 iso consumable teleport mean,0
+iso.f04.wand_evoke_mean,F04 iso wand evoke mean,0
+iso.f04.weapon_improve_rate,F04 iso weapon improve rate,0
+iso.f04.armor_improve_rate,F04 iso armor improve rate,0
+iso.f04.weapon_spawn_rate,F04 iso weapon spawn rate,0
+iso.f04.weapon_take_rate,F04 iso weapon take rate,0
+iso.f04.armor_spawn_rate,F04 iso armor spawn rate,0
+iso.f04.armor_take_rate,F04 iso armor take rate,0
+iso.f04.digest_when_weapon_spawned,F04 iso digest when weapon spawned,0
+iso.f04.digest_when_weapon_not_spawned,F04 iso digest when weapon not spawned,0
+iso.f04.stunned_events_mean,F04 iso stunned events mean,0
+iso.f05.runs,F05 iso runs,0
+iso.f05.digest_rate,F05 iso digest rate,0
+iso.f05.descend_rate,F05 iso descend rate,0
+iso.f05.difficulty_mean,F05 iso difficulty mean,0
+iso.f05.difficulty_median,F05 iso difficulty median,0
+iso.f05.difficulty_p10,F05 iso difficulty p10,0
+iso.f05.difficulty_p90,F05 iso difficulty p90,0
+iso.f05.difficulty_stdev,F05 iso difficulty stdev,0
+iso.f05.runes_0,F05 iso runes 0,0
+iso.f05.runes_1,F05 iso runes 1,0
+iso.f05.runes_2,F05 iso runes 2,0
+iso.f05.runes_3,F05 iso runes 3,0
+iso.f05.early_bail_rate,F05 iso early bail rate,0
+iso.f05.consumable_heal_mean,F05 iso consumable heal mean,0
+iso.f05.consumable_might_mean,F05 iso consumable might mean,0
+iso.f05.consumable_haste_mean,F05 iso consumable haste mean,0
+iso.f05.consumable_teleport_mean,F05 iso consumable teleport mean,0
+iso.f05.wand_evoke_mean,F05 iso wand evoke mean,0
+iso.f05.weapon_improve_rate,F05 iso weapon improve rate,0
+iso.f05.armor_improve_rate,F05 iso armor improve rate,0
+iso.f05.weapon_spawn_rate,F05 iso weapon spawn rate,0
+iso.f05.weapon_take_rate,F05 iso weapon take rate,0
+iso.f05.armor_spawn_rate,F05 iso armor spawn rate,0
+iso.f05.armor_take_rate,F05 iso armor take rate,0
+iso.f05.digest_when_weapon_spawned,F05 iso digest when weapon spawned,0
+iso.f05.digest_when_weapon_not_spawned,F05 iso digest when weapon not spawned,0
+iso.f05.stunned_events_mean,F05 iso stunned events mean,0
+iso.f06.runs,F06 iso runs,0
+iso.f06.digest_rate,F06 iso digest rate,0
+iso.f06.descend_rate,F06 iso descend rate,0
+iso.f06.difficulty_mean,F06 iso difficulty mean,0
+iso.f06.difficulty_median,F06 iso difficulty median,0
+iso.f06.difficulty_p10,F06 iso difficulty p10,0
+iso.f06.difficulty_p90,F06 iso difficulty p90,0
+iso.f06.difficulty_stdev,F06 iso difficulty stdev,0
+iso.f06.runes_0,F06 iso runes 0,0
+iso.f06.runes_1,F06 iso runes 1,0
+iso.f06.runes_2,F06 iso runes 2,0
+iso.f06.runes_3,F06 iso runes 3,0
+iso.f06.early_bail_rate,F06 iso early bail rate,0
+iso.f06.consumable_heal_mean,F06 iso consumable heal mean,0
+iso.f06.consumable_might_mean,F06 iso consumable might mean,0
+iso.f06.consumable_haste_mean,F06 iso consumable haste mean,0
+iso.f06.consumable_teleport_mean,F06 iso consumable teleport mean,0
+iso.f06.wand_evoke_mean,F06 iso wand evoke mean,0
+iso.f06.weapon_improve_rate,F06 iso weapon improve rate,0
+iso.f06.armor_improve_rate,F06 iso armor improve rate,0
+iso.f06.weapon_spawn_rate,F06 iso weapon spawn rate,0
+iso.f06.weapon_take_rate,F06 iso weapon take rate,0
+iso.f06.armor_spawn_rate,F06 iso armor spawn rate,0
+iso.f06.armor_take_rate,F06 iso armor take rate,0
+iso.f06.digest_when_weapon_spawned,F06 iso digest when weapon spawned,0
+iso.f06.digest_when_weapon_not_spawned,F06 iso digest when weapon not spawned,0
+iso.f06.stunned_events_mean,F06 iso stunned events mean,0
+iso.f07.runs,F07 iso runs,0
+iso.f07.digest_rate,F07 iso digest rate,0
+iso.f07.descend_rate,F07 iso descend rate,0
+iso.f07.difficulty_mean,F07 iso difficulty mean,0
+iso.f07.difficulty_median,F07 iso difficulty median,0
+iso.f07.difficulty_p10,F07 iso difficulty p10,0
+iso.f07.difficulty_p90,F07 iso difficulty p90,0
+iso.f07.difficulty_stdev,F07 iso difficulty stdev,0
+iso.f07.runes_0,F07 iso runes 0,0
+iso.f07.runes_1,F07 iso runes 1,0
+iso.f07.runes_2,F07 iso runes 2,0
+iso.f07.runes_3,F07 iso runes 3,0
+iso.f07.early_bail_rate,F07 iso early bail rate,0
+iso.f07.consumable_heal_mean,F07 iso consumable heal mean,0
+iso.f07.consumable_might_mean,F07 iso consumable might mean,0
+iso.f07.consumable_haste_mean,F07 iso consumable haste mean,0
+iso.f07.consumable_teleport_mean,F07 iso consumable teleport mean,0
+iso.f07.wand_evoke_mean,F07 iso wand evoke mean,0
+iso.f07.weapon_improve_rate,F07 iso weapon improve rate,0
+iso.f07.armor_improve_rate,F07 iso armor improve rate,0
+iso.f07.weapon_spawn_rate,F07 iso weapon spawn rate,0
+iso.f07.weapon_take_rate,F07 iso weapon take rate,0
+iso.f07.armor_spawn_rate,F07 iso armor spawn rate,0
+iso.f07.armor_take_rate,F07 iso armor take rate,0
+iso.f07.digest_when_weapon_spawned,F07 iso digest when weapon spawned,0
+iso.f07.digest_when_weapon_not_spawned,F07 iso digest when weapon not spawned,0
+iso.f07.stunned_events_mean,F07 iso stunned events mean,0
+iso.f08.runs,F08 iso runs,0
+iso.f08.digest_rate,F08 iso digest rate,0
+iso.f08.descend_rate,F08 iso descend rate,0
+iso.f08.difficulty_mean,F08 iso difficulty mean,0
+iso.f08.difficulty_median,F08 iso difficulty median,0
+iso.f08.difficulty_p10,F08 iso difficulty p10,0
+iso.f08.difficulty_p90,F08 iso difficulty p90,0
+iso.f08.difficulty_stdev,F08 iso difficulty stdev,0
+iso.f08.runes_0,F08 iso runes 0,0
+iso.f08.runes_1,F08 iso runes 1,0
+iso.f08.runes_2,F08 iso runes 2,0
+iso.f08.runes_3,F08 iso runes 3,0
+iso.f08.early_bail_rate,F08 iso early bail rate,0
+iso.f08.consumable_heal_mean,F08 iso consumable heal mean,0
+iso.f08.consumable_might_mean,F08 iso consumable might mean,0
+iso.f08.consumable_haste_mean,F08 iso consumable haste mean,0
+iso.f08.consumable_teleport_mean,F08 iso consumable teleport mean,0
+iso.f08.wand_evoke_mean,F08 iso wand evoke mean,0
+iso.f08.weapon_improve_rate,F08 iso weapon improve rate,0
+iso.f08.armor_improve_rate,F08 iso armor improve rate,0
+iso.f08.weapon_spawn_rate,F08 iso weapon spawn rate,0
+iso.f08.weapon_take_rate,F08 iso weapon take rate,0
+iso.f08.armor_spawn_rate,F08 iso armor spawn rate,0
+iso.f08.armor_take_rate,F08 iso armor take rate,0
+iso.f08.digest_when_weapon_spawned,F08 iso digest when weapon spawned,0
+iso.f08.digest_when_weapon_not_spawned,F08 iso digest when weapon not spawned,0
+iso.f08.stunned_events_mean,F08 iso stunned events mean,0
+iso.f09.runs,F09 iso runs,0
+iso.f09.digest_rate,F09 iso digest rate,0
+iso.f09.descend_rate,F09 iso descend rate,0
+iso.f09.difficulty_mean,F09 iso difficulty mean,0
+iso.f09.difficulty_median,F09 iso difficulty median,0
+iso.f09.difficulty_p10,F09 iso difficulty p10,0
+iso.f09.difficulty_p90,F09 iso difficulty p90,0
+iso.f09.difficulty_stdev,F09 iso difficulty stdev,0
+iso.f09.runes_0,F09 iso runes 0,0
+iso.f09.runes_1,F09 iso runes 1,0
+iso.f09.runes_2,F09 iso runes 2,0
+iso.f09.runes_3,F09 iso runes 3,0
+iso.f09.early_bail_rate,F09 iso early bail rate,0
+iso.f09.consumable_heal_mean,F09 iso consumable heal mean,0
+iso.f09.consumable_might_mean,F09 iso consumable might mean,0
+iso.f09.consumable_haste_mean,F09 iso consumable haste mean,0
+iso.f09.consumable_teleport_mean,F09 iso consumable teleport mean,0
+iso.f09.wand_evoke_mean,F09 iso wand evoke mean,0
+iso.f09.weapon_improve_rate,F09 iso weapon improve rate,0
+iso.f09.armor_improve_rate,F09 iso armor improve rate,0
+iso.f09.weapon_spawn_rate,F09 iso weapon spawn rate,0
+iso.f09.weapon_take_rate,F09 iso weapon take rate,0
+iso.f09.armor_spawn_rate,F09 iso armor spawn rate,0
+iso.f09.armor_take_rate,F09 iso armor take rate,0
+iso.f09.digest_when_weapon_spawned,F09 iso digest when weapon spawned,0
+iso.f09.digest_when_weapon_not_spawned,F09 iso digest when weapon not spawned,0
+iso.f09.stunned_events_mean,F09 iso stunned events mean,0
+iso.f10.runs,F10 iso runs,0
+iso.f10.digest_rate,F10 iso digest rate,0
+iso.f10.descend_rate,F10 iso descend rate,0
+iso.f10.difficulty_mean,F10 iso difficulty mean,0
+iso.f10.difficulty_median,F10 iso difficulty median,0
+iso.f10.difficulty_p10,F10 iso difficulty p10,0
+iso.f10.difficulty_p90,F10 iso difficulty p90,0
+iso.f10.difficulty_stdev,F10 iso difficulty stdev,0
+iso.f10.runes_0,F10 iso runes 0,0
+iso.f10.runes_1,F10 iso runes 1,0
+iso.f10.runes_2,F10 iso runes 2,0
+iso.f10.runes_3,F10 iso runes 3,0
+iso.f10.early_bail_rate,F10 iso early bail rate,0
+iso.f10.consumable_heal_mean,F10 iso consumable heal mean,0
+iso.f10.consumable_might_mean,F10 iso consumable might mean,0
+iso.f10.consumable_haste_mean,F10 iso consumable haste mean,0
+iso.f10.consumable_teleport_mean,F10 iso consumable teleport mean,0
+iso.f10.wand_evoke_mean,F10 iso wand evoke mean,0
+iso.f10.weapon_improve_rate,F10 iso weapon improve rate,0
+iso.f10.armor_improve_rate,F10 iso armor improve rate,0
+iso.f10.weapon_spawn_rate,F10 iso weapon spawn rate,0
+iso.f10.weapon_take_rate,F10 iso weapon take rate,0
+iso.f10.armor_spawn_rate,F10 iso armor spawn rate,0
+iso.f10.armor_take_rate,F10 iso armor take rate,0
+iso.f10.digest_when_weapon_spawned,F10 iso digest when weapon spawned,0
+iso.f10.digest_when_weapon_not_spawned,F10 iso digest when weapon not spawned,0
+iso.f10.stunned_events_mean,F10 iso stunned events mean,0
+iso.f11.runs,F11 iso runs,0
+iso.f11.digest_rate,F11 iso digest rate,0
+iso.f11.descend_rate,F11 iso descend rate,0
+iso.f11.difficulty_mean,F11 iso difficulty mean,0
+iso.f11.difficulty_median,F11 iso difficulty median,0
+iso.f11.difficulty_p10,F11 iso difficulty p10,0
+iso.f11.difficulty_p90,F11 iso difficulty p90,0
+iso.f11.difficulty_stdev,F11 iso difficulty stdev,0
+iso.f11.runes_0,F11 iso runes 0,0
+iso.f11.runes_1,F11 iso runes 1,0
+iso.f11.runes_2,F11 iso runes 2,0
+iso.f11.runes_3,F11 iso runes 3,0
+iso.f11.early_bail_rate,F11 iso early bail rate,0
+iso.f11.consumable_heal_mean,F11 iso consumable heal mean,0
+iso.f11.consumable_might_mean,F11 iso consumable might mean,0
+iso.f11.consumable_haste_mean,F11 iso consumable haste mean,0
+iso.f11.consumable_teleport_mean,F11 iso consumable teleport mean,0
+iso.f11.wand_evoke_mean,F11 iso wand evoke mean,0
+iso.f11.weapon_improve_rate,F11 iso weapon improve rate,0
+iso.f11.armor_improve_rate,F11 iso armor improve rate,0
+iso.f11.weapon_spawn_rate,F11 iso weapon spawn rate,0
+iso.f11.weapon_take_rate,F11 iso weapon take rate,0
+iso.f11.armor_spawn_rate,F11 iso armor spawn rate,0
+iso.f11.armor_take_rate,F11 iso armor take rate,0
+iso.f11.digest_when_weapon_spawned,F11 iso digest when weapon spawned,0
+iso.f11.digest_when_weapon_not_spawned,F11 iso digest when weapon not spawned,0
+iso.f11.stunned_events_mean,F11 iso stunned events mean,0
+iso.f12.runs,F12 iso runs,0
+iso.f12.digest_rate,F12 iso digest rate,0
+iso.f12.descend_rate,F12 iso descend rate,0
+iso.f12.difficulty_mean,F12 iso difficulty mean,0
+iso.f12.difficulty_median,F12 iso difficulty median,0
+iso.f12.difficulty_p10,F12 iso difficulty p10,0
+iso.f12.difficulty_p90,F12 iso difficulty p90,0
+iso.f12.difficulty_stdev,F12 iso difficulty stdev,0
+iso.f12.runes_0,F12 iso runes 0,0
+iso.f12.runes_1,F12 iso runes 1,0
+iso.f12.runes_2,F12 iso runes 2,0
+iso.f12.runes_3,F12 iso runes 3,0
+iso.f12.early_bail_rate,F12 iso early bail rate,0
+iso.f12.consumable_heal_mean,F12 iso consumable heal mean,0
+iso.f12.consumable_might_mean,F12 iso consumable might mean,0
+iso.f12.consumable_haste_mean,F12 iso consumable haste mean,0
+iso.f12.consumable_teleport_mean,F12 iso consumable teleport mean,0
+iso.f12.wand_evoke_mean,F12 iso wand evoke mean,0
+iso.f12.weapon_improve_rate,F12 iso weapon improve rate,0
+iso.f12.armor_improve_rate,F12 iso armor improve rate,0
+iso.f12.weapon_spawn_rate,F12 iso weapon spawn rate,0
+iso.f12.weapon_take_rate,F12 iso weapon take rate,0
+iso.f12.armor_spawn_rate,F12 iso armor spawn rate,0
+iso.f12.armor_take_rate,F12 iso armor take rate,0
+iso.f12.digest_when_weapon_spawned,F12 iso digest when weapon spawned,0
+iso.f12.digest_when_weapon_not_spawned,F12 iso digest when weapon not spawned,0
+iso.f12.stunned_events_mean,F12 iso stunned events mean,0
+iso.f13.runs,F13 iso runs,0
+iso.f13.digest_rate,F13 iso digest rate,0
+iso.f13.descend_rate,F13 iso descend rate,0
+iso.f13.difficulty_mean,F13 iso difficulty mean,0
+iso.f13.difficulty_median,F13 iso difficulty median,0
+iso.f13.difficulty_p10,F13 iso difficulty p10,0
+iso.f13.difficulty_p90,F13 iso difficulty p90,0
+iso.f13.difficulty_stdev,F13 iso difficulty stdev,0
+iso.f13.runes_0,F13 iso runes 0,0
+iso.f13.runes_1,F13 iso runes 1,0
+iso.f13.runes_2,F13 iso runes 2,0
+iso.f13.runes_3,F13 iso runes 3,0
+iso.f13.early_bail_rate,F13 iso early bail rate,0
+iso.f13.consumable_heal_mean,F13 iso consumable heal mean,0
+iso.f13.consumable_might_mean,F13 iso consumable might mean,0
+iso.f13.consumable_haste_mean,F13 iso consumable haste mean,0
+iso.f13.consumable_teleport_mean,F13 iso consumable teleport mean,0
+iso.f13.wand_evoke_mean,F13 iso wand evoke mean,0
+iso.f13.weapon_improve_rate,F13 iso weapon improve rate,0
+iso.f13.armor_improve_rate,F13 iso armor improve rate,0
+iso.f13.weapon_spawn_rate,F13 iso weapon spawn rate,0
+iso.f13.weapon_take_rate,F13 iso weapon take rate,0
+iso.f13.armor_spawn_rate,F13 iso armor spawn rate,0
+iso.f13.armor_take_rate,F13 iso armor take rate,0
+iso.f13.digest_when_weapon_spawned,F13 iso digest when weapon spawned,0
+iso.f13.digest_when_weapon_not_spawned,F13 iso digest when weapon not spawned,0
+iso.f13.stunned_events_mean,F13 iso stunned events mean,0
+iso.f14.runs,F14 iso runs,0
+iso.f14.digest_rate,F14 iso digest rate,0
+iso.f14.descend_rate,F14 iso descend rate,0
+iso.f14.difficulty_mean,F14 iso difficulty mean,0
+iso.f14.difficulty_median,F14 iso difficulty median,0
+iso.f14.difficulty_p10,F14 iso difficulty p10,0
+iso.f14.difficulty_p90,F14 iso difficulty p90,0
+iso.f14.difficulty_stdev,F14 iso difficulty stdev,0
+iso.f14.runes_0,F14 iso runes 0,0
+iso.f14.runes_1,F14 iso runes 1,0
+iso.f14.runes_2,F14 iso runes 2,0
+iso.f14.runes_3,F14 iso runes 3,0
+iso.f14.early_bail_rate,F14 iso early bail rate,0
+iso.f14.consumable_heal_mean,F14 iso consumable heal mean,0
+iso.f14.consumable_might_mean,F14 iso consumable might mean,0
+iso.f14.consumable_haste_mean,F14 iso consumable haste mean,0
+iso.f14.consumable_teleport_mean,F14 iso consumable teleport mean,0
+iso.f14.wand_evoke_mean,F14 iso wand evoke mean,0
+iso.f14.weapon_improve_rate,F14 iso weapon improve rate,0
+iso.f14.armor_improve_rate,F14 iso armor improve rate,0
+iso.f14.weapon_spawn_rate,F14 iso weapon spawn rate,0
+iso.f14.weapon_take_rate,F14 iso weapon take rate,0
+iso.f14.armor_spawn_rate,F14 iso armor spawn rate,0
+iso.f14.armor_take_rate,F14 iso armor take rate,0
+iso.f14.digest_when_weapon_spawned,F14 iso digest when weapon spawned,0
+iso.f14.digest_when_weapon_not_spawned,F14 iso digest when weapon not spawned,0
+iso.f14.stunned_events_mean,F14 iso stunned events mean,0
+iso.f15.runs,F15 iso runs,0
+iso.f15.digest_rate,F15 iso digest rate,0
+iso.f15.descend_rate,F15 iso descend rate,0
+iso.f15.difficulty_mean,F15 iso difficulty mean,0
+iso.f15.difficulty_median,F15 iso difficulty median,0
+iso.f15.difficulty_p10,F15 iso difficulty p10,0
+iso.f15.difficulty_p90,F15 iso difficulty p90,0
+iso.f15.difficulty_stdev,F15 iso difficulty stdev,0
+iso.f15.runes_0,F15 iso runes 0,0
+iso.f15.runes_1,F15 iso runes 1,0
+iso.f15.runes_2,F15 iso runes 2,0
+iso.f15.runes_3,F15 iso runes 3,0
+iso.f15.early_bail_rate,F15 iso early bail rate,0
+iso.f15.consumable_heal_mean,F15 iso consumable heal mean,0
+iso.f15.consumable_might_mean,F15 iso consumable might mean,0
+iso.f15.consumable_haste_mean,F15 iso consumable haste mean,0
+iso.f15.consumable_teleport_mean,F15 iso consumable teleport mean,0
+iso.f15.wand_evoke_mean,F15 iso wand evoke mean,0
+iso.f15.weapon_improve_rate,F15 iso weapon improve rate,0
+iso.f15.armor_improve_rate,F15 iso armor improve rate,0
+iso.f15.weapon_spawn_rate,F15 iso weapon spawn rate,0
+iso.f15.weapon_take_rate,F15 iso weapon take rate,0
+iso.f15.armor_spawn_rate,F15 iso armor spawn rate,0
+iso.f15.armor_take_rate,F15 iso armor take rate,0
+iso.f15.digest_when_weapon_spawned,F15 iso digest when weapon spawned,0
+iso.f15.digest_when_weapon_not_spawned,F15 iso digest when weapon not spawned,0
+iso.f15.stunned_events_mean,F15 iso stunned events mean,0
+iso.f16.runs,F16 iso runs,0
+iso.f16.digest_rate,F16 iso digest rate,0
+iso.f16.descend_rate,F16 iso descend rate,0
+iso.f16.difficulty_mean,F16 iso difficulty mean,0
+iso.f16.difficulty_median,F16 iso difficulty median,0
+iso.f16.difficulty_p10,F16 iso difficulty p10,0
+iso.f16.difficulty_p90,F16 iso difficulty p90,0
+iso.f16.difficulty_stdev,F16 iso difficulty stdev,0
+iso.f16.runes_0,F16 iso runes 0,0
+iso.f16.runes_1,F16 iso runes 1,0
+iso.f16.runes_2,F16 iso runes 2,0
+iso.f16.runes_3,F16 iso runes 3,0
+iso.f16.early_bail_rate,F16 iso early bail rate,0
+iso.f16.consumable_heal_mean,F16 iso consumable heal mean,0
+iso.f16.consumable_might_mean,F16 iso consumable might mean,0
+iso.f16.consumable_haste_mean,F16 iso consumable haste mean,0
+iso.f16.consumable_teleport_mean,F16 iso consumable teleport mean,0
+iso.f16.wand_evoke_mean,F16 iso wand evoke mean,0
+iso.f16.weapon_improve_rate,F16 iso weapon improve rate,0
+iso.f16.armor_improve_rate,F16 iso armor improve rate,0
+iso.f16.weapon_spawn_rate,F16 iso weapon spawn rate,0
+iso.f16.weapon_take_rate,F16 iso weapon take rate,0
+iso.f16.armor_spawn_rate,F16 iso armor spawn rate,0
+iso.f16.armor_take_rate,F16 iso armor take rate,0
+iso.f16.digest_when_weapon_spawned,F16 iso digest when weapon spawned,0
+iso.f16.digest_when_weapon_not_spawned,F16 iso digest when weapon not spawned,0
+iso.f16.stunned_events_mean,F16 iso stunned events mean,0
+iso.f17.runs,F17 iso runs,0
+iso.f17.digest_rate,F17 iso digest rate,0
+iso.f17.descend_rate,F17 iso descend rate,0
+iso.f17.difficulty_mean,F17 iso difficulty mean,0
+iso.f17.difficulty_median,F17 iso difficulty median,0
+iso.f17.difficulty_p10,F17 iso difficulty p10,0
+iso.f17.difficulty_p90,F17 iso difficulty p90,0
+iso.f17.difficulty_stdev,F17 iso difficulty stdev,0
+iso.f17.runes_0,F17 iso runes 0,0
+iso.f17.runes_1,F17 iso runes 1,0
+iso.f17.runes_2,F17 iso runes 2,0
+iso.f17.runes_3,F17 iso runes 3,0
+iso.f17.early_bail_rate,F17 iso early bail rate,0
+iso.f17.consumable_heal_mean,F17 iso consumable heal mean,0
+iso.f17.consumable_might_mean,F17 iso consumable might mean,0
+iso.f17.consumable_haste_mean,F17 iso consumable haste mean,0
+iso.f17.consumable_teleport_mean,F17 iso consumable teleport mean,0
+iso.f17.wand_evoke_mean,F17 iso wand evoke mean,0
+iso.f17.weapon_improve_rate,F17 iso weapon improve rate,0
+iso.f17.armor_improve_rate,F17 iso armor improve rate,0
+iso.f17.weapon_spawn_rate,F17 iso weapon spawn rate,0
+iso.f17.weapon_take_rate,F17 iso weapon take rate,0
+iso.f17.armor_spawn_rate,F17 iso armor spawn rate,0
+iso.f17.armor_take_rate,F17 iso armor take rate,0
+iso.f17.digest_when_weapon_spawned,F17 iso digest when weapon spawned,0
+iso.f17.digest_when_weapon_not_spawned,F17 iso digest when weapon not spawned,0
+iso.f17.stunned_events_mean,F17 iso stunned events mean,0
+iso.f18.runs,F18 iso runs,0
+iso.f18.digest_rate,F18 iso digest rate,0
+iso.f18.descend_rate,F18 iso descend rate,0
+iso.f18.difficulty_mean,F18 iso difficulty mean,0
+iso.f18.difficulty_median,F18 iso difficulty median,0
+iso.f18.difficulty_p10,F18 iso difficulty p10,0
+iso.f18.difficulty_p90,F18 iso difficulty p90,0
+iso.f18.difficulty_stdev,F18 iso difficulty stdev,0
+iso.f18.runes_0,F18 iso runes 0,0
+iso.f18.runes_1,F18 iso runes 1,0
+iso.f18.runes_2,F18 iso runes 2,0
+iso.f18.runes_3,F18 iso runes 3,0
+iso.f18.early_bail_rate,F18 iso early bail rate,0
+iso.f18.consumable_heal_mean,F18 iso consumable heal mean,0
+iso.f18.consumable_might_mean,F18 iso consumable might mean,0
+iso.f18.consumable_haste_mean,F18 iso consumable haste mean,0
+iso.f18.consumable_teleport_mean,F18 iso consumable teleport mean,0
+iso.f18.wand_evoke_mean,F18 iso wand evoke mean,0
+iso.f18.weapon_improve_rate,F18 iso weapon improve rate,0
+iso.f18.armor_improve_rate,F18 iso armor improve rate,0
+iso.f18.weapon_spawn_rate,F18 iso weapon spawn rate,0
+iso.f18.weapon_take_rate,F18 iso weapon take rate,0
+iso.f18.armor_spawn_rate,F18 iso armor spawn rate,0
+iso.f18.armor_take_rate,F18 iso armor take rate,0
+iso.f18.digest_when_weapon_spawned,F18 iso digest when weapon spawned,0
+iso.f18.digest_when_weapon_not_spawned,F18 iso digest when weapon not spawned,0
+iso.f18.stunned_events_mean,F18 iso stunned events mean,0
+iso.f19.runs,F19 iso runs,0
+iso.f19.digest_rate,F19 iso digest rate,0
+iso.f19.descend_rate,F19 iso descend rate,0
+iso.f19.difficulty_mean,F19 iso difficulty mean,0
+iso.f19.difficulty_median,F19 iso difficulty median,0
+iso.f19.difficulty_p10,F19 iso difficulty p10,0
+iso.f19.difficulty_p90,F19 iso difficulty p90,0
+iso.f19.difficulty_stdev,F19 iso difficulty stdev,0
+iso.f19.runes_0,F19 iso runes 0,0
+iso.f19.runes_1,F19 iso runes 1,0
+iso.f19.runes_2,F19 iso runes 2,0
+iso.f19.runes_3,F19 iso runes 3,0
+iso.f19.early_bail_rate,F19 iso early bail rate,0
+iso.f19.consumable_heal_mean,F19 iso consumable heal mean,0
+iso.f19.consumable_might_mean,F19 iso consumable might mean,0
+iso.f19.consumable_haste_mean,F19 iso consumable haste mean,0
+iso.f19.consumable_teleport_mean,F19 iso consumable teleport mean,0
+iso.f19.wand_evoke_mean,F19 iso wand evoke mean,0
+iso.f19.weapon_improve_rate,F19 iso weapon improve rate,0
+iso.f19.armor_improve_rate,F19 iso armor improve rate,0
+iso.f19.weapon_spawn_rate,F19 iso weapon spawn rate,0
+iso.f19.weapon_take_rate,F19 iso weapon take rate,0
+iso.f19.armor_spawn_rate,F19 iso armor spawn rate,0
+iso.f19.armor_take_rate,F19 iso armor take rate,0
+iso.f19.digest_when_weapon_spawned,F19 iso digest when weapon spawned,0
+iso.f19.digest_when_weapon_not_spawned,F19 iso digest when weapon not spawned,0
+iso.f19.stunned_events_mean,F19 iso stunned events mean,0
+iso.f20.runs,F20 iso runs,0
+iso.f20.digest_rate,F20 iso digest rate,0
+iso.f20.descend_rate,F20 iso descend rate,0
+iso.f20.difficulty_mean,F20 iso difficulty mean,0
+iso.f20.difficulty_median,F20 iso difficulty median,0
+iso.f20.difficulty_p10,F20 iso difficulty p10,0
+iso.f20.difficulty_p90,F20 iso difficulty p90,0
+iso.f20.difficulty_stdev,F20 iso difficulty stdev,0
+iso.f20.runes_0,F20 iso runes 0,0
+iso.f20.runes_1,F20 iso runes 1,0
+iso.f20.runes_2,F20 iso runes 2,0
+iso.f20.runes_3,F20 iso runes 3,0
+iso.f20.early_bail_rate,F20 iso early bail rate,0
+iso.f20.consumable_heal_mean,F20 iso consumable heal mean,0
+iso.f20.consumable_might_mean,F20 iso consumable might mean,0
+iso.f20.consumable_haste_mean,F20 iso consumable haste mean,0
+iso.f20.consumable_teleport_mean,F20 iso consumable teleport mean,0
+iso.f20.wand_evoke_mean,F20 iso wand evoke mean,0
+iso.f20.weapon_improve_rate,F20 iso weapon improve rate,0
+iso.f20.armor_improve_rate,F20 iso armor improve rate,0
+iso.f20.weapon_spawn_rate,F20 iso weapon spawn rate,0
+iso.f20.weapon_take_rate,F20 iso weapon take rate,0
+iso.f20.armor_spawn_rate,F20 iso armor spawn rate,0
+iso.f20.armor_take_rate,F20 iso armor take rate,0
+iso.f20.digest_when_weapon_spawned,F20 iso digest when weapon spawned,0
+iso.f20.digest_when_weapon_not_spawned,F20 iso digest when weapon not spawned,0
+iso.f20.stunned_events_mean,F20 iso stunned events mean,0

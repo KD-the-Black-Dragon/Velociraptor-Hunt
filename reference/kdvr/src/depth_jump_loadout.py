@@ -9,7 +9,14 @@ from typing import TYPE_CHECKING
 
 from tcod.ecs import Entity
 
-from src.components import EquipState, Fighter, Inventory, ItemCategory, Player
+from src.components import (
+    EquipState,
+    Fighter,
+    Inventory,
+    ItemCategory,
+    Player,
+    empty_inventory_slots,
+)
 from src.data.depth_jump_start_loader import DepthJumpStartConfig, default_depth_jump_start_config
 from src.data.floor_rune_registry import FloorRuneDefinition, FloorRuneRegistry
 from src.data.item_registry import (
@@ -142,7 +149,9 @@ def apply_depth_jump_loadout(
     loot_depth = target_depth - 1
     inventory = player.components[Inventory]
     equip = player.components.setdefault(EquipState, EquipState())
+    # Must keep a full a–z map: pickup / first_empty_slot index every letter.
     inventory.slots.clear()
+    inventory.slots.update(empty_inventory_slots())
 
     weapons = eligible_weapons(registry, loot_depth)
     strongest_weapon = pick_strongest(weapons, key=weapon_strength_key, rng=rng)

@@ -38,6 +38,25 @@ class MatchAbilityDef:
 
 
 @attrs.define(frozen=True)
+class ReadyBalanceRule:
+    """Per-action sliding balance with floor/ceiling so basic actions cannot dump to extremes.
+
+    Defensive (keep_watch / brace): use high_threshold + floor.
+    Offensive (step): use low_threshold + ceiling.
+    """
+
+    high_threshold: int | None = None
+    delta_when_high: int = 0
+    delta_when_not_high: int = 0
+    floor: int | None = None
+    low_threshold: int | None = None
+    delta_when_low: int = 0
+    delta_when_not_low: int = 0
+    ceiling: int | None = None
+    fixed_delta: int | None = None
+
+
+@attrs.define(frozen=True)
 class ManeuverDef:
     id: str
     aut_cost: float = 1.0
@@ -45,17 +64,25 @@ class ManeuverDef:
     balance_delta: int = 0
     damage_mult: float = 1.0
     accuracy_mult: float = 1.0
+    ready_balance: ReadyBalanceRule | None = None
 
 
 @attrs.define(frozen=True)
 class BalancePassiveConfig:
-    overextended_start: int = 4
-    cowering_start: int = -4
-    extreme_acc_penalty: float = 0.15
+    """Balance → actual stat multipliers. Prefer per-integer tables (use_table)."""
+
+    overextended_start: int = 6
+    cowering_start: int = -6
+    extreme_acc_penalty: float = 0.95
     extreme_evade_penalty: float = 0.15
-    extreme_damage_bonus: float = 0.2
+    extreme_damage_bonus: float = 0.25
     moderate_acc_bonus: float = 0.05
     moderate_evade_bonus: float = 0.05
+    use_table: bool = False
+    accuracy_mult: dict[int, float] = attrs.field(factory=dict)
+    damage_mult: dict[int, float] = attrs.field(factory=dict)
+    ac_bonus: dict[int, int] = attrs.field(factory=dict)
+    evade_mult: dict[int, float] = attrs.field(factory=dict)
 
 
 @attrs.define(frozen=True)
@@ -76,8 +103,10 @@ class MatchCombatConfig:
         if key in self.maneuvers:
             return self.maneuvers[key]
         defaults = {
-            "step": ManeuverDef("step", 0.45, 0, 0),
+            "step": ManeuverDef("step", 0.45, 0, 1),
             "wait": ManeuverDef("wait", 1.0, 0, -1),
+            "keep_watch": ManeuverDef("keep_watch", 1.0, 0, -1),
+            "brace": ManeuverDef("brace", 1.0, 0, -2),
             "jab": ManeuverDef("jab", 1.0, 0, 1, 0.65, 1.15),
             "standard_attack": ManeuverDef("standard_attack", 1.2, 0, 1),
             "all_out": ManeuverDef("all_out", 1.5, 0, 2, 1.25, 1.05),
@@ -109,6 +138,22 @@ class CombatantState:
     debuff_until_aut: float = -1.0
     debuff_accuracy_mult: float = 1.0
     debuff_evade_mult: float = 1.0
+    # Battle Sport
+    weapon_id: str = "short_sword"
+    ferocity: int = 5
+    cunning: int = 5
+    tenacity: int = 5
+    appetite: int = 5
+    true_ferocity: int = 5
+    morale_shock_until_aut: float = -1.0
+    hp_at_shock_end: int | None = None
+    momentum_dx: int = 0
+    momentum_dy: int = 0
+    momentum_until_aut: float = -1.0
+    footwork_chain: int = 0
+    last_footwork_aut: float = -99.0
+    ability_ids: tuple[str, ...] = ()
+    vore_capable: bool = False
 
     @classmethod
     def from_fighter(
@@ -119,7 +164,15 @@ class CombatantState:
         world_aut: float = 0.0,
         injuries: list[InjuryInstance] | None = None,
         second_wind_uses: int = 1,
+        weapon_id: str = "short_sword",
+        ferocity: int = 5,
+        cunning: int = 5,
+        tenacity: int = 5,
+        appetite: int = 5,
+        ability_ids: tuple[str, ...] = (),
+        vore_capable: bool = False,
     ) -> CombatantState:
+        f = max(0, min(10, int(ferocity)))
         return cls(
             ap=float(cfg.ap_max),
             ap_max=float(cfg.ap_max),
@@ -134,7 +187,31 @@ class CombatantState:
             last_world_aut=float(world_aut),
             injuries=list(injuries or []),
             second_wind_uses_left=second_wind_uses,
+            weapon_id=str(weapon_id),
+            ferocity=f,
+            cunning=max(0, min(10, int(cunning))),
+            tenacity=max(0, min(10, int(tenacity))),
+            appetite=max(0, min(10, int(appetite))),
+            true_ferocity=f,
+            hp_at_shock_end=int(fighter.hp),
+            ability_ids=tuple(ability_ids),
+            vore_capable=bool(vore_capable),
         )
+
+    def effective_ferocity(self, world_aut: float) -> int:
+        if self.morale_shock_until_aut >= 0 and world_aut < self.morale_shock_until_aut:
+            return int(self.ferocity)  # already forced low while shocked
+        return int(self.true_ferocity)
+
+    def clear_expired_statuses(self, world_aut: float) -> None:
+        if self.morale_shock_until_aut >= 0 and world_aut >= self.morale_shock_until_aut:
+            self.morale_shock_until_aut = -1.0
+            self.ferocity = int(self.true_ferocity)
+            # hp_at_shock_end set by caller on live HP when shock ends
+        if self.momentum_until_aut >= 0 and world_aut >= self.momentum_until_aut:
+            self.momentum_dx = 0
+            self.momentum_dy = 0
+            self.momentum_until_aut = -1.0
 
     def tick_ap(self, world_aut: float) -> None:
         if world_aut <= self.last_world_aut:
@@ -159,6 +236,93 @@ class CombatantState:
         )
 
 
+def ready_balance_delta(
+    balance: int,
+    rule: ReadyBalanceRule | None,
+    *,
+    fixed_fallback: int = 0,
+    global_min: int = -10,
+    global_max: int = 10,
+) -> int:
+    """Compute balance Δ for a ready-action; clamps so floor/ceiling cannot be crossed."""
+    b = int(balance)
+    if rule is None:
+        return int(fixed_fallback)
+
+    if (
+        rule.fixed_delta is not None
+        and rule.high_threshold is None
+        and rule.low_threshold is None
+        and rule.floor is None
+        and rule.ceiling is None
+    ):
+        delta = int(rule.fixed_delta)
+    elif rule.floor is not None or rule.high_threshold is not None:
+        # Defensive slide (keep_watch / brace)
+        if rule.floor is not None and b <= rule.floor:
+            return 0
+        thr = rule.high_threshold
+        if thr is not None and b >= thr:
+            delta = int(rule.delta_when_high)
+        else:
+            delta = int(rule.delta_when_not_high)
+        if rule.floor is not None and b + delta < rule.floor:
+            delta = rule.floor - b
+    elif rule.ceiling is not None or rule.low_threshold is not None:
+        # Offensive slide (step)
+        if rule.ceiling is not None and b >= rule.ceiling:
+            return 0
+        thr = rule.low_threshold
+        if thr is not None and b <= thr:
+            delta = int(rule.delta_when_low)
+        else:
+            delta = int(rule.delta_when_not_low)
+        if rule.ceiling is not None and b + delta > rule.ceiling:
+            delta = rule.ceiling - b
+    else:
+        delta = int(fixed_fallback)
+
+    # Global clamp awareness
+    if b + delta < global_min:
+        delta = global_min - b
+    if b + delta > global_max:
+        delta = global_max - b
+    return int(delta)
+
+
+def apply_ready_balance(
+    state: CombatantState,
+    cfg: MatchCombatConfig,
+    maneuver_key: str,
+) -> int:
+    """Apply sliding ready-action balance; returns delta applied."""
+    man = cfg.maneuver(maneuver_key)
+    delta = ready_balance_delta(
+        state.balance,
+        man.ready_balance,
+        fixed_fallback=man.balance_delta,
+        global_min=cfg.balance_min,
+        global_max=cfg.balance_max,
+    )
+    if delta:
+        state.shift_balance(delta, cfg)
+    return delta
+
+
+def _table_get(table: dict[int, float] | dict[int, int], bal: int, default: float) -> float:
+    if bal in table:
+        return float(table[bal])
+    # nearest key
+    if not table:
+        return float(default)
+    keys = sorted(table.keys())
+    if bal <= keys[0]:
+        return float(table[keys[0]])
+    if bal >= keys[-1]:
+        return float(table[keys[-1]])
+    return float(default)
+
+
 def actual_fighter(
     state: CombatantState,
     cfg: MatchCombatConfig,
@@ -167,7 +331,7 @@ def actual_fighter(
 ) -> Fighter:
     """Base → balance → injuries → temp debuffs. Always use for resolution."""
     bp = cfg.balance_passive
-    bal = state.balance
+    bal = int(state.balance)
     acc = state.base_accuracy
     evade = state.base_evade
     min_d = float(state.base_min_damage)
@@ -175,25 +339,33 @@ def actual_fighter(
     ac = float(state.base_ac)
     max_hp = float(state.base_max_hp)
 
-    if 1 <= bal < bp.overextended_start:
-        acc *= 1.0 + bp.moderate_acc_bonus
-        min_d *= 1.0 + bp.moderate_acc_bonus * 0.5
-        max_d *= 1.0 + bp.moderate_acc_bonus * 0.5
-    elif bp.cowering_start < bal <= -1:
-        evade *= 1.0 + bp.moderate_evade_bonus
-
-    if bal >= bp.overextended_start:
-        t = min(1.0, (bal - bp.overextended_start + 1) / 4.0)
-        acc *= 1.0 - bp.extreme_acc_penalty * t
-        evade *= 1.0 - bp.extreme_evade_penalty * t
-        min_d *= 1.0 + bp.extreme_damage_bonus * t
-        max_d *= 1.0 + bp.extreme_damage_bonus * t
-    elif bal <= bp.cowering_start:
-        t = min(1.0, (bp.cowering_start - bal + 1) / 4.0)
-        acc *= 1.0 - bp.extreme_acc_penalty * t * 0.8
-        evade *= 1.0 - bp.extreme_evade_penalty * t * 0.5
-        min_d *= 1.0 - 0.15 * t
-        max_d *= 1.0 - 0.15 * t
+    if bp.use_table and bp.accuracy_mult:
+        acc *= _table_get(bp.accuracy_mult, bal, 1.0)
+        dmg_m = _table_get(bp.damage_mult, bal, 1.0)
+        min_d *= dmg_m
+        max_d *= dmg_m
+        ac += _table_get(bp.ac_bonus, bal, 0.0)
+        evade *= _table_get(bp.evade_mult, bal, 1.0)
+    else:
+        # Legacy parametric fallback
+        if 1 <= bal < bp.overextended_start:
+            acc *= 1.0 + bp.moderate_acc_bonus
+            min_d *= 1.0 + bp.moderate_acc_bonus * 0.5
+            max_d *= 1.0 + bp.moderate_acc_bonus * 0.5
+        elif bp.cowering_start < bal <= -1:
+            evade *= 1.0 + bp.moderate_evade_bonus
+        if bal >= bp.overextended_start:
+            t = min(1.0, (bal - bp.overextended_start + 1) / 5.0)
+            acc *= max(0.05, 1.0 - bp.extreme_acc_penalty * t)
+            evade *= 1.0 - bp.extreme_evade_penalty * t
+            min_d *= 1.0 + bp.extreme_damage_bonus * t
+            max_d *= 1.0 + bp.extreme_damage_bonus * t
+        elif bal <= bp.cowering_start:
+            t = min(1.0, (bp.cowering_start - bal + 1) / 5.0)
+            # Cowering: do not tank accuracy
+            min_d *= 1.0 - 0.85 * t
+            max_d *= 1.0 - 0.85 * t
+            ac += 2.0 * t
 
     inj_m = injury_stat_multipliers(state.injuries, cfg=load_injury_config())
     acc *= inj_m["accuracy"]
@@ -204,7 +376,6 @@ def actual_fighter(
     max_hp *= inj_m["max_hp"]
 
     if state.debuff_until_aut >= 0:
-        # caller must clear when world_aut exceeds; still apply if active
         acc *= state.debuff_accuracy_mult
         evade *= state.debuff_evade_mult
 
@@ -250,6 +421,24 @@ def choose_bump_profile(openness: float) -> str:
     return "standard"
 
 
+def _parse_ready_balance(raw: object) -> ReadyBalanceRule | None:
+    if not isinstance(raw, dict):
+        return None
+    return ReadyBalanceRule(
+        high_threshold=(
+            int(raw["high_threshold"]) if "high_threshold" in raw else None
+        ),
+        delta_when_high=int(raw.get("delta_when_high", 0)),
+        delta_when_not_high=int(raw.get("delta_when_not_high", 0)),
+        floor=int(raw["floor"]) if "floor" in raw else None,
+        low_threshold=int(raw["low_threshold"]) if "low_threshold" in raw else None,
+        delta_when_low=int(raw.get("delta_when_low", 0)),
+        delta_when_not_low=int(raw.get("delta_when_not_low", 0)),
+        ceiling=int(raw["ceiling"]) if "ceiling" in raw else None,
+        fixed_delta=int(raw["fixed_delta"]) if "fixed_delta" in raw else None,
+    )
+
+
 def _parse_maneuver(key: str, raw: dict[str, Any]) -> ManeuverDef:
     return ManeuverDef(
         id=key,
@@ -258,6 +447,7 @@ def _parse_maneuver(key: str, raw: dict[str, Any]) -> ManeuverDef:
         balance_delta=int(raw.get("balance_delta", 0)),
         damage_mult=float(raw.get("damage_mult", 1.0)),
         accuracy_mult=float(raw.get("accuracy_mult", 1.0)),
+        ready_balance=_parse_ready_balance(raw.get("balance")),
     )
 
 
@@ -296,18 +486,52 @@ def _parse_ability(row: dict[str, Any]) -> MatchAbilityDef | None:
     )
 
 
+def _parse_int_float_table(raw: object) -> dict[int, float]:
+    out: dict[int, float] = {}
+    if not isinstance(raw, dict):
+        return out
+    for k, v in raw.items():
+        try:
+            out[int(k)] = float(v)
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
+def _parse_int_int_table(raw: object) -> dict[int, int]:
+    out: dict[int, int] = {}
+    if not isinstance(raw, dict):
+        return out
+    for k, v in raw.items():
+        try:
+            out[int(k)] = int(v)
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
 def _parse_config(data: dict[str, Any]) -> MatchCombatConfig:
     bp_raw = data.get("balance_passive") or {}
     if not isinstance(bp_raw, dict):
         bp_raw = {}
+    acc_t = _parse_int_float_table(bp_raw.get("accuracy_mult"))
+    dmg_t = _parse_int_float_table(bp_raw.get("damage_mult"))
+    ac_t = _parse_int_int_table(bp_raw.get("ac_bonus"))
+    evade_t = _parse_int_float_table(bp_raw.get("evade_mult"))
+    use_table = bool(bp_raw.get("use_table", bool(acc_t)))
     bp = BalancePassiveConfig(
-        overextended_start=int(bp_raw.get("overextended_start", 4)),
-        cowering_start=int(bp_raw.get("cowering_start", -4)),
-        extreme_acc_penalty=float(bp_raw.get("extreme_acc_penalty", 0.15)),
+        overextended_start=int(bp_raw.get("overextended_start", 6)),
+        cowering_start=int(bp_raw.get("cowering_start", -6)),
+        extreme_acc_penalty=float(bp_raw.get("extreme_acc_penalty", 0.95)),
         extreme_evade_penalty=float(bp_raw.get("extreme_evade_penalty", 0.15)),
-        extreme_damage_bonus=float(bp_raw.get("extreme_damage_bonus", 0.2)),
+        extreme_damage_bonus=float(bp_raw.get("extreme_damage_bonus", 0.25)),
         moderate_acc_bonus=float(bp_raw.get("moderate_acc_bonus", 0.05)),
         moderate_evade_bonus=float(bp_raw.get("moderate_evade_bonus", 0.05)),
+        use_table=use_table,
+        accuracy_mult=acc_t,
+        damage_mult=dmg_t,
+        ac_bonus=ac_t,
+        evade_mult=evade_t,
     )
     abilities: list[MatchAbilityDef] = []
     for row in data.get("abilities") or []:
@@ -369,6 +593,77 @@ def format_ap_meter(ap: float, ap_max: float, *, width: int = 10) -> str:
         return "[" + " " * width + "]"
     filled = int(round(width * max(0.0, min(1.0, ap / ap_max))))
     return "[" + ("#" * filled) + ("." * (width - filled)) + "]"
+
+
+def balance_stat_deltas(
+    state: CombatantState,
+    cfg: MatchCombatConfig,
+) -> list[tuple[str, float, bool]]:
+    """Named relative effects from balance alone vs balance 0.
+
+    Returns list of (label, percent_change_or_flat, is_buff).
+    percent_change is e.g. +5.0 for +5% accuracy; AC uses flat points.
+    """
+    zero = CombatantState.from_fighter(
+        Fighter(
+            hp=1,
+            max_hp=state.base_max_hp,
+            accuracy=state.base_accuracy,
+            evade=state.base_evade,
+            ac=state.base_ac,
+            min_damage=state.base_min_damage,
+            max_damage=state.base_max_damage,
+        ),
+        cfg,
+    )
+    zero.balance = 0
+    zero.injuries = []
+    cur = CombatantState.from_fighter(
+        Fighter(
+            hp=1,
+            max_hp=state.base_max_hp,
+            accuracy=state.base_accuracy,
+            evade=state.base_evade,
+            ac=state.base_ac,
+            min_damage=state.base_min_damage,
+            max_damage=state.base_max_damage,
+        ),
+        cfg,
+    )
+    cur.balance = state.balance
+    cur.injuries = []
+    a0 = actual_fighter(zero, cfg)
+    a1 = actual_fighter(cur, cfg)
+    out: list[tuple[str, float, bool]] = []
+
+    def pct(label: str, base: float, now: float, *, higher_is_better: bool) -> None:
+        if base <= 1e-9:
+            if abs(now - base) < 1e-9:
+                return
+            delta = 100.0 if now > base else -100.0
+        else:
+            delta = (now / base - 1.0) * 100.0
+        if abs(delta) < 0.5:
+            return
+        is_buff = delta > 0 if higher_is_better else delta < 0
+        out.append((label, delta, is_buff))
+
+    pct("Acc", a0.accuracy, a1.accuracy, higher_is_better=True)
+    # Use max damage as damage readout
+    pct("Dmg", float(a0.max_damage), float(a1.max_damage), higher_is_better=True)
+    pct("Eva", a0.evade, a1.evade, higher_is_better=True)
+    ac_delta = float(a1.ac - a0.ac)
+    if abs(ac_delta) >= 0.5:
+        out.append(("AC", ac_delta, ac_delta > 0))
+    return out
+
+
+def format_balance_effect_line(label: str, value: float, *, is_ac: bool = False) -> str:
+    if is_ac:
+        sign = "+" if value >= 0 else ""
+        return f"{label} {sign}{int(round(value))}"
+    sign = "+" if value >= 0 else ""
+    return f"{label} {sign}{value:.0f}%"
 
 
 def format_balance_meter(balance: int, *, lo: int = -10, hi: int = 10, width: int = 11) -> str:

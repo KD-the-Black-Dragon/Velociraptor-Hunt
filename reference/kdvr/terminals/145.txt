@@ -1,0 +1,23 @@
+---
+pid: 14852
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_neutral_explore_antistuck.py tests/test_enhancements_3.py::test_neutral_explores_when_no_evil tests/test_enhancements_2.py::test_neutral_flees_from_visible_evil tests/test_npc_abilities_coward.py::test_coward_neutral_full_hp_skips_flee_direction -v"
+started_at: 2026-07-04T22:24:43.725Z
+running_for_ms: 12735001 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+collecting ... collected 7 items
+
+tests/test_neutral_explore_antistuck.py::test_recent_positions_maxlen_on_ai_state PASSED [ 14%]
+tests/test_neutral_explore_antistuck.py::test_oscillation_clears_explore_goal_and_recent PASSED [ 28%]
+tests/test_neutral_explore_antistuck.py::test_explore_waits_when_only_moves_revisit_recent PASSED [ 42%]
+tests/test_neutral_explore_antistuck.py::test_corner_ping_pong_stops_after_oscillation PASSED [ 57%]
+tests/test_enhancements_3.py::test_neutral_explores_when_no_evil PASSED  [ 71%]
+tests/test_enhancements_2.py::test_neutral_flees_from_visible_evil PASSED [ 85%]
+tests/test_npc_abilities_coward.py::test_coward_neutral_full_hp_skips_flee_direction PASSED [100%]
+
+============================= 7 passed in 55.76s ==============================

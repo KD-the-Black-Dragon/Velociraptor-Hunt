@@ -1,0 +1,129 @@
+---
+pid: 12484
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; .\\.venv\\Scripts\\python.exe -m pytest tests/test_single_instance.py tests/test_entity_validation_startup.py tests/test_ui_bootstrap.py -v"
+started_at: 2026-07-16T15:50:11.136Z
+running_for_ms: 45002    
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\VS Code Projects\kds-vore-roguelike\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+collecting ... collected 15 items
+
+tests/test_single_instance.py::test_try_acquire_succeeds_when_unheld PASSED [  6%]
+tests/test_single_instance.py::test_release_allows_reacquire PASSED      [ 13%]
+tests/test_single_instance.py::test_skip_env_disables_enforcement PASSED [ 20%]
+tests/test_single_instance.py::test_block_second_instance_returns_false_when_held FAILED [ 26%]
+tests/test_single_instance.py::test_second_process_can_acquire_after_release PASSED [ 33%]
+tests/test_entity_validation_startup.py::test_skip_quit_milestone_suppresses_flag PASSED [ 40%]
+tests/test_entity_validation_startup.py::test_startup_validation_failure_subprocess PASSED [ 46%]
+tests/test_entity_validation_startup.py::test_startup_validation_failure_in_process PASSED [ 53%]
+tests/test_ui_bootstrap.py::test_runtime_console_matches_layout_preset PASSED [ 60%]
+tests/test_ui_bootstrap.py::test_load_active_layout_uses_settings_preset PASSED [ 66%]
+tests/test_ui_bootstrap.py::test_settings_invalid_ui_preset_falls_back_to_default PASSED [ 73%]
+tests/test_ui_bootstrap.py::test_settings_ui_preset_round_trip PASSED    [ 80%]
+tests/test_ui_bootstrap.py::test_default_layout_tile_scale_is_two PASSED [ 86%]
+tests/test_ui_bootstrap.py::test_window_pixel_size_doubles_tile_scale PASSED [ 93%]
+tests/test_ui_bootstrap.py::test_main_opens_with_first_launch_window_size PASSED [100%]
+
+================================== FAILURES ===================================
+_____________ test_block_second_instance_returns_false_when_held ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021EAFAF6360>
+tmp_path = WindowsPath('C:/Users/hybri/AppData/Local/Temp/pytest-of-hybri/pytest-744/test_block_second_instance_ret0')
+
+    def test_block_second_instance_returns_false_when_held(
+        monkeypatch: pytest.MonkeyPatch,
+        tmp_path: Path,
+    ) -> None:
+        monkeypatch.setenv("KDS_USER_DATA_DIR", str(tmp_path))
+        assert try_acquire_single_instance() is True
+    
+        script = textwrap.dedent(
+            f"""
+            import os
+            os.environ["KDS_USER_DATA_DIR"] = {str(tmp_path)!r}
+            os.environ["KDS_SKIP_STARTUP_DIALOG"] = "1"
+            from src.single_instance import block_second_instance
+            raise SystemExit(0 if block_second_instance() else 17)
+            """
+        )
+>       result = subprocess.run(
+            [sys.executable, "-c", script],
+            cwd=Path(__file__).resolve().parents[1],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+
+tests\test_single_instance.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\subprocess.py:557: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\subprocess.py:1221: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <Popen: returncode: 1 args: ['C:\\VS Code Projects\\kds-vore-roguelike\\.ven...>
+input = None, endtime = 353886.477155, orig_timeout = 15
+
+    def _communicate(self, input, endtime, orig_timeout):
+        # Start reader threads feeding into a list hanging off of this
+        # object, unless they've already been started.
+        if self.stdout and not hasattr(self, "_stdout_buff"):
+            self._stdout_buff = []
+            self.stdout_thread = \
+                    threading.Thread(target=self._readerthread,
+                                     args=(self.stdout, self._stdout_buff))
+            self.stdout_thread.daemon = True
+            self.stdout_thread.start()
+        if self.stderr and not hasattr(self, "_stderr_buff"):
+            self._stderr_buff = []
+            self.stderr_thread = \
+                    threading.Thread(target=self._readerthread,
+                                     args=(self.stderr, self._stderr_buff))
+            self.stderr_thread.daemon = True
+            self.stderr_thread.start()
+    
+        # Start writer thread to send input to stdin, unless already
+        # started.  The thread writes input and closes stdin when done,
+        # or continues in the background on timeout.
+        if self.stdin and not hasattr(self, "_stdin_thread"):
+            self._stdin_thread = \
+                    threading.Thread(target=self._writerthread,
+                                     args=(input,))
+            self._stdin_thread.daemon = True
+            self._stdin_thread.start()
+    
+        # Wait for the writer thread, or time out.  If we time out, the
+        # thread remains writing and the fd left open in case the user
+        # calls communicate again.
+        if hasattr(self, "_stdin_thread"):
+            self._stdin_thread.join(self._remaining_time(endtime))
+            if self._stdin_thread.is_alive():
+                raise TimeoutExpired(self.args, orig_timeout)
+    
+        # Wait for the reader threads, or time out.  If we time out, the
+        # threads remain reading and the fds left open in case the user
+        # calls communicate again.
+        if self.stdout is not None:
+            self.stdout_thread.join(self._remaining_time(endtime))
+            if self.stdout_thread.is_alive():
+>               raise TimeoutExpired(self.args, orig_timeout)
+E               subprocess.TimeoutExpired: Command '['C:\\VS Code Projects\\kds-vore-roguelike\\.venv\\Scripts\\python.exe', '-c', '\nimport os\nos.environ["KDS_USER_DATA_DIR"] = \'C:\\\\Users\\\\hybri\\\\AppData\\\\Local\\\\Temp\\\\pytest-of-hybri\\\\pytest-744\\\\test_block_second_instance_ret0\'\nos.environ["KDS_SKIP_STARTUP_DIALOG"] = "1"\nfrom src.single_instance import block_second_instance\nraise SystemExit(0 if block_second_instance() else 17)\n']' timed out after 15 seconds
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\subprocess.py:1664: TimeoutExpired
+============================== warnings summary ===============================
+tests/test_ui_bootstrap.py: 29 warnings
+  C:\VS Code Projects\kds-vore-roguelike\.venv\Lib\site-packages\tcod\tileset.py:237: DeprecationWarning: Assign to a tile using 'tileset[codepoint] = tile' instead.
+    return self.set_tile(codepoint, full_tile)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_single_instance.py::test_block_second_instance_returns_false_when_held
+================= 1 failed, 14 passed, 29 warnings in 16.18s ==================

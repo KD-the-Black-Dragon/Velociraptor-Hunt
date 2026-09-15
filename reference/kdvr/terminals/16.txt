@@ -1,0 +1,263 @@
+---
+pid: 17556
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q"
+started_at: 2026-06-30T22:14:38.906Z
+running_for_ms: 10255008 
+---
+........................................................................ [ 24%]
+..................................F...............F.........F..F........ [ 49%]
+.......F................................................................ [ 74%]
+...................................F.................................... [ 99%]
+.                                                                        [100%]
+================================== FAILURES ===================================
+_______________________ test_rabbit_stunned_not_removed _______________________
+
+    def test_rabbit_stunned_not_removed() -> None:
+        engine = GameEngine()
+        wolf = _first_wolf(engine)
+>       (ax, ay), (bx, by), direction = carved_fov_bump_pair(
+            engine, require_visible=True
+        )
+
+tests\test_enhancements_3.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018D7FA08890>
+require_visible = True
+
+    def carved_fov_bump_pair(
+        engine: GameEngine,
+        *,
+        require_visible: bool,
+    ) -> tuple[tuple[int, int], tuple[int, int], tuple[int, int]]:
+        """Actor/defender tiles on carved floor inside or outside player FOV."""
+        from src.systems.fov import update_fov
+    
+        relocate_player(engine, FOV_PLAYER_X, ARENA_Y)
+        if require_visible:
+            ax, ay = ARENA_X, BUMP_ARENA_Y
+        else:
+            ax, ay = ARENA_X, FOV_HIDDEN_Y
+        carve_horizontal_line(engine, ax, ay, 2)
+        pos = engine.player.components[Position]
+        update_fov(engine.game_map, pos.x, pos.y)
+        game_map = engine.game_map
+        visible = game_map.visible[ay, ax] or game_map.visible[ay, ax + 1]
+        if visible != require_visible:
+>           raise RuntimeError(
+                f"FOV bump pair visibility mismatch: visible={visible} "
+                f"require_visible={require_visible}"
+            )
+E           RuntimeError: FOV bump pair visibility mismatch: visible=False require_visible=True
+
+tests\map_test_helpers.py:105: RuntimeError
+____________________ test_good_moves_to_last_known_player _____________________
+
+    def test_good_moves_to_last_known_player() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        for wolf in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position]):
+            wolf.components[Position] = Position(70, 40)
+        wpos, _, ppos = carved_collinear(engine, 3)
+        knight = spawn_test_npc(
+            engine.world,
+            x=wpos.x,
+            y=wpos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+        )
+        player.components[Position] = Position(1, 1)
+        state = _get_ai_state(knight)
+        state.last_known_player = ppos
+        update_fov(engine.game_map, wpos.x, wpos.y)
+>       assert not can_see(engine.game_map, wpos.x, wpos.y, player.components[Position].x, player.components[Position].y)
+                   ^^^^^^^
+E       NameError: name 'can_see' is not defined
+
+tests\test_enhancements_3.py:552: NameError
+______________________ test_npc_cross_alignment_attacks _______________________
+
+    def test_npc_cross_alignment_attacks() -> None:
+        engine = GameEngine()
+>       (ax, ay), (bx, by), direction = carved_fov_bump_pair(
+            engine, require_visible=True
+        )
+
+tests\test_enhancements_3.py:811: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018D7FA08350>
+require_visible = True
+
+    def carved_fov_bump_pair(
+        engine: GameEngine,
+        *,
+        require_visible: bool,
+    ) -> tuple[tuple[int, int], tuple[int, int], tuple[int, int]]:
+        """Actor/defender tiles on carved floor inside or outside player FOV."""
+        from src.systems.fov import update_fov
+    
+        relocate_player(engine, FOV_PLAYER_X, ARENA_Y)
+        if require_visible:
+            ax, ay = ARENA_X, BUMP_ARENA_Y
+        else:
+            ax, ay = ARENA_X, FOV_HIDDEN_Y
+        carve_horizontal_line(engine, ax, ay, 2)
+        pos = engine.player.components[Position]
+        update_fov(engine.game_map, pos.x, pos.y)
+        game_map = engine.game_map
+        visible = game_map.visible[ay, ax] or game_map.visible[ay, ax + 1]
+        if visible != require_visible:
+>           raise RuntimeError(
+                f"FOV bump pair visibility mismatch: visible={visible} "
+                f"require_visible={require_visible}"
+            )
+E           RuntimeError: FOV bump pair visibility mismatch: visible=False require_visible=True
+
+tests\map_test_helpers.py:105: RuntimeError
+______________________ test_npc_combat_on_screen_logged _______________________
+
+    def test_npc_combat_on_screen_logged() -> None:
+        engine = GameEngine()
+>       (ax, ay), (bx, by), direction = carved_fov_bump_pair(
+            engine, require_visible=True
+        )
+
+tests\test_enhancements_3.py:911: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018D7FA08950>
+require_visible = True
+
+    def carved_fov_bump_pair(
+        engine: GameEngine,
+        *,
+        require_visible: bool,
+    ) -> tuple[tuple[int, int], tuple[int, int], tuple[int, int]]:
+        """Actor/defender tiles on carved floor inside or outside player FOV."""
+        from src.systems.fov import update_fov
+    
+        relocate_player(engine, FOV_PLAYER_X, ARENA_Y)
+        if require_visible:
+            ax, ay = ARENA_X, BUMP_ARENA_Y
+        else:
+            ax, ay = ARENA_X, FOV_HIDDEN_Y
+        carve_horizontal_line(engine, ax, ay, 2)
+        pos = engine.player.components[Position]
+        update_fov(engine.game_map, pos.x, pos.y)
+        game_map = engine.game_map
+        visible = game_map.visible[ay, ax] or game_map.visible[ay, ax + 1]
+        if visible != require_visible:
+>           raise RuntimeError(
+                f"FOV bump pair visibility mismatch: visible={visible} "
+                f"require_visible={require_visible}"
+            )
+E           RuntimeError: FOV bump pair visibility mismatch: visible=False require_visible=True
+
+tests\map_test_helpers.py:105: RuntimeError
+________________________ test_examine_potion_on_floor _________________________
+
+    def test_examine_potion_on_floor() -> None:
+        engine = GameEngine()
+        item = next(iter(engine.world.Q.all_of(components=[Item])))
+        ipos = item.components[Position]
+        engine.examine_state.enter(ipos)
+        _press(engine, KeySym.RETURN)
+        desc = item.components[ExamineDescription]
+        assert desc is not None
+>       assert engine.examine_state.description_text == desc.text
+E       assert 'This wolf lo...nd ferocious.' == "This is a he... one's vigor."
+E         
+E         - This is a healing potion that can restore one's vigor.
+E         + This wolf looks particularly vicious and ferocious.
+
+tests\test_examine.py:82: AssertionError
+_______________ test_roaming_wolf_wanders_while_player_engulfed _______________
+
+    def test_roaming_wolf_wanders_while_player_engulfed() -> None:
+        engine = GameEngine()
+        _move_non_wolves_away(engine)
+        player = engine.player
+        assert player is not None
+        monsters = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position]))
+        assert len(monsters) >= 2
+        predator, rover = monsters[0], monsters[1]
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 6)
+        predator.components[Position] = Position(pos.x + 1, pos.y)
+        engulf_player(
+            engine.world, player, predator, engine.message_log, narrative_type="OV"
+        )
+        rover.components[Position] = Position(pos.x + 5, pos.y)
+        rover_before = rover.components[Position]
+        update_fov(engine.game_map, pos.x, pos.y)
+    
+        chase_calls: list[Position] = []
+    
+        def _fake_chase(world, game_map, monster, origin, target, **kwargs):
+            chase_calls.append(target)
+            return None
+    
+        with patch("src.systems.ai._choose_chase_direction", side_effect=_fake_chase):
+            with patch("src.systems.ai._choose_wander_direction", return_value=None):
+                with patch("random.Random.random", return_value=0.9):
+                    run_monster_turns(
+                        engine.world,
+                        engine.game_map,
+                        player,
+                        engine.message_log,
+                        rng=random.Random(0),
+                        modal=engine.vore_modal,
+                    )
+    
+>       assert player.components[Position] not in chase_calls
+E       assert Position(x=58, y=2) not in [Position(x=59, y=15), Position(x=37, y=21), Position(x=58, y=2), Position(x=54, y=11), Position(x=56, y=38), Position(x=62, y=37), ...]
+
+tests\test_vore_engulfed.py:299: AssertionError
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:114: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:71: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:163: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_enhancements_3.py::test_rabbit_stunned_not_removed - Runtim...
+FAILED tests/test_enhancements_3.py::test_good_moves_to_last_known_player - N...
+FAILED tests/test_enhancements_3.py::test_npc_cross_alignment_attacks - Runti...
+FAILED tests/test_enhancements_3.py::test_npc_combat_on_screen_logged - Runti...
+FAILED tests/test_examine.py::test_examine_potion_on_floor - assert 'This wol...
+FAILED tests/test_vore_engulfed.py::test_roaming_wolf_wanders_while_player_engulfed
+6 failed, 283 passed, 14 warnings in 37.11s

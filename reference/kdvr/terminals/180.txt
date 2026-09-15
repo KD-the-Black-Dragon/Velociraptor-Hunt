@@ -1,0 +1,37 @@
+---
+pid: 29792
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python tools/profile_turn.py --scenario explore_10 --action consume --iterations 15 --profile"
+started_at: 2026-07-05T19:55:18.212Z
+running_for_ms: 11165013 
+---
+Profiling action=consume  seed=42  iterations=15
+------------------------------------------------------------------------------------------
+explore_10    npcs= 10  action=consume   mean=4818.74ms  median=4820.62ms  p95=5120.47ms  max=5194.05ms
+  Top functions (cumulative):
+    100.0%  222.2409s  ncalls=    15  profile_turn.py:236(_consume_player_turn)
+    100.0%  222.2409s  ncalls=    15  engine.py:855(_consume_player_turn)
+    100.0%  222.2209s  ncalls=    15  engine.py:629(_run_world_turn)
+    100.0%  222.2166s  ncalls=    15  ai.py:2778(run_monster_turns)
+    100.0%  222.2063s  ncalls=   150  ai.py:2640(_run_monster_visit)
+     99.9%  221.9996s  ncalls=   150  ai.py:2410(_execute_intent_pipeline)
+     97.5%  216.6871s  ncalls=  1110  map_gen.py:373(bfs_path_distances)
+     83.9%  186.5692s  ncalls=21410790  ai.py:457(entity_explore_can_traverse)
+     54.0%  120.0507s  ncalls=   300  ai.py:1224(pick_evil_chase)
+     53.9%  119.7831s  ncalls=   600  ai.py:473(explore_reachable_distances)
+     47.2%  104.7907s  ncalls=11573400  ai.py:482(<lambda>)
+     46.8%  104.0240s  ncalls=21411870  movement.py:31(entity_mobility)
+     45.7%  101.5888s  ncalls=   510  ai.py:560(explore_distances_to_goal)
+     39.9%   88.7850s  ncalls=9837390  ai.py:569(<lambda>)
+     37.8%   84.1143s  ncalls=   150  ai.py:1956(_resolve_monster_move_direction)
+     35.0%   77.8309s  ncalls=   150  ai.py:2143(_try_monster_move)
+     35.0%   77.8016s  ncalls=   150  ai.py:699(_complete_explore_step)
+     35.0%   77.7962s  ncalls=   390  ai.py:575(_explore_path_distance_to_goal)
+     30.3%   67.3615s  ncalls=22234412  entity.py:531(get)
+     29.2%   64.9611s  ncalls=21411870  map_gen.py:110(can_enter_tile)
+     27.4%   60.9793s  ncalls=22239432  entity.py:417(__getitem__)
+     27.0%   59.9536s  ncalls=   300  ai.py:241(_sanitize_unreachable_memory_targets)
+     26.9%   59.8610s  ncalls=   300  ai.py:657(_ensure_explore_goal)
+     19.2%   42.6880s  ncalls=21411870  map_gen.py:91(tile_at)
+     12.4%   27.6064s  ncalls=22239552  entity.py:187(components)
+

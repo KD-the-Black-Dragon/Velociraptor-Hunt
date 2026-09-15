@@ -42,7 +42,9 @@ The game SHALL load NPC definitions from `data/entities.json` at startup. Each e
 
 Entity definitions MAY include `"placeholder": true` (default false when omitted). The loader SHALL parse it into `EntityDefinition.placeholder` without treating it as an unknown trait. Placeholder status SHALL **not** change combat, AI, spawn eligibility, or vore systems — it is a content-authoring marker for unfinished species (see `data/SCHEMA.md` **Placeholder content checklist**). Stock shipped species need not set the field.
 
-Stock roster growth (themed placeholders and mid/deep cast) lives in `data/entities.json`; deprecated species SHALL use `spawn.weight: 0` rather than deleting ids when old saves may reference them (e.g. `giant_spider`).
+Stock roster growth (themed placeholders, mid/deep cast, and **good-aligned allies**) lives in `data/entities.json`; deprecated species SHALL use `spawn.weight: 0` rather than deleting ids when old saves may reference them (e.g. `giant_spider`).
+
+Stock **good** allies are multi-species (not knight-only): staggered depth bands with rising rank titles (squire → knight → guard → warrior → warden → at-arms → champion), plus parallel specialist tracks (e.g. Path crossbow, Smite cleric). Good definitions use cyan presentation, non-empty `introduction` lines, and `names.json` pools keyed by entity id.
 
 #### Scenario: Placeholder flag loads
 
@@ -89,18 +91,18 @@ Unknown entity traits and abilities SHALL log a one-time warning per key and SHA
 
 ### Requirement: Density-driven floor spawn
 
-`spawn.weight` SHALL be **relative draw probability only**, not an implicit species count. Total NPCs per floor SHALL come from `data/dungeon_spawn.json` via `compute_target_npc_count()`.
+`spawn.weight` SHALL be **relative draw probability only**, not an implicit species count. **Non-good** NPC count per floor SHALL come from `data/dungeon_spawn.json` via `compute_target_npc_count()` (evil + neutral only). Good allies use a separate **quota** (see **Good spawn quota**).
 
 `spawn_floor_population()` SHALL:
 
-1. Count valid spawn tiles and compute `target` from density config + RNG variance
-2. Set `effective_target = max(0, target - good_follower_reduction)`
-3. Filter definitions by `spawn.min_depth ≤ floor_depth ≤ spawn.max_depth`, terrain, and `spawn_requires_water` when the map has no deep water
-4. Build a **filtered union** of eligible land and water definitions that still have placement candidates
-5. Perform `effective_target` independent weighted draws (`int(spawn.weight)` truncation); reject and retry when a drawn terrain pool is empty
+1. Count valid spawn tiles and compute density `target` from density config + RNG variance + difficulty `density_multiplier`
+2. Run the **good spawn quota** pass (followers count first; weighted new goods up to difficulty `good_spawn_limit`)
+3. Filter **non-good** definitions by `spawn.min_depth ≤ floor_depth ≤ spawn.max_depth`, terrain, `spawn.weight > 0`, `spawn_requires_water` when the map has no deep water, and **`spawn.requires_vore_types`** against the run’s `VoreContentPreferences` (see **Spawn vore-type requirements**)
+4. Build a **filtered union** of eligible land and water non-good definitions that still have placement candidates
+5. Perform `target` independent weighted draws among evil/neutral only (`int(spawn.weight)` truncation); reject and retry when a drawn terrain pool is empty
 6. Spawn only at `new_game()` and `descend_floor()` — no mid-level respawn
 
-The code SHALL NOT enforce minimum or maximum counts per species `id`.
+The code SHALL NOT enforce minimum or maximum counts per species `id` within density draws. The good quota is a **faction-wide** cap, not a per-species min/max. Filtering out gated species SHALL NOT reduce `target`; remaining eligible species fill the draws.
 
 #### Scenario: Weight affects probability not quota
 
@@ -122,26 +124,115 @@ The code SHALL NOT enforce minimum or maximum counts per species `id`.
 - WHEN `floor_depth` is 4
 - THEN that entity is not eligible for draws
 
-### Requirement: Good follower spawn deduction
+### Requirement: Spawn vore-type requirements
 
-When the player descends, good-aligned NPCs in line of sight follow (see `dungeon` spec). Fresh spawns on the new floor SHALL use:
+Optional `spawn.requires_vore_types` (string array) is the species’ **vore capability** list when non-empty. It SHALL gate whether a definition is a spawn **candidate**. Semantics:
 
-```text
-good_reduction = min(follower_count, good_aligned_weight_at_depth(registry, floor_depth))
-effective_target = max(0, target - good_reduction)
-```
+| JSON value | Effect |
+|------------|--------|
+| Missing, `null`, or `[]` | Unrestricted |
+| After ignoring unrecognized tokens, empty set | Unrestricted |
+| One or more of `OV` / `CV` / `AV` | **OR**: eligible iff at least one recognized listed type is enabled in the run’s vore content prefs (non-empty intersection) |
 
-`good_aligned_weight_at_depth()` SHALL sum `int(spawn.weight)` for all eligible **good**-aligned definitions (land + water) at the new depth. This replaces knight-only coupling. No backfill: total placed NPCs drop by the reduction amount.
+Unrecognized tokens SHALL be ignored (no load failure). A present value that is not an array or `null` SHALL be a load error.
+
+Stock shipped entities SHALL use `"requires_vore_types": []` (documentation; unrestricted).
+
+The same eligibility check SHALL apply to **all definition-based materialization** (`spawn_from_definition` / `spawn_entity_by_id`: floor population, good quota, arena, NPC summons, alliance potion). When prefs are not met, creation SHALL NOT occur (`None` / skip). **Save/load restore** SHALL NOT despawn existing NPCs via this gate.
+
+Prefs source: the run snapshot `VoreContentPreferences` (see `vore` / `main-menu` specs).
+
+When non-empty, the same capability list SHALL also constrain **initiation**: a living predator may only attempt types in (its narrative types ∩ capability ∩ run prefs). Empty capability remains unrestricted for attempts. Lookup is by `SpeciesId` → definition (including save-restored NPCs). When that attempt pool is empty, initiation SHALL use the prefs-immune internal type `GENERIC` with hardcoded minimal copy (see `vore` spec; likely unreachable in normal play given New Game prefs snapshot + this spawn OR gate).
+
+#### Scenario: CV-only species excluded when CV disabled
+
+- GIVEN a definition with `spawn.requires_vore_types: ["CV"]`
+- AND the run has CV disabled
+- WHEN floor eligibility is built
+- THEN that definition is not a candidate
+- AND density `target` is unchanged so other eligible species may fill the count
+
+#### Scenario: Pair spawns when any listed type is enabled
+
+- GIVEN `spawn.requires_vore_types: ["OV", "CV"]`
+- AND the run enables OV but not CV
+- WHEN spawn eligibility is checked
+- THEN the definition is eligible
+
+#### Scenario: Pair excluded when neither listed type is enabled
+
+- GIVEN `spawn.requires_vore_types: ["CV", "AV"]`
+- AND the run enables only OV
+- WHEN spawn eligibility is checked
+- THEN the definition is not eligible
+
+#### Scenario: All three listed is effectively unrestricted for spawn
+
+- GIVEN `spawn.requires_vore_types: ["OV", "CV", "AV"]`
+- AND the run enables any one of those types
+- WHEN spawn eligibility is checked
+- THEN the definition is eligible (at least one pref is always on)
+
+#### Scenario: Unknown tokens ignored
+
+- GIVEN `spawn.requires_vore_types: ["CV", "nope"]`
+- AND the run enables CV
+- WHEN the definition is parsed and checked
+- THEN the effective capability is `{CV}` only
+- AND the species may spawn
+
+#### Scenario: Capability restricts attempts when prefs allow more
+
+- GIVEN a definition with `spawn.requires_vore_types: ["CV"]`
+- AND the run enables OV, CV, and AV
+- AND the species has spawned
+- WHEN that predator initiates vore
+- THEN only `CV` may be selected
+
+### Requirement: Good spawn quota
+
+When the player descends, good-aligned NPCs in line of sight follow (see `dungeon` spec). Fresh floor population SHALL apply a **good spawn quota** from the run difficulty profile field `good_spawn_limit` (omit → default **2**):
+
+1. If **no** good-aligned definition is eligible to place on this floor (weight > 0, depth window, terrain/water gates, **`requires_vore_types`**, non-empty placement tiles), spawn **zero** new goods.
+2. Let `brought` be the number of good followers already placed on this floor. If `brought >= good_spawn_limit`, spawn **zero** new goods.
+3. Otherwise weighted-spawn new goods until `brought + new == good_spawn_limit` or placeable goods run out (independent weighted draws; duplicate species allowed).
+4. **Placement band:** each **new** good SHALL be placed on a tile whose **player-path** distance from the player's floor start position is between **10 and 15** inclusive (8-directional steps). Path tiles SHALL treat **closed doors as walkable** (openable); items and runes do **not** block path length. Tiles outside this band SHALL NOT be used for new goods. If no band tiles remain, stop placing new goods early.
+5. Density spawn SHALL **exclude** good-aligned definitions (quota owns good presence). Followers do **not** reduce the density target. Followers from descent are **not** re-placed by this band rule.
+
+Stock limits: **Easier = 3**, **Normal / Hard / Nightmare = 2**.
 
 `floor_depth` SHALL increment **before** spawning the new floor.
 
-#### Scenario: Followers reduce total spawn budget
+#### Scenario: Floor with no eligible goods
 
-- GIVEN three good followers descend with the player
-- AND `good_aligned_weight_at_depth` is 5 at this depth
-- WHEN the new floor spawns with a fixed density target
-- THEN `effective_target` is `target - 3`
-- AND total fresh NPCs placed equals `effective_target` (given sufficient candidates)
+- GIVEN floor depth has no good species with weight > 0 in range
+- WHEN the floor spawns
+- THEN zero new goods are placed
+
+#### Scenario: Quota with zero followers
+
+- GIVEN eligible goods and `good_spawn_limit` 2
+- AND zero followers
+- WHEN the floor spawns
+- THEN exactly 2 new goods are placed when tiles allow
+
+#### Scenario: Followers count toward the cap
+
+- GIVEN one good follower and limit 2
+- WHEN the floor spawns
+- THEN exactly 1 new good is placed (when eligible)
+
+#### Scenario: At or over limit
+
+- GIVEN two or more good followers and limit 2
+- WHEN the floor spawns
+- THEN zero new goods are placed
+
+#### Scenario: Density never adds extra goods
+
+- GIVEN the good quota is filled
+- WHEN density weighted draws run
+- THEN no good-aligned species is selected
 
 ### Requirement: Combat range model
 
@@ -205,7 +296,7 @@ Production spawn SHALL use `spawn_from_definition()` only. Per-species `_spawn_*
 - Spawn: `src/spawn.py` — `spawn_floor_population()`, `spawn_entity_by_id()`, `spawn_from_definition(..., floor_depth=)`
 - Spawn config: `src/data/dungeon_spawn_loader.py`, `compute_target_npc_count()` in `src/data/dungeon_spawn_config.py`
 - Depth scaling: `src/data/depth_scaling_loader.py` — bake at spawn (`balance` spec)
-- Spawn: `good_aligned_weight_at_depth()` in `src/spawn.py`
+- Spawn: `eligible_good_definitions()`, `good_spawn_count_to_place()` in `src/spawn.py`
 - Tests: `tests/test_npc_data_pr1.py` … `tests/test_npc_data_pr4.py`, `tests/test_spawn_density_pr2.py`, `tests/test_dungeon_spawn_config.py`
 
 ## Related specs

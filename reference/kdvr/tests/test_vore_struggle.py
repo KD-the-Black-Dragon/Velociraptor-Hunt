@@ -21,13 +21,15 @@ from src.components import (
 )
 from src import messages
 from src.systems.ai import run_monster_turns
-from src.constants import VORE_ESCAPE_BASE, VORE_ESCAPE_PER_FAIL, VORE_STRUGGLE_DAMAGE
+from src.constants import VORE_ESCAPE_BASE, VORE_ESCAPE_PER_FAIL
 from src import messages
 from src.engine import GameEngine
 from src.systems.naming import entity_log_name
 
 from tests.map_test_helpers import carve_east_of, carve_floor_rect
-from src.systems.combat import apply_struggle_damage
+from src.systems.combat import apply_struggle_damage, compute_struggle_damage
+from src.systems.inventory import effective_fighter
+from src.systems.vore import debug_weaken_all_monsters
 from src.systems.fov import update_fov
 from src.systems.vore import (
     engulf_player,
@@ -62,8 +64,47 @@ def test_apply_struggle_damage_flat() -> None:
     engine = GameEngine()
     wolf = list(engine.world.Q.all_of(components=[Fighter, AI]))[0]
     wolf.components[Fighter] = Fighter(hp=10, max_hp=10, accuracy=10.0, evade=0, ac=0, min_damage=2, max_damage=2)
-    apply_struggle_damage(wolf, VORE_STRUGGLE_DAMAGE)
-    assert wolf.components[Fighter].hp == 10 - VORE_STRUGGLE_DAMAGE
+    apply_struggle_damage(wolf, 2)
+    assert wolf.components[Fighter].hp == 8
+
+
+def test_compute_struggle_damage_is_half_melee_no_ac() -> None:
+    engine = GameEngine()
+    player = engine.player
+    assert player is not None
+    from src.components import PlayerProgression
+
+    # Force deterministic attack range: min == max so no roll variance.
+    progression = player.components.get(PlayerProgression) or PlayerProgression()
+    player.components[PlayerProgression] = progression
+    # Starter dagger is typically 3-5; pad bonuses so effective becomes 8-8.
+    ef = effective_fighter(player)
+    progression.bonus_min_damage += 8 - ef.min_damage
+    progression.bonus_max_damage += 8 - ef.max_damage
+    ef = effective_fighter(player)
+    assert ef.min_damage == 8 and ef.max_damage == 8
+    # Predator AC would not matter: compute_struggle_damage never applies it.
+    amount = compute_struggle_damage(player, random.Random(0))
+    assert amount == 4
+
+
+def test_struggle_applies_half_attack_damage() -> None:
+    engine = GameEngine()
+    player, wolf = _engulf_player_on_wolf(engine)
+    wolf.components[Fighter].hp = 30
+    from src.components import PlayerProgression
+
+    progression = player.components.get(PlayerProgression) or PlayerProgression()
+    player.components[PlayerProgression] = progression
+    ef = effective_fighter(player)
+    progression.bonus_min_damage += 6 - ef.min_damage
+    progression.bonus_max_damage += 6 - ef.max_damage
+    assert effective_fighter(player).min_damage == 6
+    assert effective_fighter(player).max_damage == 6
+    rng = random.Random(0)
+    with patch.object(rng, "random", return_value=1.0):
+        try_struggle(engine.world, engine.game_map, player, (1, 0), engine.message_log, rng)
+    assert wolf.components[Fighter].hp == 30 - 3
 
 
 def test_struggle_defeats_one_hp_predator_and_escapes() -> None:
@@ -82,7 +123,7 @@ def test_struggle_defeats_one_hp_predator_and_escapes() -> None:
 def test_struggle_f2_predator_escape_via_key() -> None:
     engine = GameEngine()
     _engulf_player_on_wolf(engine)
-    _press(engine, KeySym.F2)
+    debug_weaken_all_monsters(engine.world, engine.message_log)
     turns_before = engine.player_turn_count
     with patch.object(engine.rng, "random", return_value=1.0):
         _press(engine, KeySym.UP)

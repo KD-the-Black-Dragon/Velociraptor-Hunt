@@ -164,6 +164,15 @@ def _parse(raw: dict[str, Any]) -> MatchCardsConfig:
     )
 
 
+def is_solo_eligible_card(card: CardDef | Any) -> bool:
+    """True if the card is a pure 1v1 duel (one enemy id, count 1)."""
+    enemies = getattr(card, "enemies", None) or ()
+    if len(enemies) != 1:
+        return False
+    _eid, count = enemies[0]
+    return int(count) == 1
+
+
 def green_allowed_for_round(
     round_index: int,
     *,
@@ -190,6 +199,7 @@ def eligible_card_defs(
     *,
     difficulty_id: str = "normal",
     cfg: MatchCardsConfig | None = None,
+    solo_only: bool = False,
 ) -> list[CardDef]:
     c = cfg if cfg is not None else load_match_cards_config()
     allow_green = green_allowed_for_round(
@@ -197,14 +207,19 @@ def eligible_card_defs(
     )
     out: list[CardDef] = []
     for card in c.cards:
+        if solo_only and not is_solo_eligible_card(card):
+            continue
         if round_index < card.min_round or round_index > card.max_round:
             continue
         if card.kind == "green" and not allow_green:
             continue
         out.append(card)
     if not out:
-        # Always offer something
-        out = [x for x in c.cards if x.kind == "red"] or list(c.cards)
+        # Always offer something — prefer same style constraints
+        fallback = list(c.cards)
+        if solo_only:
+            fallback = [x for x in fallback if is_solo_eligible_card(x)]
+        out = [x for x in fallback if x.kind == "red"] or fallback
     return out
 
 
@@ -214,29 +229,37 @@ def pick_match_offers(
     difficulty_id: str = "normal",
     rng: random.Random | None = None,
     cfg: MatchCardsConfig | None = None,
+    solo_only: bool = False,
 ) -> tuple[Any, ...]:
     """Return up to offer_count MatchCard instances for the hub."""
     from src.downtime_hub import MatchCard
 
     c = cfg if cfg is not None else load_match_cards_config()
     r = rng if rng is not None else random.Random()
-    pool = eligible_card_defs(round_index, difficulty_id=difficulty_id, cfg=c)
+    pool = eligible_card_defs(
+        round_index,
+        difficulty_id=difficulty_id,
+        cfg=c,
+        solo_only=solo_only,
+    )
     n = min(c.offer_count, len(pool))
     if n <= 0:
         return ()
     chosen = r.sample(pool, n) if len(pool) >= n else list(pool)
-    return tuple(_def_to_match_card(d) for d in chosen)
+    cards = tuple(_def_to_match_card(d, force_solo=solo_only) for d in chosen)
+    return cards
 
 
-def _def_to_match_card(d: CardDef) -> Any:
+def _def_to_match_card(d: CardDef, *, force_solo: bool = False) -> Any:
     from src.downtime_hub import MatchCard
 
+    max_allies = 0 if force_solo else d.max_allies
     return MatchCard(
         card_id=d.card_id,
         title=d.title,
         kind=d.kind if d.kind in ("green", "red") else "red",
         payout_mult=d.payout_mult,
-        max_allies=d.max_allies,
+        max_allies=max_allies,
         enemies=d.enemies,
     )
 

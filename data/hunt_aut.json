@@ -1,0 +1,15 @@
+{
+  "wait": 0.8,
+  "step": 0.8,
+  "walk": 0.8,
+  "quick": 0.7,
+  "run": 0.4,
+  "sneak": 1.6,
+  "rotate_45": 0.8,
+  "rotate_90": 0.8,
+  "sidestep": 0.8,
+  "gait": 0.0,
+  "aim": 0.8,
+  "stand_down": 0.8,
+  "fire": 0.8
+}

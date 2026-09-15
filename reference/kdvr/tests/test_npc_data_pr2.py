@@ -194,11 +194,13 @@ def test_spawn_floor_population_water_floor_uses_unified_target() -> None:
             assert game_map.tiles[pos.y, pos.x] == Tile.DEEP_WATER
 
 
-def test_good_follower_reduction_lowers_spawn_total() -> None:
+def test_good_followers_brought_does_not_reduce_density_target() -> None:
+    """Follower count only affects good quota; density target is unchanged."""
     world = Registry()
     game_map = _open_spawn_map()
     config = fixed_spawn_config(density_pct=0.2, density_variance=0.0)
     baseline = expected_spawn_count(game_map, 30, 30, floor_depth=1, config=config, rng_seed=3)
+    # Floor 1 stock: no eligible goods → spawn count == density only
     spawned = spawn_floor_population(
         world,
         game_map,
@@ -207,9 +209,9 @@ def test_good_follower_reduction_lowers_spawn_total() -> None:
         floor_depth=1,
         rng=random.Random(3),
         spawn_config=config,
-        good_follower_reduction=1,
+        good_followers_brought=2,
     )
-    assert len(spawned) == max(0, baseline - 1)
+    assert len(spawned) == baseline
 
 
 def test_generated_dungeon_spawns_ai_entities() -> None:

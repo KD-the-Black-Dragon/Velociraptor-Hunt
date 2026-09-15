@@ -1,0 +1,29 @@
+{
+  "map_width": 61,
+  "map_height": 61,
+  "tree_count": 64,
+  "grass_blobs": 14,
+  "bush_blobs": 9,
+  "mud_blobs": 8,
+  "open_clearings": 6,
+  "blob_radius_min": 2,
+  "blob_radius_max": 4,
+  "cone_range": 12,
+  "cone_half_degrees": 55,
+  "vision": {
+    "walk": {"cone_range": 12, "cone_half_degrees": 55},
+    "sneak": {"cone_range": 12, "cone_half_degrees": 55},
+    "run": {"cone_range": 9, "cone_half_degrees": 50},
+    "aim": {"cone_range": 16, "cone_half_degrees": 28},
+    "deep_aim": {"cone_range": 20, "cone_half_degrees": 16},
+    "rifle_aim": {"cone_range": 22, "cone_half_degrees": 6, "close_blind": 3, "line": true},
+    "rifle_deep_aim": {"cone_range": 28, "cone_half_degrees": 4, "close_blind": 3, "line": true}
+  },
+  "raptor_cone_range": 14,
+  "raptor_cone_half_degrees": 55,
+  "bullseye_mud_radius": 1,
+  "bullseye_ring_inner": 3,
+  "bullseye_ring_outer": 8,
+  "bullseye_grass_patches": 8,
+  "bullseye_grass_radius": 3
+}

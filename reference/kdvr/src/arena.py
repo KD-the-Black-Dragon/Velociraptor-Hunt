@@ -126,6 +126,7 @@ def _arena_victory_handler(engine: GameEngine) -> Callable[[Entity], None]:
         engine.inventory_modal.reset()
         engine.ground_pickup_modal.reset()
         engine.examine_state.reset()
+        engine.dismiss_state.reset()
         engine.macguffin_victory_confirm.reset()
         engine._end_rest_session()
         engine._end_autoexplore_session()
@@ -199,6 +200,7 @@ def initialize_arena(
     engine.run_stats.reset()
     engine.skipped_this_phase.clear()
     engine.examine_state.reset()
+    engine.dismiss_state.reset()
     engine.ground_pickup_modal.reset()
     engine.inventory_modal.reset()
     engine.macguffin_discovery.reset()
@@ -221,7 +223,13 @@ def initialize_arena(
         registry=reg,
         floor_depth=min_depth,
         difficulty_id=engine.difficulty_id,
+        vore_prefs=engine.vore_content_prefs,
     )
+    if enemy is None:
+        raise ValueError(
+            f"arena enemy '{entity_id}' blocked by spawn.requires_vore_types "
+            f"for current vore prefs"
+        )
     engine.arena_enemy_entity = enemy
     register_arena_victory_handler(engine)
 

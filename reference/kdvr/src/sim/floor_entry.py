@@ -119,6 +119,7 @@ def _reset_engine_session(engine: GameEngine) -> None:
     engine.run_stats.reset()
     engine.skipped_this_phase.clear()
     engine.examine_state.reset()
+    engine.dismiss_state.reset()
     engine.ground_pickup_modal.reset()
     engine.inventory_modal.reset()
     engine.macguffin_discovery.reset()

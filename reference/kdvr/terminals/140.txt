@@ -1,0 +1,53 @@
+---
+pid: 29108
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; python -m pytest tests/test_rest_until_healed.py tests/test_enhancements_1.py -q"
+started_at: 2026-07-04T12:35:38.509Z
+running_for_ms: 48074999 
+---
+............F...........                                                 [100%]
+================================== FAILURES ===================================
+__________ test_rest_frame_batches_silent_turns_without_dirty_screen __________
+
+    def test_rest_frame_batches_silent_turns_without_dirty_screen() -> None:
+        engine = GameEngine()
+        _clear_npcs(engine)
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 10
+        session = begin_rest_until_healed_or_danger(
+            player=player,
+            game_map=engine.game_map,
+            world=engine.world,
+            message_log=engine.message_log,
+            max_turns=4,
+        )
+        assert session is not None
+    
+        with patch("src.engine.run_monster_turns"):
+            frame = advance_rest_frame(
+                player=player,
+                game_map=engine.game_map,
+                world=engine.world,
+                message_log=engine.message_log,
+                session=session,
+                consume_turn=engine._consume_player_turn,
+            )
+    
+        assert session.consumed == 4
+        assert frame.finished
+>       assert frame.screen_dirty is False
+E       assert True is False
+E        +  where True = RestFrameResult(screen_dirty=True, finished=True).screen_dirty
+
+tests\test_rest_until_healed.py:358: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[prefetch] miss -> sync
+[map_gen] rejected attempt 1: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 2: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: stairs_too_clustered_after_doors
+[map_gen] rejected attempt 5: layout_carve_failed
+=========================== short test summary info ===========================
+FAILED tests/test_rest_until_healed.py::test_rest_frame_batches_silent_turns_without_dirty_screen
+1 failed, 23 passed in 20.22s

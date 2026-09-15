@@ -1,0 +1,31 @@
+---
+pid: 9544
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_dungeon_layout_pr0.py tests/test_dungeon_layout_pr1.py tests/test_dungeon_layout_pr2.py tests/test_dungeon_layout_pr3.py tests/test_floor_runes_pr3.py tests/test_dungeon_pr2.py -q"
+started_at: 2026-07-03T15:02:55.426Z
+running_for_ms: 28164995 
+---
+....................................................F                    [100%]
+================================== FAILURES ===================================
+______________________ test_land_count_matches_reachable ______________________
+
+    def test_land_count_matches_reachable() -> None:
+        dungeon = generate_dungeon(MAP_WIDTH, MAP_HEIGHT, seed=13)
+        all_land = set(land_positions(dungeon))
+        reachable = land_reachable_from(dungeon, dungeon.enter_xy)
+>       assert all_land == reachable
+E       AssertionError: assert {(3, 8), (3, ... (3, 13), ...} == {(27, 18), (2...(32, 18), ...}
+E         
+E         Extra items in the left set:
+E         (38, 23)
+E         (49, 23)
+E         (71, 29)
+E         (15, 39)
+E         (27, 13)...
+E         
+E         ...Full output truncated (784 lines hidden), use '-vv' to show
+
+tests\test_dungeon_pr2.py:138: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_pr2.py::test_land_count_matches_reachable - Asserti...
+1 failed, 52 passed in 184.02s (0:03:04)

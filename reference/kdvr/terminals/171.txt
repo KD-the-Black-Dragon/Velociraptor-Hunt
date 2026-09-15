@@ -1,0 +1,36 @@
+---
+pid: 22636
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "python -m pytest tests/test_past_runs_menu_pr4.py tests/test_main_menu.py tests/test_flow_pr4.py tests/test_save_menu_pr4.py -q"
+started_at: 2026-07-05T18:33:10.362Z
+running_for_ms: 16089994 
+---
+...................................................                      [100%]
+============================== warnings summary ===============================
+tests/test_past_runs_menu_pr4.py::test_render_past_runs_screen_shows_header_and_row
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_past_runs_menu_pr4.py:129: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, 1]["ch"])
+
+tests/test_past_runs_menu_pr4.py::test_render_past_runs_screen_shows_header_and_row
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_past_runs_menu_pr4.py:136: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+tests/test_main_menu.py::test_render_main_menu_options_fit_layout_console_height
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:144: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:221: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x, row_y]["ch"])) in "> "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:222: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 1, row_y]["ch"])) == " "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:223: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 2, row_y]["ch"])) == option[0]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+51 passed, 7 warnings in 29.99s

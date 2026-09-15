@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import random
+import string
 from pathlib import Path
 
 import tcod.event
@@ -237,6 +238,11 @@ def test_loadout_uses_loot_depth_minus_one(tmp_path: Path) -> None:
     assert inventory.slots["c"].stack_count == 5
     assert equip.wielded_slot == "a"
     assert equip.worn_slot == "b"
+    # Full a–z map required: sparse maps crash on pickup (KeyError letter).
+    assert set(inventory.slots) == set(string.ascii_lowercase)
+    from src.systems.inventory import first_empty_slot
+
+    assert first_empty_slot(inventory) is not None
     loot_pool = {weapon.id for weapon in eligible_weapons(registry, 9)}
     assert "late_only" not in loot_pool
     assert inventory.slots["a"].item_id == "strong_blade"

@@ -192,20 +192,23 @@ def expected_ai_count(
     *,
     floor_depth: int = 1,
     rng_seed: int = 0,
-    good_follower_reduction: int = 0,
 ) -> int:
-    """Expected NPC count for a map using stock dungeon_spawn.json (same seed as engine rng at spawn)."""
+    """Expected density NPC count for stock dungeon_spawn.json (excludes good quota).
+
+    Good quota adds up to ``good_spawn_limit`` extra allies when eligible; callers
+    that assert exact totals should account for goods separately or use depth 1
+    (stock: no good spawns on floor 1).
+    """
     enter_x, enter_y = game_map.enter_xy
     land, water = valid_spawn_tiles(game_map, enter_x, enter_y)
     valid_count = count_valid_spawn_tiles(land, water)
     config = load_dungeon_spawn_config()
-    target = compute_target_npc_count(
+    return compute_target_npc_count(
         valid_count,
         floor_depth,
         config,
         random.Random(rng_seed),
     )
-    return max(0, target - good_follower_reduction)
 
 
 def iter_wolves(engine: GameEngine) -> Iterator[object]:
@@ -294,12 +297,14 @@ def spawn_wolf_with_abilities(
     from src.components import Abilities, AbilityState
     from src.data.ability_parser import parse_abilities
     from src.spawn import spawn_entity_by_id
+    from src.systems.ranged_magazine import ensure_ranged_magazine
 
     wolf = spawn_entity_by_id(world, "wolf", x, y)
     wolf.components[AbilityState] = AbilityState()
     parsed = parse_abilities(abilities)
     if parsed:
         wolf.components[Abilities] = Abilities(parsed=parsed)
+        ensure_ranged_magazine(wolf, maximum=2)
     else:
         wolf.components.pop(Abilities, None)
     return wolf

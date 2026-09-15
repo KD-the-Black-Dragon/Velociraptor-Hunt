@@ -1,0 +1,48 @@
+{
+  "raptor_max_hp": 100,
+  "hunter_running_penalty": 30,
+  "weapons": {
+    "rifle": {
+      "ammo": 5,
+      "ideal_range_min": 5,
+      "ideal_range_max": 10,
+      "max_range": 16,
+      "base_damage": 100,
+      "per_tile_outside": 12,
+      "unaimed_penalty": 0,
+      "unaimed_cap": 15,
+      "aim_bonus": 0,
+      "deep_aim_bonus": 15,
+      "unaimed_extra_per_tile": 12,
+      "rain_medium": 18,
+      "rain_heavy": 35,
+      "motion_penalty": 25,
+      "perp_move_penalty": 22,
+      "perp_stand_bonus": 12
+    },
+    "shotgun": {
+      "ammo": 6,
+      "ideal_range_min": 1,
+      "ideal_range_max": 1,
+      "max_range": 6,
+      "base_damage": 110,
+      "per_tile_outside": 35,
+      "unaimed_penalty": 10,
+      "unaimed_cap": 0,
+      "aim_bonus": 10,
+      "deep_aim_bonus": 15
+    },
+    "revolver": {
+      "ammo": 8,
+      "ideal_range_min": 2,
+      "ideal_range_max": 4,
+      "max_range": 10,
+      "base_damage": 100,
+      "per_tile_outside": 18,
+      "unaimed_penalty": 20,
+      "unaimed_cap": 0,
+      "aim_bonus": 10,
+      "deep_aim_bonus": 20
+    }
+  }
+}

@@ -1164,10 +1164,12 @@ def test_engulfed_npc_prey_skips_turn() -> None:
 
 
 def test_engulfed_good_npc_invisible_to_evil_ai() -> None:
+    from tests.map_test_helpers import ensure_wolves
+
     engine = GameEngine()
     player = engine.player
     assert player is not None
-    wolves = list(iter_wolves(engine))
+    wolves = ensure_wolves(engine, 2)
     predator, hunter = wolves[0], wolves[1]
     player_pos = player.components[Position]
     pred_tile, prey_tile, hunter_tile = carve_adjacent_line(engine, player_pos, 3)
@@ -1201,10 +1203,12 @@ def test_engulfed_good_npc_invisible_to_evil_ai() -> None:
 
 
 def test_engulfed_neutral_invisible_to_evil_ai() -> None:
+    from tests.map_test_helpers import ensure_wolves
+
     engine = GameEngine()
     player = engine.player
     assert player is not None
-    wolves = list(iter_wolves(engine))
+    wolves = ensure_wolves(engine, 2)
     predator, hunter = wolves[0], wolves[1]
     player_pos = player.components[Position]
     pred_tile, prey_tile, hunter_tile = carve_adjacent_line(engine, player_pos, 3)
@@ -1276,7 +1280,7 @@ def test_npc_vore_off_screen_logs_atmospheric_line() -> None:
     knight.components[Fighter].hp = 0
     knight.tags.add(Stunned)
     lines_before = len(engine.message_log.lines())
-    with patch("src.systems.vore.pick_narrative_type", return_value="OV"):
+    with patch("src.systems.vore.pick_attempt_narrative_type", return_value="OV"):
         with patch("src.systems.vore.resolve_vore_hit", return_value=True):
             with patch("src.systems.vore.should_attempt_vore", return_value=True):
                 assert try_resolve_npc_vore(

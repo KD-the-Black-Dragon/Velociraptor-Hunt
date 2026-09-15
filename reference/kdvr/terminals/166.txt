@@ -1,0 +1,8 @@
+---
+pid: 18548
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "python -m pytest tests/test_game_over_ending.py tests/test_past_runs_store.py tests/test_save_game_over_pr5.py tests/test_name_entry.py -q"
+started_at: 2026-07-05T17:49:36.734Z
+running_for_ms: 18705001 
+---
+.............

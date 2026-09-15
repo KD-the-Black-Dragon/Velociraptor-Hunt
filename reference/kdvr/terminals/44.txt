@@ -1,0 +1,11 @@
+---
+pid: 6552
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; python -m pytest tests/ -q --tb=line 2>&1 | Select-String 'FAILED|passed|failed'"
+started_at: 2026-07-01T12:02:14.361Z
+running_for_ms: 24249999 
+---
+
+318 passed, 16 warnings in 80.61s (0:01:20)
+
+

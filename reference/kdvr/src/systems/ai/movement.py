@@ -14,7 +14,7 @@ from src.components import (
 )
 from src.map_gen import GameMap
 from src.message_log import MessageLog
-from src.systems.combat import _fighter_at, try_action
+from src.systems.combat import actor_can_melee_damage, _fighter_at, try_action
 from src.systems.movement import MOVEMENT_DIRECTIONS, can_move_to, is_stationary
 from src.systems.naming import entity_log_name
 from src.systems.abilities import (
@@ -166,7 +166,11 @@ def _try_predator_holding_attack(
     rng: random.Random,
     skipped: set[Entity] | None = None,
 ) -> None:
-    """Bump-attack one adjacent hostile; holding predators cannot move or chase."""
+    """Bump-attack one adjacent valid target; holding predators cannot move or chase.
+
+    Skips alignment-illegal targets (evil never attacks evil). Tries further
+    directions if a neighbor is present but not a valid melee target.
+    """
     origin = predator.components[Position]
     for direction in MOVEMENT_DIRECTIONS:
         dest = origin + direction
@@ -175,7 +179,9 @@ def _try_predator_holding_attack(
         defender = _fighter_at(world, dest.x, dest.y, exclude=predator)
         if defender is None:
             continue
-        try_action(
+        if not actor_can_melee_damage(predator, defender):
+            continue
+        if try_action(
             world,
             game_map,
             predator,
@@ -183,8 +189,8 @@ def _try_predator_holding_attack(
             message_log,
             rng=rng,
             skip_turn_entities=skipped,
-        )
-        return
+        ):
+            return
 
 
 def resolve_wander_ability_move(

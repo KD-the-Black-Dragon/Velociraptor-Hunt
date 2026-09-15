@@ -18,7 +18,9 @@ from src.components import (
     ExamineDescription,
     Fighter,
     Item,
+    ItemCategory,
     Mobility,
+    MobilityType,
     NPCAlignment,
     NpcPrefix,
     Position,
@@ -28,7 +30,13 @@ from src.components import (
     VoreCapable,
     VoreNarratives,
 )
-from src.constants import MONSTER_SPAWN_MIN_DISTANCE
+from src.constants import (
+    DEFAULT_VORE_CONTENT_PREFS,
+    GOOD_SPAWN_PATH_MAX,
+    GOOD_SPAWN_PATH_MIN,
+    MONSTER_SPAWN_MIN_DISTANCE,
+    VoreContentPreferences,
+)
 from src.data.ability_parser import collapse_and_parse_abilities, parse_abilities
 from src.data.alignment_profiles import alignment_profile, digest_time_for, digestion_damage_for
 from src.data.depth_scaling_config import (
@@ -45,7 +53,6 @@ from src.data.dungeon_spawn_loader import load_dungeon_spawn_config
 from src.data.entity_loader import load_entity_registry
 from src.data.entity_registry import EntityDefinition, EntityRegistry
 from src.data.item_loader import load_item_registry
-from src.components import ItemCategory
 from src.data.item_registry import (
     ArmorDefinition,
     ItemRegistry,
@@ -58,7 +65,13 @@ from src.data.npc_prefix_loader import (
     reset_npc_prefix_registry_cache,
 )
 from src.data.npc_prefix_registry import NpcPrefixDefinition, NpcPrefixRegistry
-from src.map_gen import GameMap, can_enter_tile, water_positions
+from src.map_gen import (
+    GameMap,
+    bfs_path_distances_from_mask,
+    build_mobility_walk_mask,
+    can_enter_tile,
+    water_positions,
+)
 
 @lru_cache(maxsize=1)
 def _get_registry() -> EntityRegistry:
@@ -91,6 +104,25 @@ def __getattr__(name: str) -> Any:
     return value
 
 
+def meets_vore_type_requirements(
+    definition: EntityDefinition,
+    prefs: VoreContentPreferences | None = None,
+) -> bool:
+    """True when ``spawn.requires_vore_types`` is empty or intersects enabled prefs.
+
+    Non-empty ``requires_vore_types`` is the species' capability set: spawn is
+    allowed when at least one listed type is enabled (OR). Empty capability =
+    unrestricted.
+
+    ``prefs is None`` is treated as all v1 types enabled (test / unrestricted callers).
+    """
+    required = definition.spawn.requires_vore_types
+    if not required:
+        return True
+    enabled = (prefs or DEFAULT_VORE_CONTENT_PREFS).enabled
+    return bool(required & enabled)
+
+
 def spawn_entity_by_id(
     world: Registry,
     entity_id: str,
@@ -101,7 +133,8 @@ def spawn_entity_by_id(
     floor_depth: int = 1,
     difficulty_id: str | None = None,
     depth_scaling: DepthScalingConfig | None = None,
-) -> Entity:
+    vore_prefs: VoreContentPreferences | None = None,
+) -> Entity | None:
     """Spawn one entity by registry id (tests, debug helpers, summons)."""
     reg = registry or load_entity_registry()
     return spawn_from_definition(
@@ -112,6 +145,7 @@ def spawn_entity_by_id(
         floor_depth=floor_depth,
         difficulty_id=difficulty_id,
         depth_scaling=depth_scaling,
+        vore_prefs=vore_prefs,
     )
 
 
@@ -261,12 +295,17 @@ def spawn_from_definition(
     player_x: int | None = None,
     player_y: int | None = None,
     arm_spawn_freeze: bool = False,
-) -> Entity:
+    vore_prefs: VoreContentPreferences | None = None,
+) -> Entity | None:
     """Materialize one NPC from a loaded entity definition.
 
     Depth bonuses bake into ``Fighter`` / digestion damage at spawn (once).
     Optional ``roll_prefix`` (floor population only) may add Elite-style modifiers.
+    Returns ``None`` when ``spawn.requires_vore_types`` is not satisfied by ``vore_prefs``
+    (``None`` prefs = all types enabled).
     """
+    if not meets_vore_type_requirements(definition, vore_prefs):
+        return None
     profile = alignment_profile(definition.alignment)
     scaling = (
         depth_scaling
@@ -364,6 +403,17 @@ def spawn_from_definition(
             prefix_registry=prefix_registry,
         )
 
+    from src.systems.ranged_magazine import (
+        ensure_ranged_magazine,
+        resolve_magazine_maximum_for_entity,
+    )
+
+    difficulty_profile = scaling.profile_for(difficulty_id)
+    ensure_ranged_magazine(
+        entity,
+        maximum=resolve_magazine_maximum_for_entity(entity, difficulty_profile),
+    )
+
     if arm_spawn_freeze and player_x is not None and player_y is not None:
         from src.systems.ai.common import apply_spawn_ai_freeze_at_spawn
 
@@ -428,6 +478,7 @@ def _eligible_definitions(
     floor_depth: int,
     terrain: str,
     map_has_water: bool,
+    vore_prefs: VoreContentPreferences | None = None,
 ) -> list[EntityDefinition]:
     eligible: list[EntityDefinition] = []
     for definition in registry.entities:
@@ -436,6 +487,8 @@ def _eligible_definitions(
         if definition.spawn.terrain != terrain:
             continue
         if definition.spawn_requires_water and not map_has_water:
+            continue
+        if not meets_vore_type_requirements(definition, vore_prefs):
             continue
         eligible.append(definition)
     return eligible
@@ -474,24 +527,85 @@ def count_valid_spawn_tiles(land: list[tuple[int, int]], water: list[tuple[int, 
     return len(land) + len(water)
 
 
-def good_aligned_weight_at_depth(
+def eligible_good_definitions(
     registry: EntityRegistry,
-    floor_depth: int,
     *,
+    floor_depth: int,
     map_has_water: bool,
-) -> int:
-    """Species-agnostic cap for good-follower spawn budget reduction."""
-    total = 0
+    land_cands: list[tuple[int, int]],
+    water_place_pool: list[tuple[int, int]],
+    vore_prefs: VoreContentPreferences | None = None,
+) -> list[EntityDefinition]:
+    """Good-aligned defs that can place on this floor (weight, depth, terrain, tiles)."""
+    goods: list[EntityDefinition] = []
     for terrain in ("land", "water"):
+        pool = land_cands if terrain == "land" else water_place_pool
+        if not pool:
+            continue
         for definition in _eligible_definitions(
             registry,
             floor_depth=floor_depth,
             terrain=terrain,
             map_has_water=map_has_water,
+            vore_prefs=vore_prefs,
         ):
-            if definition.alignment == Alignment.GOOD:
-                total += max(0, int(definition.spawn.weight))
-    return total
+            if definition.alignment != Alignment.GOOD:
+                continue
+            if max(0, int(definition.spawn.weight)) <= 0:
+                continue
+            goods.append(definition)
+    return goods
+
+
+def good_spawn_count_to_place(
+    *,
+    limit: int,
+    brought: int,
+    has_eligible_goods: bool,
+) -> int:
+    """How many new good NPCs to spawn for the quota (0 if none eligible or at cap)."""
+    if not has_eligible_goods or limit <= 0:
+        return 0
+    if brought >= limit:
+        return 0
+    return limit - brought
+
+
+def player_path_distances(
+    game_map: GameMap,
+    origin_x: int,
+    origin_y: int,
+) -> dict[tuple[int, int], int]:
+    """Player ground-path distances from origin (8-dir; closed doors walkable).
+
+    Items/runes do not affect the mask (tile geometry only). Matches player
+    traversal intent for "how many steps to reach this tile."
+    """
+    mask = build_mobility_walk_mask(
+        game_map,
+        MobilityType.GROUND,
+        include_closed_doors=True,
+    )
+    return bfs_path_distances_from_mask(
+        (origin_x, origin_y),
+        mask,
+        cardinal_only=False,
+    )
+
+
+def filter_tiles_by_path_band(
+    tiles: list[tuple[int, int]],
+    distances: dict[tuple[int, int], int],
+    *,
+    min_steps: int = GOOD_SPAWN_PATH_MIN,
+    max_steps: int = GOOD_SPAWN_PATH_MAX,
+) -> list[tuple[int, int]]:
+    """Keep tiles whose player-path distance is in ``[min_steps, max_steps]``."""
+    return [
+        tile
+        for tile in tiles
+        if min_steps <= distances.get(tile, -1) <= max_steps
+    ]
 
 
 def _water_placement_pool(
@@ -535,6 +649,44 @@ def _weighted_choice(definitions: list[EntityDefinition], rng: random.Random) ->
     return rng.choices(definitions, weights=weights, k=1)[0]
 
 
+def _spawn_one_definition(
+    world: Registry,
+    definition: EntityDefinition,
+    *,
+    floor_depth: int,
+    difficulty_id: str | None,
+    depth_scaling: DepthScalingConfig,
+    rng: random.Random,
+    player_x: int,
+    player_y: int,
+    land_cands: list[tuple[int, int]],
+    water_place_pool: list[tuple[int, int]],
+    vore_prefs: VoreContentPreferences | None = None,
+) -> Entity | None:
+    """Place one definition on a free tile from its terrain pool; None if no tile."""
+    terrain = definition.spawn.terrain
+    pool = land_cands if terrain == "land" else water_place_pool
+    if not pool:
+        return None
+    x, y = rng.choice(pool)
+    pool.remove((x, y))
+    return spawn_from_definition(
+        world,
+        definition,
+        x,
+        y,
+        floor_depth=floor_depth,
+        difficulty_id=difficulty_id,
+        depth_scaling=depth_scaling,
+        roll_prefix=True,
+        rng=rng,
+        player_x=player_x,
+        player_y=player_y,
+        arm_spawn_freeze=True,
+        vore_prefs=vore_prefs,
+    )
+
+
 def spawn_floor_population(
     world: Registry,
     game_map: GameMap,
@@ -543,14 +695,19 @@ def spawn_floor_population(
     floor_depth: int,
     *,
     rng: random.Random | None = None,
-    good_follower_reduction: int = 0,
+    good_followers_brought: int = 0,
     registry: EntityRegistry | None = None,
     spawn_config: DungeonSpawnConfig | None = None,
     difficulty_id: str | None = None,
     depth_scaling: DepthScalingConfig | None = None,
     density_multiplier: float | None = None,
+    vore_prefs: VoreContentPreferences | None = None,
 ) -> list[Entity]:
-    """Spawn NPCs via density-driven weighted draws from entity definitions."""
+    """Spawn goods to difficulty quota, then density-driven evil/neutral NPCs.
+
+    Good allies are a separate guarantee pass (followers count toward the cap).
+    Density target applies only to non-good alignments.
+    """
     rng = rng or random.Random()
     reg = registry or load_entity_registry()
     config = spawn_config or default_spawn_config()
@@ -565,75 +722,140 @@ def spawn_floor_population(
         if density_multiplier is not None
         else float(profile.density_multiplier)
     )
+    good_limit = max(0, int(profile.good_spawn_limit))
+    brought = max(0, int(good_followers_brought))
 
     land_cands, water_cands = valid_spawn_tiles(game_map, player_x, player_y)
     map_has_water = bool(water_positions(game_map))
-
-    land_defs = _eligible_definitions(
-        reg,
-        floor_depth=floor_depth,
-        terrain="land",
-        map_has_water=map_has_water,
-    )
-    water_defs = _eligible_definitions(
-        reg,
-        floor_depth=floor_depth,
-        terrain="water",
-        map_has_water=map_has_water,
-    )
     water_place_pool = _water_placement_pool(game_map, water_cands)
 
+    # Density target uses full candidate count and consumes RNG variance first
+    # (stable relative to placement draws that follow).
     valid_count = count_valid_spawn_tiles(land_cands, water_cands)
-    target = compute_target_npc_count(
+    density_target = compute_target_npc_count(
         valid_count,
         floor_depth,
         config,
         rng,
         density_multiplier=dens_mult,
     )
-    effective_target = max(0, target - good_follower_reduction)
+
+    land_defs = _eligible_definitions(
+        reg,
+        floor_depth=floor_depth,
+        terrain="land",
+        map_has_water=map_has_water,
+        vore_prefs=vore_prefs,
+    )
+    water_defs = _eligible_definitions(
+        reg,
+        floor_depth=floor_depth,
+        terrain="water",
+        map_has_water=map_has_water,
+        vore_prefs=vore_prefs,
+    )
+    land_nongood = [
+        d
+        for d in land_defs
+        if d.alignment != Alignment.GOOD and max(0, int(d.spawn.weight)) > 0
+    ]
+    water_nongood = [
+        d
+        for d in water_defs
+        if d.alignment != Alignment.GOOD and max(0, int(d.spawn.weight)) > 0
+    ]
 
     placed: list[Entity] = []
-    attempts = 0
-    max_attempts = max(effective_target * 30, 50)
 
-    while len(placed) < effective_target and attempts < max_attempts:
+    # --- Good quota pass (placement ring: player path 10–15 steps) ---
+    path_distances = player_path_distances(game_map, player_x, player_y)
+    good_land_cands = filter_tiles_by_path_band(land_cands, path_distances)
+    good_water_pool = filter_tiles_by_path_band(water_place_pool, path_distances)
+    good_candidates = eligible_good_definitions(
+        reg,
+        floor_depth=floor_depth,
+        map_has_water=map_has_water,
+        land_cands=good_land_cands,
+        water_place_pool=good_water_pool,
+        vore_prefs=vore_prefs,
+    )
+    to_spawn = good_spawn_count_to_place(
+        limit=good_limit,
+        brought=brought,
+        has_eligible_goods=bool(good_candidates),
+    )
+    goods_placed = 0
+    good_attempts = 0
+    max_good_attempts = max(to_spawn * 30, 10)
+    while goods_placed < to_spawn and good_attempts < max_good_attempts:
+        good_attempts += 1
+        placeable = eligible_good_definitions(
+            reg,
+            floor_depth=floor_depth,
+            map_has_water=map_has_water,
+            land_cands=good_land_cands,
+            water_place_pool=good_water_pool,
+            vore_prefs=vore_prefs,
+        )
+        if not placeable:
+            break
+        definition = _weighted_choice(placeable, rng)
+        entity = _spawn_one_definition(
+            world,
+            definition,
+            floor_depth=floor_depth,
+            difficulty_id=difficulty_id,
+            depth_scaling=scaling,
+            rng=rng,
+            player_x=player_x,
+            player_y=player_y,
+            land_cands=good_land_cands,
+            water_place_pool=good_water_pool,
+            vore_prefs=vore_prefs,
+        )
+        if entity is not None:
+            placed.append(entity)
+            goods_placed += 1
+            # Keep density pools in sync (good_* lists are filtered views).
+            gpos = entity.components[Position]
+            occupied = (gpos.x, gpos.y)
+            if occupied in land_cands:
+                land_cands.remove(occupied)
+            if occupied in water_place_pool:
+                water_place_pool.remove(occupied)
+
+    # --- Density pass (evil + neutral) ---
+    density_placed = 0
+    attempts = 0
+    max_attempts = max(density_target * 30, 50)
+    while density_placed < density_target and attempts < max_attempts:
         attempts += 1
         eligible = _filtered_eligible(
-            land_defs,
-            water_defs,
+            land_nongood,
+            water_nongood,
             land_cands=land_cands,
             water_place_pool=water_place_pool,
             map_has_water=map_has_water,
         )
         if not eligible:
             break
-
         definition = _weighted_choice(eligible, rng)
-        terrain = definition.spawn.terrain
-        pool = land_cands if terrain == "land" else water_place_pool
-
-        if not pool:
-            continue
-
-        x, y = rng.choice(pool)
-        pool.remove((x, y))
-        placed.append(
-            spawn_from_definition(
-                world,
-                definition,
-                x,
-                y,
-                floor_depth=floor_depth,
-                difficulty_id=difficulty_id,
-                depth_scaling=scaling,
-                roll_prefix=True,
-                rng=rng,
-                player_x=player_x,
-                player_y=player_y,
-                arm_spawn_freeze=True,
-            )
+        entity = _spawn_one_definition(
+            world,
+            definition,
+            floor_depth=floor_depth,
+            difficulty_id=difficulty_id,
+            depth_scaling=scaling,
+            rng=rng,
+            player_x=player_x,
+            player_y=player_y,
+            land_cands=land_cands,
+            water_place_pool=water_place_pool,
+            vore_prefs=vore_prefs,
         )
+        if entity is not None:
+            placed.append(entity)
+            density_placed += 1
 
     return placed
 
@@ -761,6 +983,8 @@ def spawn_item_entity(
             lo = max(1, int(throwable.spawn_stack_min))
             hi = max(lo, int(throwable.spawn_stack_max))
             item_stack = rng.randint(lo, hi)
+    elif category == ItemCategory.POTION and stack_count is not None:
+        item_stack = max(1, int(stack_count))
 
     entity.components[Item] = Item(
         item_id=item_id,

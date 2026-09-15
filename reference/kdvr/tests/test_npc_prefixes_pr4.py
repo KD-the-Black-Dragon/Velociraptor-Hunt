@@ -116,7 +116,8 @@ class TestLoader:
         elite = reg.get("elite")
         assert elite.display_prefix == "Elite "
         assert Alignment.EVIL in elite.apply_to_alignments
-        assert elite.stat_bonuses.max_hp == 4
+        # Stock elite max_hp was scaled with the global HP +50% pass (4 → 6).
+        assert elite.stat_bonuses.max_hp == 6
 
 
 class TestApplyPrefix:

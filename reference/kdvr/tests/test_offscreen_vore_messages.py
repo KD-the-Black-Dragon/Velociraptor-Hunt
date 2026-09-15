@@ -56,7 +56,7 @@ def test_offscreen_vore_hit_logs_entity_line() -> None:
     engine = GameEngine()
     wolf, knight = _hidden_wolf_knight_setup(engine)
     lines_before = len(engine.message_log.lines())
-    with patch("src.systems.vore.pick_narrative_type", return_value="OV"):
+    with patch("src.systems.vore.pick_attempt_narrative_type", return_value="OV"):
         with patch("src.systems.vore.resolve_vore_hit", return_value=True):
             with patch("src.systems.vore.should_attempt_vore", return_value=True):
                 assert try_resolve_npc_vore(
@@ -93,7 +93,7 @@ def test_offscreen_vore_hit_cv_logs() -> None:
     engine = GameEngine()
     wolf, _knight = _hidden_wolf_knight_setup(engine)
     lines_before = len(engine.message_log.lines())
-    with patch("src.systems.vore.pick_narrative_type", return_value="CV"):
+    with patch("src.systems.vore.pick_attempt_narrative_type", return_value="CV"):
         with patch("src.systems.vore.resolve_vore_hit", return_value=True):
             with patch("src.systems.vore.should_attempt_vore", return_value=True):
                 assert try_resolve_npc_vore(
@@ -112,7 +112,7 @@ def test_offscreen_vore_hit_av_logs() -> None:
     engine = GameEngine()
     wolf, _knight = _hidden_wolf_knight_setup(engine)
     lines_before = len(engine.message_log.lines())
-    with patch("src.systems.vore.pick_narrative_type", return_value="AV"):
+    with patch("src.systems.vore.pick_attempt_narrative_type", return_value="AV"):
         with patch("src.systems.vore.resolve_vore_hit", return_value=True):
             with patch("src.systems.vore.should_attempt_vore", return_value=True):
                 assert try_resolve_npc_vore(
@@ -131,7 +131,7 @@ def test_offscreen_vore_hit_silent_when_type_missing() -> None:
     engine = GameEngine()
     wolf, _knight = _hidden_wolf_knight_setup(engine)
     lines_before = len(engine.message_log.lines())
-    with patch("src.systems.vore.pick_narrative_type", return_value="XX"):
+    with patch("src.systems.vore.pick_attempt_narrative_type", return_value="XX"):
         with patch("src.systems.vore.resolve_vore_hit", return_value=True):
             with patch("src.systems.vore.should_attempt_vore", return_value=True):
                 assert try_resolve_npc_vore(
@@ -170,7 +170,7 @@ def test_visible_vore_hit_uses_entity_lines() -> None:
     isolate_other_ais(engine)
     wolf, knight = _visible_wolf_knight_setup(engine)
     lines_before = len(engine.message_log.lines())
-    with patch("src.systems.vore.pick_narrative_type", return_value="OV"):
+    with patch("src.systems.vore.pick_attempt_narrative_type", return_value="OV"):
         with patch("src.systems.vore.resolve_vore_hit", return_value=True):
             with patch("src.systems.vore.should_attempt_vore", return_value=True):
                 assert try_resolve_npc_vore(

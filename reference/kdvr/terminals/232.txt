@@ -1,0 +1,8 @@
+---
+pid: 11368
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python tools/_sim_smoke_one.py 4242 8000"
+started_at: 2026-07-11T23:55:50.680Z
+running_for_ms: 39160005 
+---
+seed 4242 depth 1 runes 0 end TURN_CAP turns 8000 hp 0

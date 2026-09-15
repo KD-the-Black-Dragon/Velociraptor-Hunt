@@ -1,0 +1,22 @@
+---
+pid: 29348
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_chase_pursuit_momentum.py tests/test_explore_frustration.py tests/test_debug_omniscient_vision.py -q --tb=short"
+started_at: 2026-07-05T10:41:57.949Z
+running_for_ms: 44364995 
+---
+....................F.                                                   [100%]
+================================== FAILURES ===================================
+__________ test_omniscient_vision_does_not_change_npc_line_of_sight ___________
+tests\test_debug_omniscient_vision.py:35: in test_omniscient_vision_does_not_change_npc_line_of_sight
+    assert not can_see(
+E   AssertionError: assert not True
+E    +  where True = can_see(GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, .....      [ True,  True,  True, ...,  True,  True,  True]], shape=(44, 80)), enter_xy=(66, 25), layout_archetype='organic'), 40, 22, 60, 22, radius=30)
+E    +    where GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, .....      [ True,  True,  True, ...,  True,  True,  True]], shape=(44, 80)), enter_xy=(66, 25), layout_archetype='organic') = <src.engine.GameEngine object at 0x00000280B07FCB90>.game_map
+E    +    and   40 = Position(x=40, y=22).x
+E    +    and   22 = Position(x=40, y=22).y
+E    +    and   60 = Position(x=60, y=22).x
+E    +    and   22 = Position(x=60, y=22).y
+=========================== short test summary info ===========================
+FAILED tests/test_debug_omniscient_vision.py::test_omniscient_vision_does_not_change_npc_line_of_sight
+1 failed, 21 passed in 14.11s

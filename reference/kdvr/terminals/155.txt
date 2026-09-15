@@ -1,0 +1,868 @@
+---
+pid: 28360
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest -q"
+started_at: 2026-07-05T13:30:13.178Z
+running_for_ms: 34284994 
+---
+..................................F........F.F.......................... [  8%]
+................F....................................................... [ 16%]
+.................................F...................................... [ 24%]
+...............................................F..........FF............ [ 33%]
+........................................................................ [ 41%]
+........................................................................ [ 49%]
+........................................................................ [ 58%]
+.......................F...............................................F [ 66%]
+.......................F....................................F........... [ 74%]
+........................................................................ [ 83%]
+..................................F....................................F [ 91%]
+.F....FFFF...........F..............F.F..F..F........................... [ 99%]
+.F                                                                       [100%]
+================================== FAILURES ===================================
+_______________ test_wolf_visible_to_knight_blocks_introduction _______________
+
+    def test_wolf_visible_to_knight_blocks_introduction() -> None:
+        engine = GameEngine()
+        isolate_other_ais(engine)
+        player_pos = relocate_player(engine, ARENA_X, ARENA_Y)
+        knight_pos = ensure_adjacent_floor(engine, player_pos, (1, 0))
+        knight = spawn_test_npc(
+            engine.world,
+            x=knight_pos.x,
+            y=knight_pos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+            species_id="knight",
+        )
+>       wolf = next(iter_wolves(engine))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_ally_introduction.py:153: StopIteration
+__________ test_good_prioritizes_engulfing_predator_over_closer_evil __________
+
+    def test_good_prioritizes_engulfing_predator_over_closer_evil() -> None:
+        engine = GameEngine()
+>       knight, holding_wolf, other_wolf, player = _engulfed_player_setup(engine)
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_ally_rescue_priority.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57B7A0550>
+
+    def _engulfed_player_setup(engine: GameEngine) -> tuple[object, object, object, object]:
+        """Knight west, other wolf adjacent, holding wolf east; player engulfed by holding wolf."""
+        isolate_other_ais(engine)
+        positions = carve_horizontal_line(engine, ARENA_X, ARENA_Y, 4)
+        knight_pos, other_pos, holding_pos = positions[0], positions[1], positions[2]
+        player = engine.player
+        player.components[Position] = holding_pos
+    
+        wolves = list(iter_wolves(engine))
+        holding_wolf = wolves[0]
+>       other_wolf = wolves[1]
+                     ^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_ally_rescue_priority.py:32: IndexError
+___________________ test_good_ignores_predator_without_los ____________________
+
+    def test_good_ignores_predator_without_los() -> None:
+        engine = GameEngine()
+        isolate_other_ais(engine)
+        knight_pos = carve_horizontal_line(engine, ARENA_X, ARENA_Y, 1)[0]
+        other_pos = Position(knight_pos.x, knight_pos.y + 2)
+        holding_pos = Position(knight_pos.x + 3, knight_pos.y)
+        carve_horizontal_line(engine, knight_pos.x, knight_pos.y, 4)
+        for offset in range(1, 3):
+            carve_horizontal_line(
+                engine,
+                knight_pos.x,
+                knight_pos.y + offset,
+                1,
+            )
+        carve_horizontal_line(engine, holding_pos.x, holding_pos.y, 1)
+        for y in range(knight_pos.y - 1, knight_pos.y + 2):
+            engine.game_map.tiles[y, knight_pos.x + 1] = Tile.WALL
+            engine.game_map.tiles[y, knight_pos.x + 2] = Tile.WALL
+    
+        player = engine.player
+        wolves = list(iter_wolves(engine))
+>       holding_wolf, other_wolf = wolves[0], wolves[1]
+                                   ^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_ally_rescue_priority.py:126: IndexError
+________________ test_engulfed_player_immune_to_combat_damage _________________
+
+    def test_engulfed_player_immune_to_combat_damage() -> None:
+        engine = GameEngine()
+        player, wolf = _engulf_player_on_wolf(engine, player_hp=10)
+>       hunter = next(e for e in iter_wolves(engine) if e is not wolf)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_digestion.py:627: StopIteration
+____________________ test_load_default_dungeon_spawn_json _____________________
+
+    def test_load_default_dungeon_spawn_json() -> None:
+        config = load_dungeon_spawn_config(DUNGEON_SPAWN_PATH)
+        assert config.schema_version == 1
+        assert config.defaults.density_pct == 0.02
+        assert len(config.depth_bands) == 4
+    
+        band = config.resolve_band(1)
+        assert band.density_pct == 0.036
+        assert band.density_variance == 0.35
+        assert band.min_npcs == 0
+>       assert band.max_npcs == 120
+E       assert 10 == 120
+E        +  where 10 = DepthBand(min_depth=1, max_depth=4, density_pct=0.036, density_variance=0.35, min_npcs=0, max_npcs=10).max_npcs
+
+tests\test_dungeon_spawn_config.py:59: AssertionError
+_______________________ test_npc_evil_evil_do_not_swap ________________________
+
+    def test_npc_evil_evil_do_not_swap() -> None:
+        engine = GameEngine()
+        (ax, ay), (bx, by), direction = carved_bump_pair(engine)
+        wolf_a = spawn_test_npc(
+            engine.world,
+            x=ax,
+            y=ay,
+            species="wolf",
+            alignment=Alignment.EVIL,
+        )
+        wolf_b = spawn_test_npc(
+            engine.world,
+            x=bx,
+            y=by,
+            species="wolf",
+            alignment=Alignment.EVIL,
+        )
+        pos_a_before = wolf_a.components[Position]
+        pos_b_before = wolf_b.components[Position]
+        assert not can_npc_swap(wolf_a, wolf_b)
+        try_action(
+            engine.world,
+            engine.game_map,
+            wolf_a,
+            direction,
+            engine.message_log,
+        )
+        assert wolf_a.components[Position] == pos_a_before
+        assert wolf_b.components[Position] == pos_b_before
+>       assert not any("hit" in line.lower() for line in engine.message_log.lines())
+E       assert not True
+E        +  where True = any(<generator object test_npc_evil_evil_do_not_swap.<locals>.<genexpr> at 0x000001C500349620>)
+
+tests\test_enhancements_3.py:820: AssertionError
+_________________ test_engulfed_good_npc_invisible_to_evil_ai _________________
+
+    def test_engulfed_good_npc_invisible_to_evil_ai() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        wolves = list(iter_wolves(engine))
+>       predator, hunter = wolves[0], wolves[1]
+                                      ^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_enhancements_3.py:1171: IndexError
+_________________ test_engulfed_neutral_invisible_to_evil_ai __________________
+
+    def test_engulfed_neutral_invisible_to_evil_ai() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        wolves = list(iter_wolves(engine))
+>       predator, hunter = wolves[0], wolves[1]
+                                      ^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_enhancements_3.py:1208: IndexError
+____________ test_erratic_at_range_one_pursuit_and_one_random_move ____________
+
+    def test_erratic_at_range_one_pursuit_and_one_random_move() -> None:
+        """Distant target: pursuit MOVE + ATTACK no-op + random MOVE (not a second chase)."""
+        engine = GameEngine()
+        wolf = _erratic_wolf(engine)
+        player = engine.player
+        assert player is not None
+        carve_horizontal_line(engine, ARENA_X - 2, ARENA_Y, 8)
+        player.components[Position] = Position(ARENA_X + 4, ARENA_Y)
+        update_fov(engine.game_map, ARENA_X + 4, ARENA_Y)
+        wolf_pos_before = wolf.components[Position]
+        wolf_calls: list[tuple[int, int] | None] = []
+    
+        def counting_try_action(world, game_map, actor, direction, message_log, **kwargs):
+            if actor is wolf:
+                wolf_calls.append(direction)
+            return real_try_action(
+                world, game_map, actor, direction, message_log, **kwargs
+            )
+    
+        with patch("src.systems.ai.try_action", side_effect=counting_try_action):
+            run_monster_turns(
+                engine.world,
+                engine.game_map,
+                player,
+                engine.message_log,
+                rng=random.Random(5),
+            )
+        assert len(wolf_calls) == 2
+>       assert _chebyshev(wolf_pos_before, player.components[Position]) > _chebyshev(
+            wolf.components[Position], player.components[Position]
+        )
+E       assert 4 > 4
+E        +  where 4 = _chebyshev(Position(x=40, y=22), Position(x=44, y=22))
+E        +  and   4 = _chebyshev(Position(x=40, y=23), Position(x=44, y=22))
+
+tests\test_npc_abilities_erratic.py:86: AssertionError
+_____ test_primary_at_three_preferred_over_neutral_at_two_for_ranged_pick _____
+
+    def test_primary_at_three_preferred_over_neutral_at_two_for_ranged_pick() -> None:
+        engine = GameEngine()
+        wolf = _wolf_with_range(engine, 2)
+        player = engine.player
+        assert player is not None
+        line = carve_horizontal_line(engine, ARENA_X, ARENA_Y, 12)
+        wpos = line[0]
+        wolf.components[Position] = wpos
+        player.components[Position] = Position(wpos.x + 10, wpos.y)
+        knight = spawn_test_npc(
+            engine.world,
+            x=wpos.x + 3,
+            y=wpos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+        )
+        spawn_test_npc(
+            engine.world,
+            x=wpos.x + 2,
+            y=wpos.y + 2,
+            species="rabbit",
+            alignment=Alignment.NEUTRAL,
+        )
+        update_fov(engine.game_map, wpos.x, wpos.y)
+        chase_target, _ = pick_evil_target(
+            wolf,
+            engine.world,
+            engine.game_map,
+            player,
+            random.Random(0),
+            player_engulfed=True,
+        )
+>       assert chase_target is knight
+E       assert <Entity(uid=object at 0x1C5034F7E00)> is <Entity(uid=object at 0x1C5034F7DE0)>
+
+tests\test_npc_abilities_rangen.py:179: AssertionError
+_______________________ test_load_default_entities_json _______________________
+
+    def test_load_default_entities_json() -> None:
+        registry = load_entity_registry(ENTITIES_PATH)
+        assert registry.schema_version == 1
+        by_id = registry.by_id()
+        assert set(by_id) == {"wolf", "knight", "rabbit", "shark"}
+    
+        wolf = by_id["wolf"]
+        assert wolf.digest_time == 3
+        assert wolf.alignment == Alignment.EVIL
+        assert wolf.mobility == MobilityType.GROUND
+        assert wolf.evade == 2
+        assert wolf.ac == 2
+>       assert wolf.spawn.weight == 6
+E       AssertionError: assert 1.0 == 6
+E        +  where 1.0 = SpawnConfig(weight=1.0, min_depth=1, max_depth=1000, terrain='land').weight
+E        +    where SpawnConfig(weight=1.0, min_depth=1, max_depth=1000, terrain='land') = EntityDefinition(id='wolf', display_name='wolf', glyph='o', fg=(200, 80, 80), alignment=<Alignment.EVIL: 2>, mobility=...('A distant compression sound fades into silence.',)}, introduction=None, introduction_log_category=None, abilities=()).spawn
+
+tests\test_npc_data_pr1.py:55: AssertionError
+___________ test_descend_with_follower_keeps_good_ally_on_new_floor ___________
+
+    def test_descend_with_follower_keeps_good_ally_on_new_floor() -> None:
+        from src.components import AI
+        from tests.map_test_helpers import isolate_other_ais
+    
+        engine = GameEngine()
+        engine.new_game(seed=31)
+        isolate_other_ais(engine)
+        player = engine.player
+        assert player is not None
+        player_pos = player.components[Position]
+        spawn_test_npc(
+            engine.world,
+            x=player_pos.x + 1,
+            y=player_pos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+        )
+        update_fov(engine.game_map, player_pos.x, player_pos.y)
+        _place_player_on_stairs(engine)
+        _press_descend(engine)
+>       assert len(_good_npcs(engine)) >= 1
+E       assert 0 >= 1
+E        +  where 0 = len([])
+E        +    where [] = _good_npcs(<src.engine.GameEngine object at 0x000001C57D1125D0>)
+
+tests\test_npc_data_pr4.py:144: AssertionError
+_____________ test_vore_modal_drawn_on_root_console_over_sidebar ______________
+
+    def test_vore_modal_drawn_on_root_console_over_sidebar() -> None:
+        engine = GameEngine()
+>       _open_vore_modal(engine)
+
+tests\test_ui_modals.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_vore_modal.py:30: in _open_vore_modal
+    wolf = place_adjacent_wolf(engine)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57D112210>
+
+    def place_adjacent_wolf(engine: GameEngine):
+        """Move a vore-capable wolf to carved floor east of the player."""
+        from src.systems.fov import update_fov
+    
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+>       wolf = next(
+            m for m in iter_wolves(engine) if Position in m.components
+        )
+E       StopIteration
+
+tests\map_test_helpers.py:264: StopIteration
+______________ test_should_attempt_vore_ineligible_above_half_hp ______________
+
+    def test_should_attempt_vore_ineligible_above_half_hp() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 16
+>       place_adjacent_wolf(engine)
+
+tests\test_vore_ai.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57D111310>
+
+    def place_adjacent_wolf(engine: GameEngine):
+        """Move a vore-capable wolf to carved floor east of the player."""
+        from src.systems.fov import update_fov
+    
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+>       wolf = next(
+            m for m in iter_wolves(engine) if Position in m.components
+        )
+E       StopIteration
+
+tests\map_test_helpers.py:264: StopIteration
+______________ test_should_attempt_vore_true_at_zero_hp_adjacent ______________
+
+    def test_should_attempt_vore_true_at_zero_hp_adjacent() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       wolf = place_adjacent_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_ai.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57D112AD0>
+
+    def place_adjacent_wolf(engine: GameEngine):
+        """Move a vore-capable wolf to carved floor east of the player."""
+        from src.systems.fov import update_fov
+    
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+>       wolf = next(
+            m for m in iter_wolves(engine) if Position in m.components
+        )
+E       StopIteration
+
+tests\map_test_helpers.py:264: StopIteration
+_________________ test_run_monster_turns_opens_modal_on_vore __________________
+
+    def test_run_monster_turns_opens_modal_on_vore() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       place_adjacent_wolf(engine)
+
+tests\test_vore_ai.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57D112E90>
+
+    def place_adjacent_wolf(engine: GameEngine):
+        """Move a vore-capable wolf to carved floor east of the player."""
+        from src.systems.fov import update_fov
+    
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+>       wolf = next(
+            m for m in iter_wolves(engine) if Position in m.components
+        )
+E       StopIteration
+
+tests\map_test_helpers.py:264: StopIteration
+__________ test_run_monster_turns_vore_miss_logs_evaded_after_enter ___________
+
+    def test_run_monster_turns_vore_miss_logs_evaded_after_enter() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       wolf = place_adjacent_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_ai.py:150: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57D112990>
+
+    def place_adjacent_wolf(engine: GameEngine):
+        """Move a vore-capable wolf to carved floor east of the player."""
+        from src.systems.fov import update_fov
+    
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+>       wolf = next(
+            m for m in iter_wolves(engine) if Position in m.components
+        )
+E       StopIteration
+
+tests\map_test_helpers.py:264: StopIteration
+_____________ test_vore_miss_logs_named_predator_without_article ______________
+
+    def test_vore_miss_logs_named_predator_without_article() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       wolf = place_adjacent_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_ai.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57D112D50>
+
+    def place_adjacent_wolf(engine: GameEngine):
+        """Move a vore-capable wolf to carved floor east of the player."""
+        from src.systems.fov import update_fov
+    
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+>       wolf = next(
+            m for m in iter_wolves(engine) if Position in m.components
+        )
+E       StopIteration
+
+tests\map_test_helpers.py:264: StopIteration
+____________ test_run_monster_turns_vore_hit_no_log_until_resolved ____________
+
+    def test_run_monster_turns_vore_hit_no_log_until_resolved() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       place_adjacent_wolf(engine)
+
+tests\test_vore_ai.py:180: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57D112990>
+
+    def place_adjacent_wolf(engine: GameEngine):
+        """Move a vore-capable wolf to carved floor east of the player."""
+        from src.systems.fov import update_fov
+    
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+>       wolf = next(
+            m for m in iter_wolves(engine) if Position in m.components
+        )
+E       StopIteration
+
+tests\map_test_helpers.py:264: StopIteration
+______________________ test_spawn_tags_wolf_vore_capable ______________________
+
+    def test_spawn_tags_wolf_vore_capable() -> None:
+        engine = GameEngine()
+        from tests.map_test_helpers import iter_wolves
+    
+        monsters = list(iter_wolves(engine))
+>       assert len(monsters) >= 1
+E       assert 0 >= 1
+E        +  where 0 = len([])
+
+tests\test_vore_constants.py:123: AssertionError
+_______________ test_roaming_wolf_wanders_while_player_engulfed _______________
+
+    def test_roaming_wolf_wanders_while_player_engulfed() -> None:
+        engine = GameEngine()
+        _move_non_wolves_away(engine)
+        player = engine.player
+        assert player is not None
+        monsters = [m for m in iter_wolves(engine) if Position in m.components]
+>       assert len(monsters) >= 2
+E       assert 1 >= 2
+E        +  where 1 = len([<Entity(uid=object at 0x1C50417C520)>])
+
+tests\test_vore_engulfed.py:285: AssertionError
+______________________ test_modal_opens_on_vore_attempt _______________________
+
+    def test_modal_opens_on_vore_attempt() -> None:
+        engine = GameEngine()
+>       _open_vore_modal(engine)
+
+tests\test_vore_modal.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_vore_modal.py:30: in _open_vore_modal
+    wolf = place_adjacent_wolf(engine)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57D111310>
+
+    def place_adjacent_wolf(engine: GameEngine):
+        """Move a vore-capable wolf to carved floor east of the player."""
+        from src.systems.fov import update_fov
+    
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+>       wolf = next(
+            m for m in iter_wolves(engine) if Position in m.components
+        )
+E       StopIteration
+
+tests\map_test_helpers.py:264: StopIteration
+__________________ test_hit_advances_through_success_phases ___________________
+
+    def test_hit_advances_through_success_phases() -> None:
+        engine = GameEngine()
+        with patch("src.systems.vore.resolve_vore_hit", return_value=True):
+>           _open_vore_modal(engine)
+
+tests\test_vore_modal.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_vore_modal.py:30: in _open_vore_modal
+    wolf = place_adjacent_wolf(engine)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57D112E90>
+
+    def place_adjacent_wolf(engine: GameEngine):
+        """Move a vore-capable wolf to carved floor east of the player."""
+        from src.systems.fov import update_fov
+    
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+>       wolf = next(
+            m for m in iter_wolves(engine) if Position in m.components
+        )
+E       StopIteration
+
+tests\map_test_helpers.py:264: StopIteration
+_____________________ test_movement_blocked_during_modal ______________________
+
+    def test_movement_blocked_during_modal() -> None:
+        engine = GameEngine()
+>       _open_vore_modal(engine)
+
+tests\test_vore_modal.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_vore_modal.py:30: in _open_vore_modal
+    wolf = place_adjacent_wolf(engine)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001C57D112990>
+
+    def place_adjacent_wolf(engine: GameEngine):
+        """Move a vore-capable wolf to carved floor east of the player."""
+        from src.systems.fov import update_fov
+    
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+>       wolf = next(
+            m for m in iter_wolves(engine) if Position in m.components
+        )
+E       StopIteration
+
+tests\map_test_helpers.py:264: StopIteration
+______________ test_open_attempt_stores_monster_index_for_resume ______________
+
+    def test_open_attempt_stores_monster_index_for_resume() -> None:
+        engine = GameEngine()
+        _move_non_wolves_away(engine)
+        clear_wolf_abilities(engine)
+        _stun_player(engine)
+        player = engine.player
+        assert player is not None
+        player_pos = player.components[Position]
+        carve_east_of(engine, player_pos, 3)
+        monsters = _sorted_wolves(engine)
+        for index, wolf in enumerate(monsters):
+            if index == 0:
+                place_wolf_at(engine, wolf, player_pos.x + 1, player_pos.y)
+            else:
+                place_wolf_at(engine, wolf, player_pos.x + 20, player_pos.y + 20)
+        update_fov(engine.game_map, player_pos.x, player_pos.y)
+    
+>       opener = monsters[0]
+                 ^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_turn_order.py:258: IndexError
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_dungeon_pr3.py::test_status_corner_shows_floor_depth
+tests/test_status_corner_runes.py::test_engine_render_shows_rune_hp_bonus
+tests/test_status_corner_runes.py::test_engine_render_shows_combat_rune_bonuses
+tests/test_ui_status_corner.py::test_engine_render_shows_depth_in_status_corner
+tests/test_ui_status_corner.py::test_engine_render_shows_engulfed_in_status_corner
+tests/test_ui_status_corner.py::test_engine_render_shows_stun_in_status_corner
+tests/test_vore_render.py::test_status_corner_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:64: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_floor_runes_pr4.py::test_screen_flash_only_tints_player_vicinity
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_floor_runes_pr4.py:279: FutureWarning: This attribute has been renamed to `rgba`.
+    tile = console.tiles[y, x]
+
+tests/test_help_overlay.py::test_engine_render_help_hides_map
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_help_overlay.py:129: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[map_r.x, map_r.y]["ch"])
+
+tests/test_help_overlay.py::test_engine_render_help_hides_map
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_help_overlay.py:132: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_help_overlay.py::test_render_help_overlay_draws_footer
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_help_overlay.py:146: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, footer_row]["ch"])
+
+tests/test_help_overlay.py::test_render_help_overlay_draws_footer
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_help_overlay.py:145: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, footer_row]["ch"]))
+
+tests/test_inventory_items_pr3.py::test_sidebar_no_inventory_summary
+tests/test_name_entry.py::test_sidebar_shows_player_name_not_game_title
+tests/test_ui_sidebar.py::test_engine_render_shows_player_in_sidebar
+tests/test_ui_sidebar.py::test_engine_render_sidebar_omits_engulfed_flag
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:50: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_inventory_items_pr4.py::test_player_glyph_renders_over_floor_item_on_same_tile
+tests/test_ui_camera.py::test_player_appears_on_screen_when_centered
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:121: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[map_r.x + screen[0], map_r.y + screen[1]]["ch"])
+
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr5.py:304: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+tests/test_log_font.py::test_load_log_font_state_missing_path_falls_back
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_log_font.py:51: UserWarning: message log TTF not found at C:\Users\hybri\AppData\Local\Temp\pytest-of-hybri\pytest-194\test_load_log_font_state_missi0\missing.ttf; using CP437 for the log panel
+    state = load_log_font_state(tile_px=12, tile_scale=2, font_path=missing)
+
+tests/test_log_font.py::test_engine_render_blits_log_by_default
+tests/test_log_font.py::test_engine_render_can_skip_log_blit
+tests/test_ui_message_log.py::test_engine_render_shows_messages_in_message_log_region
+tests/test_ui_regions.py::test_engine_render_uses_region_pipeline
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:36: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_log_font.py::test_engine_render_can_skip_log_blit
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_log_font.py:187: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(log_console.tiles[1, 0]["ch"])
+
+tests/test_log_markup.py::test_render_message_log_draws_multiple_colors_on_one_row
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_log_markup.py:19: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(int(console.tiles[x, y]["fg"][index]) for index in range(3))
+
+tests/test_log_overlay.py::test_engine_render_overlay_hides_map
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_log_overlay.py:140: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[map_r.x, map_r.y]["ch"])
+
+tests/test_log_overlay.py::test_engine_render_overlay_hides_map
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_log_overlay.py:143: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+tests/test_main_menu.py::test_render_main_menu_options_fit_layout_console_height
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:206: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x, row_y]["ch"])) in "> "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:207: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 1, row_y]["ch"])) == " "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:208: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 2, row_y]["ch"])) == option[0]
+
+tests/test_message_log_categories.py::test_stunned_message_renders_danger_color
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_message_log_categories.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    int(console.tiles[rect.x + 1, rect.y]["fg"][index]) for index in range(3)
+
+tests/test_message_log_wrap.py::test_render_message_log_shows_wrapped_tail
+tests/test_message_log_wrap.py::test_render_message_log_prefers_recent_wrapped_lines
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_message_log_wrap.py:16: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:144: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_options_menu.py::test_render_options_menu_shows_ui_layout_row
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_options_menu.py:125: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_ui_bootstrap.py: 29 warnings
+  C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\tcod\tileset.py:237: DeprecationWarning: Assign to a tile using 'tileset[codepoint] = tile' instead.
+    return self.set_tile(codepoint, full_tile)
+
+tests/test_ui_camera.py::test_render_map_with_camera_shows_subset
+tests/test_ui_camera.py::test_render_examine_cursor_respects_camera
+tests/test_ui_camera.py::test_render_entities_off_viewport_are_omitted
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_camera.py:24: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_message_log.py::test_render_message_log_shows_configured_line_count
+tests/test_ui_message_log.py::test_render_message_log_panel_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_message_log.py:22: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_message_log.py::test_render_message_log_panel_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_message_log.py:66: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(log_console.tiles[0, 0]["bg"][:3])
+
+tests/test_ui_modals.py::test_render_modal_centered_on_root_console
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:24: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(console.tiles[x, y]["bg"][:3])
+
+tests/test_ui_modals.py::test_name_entry_uses_console_height
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:66: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, prompt_y + 2]["ch"])) if int(console.tiles[x, prompt_y + 2]["ch"]) else " "
+
+tests/test_ui_modals.py::test_quit_confirm_centered_on_root_console
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:79: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, prompt_y]["ch"])) if int(console.tiles[x, prompt_y]["ch"]) else " "
+
+tests/test_ui_regions.py::test_blit_region_copies_map_tile_to_root
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_regions.py:22: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_sidebar.py::test_blit_sidebar_copies_player_block_to_root
+tests/test_ui_sidebar.py::test_render_sidebar_player_shows_name_and_hp_on_separate_rows
+tests/test_ui_sidebar.py::test_render_sidebar_player_omits_ailment_flags
+tests/test_ui_sidebar.py::test_sidebar_shows_visible_evil_below_player
+tests/test_ui_sidebar.py::test_sidebar_shows_visible_good_at_bottom
+tests/test_ui_sidebar.py::test_sidebar_omits_neutral_and_out_of_fov_npcs
+tests/test_ui_sidebar.py::test_sidebar_evil_sorted_nearest_first
+tests/test_ui_sidebar.py::test_sidebar_good_nearest_at_bottom_edge
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_sidebar.py:23: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_sidebar.py::test_render_sidebar_player_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_sidebar.py:131: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(side_console.tiles[0, 0]["bg"][:3])
+
+tests/test_ui_status_corner.py::test_render_status_corner_shows_depth
+tests/test_ui_status_corner.py::test_render_status_corner_shows_stun_and_engulfed
+tests/test_ui_status_corner.py::test_render_status_corner_supports_extra_rows
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_status_corner.py:24: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_status_corner.py::test_render_status_corner_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_status_corner.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(corner.tiles[0, 0]["bg"][:3])
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:164: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.x + 1, pos.y + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:81: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[x, y]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_ally_introduction.py::test_wolf_visible_to_knight_blocks_introduction
+FAILED tests/test_ally_rescue_priority.py::test_good_prioritizes_engulfing_predator_over_closer_evil
+FAILED tests/test_ally_rescue_priority.py::test_good_ignores_predator_without_los
+FAILED tests/test_digestion.py::test_engulfed_player_immune_to_combat_damage
+FAILED tests/test_dungeon_spawn_config.py::test_load_default_dungeon_spawn_json
+FAILED tests/test_enhancements_3.py::test_npc_evil_evil_do_not_swap - assert ...
+FAILED tests/test_enhancements_3.py::test_engulfed_good_npc_invisible_to_evil_ai
+FAILED tests/test_enhancements_3.py::test_engulfed_neutral_invisible_to_evil_ai
+FAILED tests/test_npc_abilities_erratic.py::test_erratic_at_range_one_pursuit_and_one_random_move
+FAILED tests/test_npc_abilities_rangen.py::test_primary_at_three_preferred_over_neutral_at_two_for_ranged_pick
+FAILED tests/test_npc_data_pr1.py::test_load_default_entities_json - Assertio...
+FAILED tests/test_npc_data_pr4.py::test_descend_with_follower_keeps_good_ally_on_new_floor
+FAILED tests/test_ui_modals.py::test_vore_modal_drawn_on_root_console_over_sidebar
+FAILED tests/test_vore_ai.py::test_should_attempt_vore_ineligible_above_half_hp
+FAILED tests/test_vore_ai.py::test_should_attempt_vore_true_at_zero_hp_adjacent
+FAILED tests/test_vore_ai.py::test_run_monster_turns_opens_modal_on_vore - St...
+FAILED tests/test_vore_ai.py::test_run_monster_turns_vore_miss_logs_evaded_after_enter
+FAILED tests/test_vore_ai.py::test_vore_miss_logs_named_predator_without_article
+FAILED tests/test_vore_ai.py::test_run_monster_turns_vore_hit_no_log_until_resolved
+FAILED tests/test_vore_constants.py::test_spawn_tags_wolf_vore_capable - asse...
+FAILED tests/test_vore_engulfed.py::test_roaming_wolf_wanders_while_player_engulfed
+FAILED tests/test_vore_modal.py::test_modal_opens_on_vore_attempt - StopItera...
+FAILED tests/test_vore_modal.py::test_hit_advances_through_success_phases - S...
+FAILED tests/test_vore_modal.py::test_movement_blocked_during_modal - StopIte...
+FAILED tests/test_vore_turn_order.py::test_open_attempt_stores_monster_index_for_resume
+25 failed, 841 passed, 101 warnings in 1607.08s (0:26:47)

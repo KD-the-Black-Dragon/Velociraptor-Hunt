@@ -37,6 +37,7 @@ def test_narrative_phases_from_fixture_index() -> None:
         npc_vore_miss={},
         offscreen_vore={},
         offscreen_digest={},
+        engulfed_flavor={},
     )
     attempt = index.narrative_phases("fixture_predator", "OV", "attempt")
     success = index.narrative_phases("fixture_predator", "OV", "success")

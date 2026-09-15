@@ -1,0 +1,18 @@
+Basic command:
+python tools/sim_arena.py
+
+difficulty arguments:
+-- difficulty easier
+-- difficulty normal
+-- difficulty hard
+-- difficulty nightmare
+
+trials arguments:
+-- trials #
+
+stalemate limit arguments:
+
+--max-turns 100
+
+e.g.:
+python tools/sim_arena.py --difficulty normal --trials 20 --max-turns 500

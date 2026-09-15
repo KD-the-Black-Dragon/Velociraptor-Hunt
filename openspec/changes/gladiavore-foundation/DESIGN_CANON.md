@@ -8,7 +8,7 @@
 | **Product** | Gladiavore (not K.D.'s Vore Roguelike) |
 | **Change** | `openspec/changes/gladiavore-foundation/` |
 | **Also see** | `design.md` (full narrative design), `proposal.md`, `tasks.md`, `KDVR_REFERENCE.md`, `AGENTS.md` |
-| **Last consolidated** | 2026-08-10 (Battle Sport design freeze; prior foundation + battle-pace) |
+| **Last consolidated** | 2026-08-10 (Solo Duels career active; Company/team on ice; Battle Sport + instant-action shipped) |
 
 ---
 
@@ -21,6 +21,7 @@
 | Reuse | Harvest systems; do **not** keep dungeon-delve as the product loop |
 | User data | `%LOCALAPPDATA%\Gladiavore\` (env `GLADIAVORE_USER_DATA_DIR`) |
 | UI fonts | **Map tiles + entity glyphs only** = fixed-width; **everything else** = log font (Source Sans / proportional) |
+| **Campaign styles** | **`solo`** (Solo Duels — **active product**): 1v1 only, no teammates. **`company`** (team + multi-enemy): **on ice**, code preserved; not New Game default. See `openspec/changes/solo-duel-career/` |
 
 ---
 

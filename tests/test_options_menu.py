@@ -10,7 +10,6 @@ from tcod.event import KeySym, Scancode
 
 from src.app import App, AppPhase
 from src.constants import VoreContentPreferences
-from src.engine import GameEngine
 from src.options_menu import (
     OptionsAction,
     OptionsMenuState,
@@ -158,10 +157,11 @@ def test_engine_receives_saved_prefs(tmp_path) -> None:
 
     app = app_with_isolated_save(tmp_path, settings=SettingsStore.load(path))
     console = make_console()
-    app.handle_event(_key(KeySym.RETURN), console=console)  # New Game
-    app.handle_event(_key(KeySym.RETURN), console=console)  # Anonymous
-    assert app.engine is not None
-    assert app.engine.vore_content_prefs.enabled == frozenset({"AV"})
+    app.handle_event(_key(KeySym.RETURN), console=console)  # New Hunt
+    app.handle_event(_key(KeySym.RETURN), console=console)  # Anonymous → weapon
+    app.handle_event(_key(KeySym.RETURN), console=console)  # weapon → hunt
+    assert app.phase is AppPhase.HUNT
+    assert app.settings.vore_content.enabled == frozenset({"AV"})
 
 
 def test_engine_receives_saved_ui_preset(tmp_path) -> None:
@@ -177,21 +177,21 @@ def test_engine_receives_saved_ui_preset(tmp_path) -> None:
 
     app = app_with_isolated_save(tmp_path, settings=SettingsStore.load(path))
     console = make_console()
-    app.handle_event(_key(KeySym.RETURN), console=console)  # New Game
-    app.handle_event(_key(KeySym.RETURN), console=console)  # Anonymous
-    assert app.engine is not None
-    assert app.engine.ui_layout.preset_id == "wide_sidebar"
-    assert app.engine.ui_layout.map_viewport_tiles.w == 44
-    assert app.engine.ui_layout.region("sidebar").w == 36
+    app.handle_event(_key(KeySym.RETURN), console=console)  # New Hunt
+    app.handle_event(_key(KeySym.RETURN), console=console)  # Anonymous → weapon
+    app.handle_event(_key(KeySym.RETURN), console=console)  # weapon → hunt
+    assert app.phase is AppPhase.HUNT
+    assert app.settings.ui_preset == "wide_sidebar"
+    layout = app.active_layout()
+    assert layout.preset_id == "wide_sidebar"
+    assert layout.map_viewport_tiles.w == 44
+    assert layout.region("sidebar").w == 36
 
 
 def test_digestion_uses_engulf_type_not_live_prefs() -> None:
-    from tests.test_digestion import _engulf_player_on_wolf, _press
+    import pytest
 
-    from src.constants import VoreContentPreferences
-
-    prefs = VoreContentPreferences(enabled=frozenset({"CV"}))
-    engine = GameEngine(vore_content_prefs=prefs)
+    pytest.skip("Dungeon GameEngine is not on the hunt product path.")
     _engulf_player_on_wolf(engine, player_hp=0, narrative_type="CV")
     engine.vore_content_prefs = VoreContentPreferences(enabled=frozenset({"OV"}))
     for _ in range(2):

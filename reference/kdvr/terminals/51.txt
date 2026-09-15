@@ -1,0 +1,104 @@
+---
+pid: 26240
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q 2>&1"
+started_at: 2026-07-01T14:13:09.374Z
+running_for_ms: 16394994 
+---
+....F................................................................... [ 20%]
+................................................................F....... [ 40%]
+........................................................................ [ 60%]
+........................................................................ [ 80%]
+........................................................................ [100%]
+================================== FAILURES ===================================
+__________________ test_ac5_bump_combat_defeated_terminology __________________
+
+    def test_ac5_bump_combat_defeated_terminology() -> None:
+        engine = GameEngine()
+        from tests.map_test_helpers import first_wolf
+    
+        monster = first_wolf(engine)
+        mpos = monster.components[Position]
+        engine.player.components[Position] = Position(mpos.x - 1, mpos.y)
+        for _ in range(12):
+            try_action(engine.world, engine.game_map, engine.player, (1, 0), engine.message_log)
+            if monster not in list(engine.world.Q.all_of(components=[AI, Fighter])):
+                break
+>       assert monster not in list(engine.world.Q.all_of(components=[AI]))
+E       AssertionError: assert <Entity(uid=object at 0x1DECA1F64B0)> not in [<Entity(uid=object at 0x1DECA1F6360)>, <Entity(uid=object at 0x1DECA1F63C0)>, <Entity(uid=object at 0x1DECA1F7AC0)>, <Entity(uid=object at 0x1DECA1F7A20)>, <Entity(uid=object at 0x1DECA1F7A40)>, <Entity(uid=object at 0x1DECA1F5B90)>, ...]
+E        +  where [<Entity(uid=object at 0x1DECA1F6360)>, <Entity(uid=object at 0x1DECA1F63C0)>, <Entity(uid=object at 0x1DECA1F7AC0)>, <Entity(uid=object at 0x1DECA1F7A20)>, <Entity(uid=object at 0x1DECA1F7A40)>, <Entity(uid=object at 0x1DECA1F5B90)>, ...] = list(BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1DECA1F63F0)>:...s 'src.components.AI'>), _traverse_keys=(<class 'tcod.ecs.constants.IsA'>,), _max_depth=None)}), _none_of=frozenset())))
+E        +    where BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1DECA1F63F0)>:...s 'src.components.AI'>), _traverse_keys=(<class 'tcod.ecs.constants.IsA'>,), _max_depth=None)}), _none_of=frozenset())) = all_of(components=[<class 'src.components.AI'>])
+E        +      where all_of = BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1DECA1F63F0)>:...et'>, {}), _names_by_name={}, _names_by_entity={}), _query=_QueryLogicalAnd(_all_of=frozenset(), _none_of=frozenset())).all_of
+E        +        where BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1DECA1F63F0)>:...et'>, {}), _names_by_name={}, _names_by_entity={}), _query=_QueryLogicalAnd(_all_of=frozenset(), _none_of=frozenset())) = Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1DECA1F63F0)>: {<class 'src.compon... at 0x000001DECA8D5380>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}).Q
+E        +          where Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1DECA1F63F0)>: {<class 'src.compon... at 0x000001DECA8D5380>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}) = <src.engine.GameEngine object at 0x000001DECA93F6F0>.world
+
+tests\test_acceptance.py:102: AssertionError
+______________________ test_evil_still_defeated_at_zero _______________________
+
+    def test_evil_still_defeated_at_zero() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        wolf = first_wolf(engine)
+        mpos = wolf.components[Position]
+        carve_east_of(engine, mpos, 2)
+        player.components[Position] = Position(mpos.x - 1, mpos.y)
+        for _ in range(8):
+            try_action(engine.world, engine.game_map, player, (1, 0), engine.message_log)
+            if wolf not in list(iter_wolves(engine)):
+                break
+>       assert wolf not in list(iter_wolves(engine))
+E       assert <Entity(uid=object at 0x1DECC6396E0)> not in [<Entity(uid=object at 0x1DECC6396E0)>, <Entity(uid=object at 0x1DECC6396D0)>, <Entity(uid=object at 0x1DECC639710)>, <Entity(uid=object at 0x1DECC639790)>, <Entity(uid=object at 0x1DECC6396F0)>, <Entity(uid=object at 0x1DECC639760)>]
+E        +  where [<Entity(uid=object at 0x1DECC6396E0)>, <Entity(uid=object at 0x1DECC6396D0)>, <Entity(uid=object at 0x1DECC639710)>, <Entity(uid=object at 0x1DECC639790)>, <Entity(uid=object at 0x1DECC6396F0)>, <Entity(uid=object at 0x1DECC639760)>] = list(<generator object iter_wolves at 0x000001DEB1B23790>)
+E        +    where <generator object iter_wolves at 0x000001DEB1B23790> = iter_wolves(<src.engine.GameEngine object at 0x000001DECAB47110>)
+
+tests\test_enhancements_3.py:187: AssertionError
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:242: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:241: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:71: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:163: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_acceptance.py::test_ac5_bump_combat_defeated_terminology - ...
+FAILED tests/test_enhancements_3.py::test_evil_still_defeated_at_zero - asser...
+2 failed, 358 passed, 16 warnings in 77.47s (0:01:17)

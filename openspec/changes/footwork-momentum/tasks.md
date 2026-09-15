@@ -9,10 +9,10 @@
 
 ## PR M1 — Momentum + evade modifiers
 
-- [ ] Apply momentum on footwork; modal dodge reads it
-- [ ] Targeted tests + manual checklist
+- [x] Apply momentum on footwork; modal dodge reads it
+- [x] Targeted tests + manual checklist (batch OK 2026-08-10)
 
 ## PR M2 — Tuning surface
 
-- [ ] JSON magnitudes/duration; edge cases
-- [ ] Designer sign-off for module
+- [x] JSON magnitudes/duration; edge cases
+- [x] Designer sign-off for module (batch 2026-08-10)

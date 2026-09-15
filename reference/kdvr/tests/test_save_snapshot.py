@@ -7,6 +7,7 @@ from collections import deque
 from src.components import (
     AIState,
     Alignment,
+    Dazed,
     DigestionStrikes,
     Engulfed,
     Inventory,
@@ -127,6 +128,27 @@ def test_round_trip_npc_ai_state() -> None:
     assert list(restored_state.explore_recent_goal_distances) == [4, 3]
 
 
+def test_round_trip_dazed_remaining() -> None:
+    engine = GameEngine()
+    isolate_other_ais(engine)
+    wolf = spawn_test_npc(
+        engine.world,
+        x=ARENA_X + 1,
+        y=ARENA_Y,
+        species="wolf",
+        alignment=Alignment.EVIL,
+    )
+    wolf.components[Dazed] = Dazed(remaining=4)
+
+    restored = _round_trip(engine)
+    restored_wolf = next(
+        entity
+        for entity in restored.world.Q.all_of(components=[Dazed])
+        if entity.components[Position] == Position(ARENA_X + 1, ARENA_Y)
+    )
+    assert restored_wolf.components[Dazed].remaining == 4
+
+
 def test_round_trip_predator_prey_link() -> None:
     engine = GameEngine()
     isolate_other_ais(engine)
@@ -146,6 +168,7 @@ def test_round_trip_predator_prey_link() -> None:
         prey=prey,
         narrative_type="OV",
         failed_struggles=1,
+        engulfed_flavor_phases=5,
     )
 
     restored = _round_trip(engine)
@@ -162,6 +185,7 @@ def test_round_trip_predator_prey_link() -> None:
     assert predator_state.prey is restored.player
     assert predator_state.narrative_type == "OV"
     assert predator_state.failed_struggles == 1
+    assert predator_state.engulfed_flavor_phases == 5
 
 
 def test_round_trip_message_log_and_metadata() -> None:

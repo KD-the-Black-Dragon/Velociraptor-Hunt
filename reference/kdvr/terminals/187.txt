@@ -1,0 +1,72 @@
+---
+pid: 20464
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_macguffins_pr1.py tests/test_macguffins_pr2.py tests/test_macguffins_pr3.py -q"
+started_at: 2026-07-06T12:24:34.762Z
+running_for_ms: 23214998 
+---
+...................................F.F                                   [100%]
+================================== FAILURES ===================================
+__________ test_mid_modal_snapshot_preserves_discovery_without_modal __________
+
+    def test_mid_modal_snapshot_preserves_discovery_without_modal() -> None:
+        engine = GameEngine()
+        _setup_macguffin_step_on(engine)
+        engine.player_turn_count = 9
+        _step_onto_macguffin(engine)
+        assert engine.macguffin_victory_confirm.active
+    
+>       restored = GameEngine.from_run_snapshot(build_run_snapshot(engine))
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_macguffins_pr3.py:286: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x000001CFCADB4590>
+
+    def build_run_snapshot(engine: GameEngine) -> dict[str, Any]:
+        """Capture full run state from a live engine."""
+        entities = list(engine.world.Q.all_of(components=[Position]))
+        id_map = assign_entity_ids(entities)
+    
+        player_entity_id: int | None = None
+        entity_records: list[dict[str, Any]] = []
+        for entity in sorted(id_map, key=lambda item: id_map[item]):
+            entity_id = id_map[entity]
+            if Player in entity.tags:
+                player_entity_id = entity_id
+            entity_records.append(encode_entity_record(entity, entity_id, id_map))
+    
+        if player_entity_id is None:
+>           raise ValueError("snapshot requires a player entity")
+E           ValueError: snapshot requires a player entity
+
+src\save\snapshot.py:49: ValueError
+_____________ test_descend_floor_preserves_discovery_resets_modal _____________
+
+    def test_descend_floor_preserves_discovery_resets_modal() -> None:
+        from tests.test_dungeon_pr3 import _place_player_on_stairs, _press_descend
+    
+        engine = GameEngine()
+        engine.macguffin_discovery.record(
+            load_macguffin_registry().get("sword_of_freedom"),
+        )
+        engine.macguffin_victory_confirm.open(
+            macguffin_id="sword_of_freedom",
+            display_name="The Sword of Freedom",
+            score=100,
+        )
+        _place_player_on_stairs(engine)
+        _press_descend(engine)
+    
+        assert engine.macguffin_discovery.macguffin_id == "sword_of_freedom"
+>       assert not engine.macguffin_victory_confirm.active
+E       assert not True
+E        +  where True = MacguffinVictoryConfirmState(display_name='The Sword of Freedom', macguffin_id='sword_of_freedom', score=100, error_message="Please type capital 'Y' or lowercase 'n' only.").active
+E        +    where MacguffinVictoryConfirmState(display_name='The Sword of Freedom', macguffin_id='sword_of_freedom', score=100, error_message="Please type capital 'Y' or lowercase 'n' only.") = <src.engine.GameEngine object at 0x000001CFCAC17B60>.macguffin_victory_confirm
+
+tests\test_macguffins_pr3.py:318: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_macguffins_pr3.py::test_mid_modal_snapshot_preserves_discovery_without_modal
+FAILED tests/test_macguffins_pr3.py::test_descend_floor_preserves_discovery_resets_modal
+2 failed, 36 passed in 17.80s

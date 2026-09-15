@@ -1,0 +1,16 @@
+---
+pid: 4428
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python tools/profile_turn.py --scenario sparse --iterations 30; python tools/profile_turn.py --scenario explore_25 --iterations 10; python tools/profile_turn.py --scenario scale_50 --iterations 5"
+started_at: 2026-07-08T18:37:19.418Z
+running_for_ms: 34145007 
+---
+Profiling action=consume  seed=42  iterations=30
+------------------------------------------------------------------------------------------
+sparse        npcs= 30  action=consume   mean=  90.74ms  median=  90.11ms  p95=  92.95ms  max=  95.40ms
+Profiling action=consume  seed=42  iterations=10
+------------------------------------------------------------------------------------------
+explore_25    npcs= 25  action=consume   mean= 533.51ms  median= 509.66ms  p95= 576.96ms  max= 613.40ms
+Profiling action=consume  seed=42  iterations=5
+------------------------------------------------------------------------------------------
+scale_50      npcs= 50  action=consume   mean= 550.45ms  median= 226.17ms  p95=1102.72ms  max=1188.28ms

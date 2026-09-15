@@ -1,0 +1,17 @@
+---
+pid: 12352
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Start-Sleep -Seconds 30; Get-Process -Id 18144 -ErrorAction SilentlyContinue | Select-Object Id, CPU; Get-Content \"C:\\VS Code Projects\\kds-vore-roguelike\\balance_seed_scan.log\" -Tail 5; (Get-Content \"C:\\VS Code Projects\\kds-vore-roguelike\\balance_seed_scan.csv\" | Measure-Object -Line).Lines"
+started_at: 2026-07-12T00:33:11.406Z
+running_for_ms: 36915005 
+---
+
+   Id    CPU
+   --    ---
+18144 0.3125
+2026-07-12T00:32:31.769535+00:00 === seed scan start ===
+2026-07-12T00:32:31.775574+00:00 data_fingerprint=50f7ce079e5abd6513f06b05cf4f401543f5c0ee4b7e417134d48fc7c7d140ff
+2026-07-12T00:32:32.168987+00:00 placement seed=1 runes_on_map=3 quota=3 (0s)
+2
+
+

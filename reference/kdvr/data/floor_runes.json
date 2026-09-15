@@ -6,44 +6,68 @@
       "id": "vitality_rune",
       "display_name": "rune of vitality",
       "glyph": "0",
-      "fg": [80, 220, 120],
+      "fg": [
+        80,
+        220,
+        120
+      ],
       "examine": "A faint green sigil pulses on the stone.",
       "weight": 4,
       "min_depth": 1,
       "max_depth": 1000,
-      "effect": { "type": "max_hp", "amount": 3 }
+      "effect": {
+        "type": "max_hp",
+        "amount": 5
+      }
     },
     {
       "id": "accuracy_rune",
       "display_name": "rune of accuracy",
       "glyph": "0",
-      "fg": [220, 180, 60],
+      "fg": [
+        220,
+        180,
+        60
+      ],
       "examine": "A golden mark promises greater precision.",
       "weight": 3,
       "min_depth": 3,
       "max_depth": 1000,
-      "effect": { "type": "accuracy", "amount": 0.03 }
+      "effect": {
+        "type": "accuracy",
+        "amount": 0.03
+      }
     },
     {
       "id": "damage_rune",
       "display_name": "rune of striking",
       "glyph": "0",
-      "fg": [220, 180, 60],
+      "fg": [
+        220,
+        180,
+        60
+      ],
       "examine": "A golden mark promises harder blows.",
       "weight": 3,
       "min_depth": 3,
       "max_depth": 1000,
-      "effect": { "type": "accuracy_damage", 
-	"accuracy": 0.00,
-	"min_damage": 1,
-	"max_damage": 1 }
+      "effect": {
+        "type": "accuracy_damage",
+        "accuracy": 0.0,
+        "min_damage": 1,
+        "max_damage": 1
+      }
     },
     {
       "id": "striking_rune_major",
       "display_name": "rune of ruin",
       "glyph": "0",
-      "fg": [255, 100, 40],
-      "examine": "A blazing sigil — power and precision together.",
+      "fg": [
+        255,
+        100,
+        40
+      ],
+      "examine": "A blazing sigil \u2014 power and precision together.",
       "weight": 1,
       "min_depth": 10,
       "max_depth": 1000,
@@ -58,18 +82,31 @@
       "id": "warding_rune",
       "display_name": "rune of warding",
       "glyph": "0",
-      "fg": [120, 160, 255],
+      "fg": [
+        120,
+        160,
+        255
+      ],
       "examine": "A blue sigil wards the body.",
       "weight": 3,
       "min_depth": 1,
       "max_depth": 1000,
-      "effect": { "type": "natural_ac", "amount": 1, "pieces_per_bonus": 2, "pieces_granted": 1 }
+      "effect": {
+        "type": "natural_ac",
+        "amount": 1,
+        "pieces_per_bonus": 2,
+        "pieces_granted": 1
+      }
     },
     {
       "id": "evasion_rune",
       "display_name": "rune of evasion",
       "glyph": "0",
-      "fg": [160, 200, 220],
+      "fg": [
+        160,
+        200,
+        220
+      ],
       "examine": "A pale mark that hardens weak points and turns dirty hits aside.",
       "weight": 2,
       "min_depth": 2,

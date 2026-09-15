@@ -65,13 +65,33 @@ from src.match_combat import (
     MatchCombatConfig,
     ability_by_letter,
     actual_fighter,
+    apply_ready_balance,
     awareness_openness,
+    balance_stat_deltas,
     choose_bump_profile,
     format_ap_meter,
+    format_balance_effect_line,
     format_balance_meter,
     format_recovery_meter,
     load_match_combat_config,
     step_aut_multiplier,
+)
+from src.match_ai_config import MatchAiConfig, load_match_ai_config
+from src.match_ai import (
+    maybe_start_morale_shock,
+    momentum_evade_mult,
+    roll_attrs,
+    score_ally_intents,
+    score_enemy_intents,
+    should_forget_order,
+)
+from src.weapon_measure import (
+    all_footwork_offsets,
+    attack_delay,
+    default_weapon_for_entity,
+    effective_band,
+    is_footwork_offset,
+    measure_mult,
 )
 from src.match_recovery import RecoveryConfig, load_recovery_config
 from src.match_vore import (
@@ -112,11 +132,13 @@ from src.match_hud_layout import MATCH_LOG_MAX_LINES
 from src.match_render import (
     apply_grapple_tile_highlights,
     draw_match_entities,
+    paint_tile_bg,
     render_map,
 )
 from src.text import cp437_safe
 
-_WAIT_KEYS = frozenset({KeySym.PERIOD, KeySym.KP_5, KeySym.SPACE})
+_WAIT_KEYS = frozenset({KeySym.PERIOD, KeySym.KP_5})  # keep watch (. and numpad 5 same)
+_SPACE_WAIT = frozenset({KeySym.SPACE})  # also keep watch
 _CONFIRM = frozenset({KeySym.RETURN, KeySym.KP_ENTER})
 _ABILITY_MENU_KEYS = frozenset({KeySym.A})
 _TALK_KEYS = frozenset({KeySym.T})
@@ -127,6 +149,9 @@ _REACT_PARRY = frozenset({KeySym.N2, KeySym.KP_2})
 _REACT_COUNTER = frozenset({KeySym.N3, KeySym.KP_3})
 _REACT_IGNORE = frozenset({KeySym.N4, KeySym.KP_4})
 _TALK_ALL = frozenset({KeySym.N0, KeySym.KP_0})
+_BRACE_KEYS = frozenset({KeySym.D})
+_FOOTWORK_KEYS = frozenset({KeySym.F})
+_REACT_HELP = frozenset({KeySym.N3, KeySym.KP_3})  # swallow modal option 3
 
 
 class MatchPhase(Enum):
@@ -187,7 +212,8 @@ class MatchSession:
     # Ally support (PR6)
     ally_entities: list[Entity] = attrs.field(factory=list)
     ally_id_by_entity: dict[object, str] = attrs.field(factory=dict)
-    ally_order: dict[str, str] = attrs.field(factory=dict)  # ally_id -> attack|defend
+    ally_order: dict[str, str] = attrs.field(factory=dict)  # ally_id -> attack|help_me|stay_close
+    ally_order_issued_at: dict[str, float] = attrs.field(factory=dict)
     talk_ui: TalkUiMode = TalkUiMode.CLOSED
     talk_target_ids: list[str] = attrs.field(factory=list)  # selected for order
     free_talk_ready_at: float = 0.0
@@ -203,6 +229,14 @@ class MatchSession:
     difficulty: DifficultyDef = attrs.field(
         factory=lambda: resolve_difficulty("normal")
     )
+    # Battle Sport
+    ai_cfg: MatchAiConfig = attrs.field(factory=load_match_ai_config)
+    footwork_targeting: bool = False
+    footwork_cursor: Position | None = None  # absolute map tile while targeting
+    # (world_aut, aggressor entity id) — recent aggressive acts on PC
+    pc_aggression_log: list[tuple[float, object]] = attrs.field(factory=list)
+    # Instant action (Ctrl+B practice) — no career persistence
+    instant_action: bool = False
 
     def living_enemies(self) -> list[Entity]:
         out: list[Entity] = []
@@ -262,11 +296,65 @@ class MatchSession:
     def _clear_pending_reaction(self) -> None:
         self.pending_reaction = None
 
+    def _note_pc_aggression(self, aggressor: Entity) -> None:
+        """Record aggressive act against PC (attacks, feints) for Help me! orders."""
+        self.pc_aggression_log.append((self.scheduler.world_aut, aggressor))
+        # Cap log size
+        if len(self.pc_aggression_log) > 40:
+            self.pc_aggression_log = self.pc_aggression_log[-40:]
+
+    def _recent_pc_aggressors(self) -> set[object]:
+        win = self.ai_cfg.help_aggression_window_aut
+        now = self.scheduler.world_aut
+        out: set[object] = set()
+        for aut, ent in self.pc_aggression_log:
+            if now - aut <= win + 1e-9:
+                out.add(ent)
+        return out
+
+    def _call_for_help(self, *, from_swallow: bool) -> bool:
+        """Tag Help me! for all allies. Returns whether the call was heard."""
+        heard = True
+        if from_swallow:
+            heard = self.rng.random() < self.ai_cfg.help_call_heard_chance_swallow
+        if not heard:
+            self.message_log.add(
+                "You call for help — but no one seems to hear.",
+                category=MessageCategory.CAUTION,
+            )
+            return False
+        now = self.scheduler.world_aut
+        # Current predator counts as aggressor
+        if self.grapple is not None and self.grapple.predator is not None:
+            self._note_pc_aggression(self.grapple.predator)  # type: ignore[arg-type]
+        for e in self.living_allies():
+            aid = self.ally_id_by_entity.get(e)
+            if aid:
+                self.ally_order[aid] = "help_me"
+                self.ally_order_issued_at[aid] = now
+        self.message_log.add(
+            "You shout for help!",
+            category=MessageCategory.SPEECH,
+        )
+        return True
+
     def _sync_ap(self) -> None:
         t = self.scheduler.world_aut
         rc = self.recovery_cfg
         for ent, state in list(self.combatants.items()):
             prev = state.last_world_aut
+            state.clear_expired_statuses(t)
+            if (
+                state.morale_shock_until_aut < 0
+                and state.hp_at_shock_end is not None
+            ):
+                pass
+            # morale check on live HP
+            live = ent.components.get(Fighter) if hasattr(ent, "components") else None
+            if live is not None and Player not in getattr(ent, "tags", set()):
+                maybe_start_morale_shock(
+                    state, int(live.hp), t, self.ai_cfg, self.rng
+                )
             elapsed = max(0.0, t - prev)
             if state.downed and elapsed > 0:
                 state.recovery_bar = min(
@@ -355,7 +443,18 @@ class MatchSession:
                 self._try_surrender()
                 return False
             if self.grapple.phase is VorePhase.ENGULFED:
-                if sym in _WAIT_KEYS or sym in DIRECTION_KEYS:
+                if sym in _TALK_KEYS:
+                    # Fully swallowed: Talk available; Help me! via free talk path
+                    if self.living_allies():
+                        self.talk_ui = TalkUiMode.PICK_ALLY
+                        self.talk_target_ids = []
+                    else:
+                        self.message_log.add(
+                            "No allies to call.",
+                            category=MessageCategory.ROUTINE,
+                        )
+                    return False
+                if sym in _WAIT_KEYS or sym in _SPACE_WAIT or sym in DIRECTION_KEYS:
                     self.scheduler.commit_action(
                         self.player,
                         self.combat_cfg.maneuver("wait").aut_cost,
@@ -372,6 +471,19 @@ class MatchSession:
 
         if self.pending_reaction is not None:
             return self._handle_reaction_event(event)
+
+        if self.footwork_targeting:
+            if sym in _ESCAPE:
+                self._cancel_footwork_targeting()
+                return False
+            if sym in _CONFIRM:
+                self._confirm_footwork_targeting()
+                return False
+            if sym in DIRECTION_KEYS:
+                dx, dy = DIRECTION_KEYS[sym]
+                self._nudge_footwork_cursor(dx, dy)
+                return False
+            return False
 
         if not self.awaiting_player:
             self.process_npc_until_player()
@@ -442,12 +554,40 @@ class MatchSession:
             self.talk_target_ids = []
             return False
 
+        # Brace (d) — not while ability menu (handled above)
+        if sym in _BRACE_KEYS and self.ability_ui is AbilityUiMode.CLOSED:
+            self.recent_dodges = 0
+            self._player_brace()
+            return False
+
+        if sym in _FOOTWORK_KEYS:
+            pc = self.combatants[self.player]
+            if pc.downed:
+                self.message_log.add(
+                    "Too exhausted for footwork.",
+                    category=MessageCategory.CAUTION,
+                )
+                return False
+            self._begin_footwork_targeting()
+            return False
+
         if sym in DIRECTION_KEYS:
             dx, dy = DIRECTION_KEYS[sym]
             self.recent_dodges = 0
-            self._player_bump(dx, dy)
+            mod = int(getattr(event, "mod", 0) or 0)
+            from tcod.event import Modifier as _Mod
+
+            ctrl = bool(mod & (int(_Mod.LCTRL) | int(_Mod.RCTRL)))
+            shift = bool(mod & (int(_Mod.LSHIFT) | int(_Mod.RSHIFT)))
+            if ctrl:
+                self._player_directed_attack(dx, dy)
+            elif shift:
+                # Quick 1-tile footwork shortcut
+                self._try_player_footwork(dx, dy)
+            else:
+                self._player_bump(dx, dy)
             return False
-        if sym in _WAIT_KEYS:
+        if sym in _WAIT_KEYS or sym in _SPACE_WAIT:
             self.recent_dodges = 0
             self._player_wait()
             return False
@@ -496,6 +636,26 @@ class MatchSession:
             )
             pr.awaiting_dodge_dir = False
             return
+        # Momentum from footwork
+        pc_st = self.combatants.get(self.player)
+        if pc_st is not None:
+            evade_m = momentum_evade_mult(
+                pc_st, dx, dy, self.scheduler.world_aut, self.ai_cfg
+            )
+            if evade_m < 0.5:
+                self.message_log.add(
+                    "Your momentum works against you!",
+                    category=MessageCategory.CAUTION,
+                )
+            # Soft gate: reverse momentum may fail the dodge
+            if evade_m < 0.5 and self.rng.random() > evade_m:
+                self.message_log.add(
+                    "You fail to reverse course in time!",
+                    category=MessageCategory.DANGER,
+                )
+                pr.awaiting_dodge_dir = False
+                self._resolve_incoming(ReactionKind.IGNORE)
+                return
         # Fatigue (stamina)
         cost = dodge_fatigue_cost(
             dodges_this_match=self.dodge_count,
@@ -595,10 +755,10 @@ class MatchSession:
         self.process_npc_until_player()
 
     def _player_wait(self) -> None:
+        """Keep watch (. / numpad 5 / space) — near-neutral, not turtle dump."""
         cst = self.combatants[self.player]
-        man = self.combat_cfg.maneuver("wait")
+        man = self.combat_cfg.maneuver("keep_watch")
         if cst.downed:
-            # Holding while down still fills recovery (via AUT commit)
             self.scheduler.commit_action(self.player, man.aut_cost)
             self.message_log.add(
                 "You catch your breath in the sand.",
@@ -607,12 +767,240 @@ class MatchSession:
             self.awaiting_player = False
             self.process_npc_until_player()
             return
-        cst.shift_balance(man.balance_delta, self.combat_cfg)
+        apply_ready_balance(cst, self.combat_cfg, "keep_watch")
         self.scheduler.commit_action(self.player, man.aut_cost)
         self.message_log.add(
-            "You brace and wait.",
+            "You keep watch.",
             category=MessageCategory.ROUTINE,
         )
+        self.awaiting_player = False
+        self.process_npc_until_player()
+
+    def _player_brace(self) -> None:
+        cst = self.combatants[self.player]
+        if cst.downed:
+            self.message_log.add(
+                "You cannot brace while downed.",
+                category=MessageCategory.CAUTION,
+            )
+            return
+        man = self.combat_cfg.maneuver("brace")
+        apply_ready_balance(cst, self.combat_cfg, "brace")
+        self.scheduler.commit_action(self.player, man.aut_cost)
+        self.message_log.add(
+            "You raise your guard.",
+            category=MessageCategory.ROUTINE,
+        )
+        self.awaiting_player = False
+        self.process_npc_until_player()
+
+    def _footwork_max_chebyshev(self) -> int:
+        return int(self.ai_cfg.footwork.max_chebyshev)
+
+    def _footwork_legal_tiles(self) -> list[Position]:
+        """Legal footwork destinations: any open tile within max_chebyshev (1 and 2)."""
+        pos = self.player.components[Position]
+        legal: list[Position] = []
+        r = self._footwork_max_chebyshev()
+        for dx, dy in all_footwork_offsets(max_chebyshev=r):
+            tx, ty = pos.x + dx, pos.y + dy
+            if self._blocker_at(tx, ty) is not None:
+                continue
+            if not can_entity_enter_tile(self.game_map, tx, ty, self.player):
+                continue
+            legal.append(Position(tx, ty))
+        return legal
+
+    def _begin_footwork_targeting(self) -> None:
+        legal = self._footwork_legal_tiles()
+        if not legal:
+            self.message_log.add(
+                "No legal footwork landing.",
+                category=MessageCategory.ROUTINE,
+            )
+            return
+        self.footwork_targeting = True
+        # Prefer a forward-ish legal tile; else first legal
+        self.footwork_cursor = legal[0]
+        for cand in legal:
+            if cand.x >= self.player.components[Position].x:
+                self.footwork_cursor = cand
+                break
+        self.message_log.add(
+            "Footwork: move cursor 1–2 tiles away (incl. knight range), Enter confirm, Esc cancel. "
+            "Shift+direction = quick 1-tile footwork.",
+            category=MessageCategory.CAUTION,
+        )
+
+    def _cancel_footwork_targeting(self) -> None:
+        self.footwork_targeting = False
+        self.footwork_cursor = None
+        self.message_log.add(
+            "Footwork cancelled.",
+            category=MessageCategory.ROUTINE,
+        )
+
+    def _nudge_footwork_cursor(self, dx: int, dy: int) -> None:
+        """Move targeting cursor one tile; snap to nearest legal if leaving legal set is OK.
+
+        Free movement on the map within a short radius, but only legal landings confirm.
+        """
+        if self.footwork_cursor is None:
+            legal = self._footwork_legal_tiles()
+            if not legal:
+                return
+            self.footwork_cursor = legal[0]
+        cx = self.footwork_cursor.x + dx
+        cy = self.footwork_cursor.y + dy
+        # Clamp to map
+        cx = max(0, min(self.game_map.width - 1, cx))
+        cy = max(0, min(self.game_map.height - 1, cy))
+        pos = self.player.components[Position]
+        # Keep cursor within Chebyshev 3 of player (footwork range + 1 for aiming)
+        if max(abs(cx - pos.x), abs(cy - pos.y)) > 3:
+            return
+        self.footwork_cursor = Position(cx, cy)
+
+    def _confirm_footwork_targeting(self) -> None:
+        if self.footwork_cursor is None:
+            self._cancel_footwork_targeting()
+            return
+        pos = self.player.components[Position]
+        dx = self.footwork_cursor.x - pos.x
+        dy = self.footwork_cursor.y - pos.y
+        r = self._footwork_max_chebyshev()
+        if not is_footwork_offset(dx, dy, max_chebyshev=r):
+            self.message_log.add(
+                "Not a legal footwork landing (need 1–2 tiles away).",
+                category=MessageCategory.CAUTION,
+            )
+            return
+        # Keep targeting state until success/fail of resolve
+        ok = self._try_player_footwork(dx, dy)
+        if ok:
+            self.footwork_targeting = False
+            self.footwork_cursor = None
+
+    def _try_player_footwork(self, dx: int, dy: int) -> bool:
+        """Execute footwork to offset (dx, dy). Returns True if the action committed."""
+        cst = self.combatants[self.player]
+        r = self._footwork_max_chebyshev()
+        if not is_footwork_offset(dx, dy, max_chebyshev=r):
+            self.message_log.add(
+                "You must footwork to at least 1 tile away.",
+                category=MessageCategory.ROUTINE,
+            )
+            return False
+        pos = self.player.components[Position]
+        tx, ty = pos.x + dx, pos.y + dy
+        if self._blocker_at(tx, ty) is not None or not can_entity_enter_tile(
+            self.game_map, tx, ty, self.player
+        ):
+            self.message_log.add(
+                "No room for footwork.",
+                category=MessageCategory.ROUTINE,
+            )
+            return False
+        fw = self.ai_cfg.footwork
+        world = self.scheduler.world_aut
+        chain = 0
+        if world - cst.last_footwork_aut <= fw.compound_window_aut:
+            chain = cst.footwork_chain + 1
+        else:
+            chain = 0
+        ap_cost = fw.ap_cost_base + chain * fw.ap_cost_compound
+        if not cst.spend_ap(ap_cost):
+            self.message_log.add(
+                f"Not enough AP for footwork (need {ap_cost:.1f}).",
+                category=MessageCategory.CAUTION,
+            )
+            return False
+        self.player.components[Position] = Position(tx, ty)
+        bal_delta = fw.balance_delta_for(cst.balance)
+        if bal_delta:
+            cst.shift_balance(bal_delta, self.combat_cfg)
+        cst.footwork_chain = chain
+        cst.last_footwork_aut = world
+        mo = self.ai_cfg.momentum
+        cst.momentum_dx = dx
+        cst.momentum_dy = dy
+        cst.momentum_until_aut = world + mo.duration_aut
+        self.scheduler.commit_action(self.player, fw.aut_cost)
+        self.message_log.add(
+            "You burst into a new position.",
+            category=MessageCategory.POSITIVE,
+        )
+        self.awaiting_player = False
+        self.process_npc_until_player()
+        return True
+
+    def _player_directed_attack(self, dx: int, dy: int) -> None:
+        """ctrl+dir: cone/homing basic attack or feint; R5+ no-op."""
+        cst = self.combatants[self.player]
+        if cst.downed:
+            return
+        pos = self.player.components[Position]
+        # Candidates in cone: same general direction
+        best: Entity | None = None
+        best_score = -1.0
+        for e in self.living_enemies():
+            ep = e.components.get(Position)
+            if ep is None:
+                continue
+            ex, ey = ep.x - pos.x, ep.y - pos.y
+            if dx != 0 and (ex == 0 or (ex > 0) != (dx > 0)):
+                continue
+            if dy != 0 and (ey == 0 or (ey > 0) != (dy > 0)):
+                continue
+            if dx == 0 and dy == 0:
+                continue
+            band = effective_band(pos, ep)
+            if band >= 5:
+                continue
+            # prefer closer, aligned
+            score = 10.0 - band
+            if score > best_score:
+                best_score = score
+                best = e
+        if best is None:
+            # No-op — never shame-swing
+            self.message_log.add(
+                "No foe in reach that way.",
+                category=MessageCategory.ROUTINE,
+            )
+            return
+        ep = best.components[Position]
+        band = effective_band(pos, ep)
+        mm = measure_mult(cst.weapon_id, band)
+        if band >= 3 and mm < 0.45:
+            # Feint
+            fe = self.ai_cfg.feint
+            cst.shift_balance(fe.balance_delta, self.combat_cfg)
+            self.scheduler.commit_action(self.player, fe.aut_cost)
+            self.message_log.add(
+                f"You feint toward {entity_log_name(best, sentence_start=False)}.",
+                category=MessageCategory.ROUTINE,
+            )
+            self.awaiting_player = False
+            self.process_npc_until_player()
+            return
+        man = self.combat_cfg.maneuver("standard_attack")
+        cst.shift_balance(man.balance_delta, self.combat_cfg)
+        delay = attack_delay(cst.weapon_id)
+        self._melee(
+            self.player,
+            best,
+            cost=delay,
+            damage_mult=man.damage_mult,
+            accuracy_mult=man.accuracy_mult,
+            style_label="thrust" if band >= 2 else "attack",
+            apply_push=band <= 1,
+        )
+        if self.phase is MatchPhase.RECAP:
+            return
+        if not self.living_enemies():
+            self._finish_win()
+            return
         self.awaiting_player = False
         self.process_npc_until_player()
 
@@ -707,18 +1095,44 @@ class MatchSession:
             order = None
             if sym in (KeySym.N1, KeySym.KP_1, KeySym.A):
                 order = "attack"
-            elif sym in (KeySym.N2, KeySym.KP_2, KeySym.D):
-                order = "defend"
+            elif sym in (KeySym.N2, KeySym.KP_2, KeySym.H):
+                order = "help_me"
+            elif sym in (KeySym.N3, KeySym.KP_3, KeySym.C):
+                order = "stay_close"
+            # Legacy defend → stay_close
+            elif sym in (KeySym.D,):
+                order = "stay_close"
             if order is None:
                 return
             self._issue_orders(order)
             self.talk_ui = TalkUiMode.CLOSED
 
     def _issue_orders(self, order: str) -> None:
-        """Apply Attack/Defend; Free Talk 0 AUT once per 1.0 AUT, else AP+turn."""
+        """Apply Attack!/Help me!/Stay close!; Free Talk 0 AUT once per refresh, else AP+turn."""
+        # Fully swallowed Help me: 50% hear
+        from_swallow = (
+            self.grapple is not None
+            and self.grapple.prey is self.player
+            and self.grapple.phase is VorePhase.ENGULFED
+            and order == "help_me"
+        )
+        if from_swallow and self.rng.random() >= self.ai_cfg.help_call_heard_chance_swallow:
+            self.message_log.add(
+                "You call for help — but no one seems to hear.",
+                category=MessageCategory.CAUTION,
+            )
+            free = self.scheduler.world_aut + 1e-9 >= self.free_talk_ready_at
+            if free:
+                self.free_talk_ready_at = (
+                    self.scheduler.world_aut + self.combat_cfg.free_talk_refresh_aut
+                )
+            return
+
         names: list[str] = []
+        now = self.scheduler.world_aut
         for aid in self.talk_target_ids:
             self.ally_order[aid] = order
+            self.ally_order_issued_at[aid] = now
             # Sync order onto career roster copy
             allies = self.career.allies()
             for a in allies:
@@ -726,7 +1140,14 @@ class MatchSession:
                     a.order = order
                     names.append(a.name)
             self.career.set_allies(allies)
-        label = "Attack!" if order == "attack" else "Defend me!"
+        if order == "help_me":
+            label = "Help me!"
+            if self.grapple is not None and self.grapple.predator is not None:
+                self._note_pc_aggression(self.grapple.predator)  # type: ignore[arg-type]
+        elif order == "stay_close":
+            label = "Stay close!"
+        else:
+            label = "Attack!"
         who = ", ".join(names) if names else "allies"
         free = self.scheduler.world_aut + 1e-9 >= self.free_talk_ready_at
         cst = self.combatants[self.player]
@@ -756,93 +1177,16 @@ class MatchSession:
         self.process_npc_until_player()
 
     def _ally_act(self, entity: Entity) -> None:
-        aid = self.ally_id_by_entity.get(entity, "")
-        order = self.ally_order.get(aid, "attack")
-        cst = self.combatants.get(entity)
-        enemies = self.living_enemies()
-        if not enemies:
+        if not self.living_enemies():
+            cst = self.combatants.get(entity)
             if cst:
-                cst.shift_balance(self.combat_cfg.balance_on_wait, self.combat_cfg)
-            self.scheduler.commit_action(entity, self.costs.wait)
-            return
-        pos = entity.components[Position]
-        player_pos = self.player.components[Position]
-
-        # During a grapple, rescuers prefer the big target (the predator)
-        g = self.grapple
-        pred = g.predator if g is not None else None
-        if isinstance(pred, Entity) and pred in enemies:
-            if chebyshev(pos, pred.components[Position]) == 1:
-                if cst:
-                    cst.shift_balance(self.combat_cfg.balance_on_attack, self.combat_cfg)
-                self._melee(
-                    entity,
-                    pred,
-                    cost=self.costs.standard_attack,
-                    apply_push=True,
-                )
-                return
-
-        # Prefer adjacent enemy always
-        adjacent = [
-            e
-            for e in enemies
-            if chebyshev(pos, e.components[Position]) == 1
-        ]
-        if adjacent:
-            # Prefer predator among adjacent when grappling an ally/PC
-            if isinstance(pred, Entity) and pred in adjacent:
-                target = pred
+                man = self.combat_cfg.maneuver("keep_watch")
+                cst.shift_balance(man.balance_delta, self.combat_cfg)
+                self.scheduler.commit_action(entity, man.aut_cost)
             else:
-                target = min(
-                    adjacent,
-                    key=lambda e: e.components[Fighter].hp,
-                )
-            if cst:
-                cst.shift_balance(self.combat_cfg.balance_on_attack, self.combat_cfg)
-            self._melee(
-                entity,
-                target,
-                cost=self.costs.standard_attack,
-                apply_push=True,
-            )
-            return
-
-        if order == "defend":
-            # Stay near player; step closer if far
-            dist = chebyshev(pos, player_pos)
-            if dist <= 1:
-                if cst:
-                    cst.shift_balance(self.combat_cfg.balance_on_wait, self.combat_cfg)
                 self.scheduler.commit_action(entity, self.costs.wait)
-                return
-            dx = _sign(player_pos.x - pos.x)
-            dy = _sign(player_pos.y - pos.y)
-        else:
-            # Attack: move toward predator if grappling, else nearest enemy
-            if isinstance(pred, Entity) and pred in enemies:
-                target = pred
-            else:
-                target = min(
-                    enemies,
-                    key=lambda e: chebyshev(pos, e.components[Position]),
-                )
-            tp = target.components[Position]
-            dx = _sign(tp.x - pos.x)
-            dy = _sign(tp.y - pos.y)
-
-        tx, ty = pos.x + dx, pos.y + dy
-        if self._blocker_at(tx, ty) is None and can_entity_enter_tile(
-            self.game_map, tx, ty, entity
-        ):
-            entity.components[Position] = Position(tx, ty)
-            if cst:
-                cst.shift_balance(self.combat_cfg.balance_on_step, self.combat_cfg)
-            self.scheduler.commit_action(entity, self.costs.step)
-        else:
-            if cst:
-                cst.shift_balance(self.combat_cfg.balance_on_wait, self.combat_cfg)
-            self.scheduler.commit_action(entity, self.costs.wait)
+            return
+        self._execute_ai_intent(entity, is_ally=True)
 
     def _on_ally_down(self, entity: Entity) -> None:
         aid = self.ally_id_by_entity.get(entity)
@@ -924,7 +1268,7 @@ class MatchSession:
         if can_entity_enter_tile(self.game_map, tx, ty, self.player) and target is None:
             self.player.components[Position] = Position(tx, ty)
             man = self.combat_cfg.maneuver("step")
-            cst.shift_balance(man.balance_delta, self.combat_cfg)
+            apply_ready_balance(cst, self.combat_cfg, "step")
             aut = man.aut_cost * step_aut_multiplier(cst)
             self.scheduler.commit_action(self.player, aut)
             self.awaiting_player = False
@@ -950,10 +1294,11 @@ class MatchSession:
 
         cst = self.combatants[self.player]
         cst.shift_balance(man.balance_delta, self.combat_cfg)
+        delay = attack_delay(cst.weapon_id)
         self._melee(
             self.player,
             target,
-            cost=man.aut_cost,
+            cost=delay,
             damage_mult=man.damage_mult,
             accuracy_mult=man.accuracy_mult,
             style_label=label,
@@ -1090,11 +1435,13 @@ class MatchSession:
         g = self.grapple
         assert g is not None and g.prey is self.player
         if g.phase is VorePhase.SWALLOW:
-            # Interactive swallow modal only — no free direction thrash
+            # Interactive swallow modal: 1 struggle | 2 conserve | 3 call for help
             if sym in _REACT_DODGE or sym == KeySym.N1 or sym == KeySym.KP_1:
                 self._prey_swallow_struggle()
             elif sym in _REACT_PARRY or sym == KeySym.N2 or sym == KeySym.KP_2:
                 self._prey_swallow_conserve()
+            elif sym in _REACT_COUNTER or sym == KeySym.N3 or sym == KeySym.KP_3:
+                self._prey_swallow_call_help()
             return
         if sym in _REACT_DODGE or sym == KeySym.N1 or sym == KeySym.KP_1:
             self._prey_break_away(spend_aut=True)
@@ -1176,6 +1523,23 @@ class MatchSession:
         self.message_log.add(
             msg.swallow_conserve_strength(),
             category=MessageCategory.ROUTINE,
+        )
+        if self.phase is MatchPhase.FIGHT:
+            self.awaiting_player = False
+            self.process_npc_until_player()
+
+    def _prey_swallow_call_help(self) -> None:
+        """Option 3: call help (50% heard) and advance swallow with no escape/conserve."""
+        g = self.grapple
+        assert g is not None and g.phase is VorePhase.SWALLOW
+        cfg = self.vore_cfg
+        self._call_for_help(from_swallow=True)
+        # Advance phase without escape or conserve bonus
+        g.swallow_phase_index += 1
+        self.scheduler.commit_action(g.prey, cfg.swallow_struggle_aut)
+        self.message_log.add(
+            "The swallow continues as you cry out.",
+            category=MessageCategory.DANGER,
         )
         if self.phase is MatchPhase.FIGHT:
             self.awaiting_player = False
@@ -1523,20 +1887,29 @@ class MatchSession:
         self.pending_reaction = None
         self.talk_ui = TalkUiMode.CLOSED
         self.grapple = None
-        # Miss only — no bonus; still record the attempt
-        patron_lines = self._apply_patron_settlement(end_kind="digested")
-        crowd_lines = self._apply_crowd_settlement(end_kind="digested")
-        self.recap_lines = (
-            "Digested",
-            flaunt,
-            "Your career ends in the pit.",
-            f"Final renown: {self.career.renown}",
-            f"Gold at end: {self.career.gold}",
-            *patron_lines,
-            *crowd_lines,
-            "",
-            "Press Enter to return to the main menu.",
-        )
+        if self.instant_action:
+            self.recap_lines = (
+                "Digested",
+                flaunt,
+                "Instant action — practice bout ends here.",
+                f"{self.card.title}  [{self.card.kind_label}]",
+                "",
+                self._recap_continue_line(),
+            )
+        else:
+            patron_lines = self._apply_patron_settlement(end_kind="digested")
+            crowd_lines = self._apply_crowd_settlement(end_kind="digested")
+            self.recap_lines = (
+                "Digested",
+                flaunt,
+                "Your career ends in the pit.",
+                f"Final renown: {self.career.renown}",
+                f"Gold at end: {self.career.gold}",
+                *patron_lines,
+                *crowd_lines,
+                "",
+                self._recap_continue_line(),
+            )
         self.awaiting_player = False
 
     def _note_assist_damage(self, predator: Entity, damage: float) -> None:
@@ -1581,6 +1954,208 @@ class MatchSession:
         self._start_grapple(entity, target)
         return True
 
+    def _execute_ai_intent(self, entity: Entity, *, is_ally: bool) -> None:
+        """Run one fuzzy AI turn for enemy or ally."""
+        cst = self.combatants.get(entity)
+        if cst is None or Position not in entity.components:
+            self.scheduler.commit_action(entity, self.costs.wait)
+            return
+        pos = entity.components[Position]
+        world = self.scheduler.world_aut
+        live = entity.components.get(Fighter)
+        if live is not None:
+            maybe_start_morale_shock(cst, int(live.hp), world, self.ai_cfg, self.rng)
+        cst.clear_expired_statuses(world)
+
+        def can_enter(x: int, y: int) -> bool:
+            if self._blocker_at(x, y) is not None:
+                return False
+            return can_entity_enter_tile(self.game_map, x, y, entity)
+
+        if is_ally:
+            enemies = self.living_enemies()
+            targets = [
+                (e, e.components[Position], e.components[Fighter])
+                for e in enemies
+                if Position in e.components and Fighter in e.components
+            ]
+            aid = self.ally_id_by_entity.get(entity, "")
+            order = self.ally_order.get(aid, "attack")
+            issued = self.ally_order_issued_at.get(aid, -999.0)
+            if order != "attack" and issued >= 0:
+                if should_forget_order(issued, world, self.ai_cfg, self.rng):
+                    order = "attack"
+                    self.ally_order[aid] = "attack"
+            help_set = self._recent_pc_aggressors()
+            # During grapple, predator is help target
+            g = self.grapple
+            if g is not None and isinstance(g.predator, Entity):
+                help_set = set(help_set)
+                help_set.add(g.predator)
+            intent = score_ally_intents(
+                rng=self.rng,
+                ai_cfg=self.ai_cfg,
+                state=cst,
+                pos=pos,
+                player_pos=self.player.components[Position],
+                order=order,
+                enemies=targets,
+                help_targets=help_set,
+                world_aut=world,
+                can_enter=can_enter,
+                can_clinch=True,
+            )
+        else:
+            targets_list: list[tuple[object, Position, Fighter]] = []
+            pf = self.player.components.get(Fighter)
+            if pf is not None and not self._is_obscured_prey(self.player):
+                targets_list.append(
+                    (self.player, self.player.components[Position], pf)
+                )
+            for ally in self.living_allies():
+                if self._is_obscured_prey(ally):
+                    continue
+                af = ally.components.get(Fighter)
+                if af is not None and Position in ally.components:
+                    targets_list.append((ally, ally.components[Position], af))
+            intent = score_enemy_intents(
+                rng=self.rng,
+                ai_cfg=self.ai_cfg,
+                state=cst,
+                pos=pos,
+                targets=targets_list,
+                world_aut=world,
+                can_enter=can_enter,
+                can_clinch=True,
+            )
+
+        if intent.kind == "keep_watch":
+            man = self.combat_cfg.maneuver("keep_watch")
+            apply_ready_balance(cst, self.combat_cfg, "keep_watch")
+            self.scheduler.commit_action(entity, man.aut_cost)
+            return
+        if intent.kind == "brace":
+            man = self.combat_cfg.maneuver("brace")
+            apply_ready_balance(cst, self.combat_cfg, "brace")
+            self.scheduler.commit_action(entity, man.aut_cost)
+            return
+        if intent.kind == "step":
+            tx, ty = pos.x + intent.dx, pos.y + intent.dy
+            if can_enter(tx, ty):
+                entity.components[Position] = Position(tx, ty)
+                man = self.combat_cfg.maneuver("step")
+                apply_ready_balance(cst, self.combat_cfg, "step")
+                self.scheduler.commit_action(entity, man.aut_cost)
+                return
+            man = self.combat_cfg.maneuver("keep_watch")
+            apply_ready_balance(cst, self.combat_cfg, "keep_watch")
+            self.scheduler.commit_action(entity, man.aut_cost)
+            return
+        if intent.kind == "footwork":
+            fw = self.ai_cfg.footwork
+            tx, ty = pos.x + intent.dx, pos.y + intent.dy
+            if not can_enter(tx, ty) or not is_footwork_offset(
+                intent.dx, intent.dy, max_chebyshev=fw.max_chebyshev
+            ):
+                man = self.combat_cfg.maneuver("keep_watch")
+                apply_ready_balance(cst, self.combat_cfg, "keep_watch")
+                self.scheduler.commit_action(entity, man.aut_cost)
+                return
+            ap_cost = fw.ap_cost_base
+            if not cst.spend_ap(ap_cost):
+                # fall back to step
+                sdx = (intent.dx > 0) - (intent.dx < 0)
+                sdy = (intent.dy > 0) - (intent.dy < 0)
+                if can_enter(pos.x + sdx, pos.y + sdy):
+                    entity.components[Position] = Position(pos.x + sdx, pos.y + sdy)
+                    man = self.combat_cfg.maneuver("step")
+                    apply_ready_balance(cst, self.combat_cfg, "step")
+                    self.scheduler.commit_action(entity, man.aut_cost)
+                    return
+                self.scheduler.commit_action(entity, self.costs.wait)
+                return
+            entity.components[Position] = Position(tx, ty)
+            bal_d = fw.balance_delta_for(cst.balance)
+            if bal_d:
+                cst.shift_balance(bal_d, self.combat_cfg)
+            cst.momentum_dx = intent.dx
+            cst.momentum_dy = intent.dy
+            cst.momentum_until_aut = world + self.ai_cfg.momentum.duration_aut
+            self.scheduler.commit_action(entity, fw.aut_cost)
+            return
+        if intent.kind == "clinch":
+            target = intent.target_key
+            if isinstance(target, Entity) and self._try_enemy_grab(entity, target):
+                return
+            # fall through to attack on same target
+            if isinstance(target, Entity):
+                man = self.combat_cfg.maneuver("standard_attack")
+                delay = attack_delay(cst.weapon_id)
+                cst.shift_balance(man.balance_delta, self.combat_cfg)
+                if target is self.player:
+                    self._note_pc_aggression(entity)
+                    self._npc_open_player_attack(entity)
+                    return
+                self._melee(
+                    entity,
+                    target,
+                    cost=delay,
+                    damage_mult=man.damage_mult,
+                    accuracy_mult=man.accuracy_mult,
+                    apply_push=True,
+                )
+                return
+        if intent.kind == "ability" and intent.ability_id:
+            ab = None
+            for a in self.combat_cfg.abilities:
+                if a.id == intent.ability_id:
+                    ab = a
+                    break
+            target = intent.target_key
+            if ab is not None and isinstance(target, Entity) and cst.spend_ap(ab.ap_cost):
+                cst.shift_balance(ab.balance_delta, self.combat_cfg)
+                if target is self.player:
+                    self._note_pc_aggression(entity)
+                    self._npc_open_player_attack(entity)
+                    return
+                self._melee(
+                    entity,
+                    target,
+                    cost=ab.aut_cost,
+                    damage_mult=ab.damage_mult,
+                    accuracy_mult=ab.accuracy_mult,
+                    apply_push=True,
+                )
+                return
+        if intent.kind == "attack":
+            target = intent.target_key
+            if not isinstance(target, Entity):
+                man = self.combat_cfg.maneuver("keep_watch")
+                self.scheduler.commit_action(entity, man.aut_cost)
+                return
+            man = self.combat_cfg.maneuver(intent.profile or "standard_attack")
+            delay = attack_delay(cst.weapon_id)
+            if target is self.player:
+                self._note_pc_aggression(entity)
+                # Use reaction modal path
+                aname = entity_log_name(entity, sentence_start=True)
+                cst.shift_balance(man.balance_delta, self.combat_cfg)
+                self._npc_open_player_attack(entity)
+                return
+            cst.shift_balance(man.balance_delta, self.combat_cfg)
+            self._melee(
+                entity,
+                target,
+                cost=delay,
+                damage_mult=man.damage_mult,
+                accuracy_mult=man.accuracy_mult,
+                apply_push=True,
+            )
+            return
+        man = self.combat_cfg.maneuver("keep_watch")
+        cst.shift_balance(man.balance_delta, self.combat_cfg)
+        self.scheduler.commit_action(entity, man.aut_cost)
+
     def _npc_open_player_attack(self, entity: Entity) -> None:
         """Telegraph a swing at the PC (reaction modal). Never while PC is grappled prey."""
         if self._is_obscured_prey(self.player):
@@ -1599,108 +2174,7 @@ class MatchSession:
             # Only predator/prey use special acts; other NPCs fight normally
             if entity is self.grapple.predator or entity is self.grapple.prey:
                 return
-        # Prefer soft targets: downed PC, then PC, then nearest ally —
-        # but never poke an obscured grapple prey (other predator's catch).
-        targets: list[Entity] = []
-        pf = self.player.components.get(Fighter)
-        if pf is not None and not self._is_obscured_prey(self.player):
-            targets.append(self.player)
-        for ally in self.living_allies():
-            if not self._is_obscured_prey(ally):
-                targets.append(ally)
-        if not targets:
-            # Hesitate: won't risk jabbing into another predator's grapple
-            cst = self.combatants.get(entity)
-            if cst:
-                cst.shift_balance(self.combat_cfg.balance_on_wait, self.combat_cfg)
-            self.scheduler.commit_action(entity, self.costs.wait)
-            return
-
-        pos = entity.components[Position]
-        # Score: prefer adjacent, then downed
-        def score(t: Entity) -> tuple[int, int, int]:
-            tp = t.components[Position]
-            dist = chebyshev(pos, tp)
-            st = self.combatants.get(t)
-            down = 0 if (st and st.downed) or (
-                t.components.get(Fighter) and t.components[Fighter].hp <= 0
-            ) else 1
-            is_pc = 0 if Player in t.tags else 1
-            return (dist, down, is_pc)
-
-        target = min(targets, key=score)
-        player_pos = target.components[Position]
-        dx = _sign(player_pos.x - pos.x)
-        dy = _sign(player_pos.y - pos.y)
-        cst = self.combatants.get(entity)
-        if dx == 0 and dy == 0:
-            # Same tile or already on them — grab/attack
-            if self._try_enemy_grab(entity, target):
-                return
-            if target is self.player:
-                self._npc_open_player_attack(entity)
-            else:
-                if cst:
-                    cst.shift_balance(self.combat_cfg.balance_on_attack, self.combat_cfg)
-                self._melee(
-                    entity,
-                    target,
-                    cost=self.combat_cfg.maneuver("standard_attack").aut_cost,
-                    apply_push=True,
-                )
-            return
-        tx, ty = pos.x + dx, pos.y + dy
-        if not can_entity_enter_tile(self.game_map, tx, ty, entity) and (
-            self._blocker_at(tx, ty) is None
-            or self._blocker_at(tx, ty) is target
-        ):
-            if abs(player_pos.x - pos.x) >= abs(player_pos.y - pos.y):
-                tx, ty = pos.x + dx, pos.y
-            else:
-                tx, ty = pos.x, pos.y + dy
-
-        blocker = self._blocker_at(tx, ty)
-        if blocker is target or (
-            blocker is not None and chebyshev(pos, target.components[Position]) == 1
-        ):
-            if chebyshev(pos, target.components[Position]) > 1 and blocker is None:
-                pass
-            else:
-                # Adjacent: grab or attack
-                if chebyshev(pos, target.components[Position]) <= 1:
-                    if self._try_enemy_grab(entity, target):
-                        return
-                    if target is self.player:
-                        self._npc_open_player_attack(entity)
-                        return
-                    if cst:
-                        cst.shift_balance(
-                            self.combat_cfg.balance_on_attack,
-                            self.combat_cfg,
-                        )
-                    self._melee(
-                        entity,
-                        target,
-                        cost=self.combat_cfg.maneuver("standard_attack").aut_cost,
-                        apply_push=True,
-                    )
-                    return
-        if blocker is None and can_entity_enter_tile(self.game_map, tx, ty, entity):
-            entity.components[Position] = Position(tx, ty)
-            if cst:
-                cst.shift_balance(self.combat_cfg.balance_on_step, self.combat_cfg)
-            self.scheduler.commit_action(entity, self.costs.step)
-            return
-        # Adjacent fallback
-        if chebyshev(pos, target.components[Position]) <= 1:
-            if self._try_enemy_grab(entity, target):
-                return
-            if target is self.player:
-                self._npc_open_player_attack(entity)
-                return
-        if cst:
-            cst.shift_balance(self.combat_cfg.balance_on_wait, self.combat_cfg)
-        self.scheduler.commit_action(entity, self.costs.wait)
+        self._execute_ai_intent(entity, is_ally=False)
 
     def _other_adjacent_positions(
         self,
@@ -1753,6 +2227,19 @@ class MatchSession:
             self._other_adjacent_positions(defender, attacker),
         )
         accuracy_mult *= flank_mult
+
+        # Weapon measure bands
+        if (
+            Position in attacker.components
+            and Position in defender.components
+            and a_state is not None
+        ):
+            band = effective_band(
+                attacker.components[Position], defender.components[Position]
+            )
+            mm = measure_mult(a_state.weapon_id, band)
+            accuracy_mult *= mm
+            damage_mult *= mm
 
         if a_state is not None:
             atk_stats = actual_fighter(a_state, self.combat_cfg, live_hp=atk_live.hp)
@@ -2030,6 +2517,11 @@ class MatchSession:
     def _payout_diff_mult(self) -> float:
         return float(self.difficulty.payout_mult)
 
+    def _recap_continue_line(self) -> str:
+        if self.instant_action:
+            return "Press Enter to return to the main menu."
+        return "Press Enter to return to downtime."
+
     def _finish_surrender(self) -> None:
         self.phase = MatchPhase.RECAP
         self.end_kind = MatchEndKind.SURRENDER
@@ -2044,28 +2536,43 @@ class MatchSession:
             economy=econ,
             difficulty_payout_mult=self._payout_diff_mult(),
         )
-        self.gold_delta = gold
-        self.renown_delta = renown
-        self.career.gold += gold
-        self.career.renown += renown
-        self.career.round_index += 1
-        patron_lines = self._apply_patron_settlement(end_kind="surrender")
-        crowd_lines = self._apply_crowd_settlement(end_kind="surrender")
+        self.gold_delta = 0 if self.instant_action else gold
+        self.renown_delta = 0 if self.instant_action else renown
+        if not self.instant_action:
+            self.career.gold += gold
+            self.career.renown += renown
+            self.career.round_index += 1
+        patron_lines = (
+            () if self.instant_action else self._apply_patron_settlement(end_kind="surrender")
+        )
+        crowd_lines = (
+            () if self.instant_action else self._apply_crowd_settlement(end_kind="surrender")
+        )
         notes = tuple(self.digest_notes) if self.digest_notes else ()
         pct = int(round(frac * 100))
-        self.recap_lines = (
-            "Surrender",
-            "You cry off mid-match. The bout ends under mercy rules.",
-            f"Show length scaled payout ({pct}% of appearance fee).",
-            f"+{gold} gold  |  +{renown} renown",
-            f"Purse: {self.career.gold} gold  |  Renown: {self.career.renown}",
-            f"Next round: {self.career.round_index}",
-            *patron_lines,
-            *crowd_lines,
-            *notes,
-            "",
-            "Press Enter to return to downtime.",
-        )
+        if self.instant_action:
+            self.recap_lines = (
+                "Surrender",
+                "Instant action — practice bout ended under mercy rules.",
+                f"{self.card.title}  [{self.card.kind_label}]",
+                *notes,
+                "",
+                self._recap_continue_line(),
+            )
+        else:
+            self.recap_lines = (
+                "Surrender",
+                "You cry off mid-match. The bout ends under mercy rules.",
+                f"Show length scaled payout ({pct}% of appearance fee).",
+                f"+{gold} gold  |  +{renown} renown",
+                f"Purse: {self.career.gold} gold  |  Renown: {self.career.renown}",
+                f"Next round: {self.career.round_index}",
+                *patron_lines,
+                *crowd_lines,
+                *notes,
+                "",
+                self._recap_continue_line(),
+            )
         self.awaiting_player = False
 
     def _finish_win(self) -> None:
@@ -2079,27 +2586,42 @@ class MatchSession:
         gold, renown = compute_win_payout(
             self.card, econ, difficulty_payout_mult=self._payout_diff_mult()
         )
-        self.gold_delta = gold
-        self.renown_delta = renown
-        self.career.gold += gold
-        self.career.renown += renown
-        self.career.round_index += 1
-        patron_lines = self._apply_patron_settlement(end_kind="win")
-        crowd_lines = self._apply_crowd_settlement(end_kind="win")
-        notes = tuple(self.digest_notes) if self.digest_notes else ()
-        self.recap_lines = (
-            "Victory!",
-            f"You defeated the opposition in: {self.card.title}",
-            f"Risk: {self.card.kind_label}",
-            f"+{gold} gold  |  +{renown} renown",
-            f"Purse: {self.career.gold} gold  |  Renown: {self.career.renown}",
-            f"Next round: {self.career.round_index}",
-            *patron_lines,
-            *crowd_lines,
-            *notes,
-            "",
-            "Press Enter to return to downtime.",
+        self.gold_delta = 0 if self.instant_action else gold
+        self.renown_delta = 0 if self.instant_action else renown
+        if not self.instant_action:
+            self.career.gold += gold
+            self.career.renown += renown
+            self.career.round_index += 1
+        patron_lines = (
+            () if self.instant_action else self._apply_patron_settlement(end_kind="win")
         )
+        crowd_lines = (
+            () if self.instant_action else self._apply_crowd_settlement(end_kind="win")
+        )
+        notes = tuple(self.digest_notes) if self.digest_notes else ()
+        if self.instant_action:
+            self.recap_lines = (
+                "Victory!",
+                f"Instant action — defeated: {self.card.title}",
+                f"Risk: {self.card.kind_label}",
+                *notes,
+                "",
+                self._recap_continue_line(),
+            )
+        else:
+            self.recap_lines = (
+                "Victory!",
+                f"You defeated the opposition in: {self.card.title}",
+                f"Risk: {self.card.kind_label}",
+                f"+{gold} gold  |  +{renown} renown",
+                f"Purse: {self.career.gold} gold  |  Renown: {self.career.renown}",
+                f"Next round: {self.career.round_index}",
+                *patron_lines,
+                *crowd_lines,
+                *notes,
+                "",
+                self._recap_continue_line(),
+            )
         self.awaiting_player = False
 
     def _finish_loss(self) -> None:
@@ -2120,26 +2642,41 @@ class MatchSession:
                 "Red match loss — you are hauled out of the sand alive. "
                 "(Permanent end only if digested.)"
             )
-        self.gold_delta = gold
-        self.renown_delta = renown
-        self.career.gold += gold
-        self.career.renown += renown
-        self.career.round_index += 1
-        patron_lines = self._apply_patron_settlement(end_kind="loss")
-        crowd_lines = self._apply_crowd_settlement(end_kind="loss")
-        notes = tuple(self.digest_notes) if self.digest_notes else ()
-        self.recap_lines = (
-            "Defeat",
-            note,
-            f"+{gold} gold",
-            f"Purse: {self.career.gold} gold  |  Renown: {self.career.renown}",
-            f"Next round: {self.career.round_index}",
-            *patron_lines,
-            *crowd_lines,
-            *notes,
-            "",
-            "Press Enter to return to downtime.",
+        self.gold_delta = 0 if self.instant_action else gold
+        self.renown_delta = 0 if self.instant_action else renown
+        if not self.instant_action:
+            self.career.gold += gold
+            self.career.renown += renown
+            self.career.round_index += 1
+        patron_lines = (
+            () if self.instant_action else self._apply_patron_settlement(end_kind="loss")
         )
+        crowd_lines = (
+            () if self.instant_action else self._apply_crowd_settlement(end_kind="loss")
+        )
+        notes = tuple(self.digest_notes) if self.digest_notes else ()
+        if self.instant_action:
+            self.recap_lines = (
+                "Defeat",
+                f"Instant action — {note}",
+                f"{self.card.title}  [{self.card.kind_label}]",
+                *notes,
+                "",
+                self._recap_continue_line(),
+            )
+        else:
+            self.recap_lines = (
+                "Defeat",
+                note,
+                f"+{gold} gold",
+                f"Purse: {self.career.gold} gold  |  Renown: {self.career.renown}",
+                f"Next round: {self.career.round_index}",
+                *patron_lines,
+                *crowd_lines,
+                *notes,
+                "",
+                self._recap_continue_line(),
+            )
         self.awaiting_player = False
 
 
@@ -2180,6 +2717,9 @@ def start_match(
         spawn_plan.extend([entity_id] * max(1, int(count)))
     if not spawn_plan:
         spawn_plan = ["rat"]
+    # Solo Duels career: force exactly one opponent
+    if career.is_solo():
+        spawn_plan = [spawn_plan[0]]
     spawns = sand_pit_enemy_spawns(len(spawn_plan))
     enemies: list[Entity] = []
     for (sx, sy), entity_id in zip(spawns, spawn_plan):
@@ -2205,10 +2745,16 @@ def start_match(
             int(round(ef.max_damage * diff.enemy_damage_mult)),
         )
 
-    # Deployed allies (PC + up to card max / career max)
+    # Deployed allies (PC + up to card max / career max) — never for solo careers
     tuning = load_roster_tuning()
-    max_dep = min(career.max_deployed_allies, card.max_allies, tuning.max_deployed_allies)
-    to_deploy = deployed_allies(career.allies(), max_deploy=max_dep)
+    if career.is_solo():
+        max_dep = 0
+        to_deploy = []
+    else:
+        max_dep = min(
+            career.max_deployed_allies, card.max_allies, tuning.max_deployed_allies
+        )
+        to_deploy = deployed_allies(career.allies(), max_deploy=max_dep)
     ally_entities: list[Entity] = []
     ally_id_by_entity: dict[object, str] = {}
     ally_order: dict[str, str] = {}
@@ -2248,6 +2794,7 @@ def start_match(
 
     scheduler = AutScheduler()
     scheduler.register(player)
+    ai_cfg = load_match_ai_config()
     combatants: dict[object, CombatantState] = {
         player: CombatantState.from_fighter(
             player.components[Fighter],
@@ -2255,23 +2802,57 @@ def start_match(
             world_aut=0.0,
             injuries=player_injuries,
             second_wind_uses=recovery_cfg.second_wind.uses_per_match,
+            weapon_id=ai_cfg.player_default_weapon,
+            ferocity=5,
+            cunning=5,
+            tenacity=5,
+            appetite=0,
+            vore_capable=False,
         ),
     }
-    for e in enemies:
+    for e, entity_id in zip(enemies, spawn_plan):
         scheduler.register(e)
+        ov = ai_cfg.entity_attr_overrides.get(entity_id, {})
+        fer, cun, ten, app, wep, abs_ = roll_attrs(
+            rng, overrides=ov, defaults=ai_cfg.default_entity_attrs
+        )
+        if not wep:
+            wep = default_weapon_for_entity(entity_id)
+        # Seed abilities for AI with any cunning
+        seed_abs = abs_ or ("haymaker", "shield_push", "hook_shield")
         combatants[e] = CombatantState.from_fighter(
             e.components[Fighter],
             combat_cfg,
             world_aut=0.0,
+            weapon_id=wep,
+            ferocity=fer,
+            cunning=cun,
+            tenacity=ten,
+            appetite=app,
+            ability_ids=tuple(seed_abs) if cun > 0 else (),
+            vore_capable=True,
         )
     for e, rec in zip(ally_entities, to_deploy):
         scheduler.register(e)
+        ov = ai_cfg.entity_attr_overrides.get(rec.species_id, {})
+        fer, cun, ten, app, wep, abs_ = roll_attrs(
+            rng, overrides=ov, defaults=ai_cfg.default_entity_attrs
+        )
+        if not wep:
+            wep = default_weapon_for_entity(rec.species_id)
         combatants[e] = CombatantState.from_fighter(
             e.components[Fighter],
             combat_cfg,
             world_aut=0.0,
             injuries=injuries_from_dicts(rec.injuries),
             second_wind_uses=0,
+            weapon_id=wep,
+            ferocity=fer,
+            cunning=cun,
+            tenacity=ten,
+            appetite=app,
+            ability_ids=tuple(abs_) if abs_ else (),
+            vore_capable=False,  # beast flag later; default steel allies
         )
 
     log = MessageLog()
@@ -2280,7 +2861,7 @@ def start_match(
         category=MessageCategory.CAUTION,
     )
     log.add(
-        "Move/bump, . wait, a abilities, T talk, s Second Wind. AP over AUT.",
+        "Move/bump, ctrl+dir attack, f footwork, . keep watch, d brace, a abilities, T talk.",
         category=MessageCategory.ROUTINE,
     )
     if player_injuries:
@@ -2322,6 +2903,7 @@ def start_match(
         recovery_cfg=recovery_cfg,
         vore_cfg=vore_cfg,
         combatants=combatants,
+        ai_cfg=ai_cfg,
         ally_entities=ally_entities,
         ally_id_by_entity=ally_id_by_entity,
         ally_order=ally_order,
@@ -2377,6 +2959,22 @@ def render_match(
         grapple=session.grapple,
         is_ally=session.is_ally,
     )
+    # Footwork targeting: legal landings cyan, cursor bright white
+    if session.footwork_targeting:
+        pos = session.player.components.get(Position)
+        legal = session._footwork_legal_tiles()
+        legal_set = {(p.x, p.y) for p in legal}
+        for lx, ly in legal_set:
+            paint_tile_bg(console, lx, ly, (40, 90, 120))
+        cur = session.footwork_cursor
+        if cur is not None:
+            if (cur.x, cur.y) in legal_set:
+                paint_tile_bg(console, cur.x, cur.y, (220, 240, 255))
+            else:
+                paint_tile_bg(console, cur.x, cur.y, (180, 100, 60))
+        if pos is not None:
+            # faint mark on player origin
+            paint_tile_bg(console, pos.x, pos.y, (60, 60, 90))
     draw_match_entities(console, session)
 
 
@@ -2388,7 +2986,7 @@ def match_footer_text(session: MatchSession) -> str:
     if session.talk_ui is TalkUiMode.PICK_ALLY:
         return "1/2… ally  |  0 all  |  Esc: cancel"
     if session.talk_ui is TalkUiMode.PICK_ORDER:
-        return "1 Attack  |  2 Defend  |  Esc: back"
+        return "1 Attack!  |  2 Help me!  |  3 Stay close!  |  Esc: back"
     # Grapple owns the footer while PC is held (no reaction stack)
     g = session.grapple
     if g is not None and g.prey is session.player:
@@ -2405,6 +3003,10 @@ def match_footer_text(session: MatchSession) -> str:
         return "1 Dodge  |  2 Parry/Block  |  3 Counter  |  4 Ignore"
     if session.ability_ui is AbilityUiMode.PICK_LETTER:
         return "Letter: use ability  |  ? list  |  Esc: cancel"
+    if session.footwork_targeting:
+        return (
+            "Footwork: arrows move cursor (1–2 tiles)  |  Enter: confirm  |  Esc: cancel"
+        )
     if session.combatants.get(session.player) and session.combatants[session.player].downed:
         base = (
             "Crawl: move  |  . rest  |  a: Recover when bar full  |  "
@@ -2413,7 +3015,10 @@ def match_footer_text(session: MatchSession) -> str:
         if session.card.kind == "green":
             base += "  |  G: surrender"
         return base + "  |  Ctrl+Q"
-    base = "Move/bump  |  . wait  |  a abilities  |  T talk  |  s Second Wind"
+    base = (
+        "Move/bump  |  ctrl+dir attack  |  f footwork  |  . watch  |  d brace  |  "
+        "a abilities  |  T talk  |  s Second Wind"
+    )
     if session.card.kind == "green":
         base += "  |  G: surrender"
     return base + "  |  Ctrl+Q"
@@ -2480,6 +3085,7 @@ def match_status_lines(session: MatchSession) -> tuple:
     meter_fg = pal["meter"]
     green = pal["green"]
     red = pal["red"]
+    orange = (240, 160, 70)
 
     session._sync_ap()
     pf = session.player.components[Fighter]
@@ -2529,9 +3135,25 @@ def match_status_lines(session: MatchSession) -> tuple:
             meter_fg,
         )
     )
+    # Balance-driven actual-stat deltas (buffs green, debuffs orange)
+    for label, val, is_buff in balance_stat_deltas(pc, session.combat_cfg):
+        is_ac = label == "AC"
+        text = format_balance_effect_line(label, val, is_ac=is_ac)
+        lines.append(HelpTextLine(text, green if is_buff else orange))
     if pc.injuries:
         lines.append(
             HelpTextLine("; ".join(format_injury_list(pc.injuries)), pal["injury"])
+        )
+    if session.footwork_targeting and session.footwork_cursor is not None:
+        cur = session.footwork_cursor
+        pos = session.player.components[Position]
+        dx, dy = cur.x - pos.x, cur.y - pos.y
+        legal = is_footwork_offset(
+            dx, dy, max_chebyshev=session._footwork_max_chebyshev()
+        ) and any(p.x == cur.x and p.y == cur.y for p in session._footwork_legal_tiles())
+        tip = "legal — Enter" if legal else "not a legal landing"
+        lines.append(
+            HelpTextLine(f"Footwork cursor ({cur.x},{cur.y}) — {tip}", title)
         )
 
     g = session.grapple
@@ -2697,7 +3319,7 @@ def match_swallow_narrative_text(session: MatchSession) -> str | None:
 
 def match_swallow_options_line() -> str:
     """Single-line choices; no explanations."""
-    return "1 - struggle | 2 - conserve strength"
+    return "1 - struggle | 2 - conserve strength | 3 - call for help"
 
 
 def match_swallow_modal_lines(session: MatchSession) -> tuple | None:

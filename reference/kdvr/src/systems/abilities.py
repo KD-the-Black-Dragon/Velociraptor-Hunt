@@ -19,6 +19,7 @@ from src.components import (
     Stunned,
     VoreCapable,
 )
+from src.systems.ranged_magazine import can_spend_ranged_shot, spend_ranged_shot
 from src.data.ability_parser import (
     FixedAbility,
     RangeAbility,
@@ -26,6 +27,7 @@ from src.data.ability_parser import (
     SmiteAbility,
     SummonAbility,
 )
+from src.constants import VoreContentPreferences
 from src.data.entity_loader import load_entity_registry
 from src.map_gen import GameMap, can_enter_tile
 from src.message_log import MessageCategory, MessageLog
@@ -33,10 +35,12 @@ from src.spawn import spawn_entity_by_id
 from src.systems import ai as ai_module
 from src.systems.ai.common import _closed_door_toward_target
 from src.systems.combat import perform_npc_path_attack, perform_npc_smite_attack
-from src.systems.ranged_path import PathShotStatus, resolve_path_shot
+from src.systems.ranged_path import PathShotStatus, resolve_path_shot, shooter_can_damage
 from src.systems.fov import entity_visible_to_player
 from src.systems.movement import MOVEMENT_DIRECTIONS, is_stationary
 from src.systems.naming import entity_log_name
+
+
 class ActionStepKind(Enum):
     SKIP = auto()
     MOVE = auto()
@@ -478,6 +482,7 @@ def try_summon_on_first_sight(
     player_engulfed: bool = False,
     floor_depth: int = 1,
     difficulty_id: str | None = None,
+    vore_prefs: VoreContentPreferences | None = None,
 ) -> bool:
     """
     One-shot summon when alignment-appropriate hostiles enter LOS.
@@ -526,6 +531,7 @@ def try_summon_on_first_sight(
                 registry=registry,
                 floor_depth=floor_depth,
                 difficulty_id=difficulty_id,
+                vore_prefs=vore_prefs,
             )
 
     if entity_visible_to_player(game_map, monster):
@@ -631,7 +637,13 @@ def _engagement_target_for_chase(
     player_engulfed: bool,
     entity_target: Entity | None,
 ) -> Entity | None:
-    if entity_target is not None:
+    """Resolve Smite target for chase. Never keep a non-hostile chase follow target."""
+    origin = monster.components[Position]
+    if (
+        entity_target is not None
+        and shooter_can_damage(monster, entity_target)
+        and _can_smite_target(origin, entity_target, max_n=max_n, game_map=game_map)
+    ):
         return entity_target
 
     if alignment == Alignment.EVIL:
@@ -647,6 +659,66 @@ def _engagement_target_for_chase(
     if alignment == Alignment.GOOD:
         return pick_good_smite_target(monster, world, game_map, rng, max_n=max_n)
     return None
+
+
+def try_evil_ranged_hunger_approach(
+    monster: Entity,
+    world: Registry,
+    game_map: GameMap,
+    player: Entity,
+    message_log: MessageLog,
+    rng: random.Random,
+    *,
+    entity_target: Entity | None,
+    player_engulfed: bool,
+    blocked: frozenset[Position],
+    skipped: set[Entity] | None,
+    vore_prefs,
+) -> bool:
+    """On vore-hunger commit out of range: step toward quarry (no Path/Smite)."""
+    from src.systems.ai.chase import _choose_chase_direction
+    from src.systems.combat import try_action
+    from src.systems.vore import should_commit_ranged_hunger_approach
+
+    if not (has_path_ability(monster) or has_smite_ability(monster)):
+        return False
+    if is_stationary(monster):
+        return False
+
+    quarry = entity_target
+    monster_pos = monster.components[Position]
+    if quarry is None and not player_engulfed:
+        player_pos = player.components[Position]
+        if ai_module._has_los(game_map, monster_pos, player_pos):
+            quarry = player
+    if quarry is None:
+        return False
+    if not should_commit_ranged_hunger_approach(
+        monster, quarry, game_map, rng, prefs=vore_prefs
+    ):
+        return False
+
+    quarry_pos = quarry.components[Position]
+    direction = _choose_chase_direction(
+        world,
+        game_map,
+        monster,
+        monster_pos,
+        quarry_pos,
+        blocked_tiles=blocked,
+    )
+    if direction is not None and direction != (0, 0):
+        try_action(
+            world,
+            game_map,
+            monster,
+            direction,
+            message_log,
+            rng=rng,
+            skip_turn_entities=skipped,
+        )
+    # Hunger overrides shooting even if movement is blocked this turn.
+    return True
 
 
 def try_smite_engagement(
@@ -667,6 +739,8 @@ def try_smite_engagement(
     """
     max_n = max_smite_range(monster)
     if max_n is None:
+        return False
+    if not can_spend_ranged_shot(monster):
         return False
 
     origin = monster.components[Position]
@@ -695,6 +769,7 @@ def try_smite_engagement(
     if not ai_module._has_los(game_map, origin, target_pos):
         return False
 
+    spend_ranged_shot(monster)
     perform_npc_smite_attack(
         monster,
         target,
@@ -847,6 +922,8 @@ def try_path_engagement(
     max_n = max_path_range(monster)
     if max_n is None:
         return False
+    if not can_spend_ranged_shot(monster):
+        return False
 
     origin = monster.components[Position]
     target = _engagement_target_for_path_chase(
@@ -876,7 +953,7 @@ def try_path_engagement(
     if not ai_module._has_los(game_map, origin, target_pos):
         return False
 
-    return perform_npc_path_attack(
+    fired = perform_npc_path_attack(
         monster,
         target,
         message_log,
@@ -884,6 +961,9 @@ def try_path_engagement(
         game_map=game_map,
         rng=rng,
     )
+    if fired:
+        spend_ranged_shot(monster)
+    return fired
 
 
 def choose_path_ranged_move_direction(

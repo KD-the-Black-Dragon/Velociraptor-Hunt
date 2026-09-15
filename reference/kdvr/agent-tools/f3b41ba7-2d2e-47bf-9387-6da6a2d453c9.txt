@@ -1,0 +1,809 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 19 items
+
+tests/test_npc_abilities_ranged_vore.py::test_parse_ranged_vore_token[2] PASSED [  5%]
+tests/test_npc_abilities_ranged_vore.py::test_parse_ranged_vore_token[3] PASSED [ 10%]
+tests/test_npc_abilities_ranged_vore.py::test_parse_ranged_vore_token[5] PASSED [ 15%]
+tests/test_npc_abilities_ranged_vore.py::test_parse_ranged_vore_token[9] PASSED [ 21%]
+tests/test_npc_abilities_ranged_vore.py::test_parse_ranged_vore_rejects_invalid_tokens PASSED [ 26%]
+tests/test_npc_abilities_ranged_vore.py::test_collapse_ranged_vore_tokens_keeps_max PASSED [ 31%]
+tests/test_npc_abilities_ranged_vore.py::test_filter_known_abilities_keeps_ranged_vore[2] PASSED [ 36%]
+tests/test_npc_abilities_ranged_vore.py::test_filter_known_abilities_keeps_ranged_vore[3] PASSED [ 42%]
+tests/test_npc_abilities_ranged_vore.py::test_spawned_wolf_max_ranged_vore_range_matches_token[2] FAILED [ 47%]
+tests/test_npc_abilities_ranged_vore.py::test_spawned_wolf_max_ranged_vore_range_matches_token[4] FAILED [ 52%]
+tests/test_npc_abilities_ranged_vore.py::test_ranged_vore_requires_distance_band FAILED [ 57%]
+tests/test_npc_abilities_ranged_vore.py::test_ranged_vore_npc_prey_lists_in_range_only FAILED [ 63%]
+tests/test_npc_abilities_ranged_vore.py::test_ranged_vore_can_target_stunned_prey_at_range FAILED [ 68%]
+tests/test_npc_abilities_ranged_vore.py::test_ranged_vore_pulls_prey_on_hit FAILED [ 73%]
+tests/test_npc_abilities_ranged_vore.py::test_ranged_vore_miss_leaves_prey_position FAILED [ 78%]
+tests/test_npc_abilities_ranged_vore.py::test_prefer_vore_skips_ranged_decision_roll FAILED [ 84%]
+tests/test_npc_abilities_ranged_vore.py::test_open_ranged_vore_modal_at_distance FAILED [ 89%]
+tests/test_npc_abilities_ranged_vore.py::test_dual_tongue_path_when_prey_above_vore_threshold FAILED [ 94%]
+tests/test_npc_abilities_ranged_vore.py::test_dual_tongue_ranged_vore_before_path_when_weakened FAILED [100%]
+
+================================== FAILURES ===================================
+__________ test_spawned_wolf_max_ranged_vore_range_matches_token[2] ___________
+
+distance = 2
+
+    @pytest.mark.parametrize("distance", [2, 4])
+    def test_spawned_wolf_max_ranged_vore_range_matches_token(distance: int) -> None:
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+__________ test_spawned_wolf_max_ranged_vore_range_matches_token[4] ___________
+
+distance = 4
+
+    @pytest.mark.parametrize("distance", [2, 4])
+    def test_spawned_wolf_max_ranged_vore_range_matches_token(distance: int) -> None:
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+___________________ test_ranged_vore_requires_distance_band ___________________
+
+    def test_ranged_vore_requires_distance_band() -> None:
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+________________ test_ranged_vore_npc_prey_lists_in_range_only ________________
+
+    def test_ranged_vore_npc_prey_lists_in_range_only() -> None:
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+______________ test_ranged_vore_can_target_stunned_prey_at_range ______________
+
+    def test_ranged_vore_can_target_stunned_prey_at_range() -> None:
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+_____________________ test_ranged_vore_pulls_prey_on_hit ______________________
+
+    def test_ranged_vore_pulls_prey_on_hit() -> None:
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:172: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+_________________ test_ranged_vore_miss_leaves_prey_position __________________
+
+    def test_ranged_vore_miss_leaves_prey_position() -> None:
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+_________________ test_prefer_vore_skips_ranged_decision_roll _________________
+
+    def test_prefer_vore_skips_ranged_decision_roll() -> None:
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+___________________ test_open_ranged_vore_modal_at_distance ___________________
+
+    def test_open_ranged_vore_modal_at_distance() -> None:
+        from src.systems.vore import VoreModalState
+    
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:256: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+____________ test_dual_tongue_path_when_prey_above_vore_threshold _____________
+
+    def test_dual_tongue_path_when_prey_above_vore_threshold() -> None:
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:281: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+___________ test_dual_tongue_ranged_vore_before_path_when_weakened ____________
+
+    def test_dual_tongue_ranged_vore_before_path_when_weakened() -> None:
+>       engine = GameEngine()
+                 ^^^^^^^^^^^^
+
+tests\test_npc_abilities_ranged_vore.py:308: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\engine.py:158: in __init__
+    self.new_game()
+src\engine.py:200: in new_game
+    engine_floor.new_game(
+src\engine_floor.py:70: in new_game
+    engine.initialize_floor(
+src\engine.py:275: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:304: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:294: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:351: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+src\engine.py:260: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:256: in spawn_floor_population_and_runes
+    spawn_floor_population(
+src\spawn.py:526: in spawn_floor_population
+    reg = registry or load_entity_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:161: in load_entity_registry
+    _default_registry, _issues = load_entities_layered(report=report_mod_errors)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:249: in load_entities_layered
+    registry, issues = layer_id_list_catalog(
+src\mods\pipeline.py:146: in layer_id_list_catalog
+    core_raw = _load_json_object(core_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\mods\pipeline.py:78: in _load_json_object
+    raw = json.load(handle)
+          ^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:298: in load
+    return loads(fp.read(),
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000028DEC4CB0E0>
+s = '{\n  "schema_version": 1,\n  "entities": [\n    {\n      "id": "bat",\n      "display_name": "bat",\n      "glyph": "...ceholder] The dragon\'s lower gut finishes its work."\n            ]\n          }\n        ]\n      }\n    }\n  ]\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid control character at: line 202 column 45 (char 11667)
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\json\decoder.py:361: JSONDecodeError
+=========================== short test summary info ===========================
+FAILED tests/test_npc_abilities_ranged_vore.py::test_spawned_wolf_max_ranged_vore_range_matches_token[2]
+FAILED tests/test_npc_abilities_ranged_vore.py::test_spawned_wolf_max_ranged_vore_range_matches_token[4]
+FAILED tests/test_npc_abilities_ranged_vore.py::test_ranged_vore_requires_distance_band
+FAILED tests/test_npc_abilities_ranged_vore.py::test_ranged_vore_npc_prey_lists_in_range_only
+FAILED tests/test_npc_abilities_ranged_vore.py::test_ranged_vore_can_target_stunned_prey_at_range
+FAILED tests/test_npc_abilities_ranged_vore.py::test_ranged_vore_pulls_prey_on_hit
+FAILED tests/test_npc_abilities_ranged_vore.py::test_ranged_vore_miss_leaves_prey_position
+FAILED tests/test_npc_abilities_ranged_vore.py::test_prefer_vore_skips_ranged_decision_roll
+FAILED tests/test_npc_abilities_ranged_vore.py::test_open_ranged_vore_modal_at_distance
+FAILED tests/test_npc_abilities_ranged_vore.py::test_dual_tongue_path_when_prey_above_vore_threshold
+FAILED tests/test_npc_abilities_ranged_vore.py::test_dual_tongue_ranged_vore_before_path_when_weakened
+======================== 11 failed, 8 passed in 5.35s =========================

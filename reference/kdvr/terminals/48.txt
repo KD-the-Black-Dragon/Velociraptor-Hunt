@@ -1,0 +1,10 @@
+---
+pid: 19304
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; python -m pytest tests/ -q --tb=line 2>&1 | Select-Object -Last 3"
+started_at: 2026-07-01T13:20:57.423Z
+running_for_ms: 19530010 
+---
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+332 passed, 16 warnings in 72.68s (0:01:12)

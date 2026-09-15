@@ -1,0 +1,129 @@
+---
+pid: 13208
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; python -m pytest tests/ -q"
+started_at: 2026-07-01T11:50:41.990Z
+running_for_ms: 24945008 
+---
+..................................................................F..... [ 22%]
+..................................................F..................... [ 45%]
+........................................................................ [ 67%]
+........................................................................ [ 90%]
+..............................                                           [100%]
+================================== FAILURES ===================================
+___________________ test_visible_knight_follows_on_descent ____________________
+
+    def test_visible_knight_follows_on_descent() -> None:
+        engine = GameEngine()
+        engine.new_game(seed=9)
+        player = engine.player
+        assert player is not None
+        player_pos = player.components[Position]
+        carve_east_of(engine, player_pos, 2)
+        knight = spawn_test_npc(
+            engine.world,
+            x=player_pos.x + 1,
+            y=player_pos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+        )
+        knight_pos_before = knight.components[Position]
+        update_fov(engine.game_map, player_pos.x, player_pos.y)
+        _place_player_on_stairs(engine)
+    
+        _press_descend(engine)
+    
+>       assert knight in list(engine.world.Q.all_of(components=[AI]))
+E       AssertionError: assert <Entity(uid=object at 0x1BB56271060)> in [<Entity(uid=object at 0x1BB562710A0)>, <Entity(uid=object at 0x1BB562710B0)>, <Entity(uid=object at 0x1BB562710C0)>, <Entity(uid=object at 0x1BB56271180)>, <Entity(uid=object at 0x1BB56271170)>, <Entity(uid=object at 0x1BB56271160)>, ...]
+E        +  where [<Entity(uid=object at 0x1BB562710A0)>, <Entity(uid=object at 0x1BB562710B0)>, <Entity(uid=object at 0x1BB562710C0)>, <Entity(uid=object at 0x1BB56271180)>, <Entity(uid=object at 0x1BB56271170)>, <Entity(uid=object at 0x1BB56271160)>, ...] = list(BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1BB56270500)>:...s 'src.components.AI'>), _traverse_keys=(<class 'tcod.ecs.constants.IsA'>,), _max_depth=None)}), _none_of=frozenset())))
+E        +    where BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1BB56270500)>:...s 'src.components.AI'>), _traverse_keys=(<class 'tcod.ecs.constants.IsA'>,), _max_depth=None)}), _none_of=frozenset())) = all_of(components=[<class 'src.components.AI'>])
+E        +      where all_of = BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1BB56270500)>:...et'>, {}), _names_by_name={}, _names_by_entity={}), _query=_QueryLogicalAnd(_all_of=frozenset(), _none_of=frozenset())).all_of
+E        +        where BoundQuery(registry=Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1BB56270500)>:...et'>, {}), _names_by_name={}, _names_by_entity={}), _query=_QueryLogicalAnd(_all_of=frozenset(), _none_of=frozenset())) = Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1BB56270500)>: {<class 'src.compon... at 0x000001BB54C94F60>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}).Q
+E        +          where Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1BB56270500)>: {<class 'src.compon... at 0x000001BB54C94F60>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}) = <src.engine.GameEngine object at 0x000001BB54F37860>.world
+
+tests\test_dungeon_pr3.py:164: AssertionError
+____________________ test_neutral_flees_from_visible_evil _____________________
+
+    def test_neutral_flees_from_visible_evil() -> None:
+        engine = _make_wolf_engine(seed=7)
+        carve_floor_rect(engine, 9, 10, 11, 10)
+        player = engine.player
+        assert player is not None
+        wolf = first_wolf(engine)
+        wolf.components[Position] = Position(10, 10)
+        wolf_pos = wolf.components[Position]
+        neutral = spawn_test_npc(
+            engine.world,
+            x=wolf_pos.x + 1,
+            y=wolf_pos.y,
+            species="villager",
+            alignment=Alignment.NEUTRAL,
+        )
+        neutral_pos_before = neutral.components[Position]
+    
+        def _chebyshev(a: Position, b: Position) -> int:
+            return max(abs(a.x - b.x), abs(a.y - b.y))
+    
+        update_fov(engine.game_map, neutral_pos_before.x, neutral_pos_before.y)
+        run_monster_turns(
+            engine.world,
+            engine.game_map,
+            player,
+            engine.message_log,
+            rng=random.Random(0),
+        )
+>       assert neutral.components[Position] != neutral_pos_before
+E       assert Position(x=11, y=10) != Position(x=11, y=10)
+
+tests\test_enhancements_2.py:423: AssertionError
+---------------------------- Captured stdout call -----------------------------
+The wolf snarls at the rabbit - the rabbit is blocking the way to the creature!
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:128: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:239: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:238: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:71: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:163: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_pr3.py::test_visible_knight_follows_on_descent - As...
+FAILED tests/test_enhancements_2.py::test_neutral_flees_from_visible_evil - a...
+2 failed, 316 passed, 16 warnings in 77.83s (0:01:17)

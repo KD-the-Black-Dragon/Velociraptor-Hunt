@@ -1,0 +1,80 @@
+---
+pid: 19868
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_sim_threat.py tests/test_sim_navigation.py tests/test_sim_runner.py -v -n 4"
+started_at: 2026-07-12T11:55:01.550Z
+running_for_ms: 5424993  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+created: 4/4 workers
+4 workers [30 items]
+
+scheduling tests via LoadScheduling
+
+tests/test_sim_threat.py::test_bail_policy_seeks_stairs_over_runes 
+tests/test_sim_threat.py::test_lethal_risk_active_when_multiple_evils_visible 
+tests/test_sim_threat.py::test_policy_returns_rest_when_hurt_and_safe 
+tests/test_sim_threat.py::test_stunned_recovery_uses_heal_potion 
+[gw0] [  3%] PASSED tests/test_sim_threat.py::test_stunned_recovery_uses_heal_potion 
+tests/test_sim_threat.py::test_stunned_recovery_uses_teleport_without_heal 
+[gw3] [  6%] PASSED tests/test_sim_threat.py::test_bail_policy_seeks_stairs_over_runes 
+tests/test_sim_threat.py::test_trajectory_run_latches_bail_on_pinned_easy_seed 
+[gw2] [ 10%] PASSED tests/test_sim_threat.py::test_policy_returns_rest_when_hurt_and_safe 
+tests/test_sim_threat.py::test_policy_stunned_returns_consume 
+[gw1] [ 13%] PASSED tests/test_sim_threat.py::test_lethal_risk_active_when_multiple_evils_visible 
+tests/test_sim_threat.py::test_bail_latches_without_heal_and_low_hp 
+[gw0] [ 16%] PASSED tests/test_sim_threat.py::test_stunned_recovery_uses_teleport_without_heal 
+tests/test_sim_threat.py::test_rest_imperfection_skips_at_high_hp 
+[gw2] [ 20%] PASSED tests/test_sim_threat.py::test_policy_stunned_returns_consume 
+tests/test_sim_navigation.py::test_first_step_toward_goal 
+[gw2] [ 23%] PASSED tests/test_sim_navigation.py::test_first_step_toward_goal 
+tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored 
+[gw2] [ 26%] PASSED tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored 
+tests/test_sim_navigation.py::test_flee_goal_increases_distance_from_shark 
+[gw2] [ 30%] PASSED tests/test_sim_navigation.py::test_flee_goal_increases_distance_from_shark 
+tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility 
+[gw2] [ 33%] PASSED tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility 
+tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius 
+[gw0] [ 36%] PASSED tests/test_sim_threat.py::test_rest_imperfection_skips_at_high_hp 
+tests/test_sim_navigation.py::test_player_walk_distances_on_carved_floor 
+[gw0] [ 40%] PASSED tests/test_sim_navigation.py::test_player_walk_distances_on_carved_floor 
+tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs 
+[gw1] [ 43%] PASSED tests/test_sim_threat.py::test_bail_latches_without_heal_and_low_hp 
+tests/test_sim_navigation.py::test_first_step_toward_prefers_goal_direction_over_cardinal_order 
+[gw1] [ 46%] PASSED tests/test_sim_navigation.py::test_first_step_toward_prefers_goal_direction_over_cardinal_order 
+tests/test_sim_runner.py::test_install_stock_game_data_fingerprint_stable 
+[gw1] [ 50%] PASSED tests/test_sim_runner.py::test_install_stock_game_data_fingerprint_stable 
+tests/test_sim_runner.py::test_trajectory_run_completes_ten_turns 
+[gw1] [ 53%] PASSED tests/test_sim_runner.py::test_trajectory_run_completes_ten_turns 
+tests/test_sim_runner.py::test_trajectory_run_records_floor_one_visit 
+[gw1] [ 56%] PASSED tests/test_sim_runner.py::test_trajectory_run_records_floor_one_visit 
+tests/test_sim_runner.py::test_wait_turn_advances_counter 
+[gw3] [ 60%] PASSED tests/test_sim_threat.py::test_trajectory_run_latches_bail_on_pinned_easy_seed 
+tests/test_sim_navigation.py::test_nearest_goal_tie_break_is_deterministic_with_rng 
+[gw3] [ 63%] PASSED tests/test_sim_navigation.py::test_nearest_goal_tie_break_is_deterministic_with_rng 
+tests/test_sim_runner.py::test_compare_sheet_append_column 
+[gw3] [ 66%] PASSED tests/test_sim_runner.py::test_compare_sheet_append_column 
+tests/test_sim_runner.py::test_wide_curve_format 
+[gw3] [ 70%] PASSED tests/test_sim_runner.py::test_wide_curve_format 
+tests/test_sim_runner.py::test_build_compare_values_includes_floor_metric 
+[gw3] [ 73%] PASSED tests/test_sim_runner.py::test_build_compare_values_includes_floor_metric 
+tests/test_sim_runner.py::test_trajectory_pass_respects_time_budget 
+[gw1] [ 76%] PASSED tests/test_sim_runner.py::test_wait_turn_advances_counter 
+tests/test_sim_runner.py::test_compare_sheet_layout 
+[gw1] [ 80%] PASSED tests/test_sim_runner.py::test_compare_sheet_layout 
+[gw3] [ 83%] PASSED tests/test_sim_runner.py::test_trajectory_pass_respects_time_budget 
+tests/test_sim_runner.py::test_balance_analysis_short_budget 
+[gw0] [ 86%] PASSED tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs 
+tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_pinned_normal_seed 
+[gw3] [ 90%] PASSED tests/test_sim_runner.py::test_balance_analysis_short_budget 
+[gw2] [ 93%] PASSED tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius 
+tests/test_sim_navigation.py::test_policy_waits_on_visible_rune_tile 
+[gw0] [ 96%] PASSED tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_pinned_normal_seed 
+[gw2] [100%] PASSED tests/test_sim_navigation.py::test_policy_waits_on_visible_rune_tile 
+
+======================= 30 passed in 322.91s (0:05:22) ========================

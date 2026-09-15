@@ -1,0 +1,33 @@
+---
+pid: 9660
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cmd /c \"cd /d C:\\VS Code Projects\\kds-vore-roguelike && python -m pytest tests/test_sim_navigation.py -v --tb=line\""
+started_at: 2026-07-11T22:52:30.868Z
+running_for_ms: 1459999  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 9 items
+
+tests/test_sim_navigation.py::test_nearest_goal_tie_break_is_deterministic_with_rng PASSED [ 11%]
+tests/test_sim_navigation.py::test_first_step_toward_goal PASSED         [ 22%]
+tests/test_sim_navigation.py::test_player_walk_distances_on_carved_floor PASSED [ 33%]
+tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored PASSED [ 44%]
+tests/test_sim_navigation.py::test_flee_goal_increases_distance_from_shark PASSED [ 55%]
+tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility PASSED [ 66%]
+tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius PASSED [ 77%]
+tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs PASSED [ 88%]
+tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_seed FAILED [100%]
+
+================================== FAILURES ===================================
+E   AssertionError: expected depth >= 2, got 1 (termination=SimTerminationReason.TURN_CAP, runes=0)
+    assert 1 >= 2
+     +  where 1 = SimTrajectoryRunResult(seed=4242, difficulty_id='normal', termination=<SimTerminationReason.TURN_CAP: 3>, depth_reached=1, runes_collected=0, monsters_defeated=0, turns_played=11, hp_at_end=0, floor_snapshots=[FloorOutcomeSnapshot(floor=1, seed=4242, digested=False, descended=False, rune_quota=3, runes_this_floor=0, bail_for_survival=False, consumable_heal=0, consumable_might=0, consumable_haste=0, consumable_teleport=0, wand_evokes=0, weapon_improved=False, armor_improved=False, upgrade_weapon_spawned=False, upgrade_weapon_taken=False, upgrade_armor_spawned=False, upgrade_armor_taken=False, stunned_events=0, event_score=0.0)]).depth_reached
+C:\VS Code Projects\kds-vore-roguelike\tests\test_sim_navigation.py:166: AssertionError: expected depth >= 2, got 1 (termination=SimTerminationReason.TURN_CAP, runes=0)
+=========================== short test summary info ===========================
+FAILED tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_seed
+=================== 1 failed, 8 passed in 191.67s (0:03:11) ===================

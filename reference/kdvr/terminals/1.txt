@@ -1,0 +1,738 @@
+---
+pid: 2660
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_dungeon_pr2.py tests/ -q"
+started_at: 2026-06-30T21:37:22.313Z
+running_for_ms: 12494995 
+---
+...............F....................F..................................F [ 25%]
+F...............F................F......F....FF......F...........F...F.. [ 50%]
+F...F.......................................................F........... [ 75%]
+......FFFF.............F....F............F........F..FF.F..F.F..F.FF...F [100%]
+================================== FAILURES ===================================
+_____________________ test_npc_release_grants_vore_mercy ______________________
+
+    def test_npc_release_grants_vore_mercy() -> None:
+        engine = GameEngine()
+>       wolf, knight = _adjacent_stunned_knight_setup(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_digestion.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F80C750>
+
+    def _adjacent_stunned_knight_setup(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        player_pos = player.components[Position]
+>       wolf = next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_digestion.py:56: StopIteration
+_____________ test_player_strike_increments_log_digestion_message _____________
+
+    def test_player_strike_increments_log_digestion_message() -> None:
+        engine = GameEngine()
+>       _engulf_player_on_wolf(engine, player_hp=0)
+
+tests\test_digestion.py:604: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747890>
+narrative_type = 'OV', player_hp = 0
+
+    def _engulf_player_on_wolf(
+        engine: GameEngine,
+        *,
+        narrative_type: str = "OV",
+        player_hp: int | None = None,
+    ) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_digestion.py:502: StopIteration
+______________________ test_entity_log_name_proper_name _______________________
+
+    def test_entity_log_name_proper_name() -> None:
+        engine = _make_wolf_engine()
+>       wolf = _first_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_2.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F746390>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_2.py:51: StopIteration
+_____________________ test_entity_log_possessive_species ______________________
+
+    def test_entity_log_possessive_species() -> None:
+        engine = _make_wolf_engine()
+>       assert entity_log_possessive(_first_wolf(engine)) == "the wolf's"
+                                     ^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_2.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747AD0>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_2.py:51: StopIteration
+______________________ test_evil_prefers_nearest_hostile ______________________
+
+    def test_evil_prefers_nearest_hostile() -> None:
+        engine = _make_wolf_engine(seed=42)
+        player = engine.player
+        assert player is not None
+        wolf = _first_wolf(engine)
+        origin = Position(10, 10)
+        wolf.components[Position] = origin
+        player.components[Position] = Position(14, 10)
+        knight = spawn_test_npc(
+            engine.world,
+            x=12,
+            y=10,
+            species="knight",
+            alignment=Alignment.GOOD,
+        )
+        update_fov(engine.game_map, origin.x, origin.y)
+        target = pick_hostile_target(
+            wolf, engine.world, engine.game_map, player, random.Random(0)
+        )
+>       assert target is knight
+E       assert None is <Entity(uid=object at 0x25B7FC8CCD0)>
+
+tests\test_enhancements_2.py:307: AssertionError
+_______________________ test_rabbit_stunned_not_removed _______________________
+
+    def test_rabbit_stunned_not_removed() -> None:
+        engine = GameEngine()
+>       wolf = _first_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_3.py:193: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747B90>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_3.py:105: StopIteration
+_______________ test_evil_frustrated_when_neutral_blocks_player _______________
+
+    def test_evil_frustrated_when_neutral_blocks_player() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+>       wolf = _first_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_3.py:358: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747AD0>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_3.py:105: StopIteration
+___________________ test_evil_priority_primary_over_neutral ___________________
+
+    def test_evil_priority_primary_over_neutral() -> None:
+        engine = GameEngine()
+>       wolf = _first_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_3.py:476: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747D10>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_3.py:105: StopIteration
+____________________ test_evil_moves_to_last_known_primary ____________________
+
+    def test_evil_moves_to_last_known_primary() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+>       wolf = _first_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_3.py:512: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747DD0>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_3.py:105: StopIteration
+_____________________ test_explore_goal_cleared_on_reach ______________________
+
+    def test_explore_goal_cleared_on_reach() -> None:
+        from src.systems.ai import _consume_reached_memory
+    
+        engine = GameEngine()
+>       wolf = _first_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_3.py:726: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7FF54350>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_3.py:105: StopIteration
+___________________ test_npc_vore_hit_engulfs_without_modal ___________________
+
+    def test_npc_vore_hit_engulfs_without_modal() -> None:
+        engine = GameEngine()
+>       wolf, knight = _adjacent_stunned_knight_setup(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_3.py:1085: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_enhancements_3.py:1045: in _adjacent_stunned_knight_setup
+    wolf = _first_wolf(engine)
+           ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7FF544D0>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_3.py:105: StopIteration
+_________________ test_engulfed_neutral_invisible_to_evil_ai __________________
+
+    def test_engulfed_neutral_invisible_to_evil_ai() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        wolves = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))
+>       predator, hunter = wolves[0], wolves[1]
+                           ^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_enhancements_3.py:1193: IndexError
+___________________ test_defeating_predator_frees_npc_prey ____________________
+
+    def test_defeating_predator_frees_npc_prey() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        wolf, rabbit, player_pos = _wolf_holding_stunned_rabbit(engine)
+        wolf_pos = wolf.components[Position]
+        player.components[Position] = Position(player_pos.x, player_pos.y)
+        wolf.components[Fighter].hp = 1
+        predator_tile_before = wolf_pos
+        rabbit_tile_before = rabbit.components[Position]
+        assert rabbit_tile_before == predator_tile_before
+    
+>       assert try_action(
+            engine.world,
+            engine.game_map,
+            player,
+            (1, 0),
+            engine.message_log,
+        )
+E       AssertionError: assert False
+E        +  where False = try_action(Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x25B7FC8F9D0)>: {<class 'src.compon... at 0x0000025B7F4A07D0>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}), GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ........, False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(18, 31)), <Entity(uid=object at 0x25B7FC8F9D0)>, (1, 0), <src.message_log.MessageLog object at 0x0000025B092AF250>)
+E        +    where Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x25B7FC8F9D0)>: {<class 'src.compon... at 0x0000025B7F4A07D0>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}) = <src.engine.GameEngine object at 0x0000025B7F746390>.world
+E        +    and   GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ........, False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(18, 31)) = <src.engine.GameEngine object at 0x0000025B7F746390>.game_map
+E        +    and   <src.message_log.MessageLog object at 0x0000025B092AF250> = <src.engine.GameEngine object at 0x0000025B7F746390>.message_log
+
+tests\test_enhancements_3.py:1327: AssertionError
+_______________ test_examine_wolf_description_in_modal_not_log ________________
+
+    def test_examine_wolf_description_in_modal_not_log() -> None:
+        engine = GameEngine()
+        player = engine.player
+>       wolf = _first_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_examine.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747AD0>
+
+    def _first_wolf(engine: GameEngine):
+        from src.components import AI, VoreCapable
+    
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_examine.py:29: StopIteration
+_______________ test_digestion_uses_engulf_type_not_live_prefs ________________
+
+    def test_digestion_uses_engulf_type_not_live_prefs() -> None:
+        from tests.test_digestion import _engulf_player_on_wolf, _press
+    
+        from src.constants import VoreContentPreferences
+    
+        prefs = VoreContentPreferences(enabled=frozenset({"CV"}))
+        engine = GameEngine(vore_content_prefs=prefs)
+>       _engulf_player_on_wolf(engine, player_hp=0, narrative_type="CV")
+
+tests\test_options_menu.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F746390>
+narrative_type = 'CV', player_hp = 0
+
+    def _engulf_player_on_wolf(
+        engine: GameEngine,
+        *,
+        narrative_type: str = "OV",
+        player_hp: int | None = None,
+    ) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_digestion.py:502: StopIteration
+_____________ test_vore_miss_logs_named_predator_without_article ______________
+
+    def test_vore_miss_logs_named_predator_without_article() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       wolf = _place_adjacent_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_ai.py:172: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747DD0>
+
+    def _place_adjacent_wolf(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_ai.py:42: StopIteration
+____________ test_run_monster_turns_vore_hit_no_log_until_resolved ____________
+
+    def test_run_monster_turns_vore_hit_no_log_until_resolved() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       _place_adjacent_wolf(engine)
+
+tests\test_vore_ai.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747E90>
+
+    def _place_adjacent_wolf(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_ai.py:42: StopIteration
+________________ test_adjacent_zero_hp_prefers_vore_over_bump _________________
+
+    def test_adjacent_zero_hp_prefers_vore_over_bump() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       _place_adjacent_wolf(engine)
+
+tests\test_vore_ai.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7FF55550>
+
+    def _place_adjacent_wolf(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_ai.py:42: StopIteration
+_________________ test_vore_event_hook_fires_on_modal_resolve _________________
+
+    def test_vore_event_hook_fires_on_modal_resolve() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       _place_adjacent_wolf(engine)
+
+tests\test_vore_ai.py:215: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7FF556D0>
+
+    def _place_adjacent_wolf(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_ai.py:42: StopIteration
+_______________________ test_engulf_after_success_modal _______________________
+
+    def test_engulf_after_success_modal() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+>       _engulf_via_successful_vore(engine)
+
+tests\test_vore_engulfed.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747E90>
+
+    def _engulf_via_successful_vore(engine: GameEngine) -> None:
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_engulfed.py:49: StopIteration
+__________________ test_sync_engulfed_position_keeps_co_tile __________________
+
+    def test_sync_engulfed_position_keeps_co_tile() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+>       predator = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_engulfed.py:149: IndexError
+________________________ test_kp_enter_advances_modal _________________________
+
+    def test_kp_enter_advances_modal() -> None:
+        engine = GameEngine()
+>       _open_vore_modal(engine)
+
+tests\test_vore_modal.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_vore_modal.py:41: in _open_vore_modal
+    _place_adjacent_wolf(engine)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7F747A10>
+
+    def _place_adjacent_wolf(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_modal.py:27: StopIteration
+__________________ test_render_skips_engulfed_npc_prey_glyph __________________
+
+    def test_render_skips_engulfed_npc_prey_glyph() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_render.py:208: StopIteration
+_______________________ test_apply_struggle_damage_flat _______________________
+
+    def test_apply_struggle_damage_flat() -> None:
+        engine = GameEngine()
+>       wolf = list(engine.world.Q.all_of(components=[Fighter, AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:58: IndexError
+______________ test_struggle_defeats_one_hp_predator_and_escapes ______________
+
+    def test_struggle_defeats_one_hp_predator_and_escapes() -> None:
+        engine = GameEngine()
+>       player, wolf = _engulf_player_on_wolf(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_struggle.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7FF55850>
+
+    def _engulf_player_on_wolf(engine: GameEngine) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:47: IndexError
+__________________ test_escape_roll_succeeds_with_seeded_rng __________________
+
+    def test_escape_roll_succeeds_with_seeded_rng() -> None:
+        engine = GameEngine()
+>       player, wolf = _engulf_player_on_wolf(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_struggle.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7FF54DD0>
+
+    def _engulf_player_on_wolf(engine: GameEngine) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:47: IndexError
+____________________ test_directional_escape_moves_player _____________________
+
+    def test_directional_escape_moves_player() -> None:
+        engine = GameEngine()
+>       player, wolf = _engulf_player_on_wolf(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_struggle.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7FF55790>
+
+    def _engulf_player_on_wolf(engine: GameEngine) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:47: IndexError
+_____________________ test_struggle_while_stunned_blocked _____________________
+
+    def test_struggle_while_stunned_blocked() -> None:
+        engine = GameEngine()
+>       player, wolf = _engulf_player_on_wolf(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_struggle.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7FF55610>
+
+    def _engulf_player_on_wolf(engine: GameEngine) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:47: IndexError
+________________ test_vore_mercy_blocks_adjacent_vore_attempt _________________
+
+    def test_vore_mercy_blocks_adjacent_vore_attempt() -> None:
+        engine = GameEngine()
+>       player, wolf = _engulf_player_on_wolf(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_struggle.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7FF55310>
+
+    def _engulf_player_on_wolf(engine: GameEngine) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:47: IndexError
+__________________ test_vore_mercy_cleared_after_world_turn ___________________
+
+    def test_vore_mercy_cleared_after_world_turn() -> None:
+        engine = GameEngine()
+>       player, wolf = _engulf_player_on_wolf(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_struggle.py:221: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000025B7FF559D0>
+
+    def _engulf_player_on_wolf(engine: GameEngine) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:47: IndexError
+___________________ test_miss_resumes_at_next_monster_index ___________________
+
+    def test_miss_resumes_at_next_monster_index() -> None:
+        engine = GameEngine()
+        _move_non_wolves_away(engine)
+        _stun_player(engine)
+        player = engine.player
+        assert player is not None
+        player_pos = player.components[Position]
+        monsters = _sorted_wolves(engine)
+>       assert len(monsters) >= 2
+E       assert 0 >= 2
+E        +  where 0 = len([])
+
+tests\test_vore_turn_order.py:83: AssertionError
+______________ test_open_attempt_stores_monster_index_for_resume ______________
+
+    def test_open_attempt_stores_monster_index_for_resume() -> None:
+        engine = GameEngine()
+        _move_non_wolves_away(engine)
+        _stun_player(engine)
+        player = engine.player
+        assert player is not None
+        player_pos = player.components[Position]
+        monsters = _sorted_wolves(engine)
+        for index, wolf in enumerate(monsters):
+            if index == 0:
+                _place_wolf_at(engine, wolf, player_pos.x + 1, player_pos.y)
+            else:
+                _place_wolf_at(engine, wolf, player_pos.x + 20, player_pos.y + 20)
+        update_fov(engine.game_map, player_pos.x, player_pos.y)
+    
+>       opener = monsters[0]
+                 ^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_turn_order.py:237: IndexError
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:114: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:68: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:159: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:73: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_digestion.py::test_npc_release_grants_vore_mercy - StopIter...
+FAILED tests/test_digestion.py::test_player_strike_increments_log_digestion_message
+FAILED tests/test_enhancements_2.py::test_entity_log_name_proper_name - StopI...
+FAILED tests/test_enhancements_2.py::test_entity_log_possessive_species - Sto...
+FAILED tests/test_enhancements_2.py::test_evil_prefers_nearest_hostile - asse...
+FAILED tests/test_enhancements_3.py::test_rabbit_stunned_not_removed - StopIt...
+FAILED tests/test_enhancements_3.py::test_evil_frustrated_when_neutral_blocks_player
+FAILED tests/test_enhancements_3.py::test_evil_priority_primary_over_neutral
+FAILED tests/test_enhancements_3.py::test_evil_moves_to_last_known_primary - ...
+FAILED tests/test_enhancements_3.py::test_explore_goal_cleared_on_reach - Sto...
+FAILED tests/test_enhancements_3.py::test_npc_vore_hit_engulfs_without_modal
+FAILED tests/test_enhancements_3.py::test_engulfed_neutral_invisible_to_evil_ai
+FAILED tests/test_enhancements_3.py::test_defeating_predator_frees_npc_prey
+FAILED tests/test_examine.py::test_examine_wolf_description_in_modal_not_log
+FAILED tests/test_options_menu.py::test_digestion_uses_engulf_type_not_live_prefs
+FAILED tests/test_vore_ai.py::test_vore_miss_logs_named_predator_without_article
+FAILED tests/test_vore_ai.py::test_run_monster_turns_vore_hit_no_log_until_resolved
+FAILED tests/test_vore_ai.py::test_adjacent_zero_hp_prefers_vore_over_bump - ...
+FAILED tests/test_vore_ai.py::test_vore_event_hook_fires_on_modal_resolve - S...
+FAILED tests/test_vore_engulfed.py::test_engulf_after_success_modal - StopIte...
+FAILED tests/test_vore_engulfed.py::test_sync_engulfed_position_keeps_co_tile
+FAILED tests/test_vore_modal.py::test_kp_enter_advances_modal - StopIteration
+FAILED tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+FAILED tests/test_vore_struggle.py::test_apply_struggle_damage_flat - IndexEr...
+FAILED tests/test_vore_struggle.py::test_struggle_defeats_one_hp_predator_and_escapes
+FAILED tests/test_vore_struggle.py::test_escape_roll_succeeds_with_seeded_rng
+FAILED tests/test_vore_struggle.py::test_directional_escape_moves_player - In...
+FAILED tests/test_vore_struggle.py::test_struggle_while_stunned_blocked - Ind...
+FAILED tests/test_vore_struggle.py::test_vore_mercy_blocks_adjacent_vore_attempt
+FAILED tests/test_vore_struggle.py::test_vore_mercy_cleared_after_world_turn
+FAILED tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+FAILED tests/test_vore_turn_order.py::test_open_attempt_stores_monster_index_for_resume
+32 failed, 256 passed, 13 warnings in 184.36s (0:03:04)

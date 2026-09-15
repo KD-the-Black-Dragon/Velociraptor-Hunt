@@ -7,12 +7,12 @@ import tcod.event
 from tcod.event import KeySym, Modifier, Scancode
 
 from src.app import AppPhase
-from src.career import STARTING_GOLD, new_career
+from src.career import CAMPAIGN_STYLE_COMPANY, STARTING_GOLD, new_career
 from src.career_store import CareerStore
 from src.downtime_hub import (
-    HUB_ROOT_OPTIONS,
     HubView,
     handle_downtime_event,
+    hub_root_options,
     render_downtime_hub,
     stub_cards_for_round,
 )
@@ -26,14 +26,11 @@ def _key(sym: KeySym, *, mod: int = 0) -> tcod.event.KeyDown:
 
 def test_new_career_enters_downtime_not_dungeon(tmp_path) -> None:
     app = app_with_isolated_save(tmp_path)
-    console = make_console()
-    app.handle_event(_key(KeySym.RETURN), console=console)  # New Game → name
-    app.handle_event(_key(KeySym.RETURN), console=console)  # name → background
-    app.handle_event(_key(KeySym.RETURN), console=console)  # background → downtime
+    career = new_career(player_name="Rix")
+    app._enter_downtime(career)
     assert app.phase is AppPhase.DOWNTIME
     assert app.engine is None
     assert app.career is not None
-    # Background may adjust gold; default first option is street_scrapper (0 bonus)
     assert app.career.gold >= 0
     assert app.career.renown >= 0
     assert app.career_store.probe()
@@ -54,25 +51,16 @@ def test_career_store_roundtrip(tmp_path) -> None:
     assert loaded.difficulty_id == "hard"
 
 
-def test_load_game_restores_career(tmp_path) -> None:
+def test_career_store_reload_restores_career(tmp_path) -> None:
     app = app_with_isolated_save(tmp_path)
     console = make_console()
-    app.handle_event(_key(KeySym.RETURN), console=console)
-    app.handle_event(_key(KeySym.A), console=console)
-    app.handle_event(_key(KeySym.RETURN), console=console)  # name confirm
-    app.handle_event(_key(KeySym.RETURN), console=console)  # background
+    app._enter_downtime(new_career(player_name="alex"))
     assert app.phase is AppPhase.DOWNTIME
     name = app.career.player_name if app.career else ""
-    app.handle_event(_key(KeySym.ESCAPE), console=console)
-    assert app.quit_confirm is not None
-    app.handle_event(_key(KeySym.Y, mod=Modifier.SHIFT), console=console)
+    app._return_to_menu()
     assert app.phase is AppPhase.MENU
-    assert "Load Game" in app.menu.options
-
-    # Highlight Load Game and enter
-    while app.menu.highlighted_option != "Load Game":
-        app.menu.move_down()
-    app.handle_event(_key(KeySym.RETURN), console=console)
+    assert app.career is None
+    app._load_career_or_dungeon(console)
     assert app.phase is AppPhase.DOWNTIME
     assert app.career is not None
     assert app.career.player_name == name
@@ -92,29 +80,29 @@ def test_match_select_shows_green_and_red() -> None:
 
 def test_hub_navigate_to_match_select() -> None:
     career = new_career(player_name="Test")
-    career.starter_picks_done = True
     from src.downtime_hub import DowntimeHubState
 
     hub = DowntimeHubState()
-    # Move highlight to "Select next match"
-    select_idx = next(
-        i for i, label in enumerate(HUB_ROOT_OPTIONS) if label.startswith("Select")
-    )
+    opts = hub_root_options(career)
+    select_idx = next(i for i, label in enumerate(opts) if label.startswith("Select"))
     hub.highlight = select_idx
     handle_downtime_event(hub, career, _key(KeySym.RETURN))
     assert hub.view is HubView.MATCH_SELECT
-    assert len(hub.cards) == 3
+    assert 1 <= len(hub.cards) <= 3
+    # Solo: only 1v1 cards
+    for card in hub.cards:
+        assert len(card.enemies) == 1 and card.enemies[0][1] == 1
 
 
 def test_hub_preserves_highlight_when_returning() -> None:
-    career = new_career(player_name="Test")
+    # Company style still has Assign team (on ice path)
+    career = new_career(player_name="Test", campaign_style=CAMPAIGN_STYLE_COMPANY)
     career.starter_picks_done = True
     from src.downtime_hub import DowntimeHubState
 
     hub = DowntimeHubState()
-    assign_idx = next(
-        i for i, label in enumerate(HUB_ROOT_OPTIONS) if label.startswith("Assign")
-    )
+    opts = hub_root_options(career)
+    assign_idx = next(i for i, label in enumerate(opts) if label.startswith("Assign"))
     hub.highlight = assign_idx
     handle_downtime_event(hub, career, _key(KeySym.RETURN))
     assert hub.view is HubView.ASSIGN_TEAM
@@ -122,9 +110,7 @@ def test_hub_preserves_highlight_when_returning() -> None:
     assert hub.view is HubView.ROOT
     assert hub.highlight == assign_idx
 
-    select_idx = next(
-        i for i, label in enumerate(HUB_ROOT_OPTIONS) if label.startswith("Select")
-    )
+    select_idx = next(i for i, label in enumerate(opts) if label.startswith("Select"))
     hub.highlight = select_idx
     handle_downtime_event(hub, career, _key(KeySym.RETURN))
     assert hub.view is HubView.MATCH_SELECT

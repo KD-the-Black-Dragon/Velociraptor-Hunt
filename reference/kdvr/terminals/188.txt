@@ -1,0 +1,272 @@
+---
+pid: 2380
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_macguffins_pr1.py tests/test_macguffins_pr2.py tests/test_macguffins_pr3.py -q"
+started_at: 2026-07-06T12:27:09.609Z
+running_for_ms: 23060005 
+---
+.....................FF...FFFFF....F..                                   [100%]
+================================== FAILURES ===================================
+____ test_try_begin_macguffin_activation_opens_modal_and_records_discovery ____
+
+    def test_try_begin_macguffin_activation_opens_modal_and_records_discovery() -> None:
+        engine = GameEngine()
+>       _setup_macguffin_step_on(engine)
+
+tests\test_macguffins_pr3.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018C5E854AD0>, mac_x = 20
+mac_y = 5
+
+    def _setup_macguffin_step_on(
+        engine: GameEngine,
+        *,
+        mac_x: int = 20,
+        mac_y: int = 5,
+    ) -> None:
+        old_player = engine.player
+        assert old_player is not None
+        world = Registry()
+        game_map = rune_placement_arena(width=45, height=10)
+        definition = load_macguffin_registry().get("sword_of_freedom")
+        spawn_macguffin_entity(world, definition, mac_x, mac_y)
+        player = world[object()]
+>       player.tags.update(old_player.tags)
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EntityTags' object has no attribute 'update'
+
+tests\test_macguffins_pr3.py:56: AttributeError
+_____________ test_try_begin_macguffin_activation_removes_entity ______________
+
+    def test_try_begin_macguffin_activation_removes_entity() -> None:
+        engine = GameEngine()
+>       _setup_macguffin_step_on(engine)
+
+tests\test_macguffins_pr3.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018C5FF2EBA0>, mac_x = 20
+mac_y = 5
+
+    def _setup_macguffin_step_on(
+        engine: GameEngine,
+        *,
+        mac_x: int = 20,
+        mac_y: int = 5,
+    ) -> None:
+        old_player = engine.player
+        assert old_player is not None
+        world = Registry()
+        game_map = rune_placement_arena(width=45, height=10)
+        definition = load_macguffin_registry().get("sword_of_freedom")
+        spawn_macguffin_entity(world, definition, mac_x, mac_y)
+        player = world[object()]
+>       player.tags.update(old_player.tags)
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EntityTags' object has no attribute 'update'
+
+tests\test_macguffins_pr3.py:56: AttributeError
+______ test_engine_step_on_macguffin_opens_modal_without_consuming_turn _______
+
+    def test_engine_step_on_macguffin_opens_modal_without_consuming_turn() -> None:
+        engine = GameEngine()
+>       _setup_macguffin_step_on(engine)
+
+tests\test_macguffins_pr3.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018C5FF2F8C0>, mac_x = 20
+mac_y = 5
+
+    def _setup_macguffin_step_on(
+        engine: GameEngine,
+        *,
+        mac_x: int = 20,
+        mac_y: int = 5,
+    ) -> None:
+        old_player = engine.player
+        assert old_player is not None
+        world = Registry()
+        game_map = rune_placement_arena(width=45, height=10)
+        definition = load_macguffin_registry().get("sword_of_freedom")
+        spawn_macguffin_entity(world, definition, mac_x, mac_y)
+        player = world[object()]
+>       player.tags.update(old_player.tags)
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EntityTags' object has no attribute 'update'
+
+tests\test_macguffins_pr3.py:56: AttributeError
+________________ test_decline_macguffin_victory_consumes_turn _________________
+
+    def test_decline_macguffin_victory_consumes_turn() -> None:
+        engine = GameEngine()
+>       _setup_macguffin_step_on(engine)
+
+tests\test_macguffins_pr3.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018C5FF2F770>, mac_x = 20
+mac_y = 5
+
+    def _setup_macguffin_step_on(
+        engine: GameEngine,
+        *,
+        mac_x: int = 20,
+        mac_y: int = 5,
+    ) -> None:
+        old_player = engine.player
+        assert old_player is not None
+        world = Registry()
+        game_map = rune_placement_arena(width=45, height=10)
+        definition = load_macguffin_registry().get("sword_of_freedom")
+        spawn_macguffin_entity(world, definition, mac_x, mac_y)
+        player = world[object()]
+>       player.tags.update(old_player.tags)
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EntityTags' object has no attribute 'update'
+
+tests\test_macguffins_pr3.py:56: AttributeError
+___________ test_confirm_macguffin_victory_stub_does_not_game_over ____________
+
+    def test_confirm_macguffin_victory_stub_does_not_game_over() -> None:
+        engine = GameEngine()
+>       _setup_macguffin_step_on(engine)
+
+tests\test_macguffins_pr3.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018C5FF2E900>, mac_x = 20
+mac_y = 5
+
+    def _setup_macguffin_step_on(
+        engine: GameEngine,
+        *,
+        mac_x: int = 20,
+        mac_y: int = 5,
+    ) -> None:
+        old_player = engine.player
+        assert old_player is not None
+        world = Registry()
+        game_map = rune_placement_arena(width=45, height=10)
+        definition = load_macguffin_registry().get("sword_of_freedom")
+        spawn_macguffin_entity(world, definition, mac_x, mac_y)
+        player = world[object()]
+>       player.tags.update(old_player.tags)
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EntityTags' object has no attribute 'update'
+
+tests\test_macguffins_pr3.py:56: AttributeError
+__________________ test_macguffin_modal_blocks_idle_command ___________________
+
+    def test_macguffin_modal_blocks_idle_command() -> None:
+        engine = GameEngine()
+>       _setup_macguffin_step_on(engine)
+
+tests\test_macguffins_pr3.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018C5FF2F620>, mac_x = 20
+mac_y = 5
+
+    def _setup_macguffin_step_on(
+        engine: GameEngine,
+        *,
+        mac_x: int = 20,
+        mac_y: int = 5,
+    ) -> None:
+        old_player = engine.player
+        assert old_player is not None
+        world = Registry()
+        game_map = rune_placement_arena(width=45, height=10)
+        definition = load_macguffin_registry().get("sword_of_freedom")
+        spawn_macguffin_entity(world, definition, mac_x, mac_y)
+        player = world[object()]
+>       player.tags.update(old_player.tags)
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EntityTags' object has no attribute 'update'
+
+tests\test_macguffins_pr3.py:56: AttributeError
+_________________ test_ctrl_q_during_macguffin_modal_is_no_op _________________
+
+tmp_path = WindowsPath('C:/Users/hybri/AppData/Local/Temp/pytest-of-hybri/pytest-233/test_ctrl_q_during_macguffin_m0')
+
+    def test_ctrl_q_during_macguffin_modal_is_no_op(tmp_path) -> None:
+        from pathlib import Path
+    
+        from src.save.coordinator import SaveCoordinator
+        from src.save.store import SaveStore
+        from tests.ui_test_helpers import make_console
+    
+        store = SaveStore(Path(tmp_path))
+        app = App(save_coordinator=SaveCoordinator(store=store))
+        console = make_console()
+        app.handle_event(_key(KeySym.RETURN), console=console)
+        app.handle_event(_key(KeySym.RETURN), console=console)
+        assert app.engine is not None
+>       _setup_macguffin_step_on(app.engine)
+
+tests\test_macguffins_pr3.py:223: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018C600BDD30>, mac_x = 20
+mac_y = 5
+
+    def _setup_macguffin_step_on(
+        engine: GameEngine,
+        *,
+        mac_x: int = 20,
+        mac_y: int = 5,
+    ) -> None:
+        old_player = engine.player
+        assert old_player is not None
+        world = Registry()
+        game_map = rune_placement_arena(width=45, height=10)
+        definition = load_macguffin_registry().get("sword_of_freedom")
+        spawn_macguffin_entity(world, definition, mac_x, mac_y)
+        player = world[object()]
+>       player.tags.update(old_player.tags)
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EntityTags' object has no attribute 'update'
+
+tests\test_macguffins_pr3.py:56: AttributeError
+__________ test_mid_modal_snapshot_preserves_discovery_without_modal __________
+
+    def test_mid_modal_snapshot_preserves_discovery_without_modal() -> None:
+        engine = GameEngine()
+>       _setup_macguffin_step_on(engine)
+
+tests\test_macguffins_pr3.py:285: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000018C5FF2FB60>, mac_x = 20
+mac_y = 5
+
+    def _setup_macguffin_step_on(
+        engine: GameEngine,
+        *,
+        mac_x: int = 20,
+        mac_y: int = 5,
+    ) -> None:
+        old_player = engine.player
+        assert old_player is not None
+        world = Registry()
+        game_map = rune_placement_arena(width=45, height=10)
+        definition = load_macguffin_registry().get("sword_of_freedom")
+        spawn_macguffin_entity(world, definition, mac_x, mac_y)
+        player = world[object()]
+>       player.tags.update(old_player.tags)
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'EntityTags' object has no attribute 'update'
+
+tests\test_macguffins_pr3.py:56: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_macguffins_pr3.py::test_try_begin_macguffin_activation_opens_modal_and_records_discovery
+FAILED tests/test_macguffins_pr3.py::test_try_begin_macguffin_activation_removes_entity
+FAILED tests/test_macguffins_pr3.py::test_engine_step_on_macguffin_opens_modal_without_consuming_turn
+FAILED tests/test_macguffins_pr3.py::test_decline_macguffin_victory_consumes_turn
+FAILED tests/test_macguffins_pr3.py::test_confirm_macguffin_victory_stub_does_not_game_over
+FAILED tests/test_macguffins_pr3.py::test_macguffin_modal_blocks_idle_command
+FAILED tests/test_macguffins_pr3.py::test_ctrl_q_during_macguffin_modal_is_no_op
+FAILED tests/test_macguffins_pr3.py::test_mid_modal_snapshot_preserves_discovery_without_modal
+8 failed, 30 passed in 19.18s

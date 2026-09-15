@@ -59,7 +59,7 @@ def test_format_player_vore_phase_unknown_key_stays() -> None:
 
 def test_wrap_text_fits_max_width() -> None:
     lines = wrap_text_words(
-        "A saved game exists and will be overwritten. Proceed? (Y/n)",
+        "A saved hunt exists and will be abandoned. Proceed? (Y/n)",
         max_width=30,
     )
     assert all(len(line) <= 30 for line in lines)

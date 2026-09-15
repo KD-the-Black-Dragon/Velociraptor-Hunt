@@ -36,8 +36,11 @@ def _key(sym: KeySym) -> tcod.event.KeyDown:
 
 
 def test_plural_display_name_for_stacked_potions() -> None:
-    assert _plural_display_name("health potion", 3) == "health potions"
-    assert _plural_display_name("health potion", 1) == "health potion"
+    assert _plural_display_name("healing potion", 3) == "healing potions"
+    assert _plural_display_name("healing potion", 1) == "healing potion"
+    assert _plural_display_name("potion of blinking", 2) == "potions of blinking"
+    assert _plural_display_name("throwing knife", 4) == "throwing knives"
+    assert _plural_display_name("rock", 3) == "rocks"
 
 
 def test_modal_list_rows_are_left_justified() -> None:

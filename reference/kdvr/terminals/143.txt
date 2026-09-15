@@ -1,0 +1,20 @@
+---
+pid: 30148
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_message_log_categories.py tests/test_rest_until_healed.py tests/test_message_log_wrap.py -q 2>&1"
+started_at: 2026-07-04T15:10:56.255Z
+running_for_ms: 38760008 
+---
+.........................                                                [100%]
+============================== warnings summary ===============================
+tests/test_message_log_categories.py::test_stunned_message_renders_danger_color
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_message_log_categories.py:72: FutureWarning: This attribute has been renamed to `rgba`.
+    int(console.tiles[rect.x + 1, rect.y]["fg"][index]) for index in range(3)
+
+tests/test_message_log_wrap.py::test_render_message_log_shows_wrapped_tail
+tests/test_message_log_wrap.py::test_render_message_log_prefers_recent_wrapped_lines
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_message_log_wrap.py:16: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+25 passed, 3 warnings in 14.12s

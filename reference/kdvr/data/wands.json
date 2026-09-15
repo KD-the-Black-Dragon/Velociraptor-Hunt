@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "wands": [
+    {
+      "id": "wand_of_magic_missile",
+      "display_name": "wand of magic missile",
+      "glyph": "/",
+      "fg": [
+        180,
+        120,
+        255
+      ],
+      "examine": "A wand that can shoot a fairly powerful magic missile that arcs overhead.",
+      "effect": "magic_missile",
+      "charges_max": 1,
+      "charges_start": 1,
+      "range": 5,
+      "min_damage": 15,
+      "max_damage": 30,
+      "accuracy": 3.0,
+      "spawn_weight": 5,
+      "spawn_min_depth": 1,
+      "spawn_max_depth": 4,
+      "abilities": []
+    },
+    {
+      "id": "wand_of_double_missile",
+      "display_name": "wand of double missile",
+      "glyph": "/",
+      "fg": [
+        160,
+        100,
+        240
+      ],
+      "examine": "A wand that shoots two magic missiles at once in a high arc.",
+      "effect": "magic_missile",
+      "charges_max": 1,
+      "charges_start": 1,
+      "range": 5,
+      "min_damage": 30,
+      "max_damage": 60,
+      "accuracy": 3.0,
+      "spawn_weight": 2,
+      "spawn_min_depth": 4,
+      "spawn_max_depth": 8,
+      "abilities": []
+    },
+    {
+      "id": "wand_of_power_bolt",
+      "display_name": "wand of power bolt",
+      "glyph": "/",
+      "fg": [
+        140,
+        80,
+        220
+      ],
+      "examine": "A heavy wand that shoots a powerful magic bolt in a high arc.",
+      "effect": "magic_missile",
+      "charges_max": 1,
+      "charges_start": 1,
+      "range": 6,
+      "min_damage": 45,
+      "max_damage": 75,
+      "accuracy": 3.0,
+      "spawn_weight": 2,
+      "spawn_min_depth": 8,
+      "spawn_max_depth": 12,
+      "abilities": []
+    },
+    {
+      "id": "wand_of_ballista",
+      "display_name": "wand of ballista",
+      "glyph": "/",
+      "fg": [
+        120,
+        60,
+        200
+      ],
+      "examine": "Wand capable of shooting a massive, stone-crushing magic bolt in a high arc.",
+      "effect": "magic_missile",
+      "charges_max": 6,
+      "charges_start": 4,
+      "range": 6,
+      "min_damage": 60,
+      "max_damage": 90,
+      "accuracy": 3.0,
+      "spawn_weight": 2,
+      "spawn_min_depth": 12,
+      "spawn_max_depth": 16,
+      "abilities": []
+    },
+    {
+      "id": "wand_of_extermination",
+      "display_name": "wand of extermination",
+      "glyph": "/",
+      "fg": [
+        100,
+        40,
+        180
+      ],
+      "examine": "Overkill in a wand-sized package.",
+      "effect": "magic_missile",
+      "charges_max": 1,
+      "charges_start": 1,
+      "range": 7,
+      "min_damage": 75,
+      "max_damage": 105,
+      "accuracy": 3.0,
+      "spawn_weight": 1,
+      "spawn_min_depth": 16,
+      "spawn_max_depth": 20,
+      "abilities": []
+    }
+  ]
+}

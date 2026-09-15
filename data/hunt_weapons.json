@@ -1,0 +1,19 @@
+{
+  "weapons": [
+    {
+      "id": "rifle",
+      "name": "Bolt-action rifle",
+      "blurb": "Long range. Needs aim/focus for a real shot. Unaimed fire always grazes."
+    },
+    {
+      "id": "shotgun",
+      "name": "Shotgun",
+      "blurb": "Dangerously close. Aim optional. Unaimed at short range can still hit hard."
+    },
+    {
+      "id": "revolver",
+      "name": "Revolver",
+      "blurb": "Mid-range snapshot. Unaimed at short range can still hit hard."
+    }
+  ]
+}

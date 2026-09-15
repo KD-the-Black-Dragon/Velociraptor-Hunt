@@ -1,0 +1,15 @@
+---
+pid: 9268
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_inventory_items_pr5.py tests/test_floor_runes_pr3.py tests/test_dungeon_spawn_config.py::test_valid_spawn_tile_distribution tests/test_floor_runes_pr4.py::test_spawn_three_distinct_rune_tiles -q --tb=short 2>&1"
+started_at: 2026-07-04T00:38:09.155Z
+running_for_ms: 9380006  
+---
+.........................                                                [100%]
+============================== warnings summary ===============================
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr5.py:304: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+25 passed, 1 warning in 125.12s (0:02:05)

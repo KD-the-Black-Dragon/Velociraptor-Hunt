@@ -1,0 +1,42 @@
+---
+pid: 23948
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cmd /c \"cd /d C:\\VS Code Projects\\kds-vore-roguelike && python -m pytest tests/test_sim_navigation.py -v --tb=line\""
+started_at: 2026-07-11T22:52:02.235Z
+running_for_ms: 1489993  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 9 items
+
+tests/test_sim_navigation.py::test_nearest_goal_tie_break_is_deterministic_with_rng PASSED [ 11%]
+tests/test_sim_navigation.py::test_first_step_toward_goal FAILED         [ 22%]
+tests/test_sim_navigation.py::test_player_walk_distances_on_carved_floor PASSED [ 33%]
+tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored FAILED [ 44%]
+tests/test_sim_navigation.py::test_flee_goal_increases_distance_from_shark PASSED [ 55%]
+tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility PASSED [ 66%]
+tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius FAILED [ 77%]
+tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs PASSED [ 88%]
+tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_seed FAILED [100%]
+
+================================== FAILURES ===================================
+E   assert None == (1, 0)
+C:\VS Code Projects\kds-vore-roguelike\tests\test_sim_navigation.py:62: assert None == (1, 0)
+E   assert (9, 3) in [(9, 1), (10, 2)]
+C:\VS Code Projects\kds-vore-roguelike\tests\test_sim_navigation.py:74: assert (9, 3) in [(9, 1), (10, 2)]
+E   assert <SimActionKind.WAIT: 1> is <SimActionKind.MOVE: 2>
+     +  where <SimActionKind.WAIT: 1> = SimAction(kind=<SimActionKind.WAIT: 1>, direction=(0, 0)).kind
+     +  and   <SimActionKind.MOVE: 2> = SimActionKind.MOVE
+C:\VS Code Projects\kds-vore-roguelike\tests\test_sim_navigation.py:121: assert <SimActionKind.WAIT: 1> is <SimActionKind.MOVE: 2>
+E   KeyError: <class 'src.components.Position'>
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\tcod\ecs\entity.py:426: KeyError: <class 'src.components.Position'>
+=========================== short test summary info ===========================
+FAILED tests/test_sim_navigation.py::test_first_step_toward_goal - assert Non...
+FAILED tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored
+FAILED tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius
+FAILED tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_seed
+=================== 4 failed, 5 passed in 161.91s (0:02:41) ===================

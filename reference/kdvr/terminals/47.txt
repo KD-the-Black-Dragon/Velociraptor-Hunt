@@ -1,0 +1,12 @@
+---
+pid: 17344
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; python -m pytest tests/ -q --tb=line 2>&1 | Select-Object -Last 5"
+started_at: 2026-07-01T13:01:44.018Z
+running_for_ms: 20680003 
+---
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+329 passed, 17 warnings in 79.67s (0:01:19)

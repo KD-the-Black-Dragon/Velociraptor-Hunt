@@ -1,0 +1,1045 @@
+---
+pid: 15288
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q"
+started_at: 2026-06-30T21:44:56.236Z
+running_for_ms: 12039997 
+---
+.....................................F.................................. [ 25%]
+................F...................F...FFF.....................F.FFF... [ 50%]
+....F.F...........F.F..................................................F [ 75%]
+........F............F.FF....F...F.FF.....F.......F.F.FFF..F...F...F.... [100%]
+================================== FAILURES ===================================
+_________ test_engulfed_player_no_regen_clears_stunned_on_strike_turn _________
+
+    def test_engulfed_player_no_regen_clears_stunned_on_strike_turn() -> None:
+        engine = GameEngine()
+>       player, _wolf = _engulf_player_on_wolf(engine, player_hp=0)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_digestion.py:611: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FCF8AF4D0>
+narrative_type = 'OV', player_hp = 0
+
+    def _engulf_player_on_wolf(
+        engine: GameEngine,
+        *,
+        narrative_type: str = "OV",
+        player_hp: int | None = None,
+    ) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_digestion.py:502: StopIteration
+______________________ test_evil_prefers_nearest_hostile ______________________
+
+    def test_evil_prefers_nearest_hostile() -> None:
+        engine = _make_wolf_engine(seed=42)
+        player = engine.player
+        assert player is not None
+        wolf = _first_wolf(engine)
+        origin = Position(10, 10)
+        wolf.components[Position] = origin
+        player.components[Position] = Position(14, 10)
+        knight = spawn_test_npc(
+            engine.world,
+            x=12,
+            y=10,
+            species="knight",
+            alignment=Alignment.GOOD,
+        )
+        update_fov(engine.game_map, origin.x, origin.y)
+        target = pick_hostile_target(
+            wolf, engine.world, engine.game_map, player, random.Random(0)
+        )
+>       assert target is knight
+E       assert None is <Entity(uid=object at 0x28FD0D24EB0)>
+
+tests\test_enhancements_2.py:307: AssertionError
+_______________ test_npc_stunned_recovery_off_screen_not_logged _______________
+
+    def test_npc_stunned_recovery_off_screen_not_logged() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player_pos = player.components[Position]
+        update_fov(engine.game_map, player_pos.x, player_pos.y)
+        game_map = engine.game_map
+        hidden_tile: tuple[int, int] | None = None
+        for y in range(game_map.height):
+            for x in range(game_map.width):
+                if game_map.is_walkable(x, y) and not game_map.visible[y, x]:
+                    hidden_tile = (x, y)
+                    break
+            if hidden_tile is not None:
+                break
+>       assert hidden_tile is not None
+E       assert None is not None
+
+tests\test_enhancements_3.py:271: AssertionError
+_______________ test_evil_frustrated_when_neutral_blocks_player _______________
+
+    def test_evil_frustrated_when_neutral_blocks_player() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        wolf = _first_wolf(engine)
+        wpos, rpos, ppos = _collinear_walkable_positions(engine, 3)
+        wolf.components[Position] = wpos
+        rabbit = spawn_test_npc(
+            engine.world,
+            x=rpos.x,
+            y=rpos.y,
+            species="rabbit",
+            alignment=Alignment.NEUTRAL,
+        )
+        player.components[Position] = ppos
+        update_fov(engine.game_map, wpos.x, wpos.y)
+        target, blocked = pick_evil_target(
+            wolf,
+            engine.world,
+            engine.game_map,
+            player,
+            random.Random(0),
+        )
+>       assert target is rabbit
+E       assert <Entity(uid=object at 0x28FD0D26400)> is <Entity(uid=object at 0x28FD0D264B0)>
+
+tests\test_enhancements_3.py:377: AssertionError
+_____________ test_evil_chases_primary_when_neutral_not_blocking ______________
+
+    def test_evil_chases_primary_when_neutral_not_blocking() -> None:
+        engine = GameEngine()
+        wolf = _first_wolf(engine)
+        wpos, _, kpos = _collinear_walkable_positions(engine, 3)
+        wolf.components[Position] = wpos
+        knight = spawn_test_npc(
+            engine.world,
+            x=kpos.x,
+            y=kpos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+        )
+        rabbit = spawn_test_npc(
+            engine.world,
+            x=kpos.x,
+            y=kpos.y + 2,
+            species="rabbit",
+            alignment=Alignment.NEUTRAL,
+        )
+        update_fov(engine.game_map, wpos.x, wpos.y)
+        target, blocked = pick_evil_target(
+            wolf,
+            engine.world,
+            engine.game_map,
+            engine.player,
+            random.Random(0),
+        )
+>       assert target is knight
+E       assert <Entity(uid=object at 0x28FD0D264E0)> is <Entity(uid=object at 0x28FD0D26620)>
+
+tests\test_enhancements_3.py:408: AssertionError
+____________________ test_evil_frustration_system_log_only ____________________
+
+capsys = <_pytest.capture.CaptureFixture object at 0x0000028FD0928D70>
+
+    def test_evil_frustration_system_log_only(capsys) -> None:
+        engine = GameEngine()
+>       wolf = _first_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_3.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FCF8AF4D0>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_3.py:105: StopIteration
+___________________________ test_npc_vore_miss_log ____________________________
+
+    def test_npc_vore_miss_log() -> None:
+        engine = GameEngine()
+>       wolf, knight = _adjacent_stunned_knight_setup(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_3.py:1063: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_enhancements_3.py:1045: in _adjacent_stunned_knight_setup
+    wolf = _first_wolf(engine)
+           ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FCF8AF950>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_3.py:105: StopIteration
+__________________ test_npc_vore_via_monster_turns_no_modal ___________________
+
+    def test_npc_vore_via_monster_turns_no_modal() -> None:
+        engine = GameEngine()
+>       wolf, knight = _adjacent_stunned_knight_setup(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_3.py:1108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_enhancements_3.py:1045: in _adjacent_stunned_knight_setup
+    wolf = _first_wolf(engine)
+           ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FCF8AFDD0>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_3.py:105: StopIteration
+______________________ test_engulfed_npc_prey_skips_turn ______________________
+
+    def test_engulfed_npc_prey_skips_turn() -> None:
+        engine = GameEngine()
+>       wolf, knight = _adjacent_stunned_knight_setup(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_enhancements_3.py:1131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_enhancements_3.py:1045: in _adjacent_stunned_knight_setup
+    wolf = _first_wolf(engine)
+           ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FCF8AFF50>
+
+    def _first_wolf(engine: GameEngine):
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_enhancements_3.py:105: StopIteration
+_________________ test_engulfed_good_npc_invisible_to_evil_ai _________________
+
+    def test_engulfed_good_npc_invisible_to_evil_ai() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        wolves = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))
+>       predator, hunter = wolves[0], wolves[1]
+                           ^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_enhancements_3.py:1157: IndexError
+_______________ test_examine_wolf_description_in_modal_not_log ________________
+
+    def test_examine_wolf_description_in_modal_not_log() -> None:
+        engine = GameEngine()
+        player = engine.player
+>       wolf = _first_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests\test_examine.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD1150410>
+
+    def _first_wolf(engine: GameEngine):
+        from src.components import AI, VoreCapable
+    
+>       return next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_examine.py:29: StopIteration
+________________________ test_examine_potion_on_floor _________________________
+
+    def test_examine_potion_on_floor() -> None:
+        engine = GameEngine()
+        item = next(iter(engine.world.Q.all_of(components=[Item])))
+        ipos = item.components[Position]
+        engine.examine_state.enter(ipos)
+        _press(engine, KeySym.RETURN)
+        desc = item.components[ExamineDescription]
+        assert desc is not None
+>       assert engine.examine_state.description_text == desc.text
+E       assert 'A noble figu...dieval armor.' == "This is a he... one's vigor."
+E         
+E         - This is a healing potion that can restore one's vigor.
+E         + A noble figure in medieval armor.
+
+tests\test_examine.py:79: AssertionError
+___________________ test_ctrl_q_during_vore_modal_is_no_op ____________________
+
+    def test_ctrl_q_during_vore_modal_is_no_op() -> None:
+        from tests.test_vore_modal import _open_vore_modal
+    
+        app = App()
+        app.handle_event(_key(KeySym.RETURN))
+        app.handle_event(_key(KeySym.RETURN))
+        assert app.engine is not None
+>       _open_vore_modal(app.engine)
+
+tests\test_flow_pr4.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_vore_modal.py:41: in _open_vore_modal
+    _place_adjacent_wolf(engine)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FCF8AFF50>
+
+    def _place_adjacent_wolf(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_modal.py:27: StopIteration
+_________________ test_ctrl_q_during_game_over_recap_is_no_op _________________
+
+    def test_ctrl_q_during_game_over_recap_is_no_op() -> None:
+        from tests.test_digestion import _engulf_player_on_wolf, _press
+    
+        app = App()
+        app.handle_event(_key(KeySym.RETURN))
+        app.handle_event(_key(KeySym.RETURN))
+>       _engulf_player_on_wolf(app.engine, player_hp=0)
+
+tests\test_flow_pr4.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD1150410>
+narrative_type = 'OV', player_hp = 0
+
+    def _engulf_player_on_wolf(
+        engine: GameEngine,
+        *,
+        narrative_type: str = "OV",
+        player_hp: int | None = None,
+    ) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = next(iter(engine.world.Q.all_of(tags=[VoreCapable], components=[AI])))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\test_digestion.py:502: StopIteration
+______________ test_should_attempt_vore_true_at_zero_hp_adjacent ______________
+
+    def test_should_attempt_vore_true_at_zero_hp_adjacent() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       wolf = _place_adjacent_wolf(engine)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_ai.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD1150C50>
+
+    def _place_adjacent_wolf(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_ai.py:42: StopIteration
+________________ test_adjacent_zero_hp_prefers_vore_over_bump _________________
+
+    def test_adjacent_zero_hp_prefers_vore_over_bump() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+>       _place_adjacent_wolf(engine)
+
+tests\test_vore_ai.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FCF8AFB90>
+
+    def _place_adjacent_wolf(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_ai.py:42: StopIteration
+_______________________ test_f2_debug_weakens_monsters ________________________
+
+    def test_f2_debug_weakens_monsters() -> None:
+        engine = GameEngine()
+        monsters = list(engine.world.Q.all_of(components=[AI, Fighter]))
+>       assert monsters
+E       assert []
+
+tests\test_vore_constants.py:146: AssertionError
+_______________________ test_engulf_after_success_modal _______________________
+
+    def test_engulf_after_success_modal() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+>       _engulf_via_successful_vore(engine)
+
+tests\test_vore_engulfed.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD1151010>
+
+    def _engulf_via_successful_vore(engine: GameEngine) -> None:
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_engulfed.py:49: StopIteration
+_______________ test_engulf_co_locates_player_on_predator_tile ________________
+
+    def test_engulf_co_locates_player_on_predator_tile() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+>       _engulf_via_successful_vore(engine)
+
+tests\test_vore_engulfed.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD1150410>
+
+    def _engulf_via_successful_vore(engine: GameEngine) -> None:
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_engulfed.py:49: StopIteration
+_________________ test_struggle_while_engulfed_consumes_turn __________________
+
+    def test_struggle_while_engulfed_consumes_turn() -> None:
+        engine = GameEngine()
+>       _engulf_via_successful_vore(engine)
+
+tests\test_vore_engulfed.py:160: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD1150D10>
+
+    def _engulf_via_successful_vore(engine: GameEngine) -> None:
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_engulfed.py:49: StopIteration
+______________ test_defeating_predator_releases_player_same_turn ______________
+
+    def test_defeating_predator_releases_player_same_turn() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+>       predator = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Fighter]))[0]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_engulfed.py:206: IndexError
+_____________________ test_no_vore_attempt_while_engulfed _____________________
+
+    def test_no_vore_attempt_while_engulfed() -> None:
+        engine = GameEngine()
+>       _engulf_via_successful_vore(engine)
+
+tests\test_vore_engulfed.py:296: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD1151490>
+
+    def _engulf_via_successful_vore(engine: GameEngine) -> None:
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 0
+        player.tags.add(Stunned)
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_engulfed.py:49: StopIteration
+______________________ test_modal_opens_on_vore_attempt _______________________
+
+    def test_modal_opens_on_vore_attempt() -> None:
+        engine = GameEngine()
+>       _open_vore_modal(engine)
+
+tests\test_vore_modal.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_vore_modal.py:41: in _open_vore_modal
+    _place_adjacent_wolf(engine)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FCF8AFF50>
+
+    def _place_adjacent_wolf(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_modal.py:27: StopIteration
+_____________________ test_movement_blocked_during_modal ______________________
+
+    def test_movement_blocked_during_modal() -> None:
+        engine = GameEngine()
+>       _open_vore_modal(engine)
+
+tests\test_vore_modal.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_vore_modal.py:41: in _open_vore_modal
+    _place_adjacent_wolf(engine)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FCF8AFB90>
+
+    def _place_adjacent_wolf(engine: GameEngine):
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_modal.py:27: StopIteration
+__________________ test_render_skips_engulfed_npc_prey_glyph __________________
+
+    def test_render_skips_engulfed_npc_prey_glyph() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+>       wolf = next(
+            m for m in engine.world.Q.all_of(tags=[VoreCapable], components=[AI, Position])
+        )
+E       StopIteration
+
+tests\test_vore_render.py:208: StopIteration
+___________________ test_engine_render_normal_after_escape ____________________
+
+    def test_engine_render_normal_after_escape() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_render.py:266: IndexError
+______________ test_struggle_defeats_one_hp_predator_and_escapes ______________
+
+    def test_struggle_defeats_one_hp_predator_and_escapes() -> None:
+        engine = GameEngine()
+>       player, wolf = _engulf_player_on_wolf(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_struggle.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD1151550>
+
+    def _engulf_player_on_wolf(engine: GameEngine) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:47: IndexError
+__________________ test_struggle_f2_predator_escape_via_key ___________________
+
+    def test_struggle_f2_predator_escape_via_key() -> None:
+        engine = GameEngine()
+>       _engulf_player_on_wolf(engine)
+
+tests\test_vore_struggle.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD11507D0>
+
+    def _engulf_player_on_wolf(engine: GameEngine) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:47: IndexError
+__________________ test_escape_roll_succeeds_with_seeded_rng __________________
+
+    def test_escape_roll_succeeds_with_seeded_rng() -> None:
+        engine = GameEngine()
+>       player, wolf = _engulf_player_on_wolf(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_struggle.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD11504D0>
+
+    def _engulf_player_on_wolf(engine: GameEngine) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:47: IndexError
+____________________ test_directional_escape_moves_player _____________________
+
+    def test_directional_escape_moves_player() -> None:
+        engine = GameEngine()
+        player, wolf = _engulf_player_on_wolf(engine)
+        pred_pos = wolf.components[Position]
+        expected = Position(pred_pos.x, pred_pos.y - 1)
+        rng = random.Random(0)
+        with patch.object(rng, "random", return_value=0.0):
+            try_struggle(engine.world, engine.game_map, player, (0, -1), engine.message_log, rng)
+>       assert player.components[Position] == expected
+E       AssertionError: assert Position(x=10, y=20) == Position(x=10, y=18)
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing attributes:
+E         ['y']
+E         
+E         Drill down into differing attribute y:
+E           y: 20 != 18
+
+tests\test_vore_struggle.py:137: AssertionError
+______________________ test_vore_mercy_granted_on_escape ______________________
+
+    def test_vore_mercy_granted_on_escape() -> None:
+        engine = GameEngine()
+>       player, wolf = _engulf_player_on_wolf(engine)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_vore_struggle.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+engine = <src.engine.GameEngine object at 0x0000028FD1150E90>
+
+    def _engulf_player_on_wolf(engine: GameEngine) -> tuple[object, object]:
+        player = engine.player
+        assert player is not None
+>       wolf = list(engine.world.Q.all_of(tags=[VoreCapable], components=[AI]))[0]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_vore_struggle.py:47: IndexError
+___________________ test_miss_resumes_at_next_monster_index ___________________
+
+    def test_miss_resumes_at_next_monster_index() -> None:
+        engine = GameEngine()
+        _move_non_wolves_away(engine)
+        _stun_player(engine)
+        player = engine.player
+        assert player is not None
+        player_pos = player.components[Position]
+        monsters = _sorted_wolves(engine)
+        assert len(monsters) >= 2
+    
+        for index, wolf in enumerate(monsters):
+            if index == 0:
+                _place_wolf_at(engine, wolf, player_pos.x + 1, player_pos.y)
+            elif index == 1:
+                _place_wolf_at(engine, wolf, player_pos.x + 3, player_pos.y)
+            else:
+                _place_wolf_at(engine, wolf, player_pos.x + 20, player_pos.y + 20)
+        update_fov(engine.game_map, player_pos.x, player_pos.y)
+    
+        acted: list[object] = []
+        original = run_monster_turns.__globals__["try_action"]
+    
+        def _track_try_action(world, game_map, actor, direction, message_log, **kwargs):
+            acted.append(actor)
+            return original(world, game_map, actor, direction, message_log, **kwargs)
+    
+        opener = monsters[0]
+        runner_up = monsters[1]
+        with patch("src.systems.ai.try_action", side_effect=_track_try_action):
+            with patch("src.systems.vore.resolve_vore_hit", return_value=False):
+                engine._consume_player_turn()
+                assert engine.vore_modal.active
+                assert engine.vore_modal.resume_monster_index == _monster_index(engine, opener)
+                assert engine.vore_modal.predator is opener
+                _resolve_miss_modal(engine)
+    
+        assert opener not in acted
+>       assert runner_up in acted
+E       assert <Entity(uid=object at 0x28FD127B690)> in []
+
+tests\test_vore_turn_order.py:112: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+ERROR    tcod:cffi.py:71 libtcod\src\libtcod\error.c:56:libtcod 2.2.2 libtcod\src\libtcod\fov_c.c:176
+Point of view {84, 37} is out of bounds.
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:114: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:68: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:159: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:73: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+  C:\VS Code Projects\kds-vore-roguelike\src\systems\fov.py:23: RuntimeWarning: Given pov index (37, 84) is outside the array of shape (44, 80).
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_digestion.py::test_engulfed_player_no_regen_clears_stunned_on_strike_turn
+FAILED tests/test_enhancements_2.py::test_evil_prefers_nearest_hostile - asse...
+FAILED tests/test_enhancements_3.py::test_npc_stunned_recovery_off_screen_not_logged
+FAILED tests/test_enhancements_3.py::test_evil_frustrated_when_neutral_blocks_player
+FAILED tests/test_enhancements_3.py::test_evil_chases_primary_when_neutral_not_blocking
+FAILED tests/test_enhancements_3.py::test_evil_frustration_system_log_only - ...
+FAILED tests/test_enhancements_3.py::test_npc_vore_miss_log - StopIteration
+FAILED tests/test_enhancements_3.py::test_npc_vore_via_monster_turns_no_modal
+FAILED tests/test_enhancements_3.py::test_engulfed_npc_prey_skips_turn - Stop...
+FAILED tests/test_enhancements_3.py::test_engulfed_good_npc_invisible_to_evil_ai
+FAILED tests/test_examine.py::test_examine_wolf_description_in_modal_not_log
+FAILED tests/test_examine.py::test_examine_potion_on_floor - assert 'A noble ...
+FAILED tests/test_flow_pr4.py::test_ctrl_q_during_vore_modal_is_no_op - StopI...
+FAILED tests/test_flow_pr4.py::test_ctrl_q_during_game_over_recap_is_no_op - ...
+FAILED tests/test_vore_ai.py::test_should_attempt_vore_true_at_zero_hp_adjacent
+FAILED tests/test_vore_ai.py::test_adjacent_zero_hp_prefers_vore_over_bump - ...
+FAILED tests/test_vore_constants.py::test_f2_debug_weakens_monsters - assert []
+FAILED tests/test_vore_engulfed.py::test_engulf_after_success_modal - StopIte...
+FAILED tests/test_vore_engulfed.py::test_engulf_co_locates_player_on_predator_tile
+FAILED tests/test_vore_engulfed.py::test_struggle_while_engulfed_consumes_turn
+FAILED tests/test_vore_engulfed.py::test_defeating_predator_releases_player_same_turn
+FAILED tests/test_vore_engulfed.py::test_no_vore_attempt_while_engulfed - Sto...
+FAILED tests/test_vore_modal.py::test_modal_opens_on_vore_attempt - StopItera...
+FAILED tests/test_vore_modal.py::test_movement_blocked_during_modal - StopIte...
+FAILED tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+FAILED tests/test_vore_render.py::test_engine_render_normal_after_escape - In...
+FAILED tests/test_vore_struggle.py::test_struggle_defeats_one_hp_predator_and_escapes
+FAILED tests/test_vore_struggle.py::test_struggle_f2_predator_escape_via_key
+FAILED tests/test_vore_struggle.py::test_escape_roll_succeeds_with_seeded_rng
+FAILED tests/test_vore_struggle.py::test_directional_escape_moves_player - As...
+FAILED tests/test_vore_struggle.py::test_vore_mercy_granted_on_escape - Index...
+FAILED tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+32 failed, 256 passed, 13 warnings in 158.15s (0:02:38)

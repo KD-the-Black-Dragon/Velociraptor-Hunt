@@ -6,6 +6,7 @@ from pathlib import Path
 
 from src.app import App
 from src.career_store import CareerStore
+from src.hunt_stats import HuntStatsStore
 from src.past_runs.store import PastRunsStore
 from src.save.coordinator import SaveCoordinator
 from src.save.store import SaveStore
@@ -21,6 +22,7 @@ def app_with_isolated_save(tmp_path: Path, **kwargs) -> App:
     saves_dir = tmp_path / "saves"
     store = SaveStore(saves_dir)
     past_runs = PastRunsStore(tmp_path / "past_runs.json")
+    hunt_stats = HuntStatsStore(tmp_path / "hunt_stats.json")
     coordinator = SaveCoordinator(store=store)
     if "settings" not in kwargs:
         kwargs["settings"] = SettingsStore(
@@ -33,5 +35,6 @@ def app_with_isolated_save(tmp_path: Path, **kwargs) -> App:
     return App(
         save_coordinator=coordinator,
         past_runs_store=past_runs,
+        hunt_stats_store=hunt_stats,
         **kwargs,
     )

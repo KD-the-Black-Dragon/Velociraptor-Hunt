@@ -1,0 +1,27 @@
+[project]
+name = "kds-vore-roguelike"
+version = "0.1.0"
+description = "KD's Vore Roguelike — minimal Python/libtcod dungeon crawler"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "tcod>=16.0",
+    "tcod-ecs>=5.0",
+    "numpy>=1.26",
+    "Pillow>=10.0",
+    "platformdirs>=4.0",
+]
+
+[project.scripts]
+kds-roguelike = "src.main:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-xdist>=3.5"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]

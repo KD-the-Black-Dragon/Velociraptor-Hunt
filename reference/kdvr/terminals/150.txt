@@ -1,0 +1,25 @@
+---
+pid: 24780
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_explore_bfs_steps.py tests/test_explore_frustration.py tests/test_chase_pursuit_momentum.py -q --tb=short"
+started_at: 2026-07-05T12:26:26.255Z
+running_for_ms: 38094997 
+---
+.....F.F....................                                             [100%]
+================================== FAILURES ===================================
+________ test_unreachable_memory_still_cleared_without_door_partition _________
+tests\test_explore_bfs_steps.py:214: in test_unreachable_memory_still_cleared_without_door_partition
+    assert state.last_known_primary is None
+E   assert Position(x=46, y=22) is None
+E    +  where Position(x=46, y=22) = AIState(last_known_primary=Position(x=46, y=22), last_known_neutral=None, last_known_evil=None, last_known_player=None...positions=deque([], maxlen=4), explore_recent_goal_distances=deque([], maxlen=4), recent_positions=deque([], maxlen=6)).last_known_primary
+________________ test_explore_direction_avoids_other_npc_tiles ________________
+tests\test_explore_bfs_steps.py:279: in test_explore_direction_avoids_other_npc_tiles
+    assert direction == (1, 0)
+E   assert (1, 1) == (1, 0)
+E     
+E     At index 1 diff: 1 != 0
+E     Use -v to get more diff
+=========================== short test summary info ===========================
+FAILED tests/test_explore_bfs_steps.py::test_unreachable_memory_still_cleared_without_door_partition
+FAILED tests/test_explore_bfs_steps.py::test_explore_direction_avoids_other_npc_tiles
+2 failed, 26 passed in 19.34s

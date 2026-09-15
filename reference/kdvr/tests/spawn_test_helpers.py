@@ -98,12 +98,10 @@ def effective_spawn_target(
     floor_depth: int,
     config: DungeonSpawnConfig,
     rng: random.Random,
-    *,
-    good_follower_reduction: int = 0,
 ) -> int:
+    """Density-only NPC target (good quota is separate)."""
     valid_count = valid_spawn_tile_count(game_map, player_x, player_y)
-    target = compute_target_npc_count(valid_count, floor_depth, config, rng)
-    return max(0, target - good_follower_reduction)
+    return compute_target_npc_count(valid_count, floor_depth, config, rng)
 
 
 def expected_spawn_count(
@@ -113,9 +111,8 @@ def expected_spawn_count(
     floor_depth: int,
     config: DungeonSpawnConfig,
     rng_seed: int,
-    *,
-    good_follower_reduction: int = 0,
 ) -> int:
+    """Expected density-pass count only (excludes good quota spawns)."""
     return effective_spawn_target(
         game_map,
         player_x,
@@ -123,7 +120,6 @@ def expected_spawn_count(
         floor_depth,
         config,
         random.Random(rng_seed),
-        good_follower_reduction=good_follower_reduction,
     )
 
 
@@ -156,6 +152,7 @@ def fixture_difficulty_profile(
     display_name: str = "Test",
     apply_to_alignments: frozenset[Alignment] | None = None,
     stats: dict[str, StatSchedule] | None = None,
+    good_spawn_limit: int = 2,
 ) -> DifficultyProfile:
     return DifficultyProfile(
         id=difficulty_id,
@@ -164,6 +161,7 @@ def fixture_difficulty_profile(
         if apply_to_alignments is not None
         else frozenset({Alignment.EVIL}),
         stats=stats or {},
+        good_spawn_limit=good_spawn_limit,
     )
 
 
@@ -212,6 +210,7 @@ def fixture_entity_definition(
     spawn_weight: int = 1,
     min_depth: int = 1,
     max_depth: int = 1000,
+    requires_vore_types: frozenset[str] | None = None,
 ) -> EntityDefinition:
     """Pinned EntityDefinition — not loaded from data/entities.json."""
     return EntityDefinition(
@@ -234,6 +233,9 @@ def fixture_entity_definition(
             weight=spawn_weight,
             min_depth=min_depth,
             max_depth=max_depth,
+            requires_vore_types=(
+                frozenset() if requires_vore_types is None else frozenset(requires_vore_types)
+            ),
         ),
         abilities=abilities,
         digestion_damage_per_tick=digestion_damage_per_tick,
@@ -293,7 +295,7 @@ def spawn_fixture_at(
     Prefer this for any test that asserts combat stats after depth bake.
     """
     scaling = depth_scaling if depth_scaling is not None else fixture_depth_scaling_config()
-    return spawn_from_definition(
+    entity = spawn_from_definition(
         world,
         definition,
         x,
@@ -304,6 +306,8 @@ def spawn_fixture_at(
         roll_prefix=roll_prefix,
         rng=rng,
     )
+    assert entity is not None
+    return entity
 
 
 def spawn_species_at(
@@ -326,7 +330,7 @@ def spawn_species_at(
     ``SpeciesId`` present) — do not pin live balance numbers in asserts.
     """
     if registry is not None:
-        return spawn_from_definition(
+        entity = spawn_from_definition(
             world,
             registry.get(species_id),
             x,
@@ -337,16 +341,19 @@ def spawn_species_at(
             roll_prefix=roll_prefix,
             rng=rng,
         )
-    return spawn_entity_by_id(
-        world,
-        species_id,
-        x,
-        y,
-        registry=None,
-        floor_depth=floor_depth,
-        difficulty_id=difficulty_id,
-        depth_scaling=depth_scaling,
-    )
+    else:
+        entity = spawn_entity_by_id(
+            world,
+            species_id,
+            x,
+            y,
+            registry=None,
+            floor_depth=floor_depth,
+            difficulty_id=difficulty_id,
+            depth_scaling=depth_scaling,
+        )
+    assert entity is not None
+    return entity
 
 
 def spawn_species_on_engine(

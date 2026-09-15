@@ -220,7 +220,7 @@ Entity spawn, rune placement, and FOV init remain on the main thread after the m
 
 The engine SHALL track **`floor_depth`**, starting at **1** on **New Game**. The player MAY descend without limit in v1 up to a cap of **1000**.
 
-Pressing **`Shift+.`** (`>`) while unshifted **`.`** remains the **wait** action (DCSS-style binding). The `>` key SHALL be handled globally during gameplay (any tile). Resolution order:
+Pressing **`Shift+.`** (`>`), **`0`**, or **NumPad0** descends while unshifted **`.`** remains the **wait** action (DCSS-style binding; `0` / NumPad0 added for keyboard layouts where `>` is unreliable). Descend keys SHALL be handled globally during gameplay (any tile). Resolution order:
 
 1. If the player is **engulfed** — **no-op**, **no turn consumed**, log *"Going deeper won't help you here!"* (regardless of tile).
 2. Else if the player is **not** on a `STAIRS_DOWN` tile — **no-op**, **no turn consumed**, log *"There are no stairs here."*
@@ -281,9 +281,22 @@ Debug key **R** behavior SHALL remain unchanged (full `new_game` reset including
 
 When the player successfully descends, every **Good**-aligned NPC that had **line of sight to the player** at the moment of descent SHALL **follow** to the new floor. The engine SHALL preserve each follower's state (e.g. HP, stunned) and place them on the **nearest valid land tiles** to the new floor's entrance (`enter_xy`). Adjacency to the player is preferred but not required when tiles are blocked or space is constrained.
 
+Each following good NPC SHALL receive a **per-instance** combat buff that stacks for every floor they follow (does not affect species archetypes or newly spawned goods):
+
+| Stat | Delta per floor followed |
+|------|--------------------------|
+| max HP | +5 |
+| current HP | +5 (capped at new max HP) |
+| min melee damage | +1 |
+| max melee damage | +1 |
+| min ranged damage | +1 (materialized on the instance) |
+| max ranged damage | +1 (materialized on the instance) |
+| melee accuracy | +0.03 |
+| ranged accuracy | +0.03 (materialized on the instance) |
+
 **Neutral** and **evil** NPCs SHALL NOT follow. Engulfed NPCs (prey inside a predator) SHALL NOT follow.
 
-Fresh spawns on the new floor SHALL reduce the **total NPC target** by the number of good followers (capped at the sum of eligible good-aligned spawn weights at this depth), so followers are not duplicated as extra spawns. See `openspec/specs/npc-data/spec.md`.
+Fresh spawns on the new floor SHALL apply the **good spawn quota** (difficulty `good_spawn_limit`): brought followers count toward the cap first; remaining slots are filled with weighted new goods when eligible. Density spawn is evil/neutral only. See `openspec/specs/npc-data/spec.md`.
 
 #### Scenario: Visible knight follows downstairs
 
@@ -292,6 +305,14 @@ Fresh spawns on the new floor SHALL reduce the **total NPC target** by the numbe
 - WHEN the new floor loads
 - THEN the knight appears on the new floor
 - AND the knight is placed as close to the entrance as valid tiles allow
+- AND that knight's combat stats gain one stack of the follower descent buff
+
+#### Scenario: Follower buffs stack; new goods do not inherit
+
+- GIVEN a good ally that has already followed once (one buff stack)
+- WHEN the player descends again with that ally still following
+- THEN the ally gains a second stack
+- AND any newly spawned good on the new floor has stock (unbuffed) combat stats
 
 #### Scenario: Off-screen knight stays behind
 
@@ -322,12 +343,12 @@ NPC count per floor SHALL be driven by **`data/dungeon_spawn.json`**, not by the
 On `new_game()` and `descend_floor()` only:
 
 1. Count valid spawn tiles (distance-filtered land + water candidates)
-2. Resolve density band for `floor_depth` and compute `target` with variance (`compute_target_npc_count()`)
-3. Apply `effective_target = max(0, target - good_follower_reduction)` (see `npc-data` spec)
-4. Perform `effective_target` independent weighted draws from eligible `entities.json` definitions (unified land + water pool)
+2. Resolve density band for `floor_depth` and compute density `target` with variance (`compute_target_npc_count()`)
+3. Run **good spawn quota** (followers first, then weighted goods up to difficulty `good_spawn_limit`; see `npc-data` spec)
+4. Perform `target` independent weighted draws from eligible **non-good** `entities.json` definitions (unified land + water pool)
 5. Place each draw on a random valid tile for its terrain; reject and retry when a terrain pool is empty
 
-Aquatic NPCs compete for the same `effective_target` slots as land NPCs — sharks are **not** guaranteed on water floors. When no deep water exists, aquatic definitions with `spawn_requires_water` SHALL NOT be eligible.
+Aquatic non-good NPCs compete for the same density `target` slots as land NPCs — sharks are **not** guaranteed on water floors. When no deep water exists, aquatic definitions with `spawn_requires_water` SHALL NOT be eligible.
 
 Floor items SHALL spawn from item JSON per `inventory-items` spec. Floor runes SHALL spawn after items per `floor-runes` spec.
 
@@ -403,7 +424,7 @@ Invalid escape destinations (walls, occupied tiles, impassable terrain for the p
 1. Maps mix room/cavern/corridor styles; water appears as shaped features when rolled.
 2. All land reachable from entrance; three reachable downstairs per floor.
 3. Ground blocked by water; FOV passes water; flyers cross water; aquatic water-only with shore attacks.
-4. `Shift+.` (`>`): engulfed → *"Going deeper won't help you here!"*; off stairs → *"There are no stairs here."*; on stairs → descend; `.` still waits; HUD shows depth.
+4. `Shift+.` (`>`), `0`, or NumPad0: engulfed → *"Going deeper won't help you here!"*; off stairs → *"There are no stairs here."*; on stairs → descend; `.` still waits; HUD shows depth.
 5. Good allies in LOS follow downstairs near entrance; neutrals/evil do not.
 6. NPC count density-driven from `dungeon_spawn.json`; no fixed 6/5/6/2 parity; aquatic NPCs probabilistic on water floors.
 7. Three floor runes per floor; pairwise BFS ≥ 20 between runes; floor items do not block rune candidates; step-on activation per `floor-runes` spec.

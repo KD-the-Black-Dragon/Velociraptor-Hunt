@@ -99,11 +99,22 @@ Each difficulty profile MAY set:
 
 | Field | Effect |
 |-------|--------|
-| `density_multiplier` | Multiplies density-derived NPC target (still min/max/tile capped) |
+| `density_multiplier` | Multiplies density-derived NPC target (still min/max/tile capped); applies to evil/neutral density pass |
 | `runes_per_floor_override` | Overrides stock rune count for spawn **and** map feasibility budget |
 | `rune_pieces_multiplier` | Integer ≥ 1; multiplies pieces needed for a full rune bonus (1 = no extra multiplier) |
 | `prefix_spawn` | Chance curve for floor-population NPC prefixes (e.g. Elite) |
 | `spawn_ai_freeze` | One-shot distant freeze so far NPCs do not all path to the player at once (see below) |
+| `good_spawn_limit` | Cap on good allies per floor (followers count first; then weighted new goods). Omit → **2**. Stock: Easier **3**, Normal/Hard/Nightmare **2** |
+| `good_ranged_shots` | Max Path/Smite magazine for **good** `RangeN`/`SmiteN` NPCs. Omit → **2**. Stock: **2** on all difficulties. MUST be ≥ 1 |
+| `evil_ranged_shots` | Max Path/Smite magazine for **evil** (and neutral, if any) `RangeN`/`SmiteN` NPCs. Omit → **2**. Stock: **2** on easier/normal/hard; **3** on nightmare. MUST be ≥ 1 |
+
+See `npc-abilities` for magazine spend/reload AI. Player ranged is unaffected.
+
+#### Scenario: Nightmare evil magazine is 3
+
+- GIVEN a New Game on Nightmare and an evil `RangeN` spawn
+- WHEN the NPC materializes
+- THEN `RangedMagazine.maximum == 3` and `current == 3`
 
 ### Requirement: Spawn AI freeze (anti-swarm)
 

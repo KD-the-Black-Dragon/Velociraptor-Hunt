@@ -1,0 +1,53 @@
+---
+pid: 22976
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_neutral_explore.py tests/test_explore_bfs_steps.py tests/test_explore_frustration.py tests/test_explore_reachable_goals.py -q"
+started_at: 2026-07-05T13:15:19.437Z
+running_for_ms: 35165000 
+---
+...F..........................                                           [100%]
+================================== FAILURES ===================================
+____________________ test_neutral_near_player_keeps_moving ____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F4EA90AEA0>
+
+    def test_neutral_near_player_keeps_moving(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        engine = GameEngine()
+        isolate_other_ais(engine)
+        y = ARENA_Y
+        left = ARENA_X
+        right = ARENA_X + 4
+        _wall_corridor(engine, left_x=left, right_x=right, y=y)
+        rabbit = spawn_test_npc(
+            engine.world,
+            x=left,
+            y=y,
+            species="rabbit",
+            alignment=Alignment.NEUTRAL,
+        )
+        player = engine.player
+        player.components[Position] = Position(left + 2, y)
+        monkeypatch.setattr("src.systems.ai.EXPLORE_IDLE_CHANCE", 0.0)
+        pos_before = rabbit.components[Position]
+        run_monster_turns(
+            engine.world,
+            engine.game_map,
+            player,
+            engine.message_log,
+            rng=random.Random(1),
+        )
+        assert rabbit.components[Position] != player.components[Position]
+        reachable = explore_reachable_distances(
+            engine.game_map,
+            rabbit.components[Position],
+            rabbit,
+        )
+>       assert player.components[Position] not in reachable or rabbit.components[Position] != pos_before
+E       assert (Position(x=42, y=22) not in {Position(x=40, y=22): 0, Position(x=41, y=22): 1, Position(x=42, y=22): 2, Position(x=43, y=22): 3, ...} or Position(x=40, y=22) != Position(x=40, y=22))
+
+tests\test_neutral_explore.py:171: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_neutral_explore.py::test_neutral_near_player_keeps_moving
+1 failed, 29 passed in 31.12s

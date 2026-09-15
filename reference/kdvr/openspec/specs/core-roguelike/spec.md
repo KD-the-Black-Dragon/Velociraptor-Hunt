@@ -35,7 +35,7 @@ Vore mechanics ship in `openspec/specs/vore/spec.md` (`src/systems/vore.py`). Co
 
 Enhancements 2 (`openspec/specs/enhancements-2/spec.md`) moved quit to **`Ctrl+Q`** and made **Escape** cancel examine only. **Main menu** (`openspec/specs/main-menu/spec.md`) supersedes immediate quit: the app boots to the menu; **`Ctrl+Q` on the menu is a no-op**; **`Ctrl+Q` during gameplay** opens quit confirmation (`Y` → menu, `n` → resume); **modals** (vore, digestion, recap) treat **Ctrl+Q as no-op** (Enter only).
 
-**Dungeon** (`openspec/specs/dungeon/spec.md`) extends map generation with mixed rooms/caverns/corridors, probabilistic deep water, three downstairs per floor, **`Shift+.` (`>`)** descent, floor depth in the **status corner**, creature mobility (ground/fly/aquatic), aquatic shore combat, and shark spawns on water floors.
+**Dungeon** (`openspec/specs/dungeon/spec.md`) extends map generation with mixed rooms/caverns/corridors, probabilistic deep water, three downstairs per floor, **`Shift+.` (`>`) / `0` / NumPad0** descent, floor depth in the **status corner**, creature mobility (ground/fly/aquatic), aquatic shore combat, and shark spawns on water floors.
 
 **UI layout** (`openspec/specs/ui-layout/spec.md`) replaces the monolithic bottom HUD with region panels: camera map viewport, right sidebar (player + FOV-visible NPCs), eight-line message log, and status corner (depth + ailments). Layout geometry is JSON-driven with Options presets.
 
@@ -377,7 +377,7 @@ src/
 
 Manual verification checklist for v1 core implementation:
 
-1. Launching the game opens a libtcod window branded **Gladiavore** at the **main menu**; window size/position restore from `{user_data}/settings.json` (see `ui-layout`). **New Game** currently still starts a dungeon run (KDVR lineage); Gladiavore career/hub/match loop is under `openspec/changes/gladiavore-foundation/`. The sidebar shows the player's display name and HP during play (see `ui-layout`).
+1. Launching the game opens a libtcod window branded **KD's Vore Roguelike** at the **main menu**; window size/position restore from `{user_data}/settings.json` (see `ui-layout`). **New Game** starts a procedurally generated dungeon. The sidebar shows the player's display name and HP during play (see `ui-layout`).
 2. The player moves in eight directions; walls block movement; diagonal corner cuts are allowed.
 3. FOV updates each turn; explored tiles persist visually; off-screen entities are hidden.
 4. At least three monsters spawn and chase the player when they have line of sight.

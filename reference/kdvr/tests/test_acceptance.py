@@ -28,7 +28,7 @@ from src.systems.movement import MOVEMENT_DIRECTIONS, can_move_to, try_move
 
 
 def test_ac1_window_title_and_dungeon() -> None:
-    assert GAME_TITLE == "Gladiavore"
+    assert GAME_TITLE == "KD's Vore Roguelike"
     dungeon = generate_dungeon(80, 44, seed=1)
     assert (dungeon.tiles == Tile.FLOOR).any()
     assert dungeon.is_walkable(*dungeon.enter_xy)
@@ -265,7 +265,7 @@ def test_ac_quit_ctrl_q(tmp_path) -> None:
         tcod.event.KeyDown(sym=KeySym.RETURN, scancode=Scancode.UNKNOWN, mod=Modifier.NONE),
         console=console,
     )
-    assert app.phase is AppPhase.DOWNTIME
+    assert app.phase is AppPhase.PLAY
     app.handle_event(
         tcod.event.KeyDown(sym=KeySym.Q, scancode=Scancode.UNKNOWN, mod=Modifier.CTRL),
     )

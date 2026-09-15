@@ -1,0 +1,37 @@
+---
+pid: 3912
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -v -n 4 2>&1 | Select-Object -Last 30"
+started_at: 2026-07-11T19:37:54.758Z
+running_for_ms: 13135006 
+---
+        carve_east_of(engine, pos, 2)
+        wolf.components[Position] = Position(pos.x + 1, pos.y)
+        update_fov(engine.game_map, pos.x, pos.y)
+        with patch("src.systems.vore.resolve_vore_hit", return_value=True):
+            engine._consume_player_turn()
+            _advance_modal(engine)
+>       assert Engulfed in player.tags
+E       AssertionError: assert 'Engulfed' in EntityTags(entity=<Entity(uid=object at 0x1CFDF727440)>, traverse=(<class 'tcod.ecs.constants.IsA'>,))
+E        +  where EntityTags(entity=<Entity(uid=object at 0x1CFDF727440)>, traverse=(<class 'tcod.ecs.constants.IsA'>,)) = <Entity(uid=object at 0x1CFDF727440)>.tags
+
+tests\test_vore_engulfed.py:72: AssertionError
+============================== warnings summary ===============================
+tests/test_log_font.py::test_load_log_font_state_missing_path_falls_back
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_log_font.py:51: UserWarning: message log TTF not found at C:\Users\hybri\AppData\Local\Temp\pytest-of-hybri\pytest-625\popen-gw0\test_load_log_font_state_missi0\missing.ttf; using CP437 for the log panel
+    state = load_log_font_state(tile_px=12, tile_scale=2, font_path=missing)
+
+tests/test_ui_bootstrap.py: 29 warnings
+  C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\tcod\tileset.py:237: DeprecationWarning: Assign to a tile using 'tileset[codepoint] = tile' instead.
+    return self.set_tile(codepoint, full_tile)
+
+tests/test_macguffins_pr3.py::test_decline_macguffin_victory_consumes_turn
+  C:\VS Code Projects\kds-vore-roguelike\src\systems\fov.py:23: RuntimeWarning: Given pov index (40, 70) is outside the array of shape (10, 45).
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_npc_data_pr4.py::test_descend_with_follower_keeps_good_ally_on_new_floor
+FAILED tests/test_vore_engulfed.py::test_struggle_while_engulfed_consumes_turn
+===== 2 failed, 1527 passed, 2 skipped, 31 warnings in 819.06s (0:13:39) ======

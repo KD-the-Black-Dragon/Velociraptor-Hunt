@@ -46,6 +46,7 @@ from src.systems.autoexplore import AutoexploreFrameResult, AutoexploreSession
 from src.systems.rest import RestFrameResult, RestSession
 from src.systems.inventory import GroundPickupModalState
 from src.systems.item_modals import InventoryModalState, InventoryModalMode
+from src.systems.dismiss import DismissState
 from src.systems.examine import ExamineState
 from src.systems.digestion import DigestionModalState, GameOverState
 from src.systems.render import (
@@ -108,6 +109,7 @@ class GameEngine:
         player_name: str = "Player",
         vore_content_prefs: VoreContentPreferences = DEFAULT_VORE_CONTENT_PREFS,
         difficulty_id: str | None = None,
+        alternate_cv_mechanics: bool = False,
         ui_layout: UILayout | None = None,
         floor_prefetch: FloorPrefetch | None = None,
         skip_new_game: bool = False,
@@ -132,11 +134,14 @@ class GameEngine:
         from src.data.depth_scaling_config import validate_difficulty_id
 
         self.difficulty_id = validate_difficulty_id(difficulty_id)
+        # Alternate CV rules snapshot (Options at New Game; immutable mid-run).
+        self.alternate_cv_mechanics = bool(alternate_cv_mechanics)
         self.vore_modal = VoreModalState()
         self.digestion_modal = DigestionModalState()
         self.game_over = GameOverState()
         self.skipped_this_phase: set[Entity] = set()
         self.examine_state = ExamineState()
+        self.dismiss_state = DismissState()
         self.ground_pickup_modal = GroundPickupModalState()
         self.inventory_modal = InventoryModalState()
         self.macguffin_discovery = MacguffinDiscovery()
@@ -179,15 +184,17 @@ class GameEngine:
         """Restore a run from an in-memory snapshot (PR1); file load uses PR2 store."""
         from src.save.codec import decode_vore_content_prefs
         from src.save.snapshot import apply_run_snapshot
-        from src.ui.layout import load_ui_layout
+        from src.ui.bootstrap import load_active_layout
 
-        ui_preset = str(run.get("ui_preset", ""))
-        ui_layout = load_ui_layout(ui_preset) if ui_preset else load_active_layout()
+        # Display layout comes from live settings (incl. 4K); App._load_saved_game
+        # also re-resolves via _layout_for_run before PLAY.
+        ui_layout = load_active_layout()
         engine = cls(
             player_name=str(run.get("player_name", "Player")),
             vore_content_prefs=decode_vore_content_prefs(
                 run.get("vore_content_prefs", {"enabled": []})
             ),
+            alternate_cv_mechanics=bool(run.get("alternate_cv_mechanics", False)),
             ui_layout=ui_layout,
             floor_prefetch=floor_prefetch,
             skip_new_game=True,
@@ -461,6 +468,9 @@ class GameEngine:
     def _handle_examine_cursor_event(self, event: tcod.event.Event) -> EngineEventResult:
         return engine_input.handle_examine_cursor_event(self, event)
 
+    def _handle_dismiss_cursor_event(self, event: tcod.event.Event) -> EngineEventResult:
+        return engine_input.handle_dismiss_cursor_event(self, event)
+
     def _handle_gameplay_event(self, event: tcod.event.Event) -> EngineEventResult:
         return engine_input.handle_gameplay_event(self, event)
 
@@ -518,7 +528,7 @@ class GameEngine:
         """
         console.clear()
         if self.help_overlay.active:
-            render_help_overlay(console)
+            render_help_overlay(console, self.help_overlay)
             return
 
         if self.log_overlay.active:
@@ -668,6 +678,15 @@ class GameEngine:
             render_examine_cursor(
                 map_console,
                 self.examine_state.cursor,
+                self.game_map,
+                camera=camera,
+            )
+            regions.blit_to_root(console, names=frozenset({"map_viewport"}))
+            regions.blit_play_chrome(console)
+        elif self.dismiss_state.active:
+            render_examine_cursor(
+                map_console,
+                self.dismiss_state.cursor,
                 self.game_map,
                 camera=camera,
             )

@@ -1,0 +1,1092 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\VS Code Projects\kds-vore-roguelike\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+created: 4/4 workers
+4 workers [1731 items]
+
+scheduling tests via LoadScheduling
+
+tests/test_ability_parser.py::test_parse_smite_tokens 
+tests/test_chase_pursuit_momentum.py::test_momentum_direction_uses_preferred_step_when_legal 
+tests/test_digestion.py::test_custom_digest_time_requires_n_strikes 
+tests/test_enhancements_1.py::test_player_turn_consumed_hook 
+[gw0] [  0%] PASSED tests/test_ability_parser.py::test_parse_smite_tokens 
+tests/test_ability_parser.py::test_range_tokens_implemented 
+[gw0] [  0%] PASSED tests/test_ability_parser.py::test_range_tokens_implemented 
+tests/test_ability_parser.py::test_collapse_range_tokens_keeps_max 
+[gw0] [  0%] PASSED tests/test_ability_parser.py::test_collapse_range_tokens_keeps_max 
+tests/test_ability_parser.py::test_parse_summon_token 
+[gw0] [  0%] PASSED tests/test_ability_parser.py::test_parse_summon_token 
+tests/test_ability_parser.py::test_collapse_smite_tokens_keeps_max 
+[gw0] [  0%] PASSED tests/test_ability_parser.py::test_collapse_smite_tokens_keeps_max 
+tests/test_ability_parser.py::test_parse_ranged_vore_token 
+[gw0] [  0%] PASSED tests/test_ability_parser.py::test_parse_ranged_vore_token 
+tests/test_ability_parser.py::test_collapse_ranged_vore_tokens_keeps_max 
+[gw0] [  0%] PASSED tests/test_ability_parser.py::test_collapse_ranged_vore_tokens_keeps_max 
+tests/test_ability_parser.py::test_parse_abilities_round_trip 
+[gw0] [  0%] PASSED tests/test_ability_parser.py::test_parse_abilities_round_trip 
+tests/test_acceptance.py::test_ac1_window_title_and_dungeon 
+[gw0] [  0%] PASSED tests/test_acceptance.py::test_ac1_window_title_and_dungeon 
+tests/test_acceptance.py::test_ac2_eight_direction_movement_and_walls 
+[gw3] [  0%] PASSED tests/test_enhancements_1.py::test_player_turn_consumed_hook 
+tests/test_enhancements_1.py::test_stunned_inventory_unchanged 
+[gw1] [  0%] PASSED tests/test_chase_pursuit_momentum.py::test_momentum_direction_uses_preferred_step_when_legal 
+tests/test_chase_pursuit_momentum.py::test_momentum_direction_never_backtracks 
+[gw2] [  0%] PASSED tests/test_digestion.py::test_custom_digest_time_requires_n_strikes 
+tests/test_digestion.py::test_digest_time_default_when_omitted 
+[gw2] [  0%] PASSED tests/test_digestion.py::test_digest_time_default_when_omitted 
+tests/test_digestion.py::test_digest_time_load_error_on_good_entity 
+[gw2] [  0%] PASSED tests/test_digestion.py::test_digest_time_load_error_on_good_entity 
+tests/test_dungeon_layout_pr0.py::test_validate_min_land_tiles_rejects_small_map 
+[gw2] [  0%] PASSED tests/test_dungeon_layout_pr0.py::test_validate_min_land_tiles_rejects_small_map 
+tests/test_dungeon_layout_pr0.py::test_validate_pairwise_spread_detects_clustered_stairs 
+[gw2] [  0%] PASSED tests/test_dungeon_layout_pr0.py::test_validate_pairwise_spread_detects_clustered_stairs 
+tests/test_dungeon_layout_pr0.py::test_validate_pairwise_spread_accepts_spread_stairs 
+[gw2] [  0%] PASSED tests/test_dungeon_layout_pr0.py::test_validate_pairwise_spread_accepts_spread_stairs 
+tests/test_dungeon_layout_pr0.py::test_validate_rune_sites_feasible_on_large_floor 
+[gw3] [  1%] PASSED tests/test_enhancements_1.py::test_stunned_inventory_unchanged 
+tests/test_enhancements_2.py::test_entity_species_from_display_name 
+[gw2] [  1%] PASSED tests/test_dungeon_layout_pr0.py::test_validate_rune_sites_feasible_on_large_floor 
+tests/test_dungeon_layout_pr0.py::test_validate_rune_sites_infeasible_on_narrow_corridor 
+[gw2] [  1%] PASSED tests/test_dungeon_layout_pr0.py::test_validate_rune_sites_infeasible_on_narrow_corridor 
+tests/test_dungeon_layout_pr0.py::test_fallback_giant_room_is_large_and_valid 
+[gw1] [  1%] PASSED tests/test_chase_pursuit_momentum.py::test_momentum_direction_never_backtracks 
+tests/test_chase_pursuit_momentum.py::test_memory_frustration_gives_up_and_clears_memory 
+[gw1] [  1%] PASSED tests/test_chase_pursuit_momentum.py::test_memory_frustration_gives_up_and_clears_memory 
+tests/test_chase_pursuit_momentum.py::test_memory_blocked_step_increments_frustration_not_blind_timer 
+[gw1] [  1%] PASSED tests/test_chase_pursuit_momentum.py::test_memory_blocked_step_increments_frustration_not_blind_timer 
+tests/test_chase_pursuit_momentum.py::test_memory_progress_resets_frustration 
+[gw1] [  1%] PASSED tests/test_chase_pursuit_momentum.py::test_memory_progress_resets_frustration 
+tests/test_chase_pursuit_momentum.py::test_memory_sidestep_without_progress_counts_as_blocked 
+[gw1] [  1%] PASSED tests/test_chase_pursuit_momentum.py::test_memory_sidestep_without_progress_counts_as_blocked 
+tests/test_chase_pursuit_momentum.py::test_momentum_exhaustion_gives_up 
+[gw1] [  1%] PASSED tests/test_chase_pursuit_momentum.py::test_momentum_exhaustion_gives_up 
+tests/test_chase_pursuit_momentum.py::test_pick_pursuit_prefers_momentum_over_memory_target 
+[gw2] [  1%] PASSED tests/test_dungeon_layout_pr0.py::test_fallback_giant_room_is_large_and_valid 
+tests/test_dungeon_layout_pr0.py::test_generate_dungeon_uses_fallback_when_all_attempts_fail 
+[gw2] [  1%] PASSED tests/test_dungeon_layout_pr0.py::test_generate_dungeon_uses_fallback_when_all_attempts_fail 
+tests/test_dungeon_layout_pr0.py::test_many_seeds_pass_sanity_gates 
+[gw0] [  1%] PASSED tests/test_acceptance.py::test_ac2_eight_direction_movement_and_walls 
+tests/test_acceptance.py::test_ac3_fov_and_explored_memory 
+[gw1] [  1%] PASSED tests/test_chase_pursuit_momentum.py::test_pick_pursuit_prefers_momentum_over_memory_target 
+tests/test_chase_pursuit_momentum.py::test_memory_pursuit_sets_frustration_limit_not_immediate_give_up 
+[gw1] [  1%] PASSED tests/test_chase_pursuit_momentum.py::test_memory_pursuit_sets_frustration_limit_not_immediate_give_up 
+tests/test_chase_pursuit_momentum.py::test_corner_pursuit_continues_past_memory_tile 
+[gw0] [  1%] PASSED tests/test_acceptance.py::test_ac3_fov_and_explored_memory 
+tests/test_acceptance.py::test_ac4_monster_spawn_and_chase 
+[gw3] [  1%] PASSED tests/test_enhancements_2.py::test_entity_species_from_display_name 
+tests/test_enhancements_2.py::test_entity_species_fallback 
+[gw1] [  1%] PASSED tests/test_chase_pursuit_momentum.py::test_corner_pursuit_continues_past_memory_tile 
+tests/test_chase_pursuit_momentum.py::test_evil_still_targets_last_known_primary_while_pathing 
+[gw0] [  2%] PASSED tests/test_acceptance.py::test_ac4_monster_spawn_and_chase 
+tests/test_acceptance.py::test_ac5_bump_combat_defeated_terminology 
+[gw3] [  2%] PASSED tests/test_enhancements_2.py::test_entity_species_fallback 
+tests/test_enhancements_2.py::test_entity_log_name_species_mid_sentence 
+[gw1] [  2%] PASSED tests/test_chase_pursuit_momentum.py::test_evil_still_targets_last_known_primary_while_pathing 
+tests/test_come_here_pr1.py::test_come_here_key_is_main_keyboard_one_not_numpad 
+[gw1] [  2%] PASSED tests/test_come_here_pr1.py::test_come_here_key_is_main_keyboard_one_not_numpad 
+tests/test_come_here_pr1.py::test_shout_sets_come_here_on_good_in_fov 
+[gw0] [  2%] PASSED tests/test_acceptance.py::test_ac5_bump_combat_defeated_terminology 
+tests/test_acceptance.py::test_ac6_stunned_and_potion_while_stunned 
+[gw0] [  2%] PASSED tests/test_acceptance.py::test_ac6_stunned_and_potion_while_stunned 
+tests/test_acceptance.py::test_ac7_inventory_slots_and_full_rejection 
+[gw0] [  2%] PASSED tests/test_acceptance.py::test_ac7_inventory_slots_and_full_rejection 
+tests/test_acceptance.py::test_ac8_no_top_level_vore_package 
+[gw0] [  2%] PASSED tests/test_acceptance.py::test_ac8_no_top_level_vore_package 
+tests/test_acceptance.py::test_core_systems_no_vore_import 
+[gw3] [  2%] PASSED tests/test_enhancements_2.py::test_entity_log_name_species_mid_sentence 
+tests/test_enhancements_2.py::test_entity_log_name_species_sentence_start 
+[gw0] [  2%] PASSED tests/test_acceptance.py::test_core_systems_no_vore_import 
+tests/test_acceptance.py::test_vore_smoke_engulf_struggle_escape 
+[gw3] [  2%] PASSED tests/test_enhancements_2.py::test_entity_log_name_species_sentence_start 
+tests/test_enhancements_2.py::test_entity_log_name_proper_name 
+[gw0] [  2%] PASSED tests/test_acceptance.py::test_vore_smoke_engulf_struggle_escape 
+tests/test_acceptance.py::test_event_hooks_exist 
+[gw0] [  2%] PASSED tests/test_acceptance.py::test_event_hooks_exist 
+tests/test_acceptance.py::test_items_spawn_on_new_game 
+[gw0] [  2%] PASSED tests/test_acceptance.py::test_items_spawn_on_new_game 
+tests/test_acceptance.py::test_ac_quit_ctrl_q 
+[gw3] [  2%] PASSED tests/test_enhancements_2.py::test_entity_log_name_proper_name 
+tests/test_enhancements_2.py::test_entity_log_possessive_species 
+[gw3] [  2%] PASSED tests/test_enhancements_2.py::test_entity_log_possessive_species 
+tests/test_enhancements_2.py::test_entity_log_possessive_proper_name 
+[gw3] [  2%] PASSED tests/test_enhancements_2.py::test_entity_log_possessive_proper_name 
+tests/test_enhancements_2.py::test_vore_log_messages_no_the_before_proper_name 
+[gw3] [  3%] PASSED tests/test_enhancements_2.py::test_vore_log_messages_no_the_before_proper_name 
+tests/test_enhancements_2.py::test_vore_log_messages_article_for_species 
+[gw3] [  3%] PASSED tests/test_enhancements_2.py::test_vore_log_messages_article_for_species 
+tests/test_enhancements_2.py::test_good_npc_never_attempts_vore 
+[gw0] [  3%] PASSED tests/test_acceptance.py::test_ac_quit_ctrl_q 
+tests/test_ally_improvement_data.py::test_load_default_names_json 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_load_default_names_json 
+tests/test_ally_improvement_data.py::test_load_default_rescue_gratitude_json 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_load_default_rescue_gratitude_json 
+tests/test_ally_improvement_data.py::test_knight_has_introduction_log_category_in_entities_json 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_knight_has_introduction_log_category_in_entities_json 
+tests/test_ally_improvement_data.py::test_knight_has_introduction_in_entities_json 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_knight_has_introduction_in_entities_json 
+tests/test_ally_improvement_data.py::test_introduction_omitted_parses_as_none 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_introduction_omitted_parses_as_none 
+tests/test_ally_improvement_data.py::test_introduction_empty_array_fails 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_introduction_empty_array_fails 
+tests/test_ally_improvement_data.py::test_introduction_log_category_invalid_fails 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_introduction_log_category_invalid_fails 
+tests/test_ally_improvement_data.py::test_introduction_invalid_entry_fails 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_introduction_invalid_entry_fails 
+tests/test_ally_improvement_data.py::test_names_singleton_and_reset 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_names_singleton_and_reset 
+tests/test_ally_improvement_data.py::test_rescue_gratitude_singleton_and_reset 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_rescue_gratitude_singleton_and_reset 
+tests/test_ally_improvement_data.py::test_names_unknown_top_level_field_fails 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_names_unknown_top_level_field_fails 
+tests/test_ally_improvement_data.py::test_rescue_gratitude_empty_lines_fails 
+[gw0] [  3%] PASSED tests/test_ally_improvement_data.py::test_rescue_gratitude_empty_lines_fails 
+tests/test_ally_introduction.py::test_knight_introduces_when_adjacent_and_coast_clear 
+[gw3] [  3%] PASSED tests/test_enhancements_2.py::test_good_npc_never_attempts_vore 
+tests/test_enhancements_2.py::test_neutral_npc_never_attempts_vore 
+[gw0] [  3%] PASSED tests/test_ally_introduction.py::test_knight_introduces_when_adjacent_and_coast_clear 
+tests/test_ally_introduction.py::test_introduction_once_per_entity 
+[gw0] [  3%] PASSED tests/test_ally_introduction.py::test_introduction_once_per_entity 
+tests/test_ally_introduction.py::test_stunned_knight_does_not_introduce 
+[gw3] [  4%] PASSED tests/test_enhancements_2.py::test_neutral_npc_never_attempts_vore 
+tests/test_enhancements_2.py::test_good_npc_does_not_open_vore_modal 
+[gw0] [  4%] PASSED tests/test_ally_introduction.py::test_stunned_knight_does_not_introduce 
+tests/test_ally_introduction.py::test_non_adjacent_knight_does_not_introduce 
+[gw0] [  4%] PASSED tests/test_ally_introduction.py::test_non_adjacent_knight_does_not_introduce 
+tests/test_ally_introduction.py::test_wolf_visible_to_player_blocks_introduction 
+[gw3] [  4%] PASSED tests/test_enhancements_2.py::test_good_npc_does_not_open_vore_modal 
+tests/test_enhancements_2.py::test_entity_display_name_species_only 
+[gw0] [  4%] PASSED tests/test_ally_introduction.py::test_wolf_visible_to_player_blocks_introduction 
+tests/test_ally_introduction.py::test_wolf_visible_to_knight_blocks_introduction 
+[gw3] [  4%] PASSED tests/test_enhancements_2.py::test_entity_display_name_species_only 
+tests/test_enhancements_2.py::test_wolves_spawn_evil_alignment 
+[gw0] [  4%] PASSED tests/test_ally_introduction.py::test_wolf_visible_to_knight_blocks_introduction 
+tests/test_ally_introduction.py::test_player_engulfed_blocks_introduction 
+[gw0] [  4%] PASSED tests/test_ally_introduction.py::test_player_engulfed_blocks_introduction 
+tests/test_ally_introduction.py::test_engine_hook_introduces_on_consumed_turn 
+[gw2] [  4%] PASSED tests/test_dungeon_layout_pr0.py::test_many_seeds_pass_sanity_gates 
+tests/test_dungeon_layout_pr0.py::test_spread_aware_stairs_via_attempt_generate 
+[gw0] [  4%] PASSED tests/test_ally_introduction.py::test_engine_hook_introduces_on_consumed_turn 
+tests/test_ally_introduction.py::test_introduction_hidden_when_not_in_player_fov 
+[gw0] [  4%] PASSED tests/test_ally_introduction.py::test_introduction_hidden_when_not_in_player_fov 
+tests/test_ally_rescue_gratitude.py::test_player_bump_rescue_emits_gratitude_for_good_prey 
+[gw2] [  4%] PASSED tests/test_dungeon_layout_pr0.py::test_spread_aware_stairs_via_attempt_generate 
+tests/test_dungeon_layout_pr1.py::test_pick_layout_archetype_respects_force 
+[gw2] [  4%] PASSED tests/test_dungeon_layout_pr1.py::test_pick_layout_archetype_respects_force 
+tests/test_dungeon_layout_pr1.py::test_forced_archetypes_set_layout_field 
+[gw3] [  4%] PASSED tests/test_enhancements_2.py::test_wolves_spawn_evil_alignment 
+tests/test_enhancements_2.py::test_no_proper_names_on_spawn 
+[gw0] [  4%] PASSED tests/test_ally_rescue_gratitude.py::test_player_bump_rescue_emits_gratitude_for_good_prey 
+tests/test_ally_rescue_gratitude.py::test_player_wand_rescue_emits_gratitude_for_good_prey 
+[gw0] [  4%] PASSED tests/test_ally_rescue_gratitude.py::test_player_wand_rescue_emits_gratitude_for_good_prey 
+tests/test_ally_rescue_gratitude.py::test_gratitude_uses_proper_name_when_set 
+[gw2] [  4%] PASSED tests/test_dungeon_layout_pr1.py::test_forced_archetypes_set_layout_field 
+tests/test_dungeon_layout_pr1.py::test_organic_carves_at_least_four_regions 
+[gw2] [  5%] PASSED tests/test_dungeon_layout_pr1.py::test_organic_carves_at_least_four_regions 
+tests/test_dungeon_layout_pr1.py::test_organic_forced_has_large_open_areas 
+[gw3] [  5%] PASSED tests/test_enhancements_2.py::test_no_proper_names_on_spawn 
+tests/test_enhancements_2.py::test_wolf_has_examine_description 
+[gw0] [  5%] PASSED tests/test_ally_rescue_gratitude.py::test_gratitude_uses_proper_name_when_set 
+tests/test_ally_rescue_gratitude.py::test_knight_rescuer_no_gratitude 
+[gw2] [  5%] PASSED tests/test_dungeon_layout_pr1.py::test_organic_forced_has_large_open_areas 
+tests/test_dungeon_layout_pr1.py::test_boxy_forced_generates_valid_floor 
+[gw1] [  5%] PASSED tests/test_come_here_pr1.py::test_shout_sets_come_here_on_good_in_fov 
+tests/test_come_here_pr1.py::test_shout_skips_good_outside_fov 
+[gw3] [  5%] PASSED tests/test_enhancements_2.py::test_wolf_has_examine_description 
+tests/test_enhancements_2.py::test_potion_has_examine_description 
+[gw0] [  5%] PASSED tests/test_ally_rescue_gratitude.py::test_knight_rescuer_no_gratitude 
+tests/test_ally_rescue_gratitude.py::test_neutral_prey_no_gratitude 
+[gw0] [  5%] PASSED tests/test_ally_rescue_gratitude.py::test_neutral_prey_no_gratitude 
+tests/test_ally_rescue_priority.py::test_good_prioritizes_engulfing_predator_over_closer_evil 
+[gw0] [  5%] PASSED tests/test_ally_rescue_priority.py::test_good_prioritizes_engulfing_predator_over_closer_evil 
+tests/test_ally_rescue_priority.py::test_good_reverts_when_player_not_engulfed 
+[gw2] [  5%] PASSED tests/test_dungeon_layout_pr1.py::test_boxy_forced_generates_valid_floor 
+tests/test_dungeon_layout_pr1.py::test_default_mix_includes_all_archetypes 
+[gw0] [  5%] PASSED tests/test_ally_rescue_priority.py::test_good_reverts_when_player_not_engulfed 
+tests/test_ally_rescue_priority.py::test_good_ignores_predator_without_los 
+[gw3] [  5%] PASSED tests/test_enhancements_2.py::test_potion_has_examine_description 
+tests/test_enhancements_2.py::test_player_hit_wolf_uses_species_name 
+[gw0] [  5%] PASSED tests/test_ally_rescue_priority.py::test_good_ignores_predator_without_los 
+tests/test_ally_rescue_priority.py::test_player_not_engulfed_unchanged_priority 
+[gw0] [  5%] PASSED tests/test_ally_rescue_priority.py::test_player_not_engulfed_unchanged_priority 
+tests/test_arena_pr1.py::test_validate_entity_entry_messages 
+[gw0] [  5%] PASSED tests/test_arena_pr1.py::test_validate_entity_entry_messages 
+tests/test_arena_pr1.py::test_evil_entity_ids_includes_weight_zero 
+[gw0] [  5%] PASSED tests/test_arena_pr1.py::test_evil_entity_ids_includes_weight_zero 
+tests/test_arena_pr1.py::test_build_arena_map_geometry 
+[gw0] [  5%] PASSED tests/test_arena_pr1.py::test_build_arena_map_geometry 
+tests/test_arena_pr1.py::test_initialize_arena_spawns_player_and_enemy 
+[gw0] [  6%] PASSED tests/test_arena_pr1.py::test_initialize_arena_spawns_player_and_enemy 
+tests/test_arena_pr1.py::test_initialize_arena_aquatic_enemy_gets_water_tile 
+[gw0] [  6%] PASSED tests/test_arena_pr1.py::test_initialize_arena_aquatic_enemy_gets_water_tile 
+tests/test_arena_pr1.py::test_arena_victory_on_enemy_defeated 
+[gw0] [  6%] PASSED tests/test_arena_pr1.py::test_arena_victory_on_enemy_defeated 
+tests/test_arena_pr1.py::test_format_arena_victory_message 
+[gw0] [  6%] PASSED tests/test_arena_pr1.py::test_format_arena_victory_message 
+tests/test_arena_pr1.py::test_arena_save_now_is_noop_without_file 
+[gw0] [  6%] PASSED tests/test_arena_pr1.py::test_arena_save_now_is_noop_without_file 
+tests/test_arena_pr1.py::test_level_warped_skips_past_runs_for_arena_digest 
+[gw0] [  6%] PASSED tests/test_arena_pr1.py::test_level_warped_skips_past_runs_for_arena_digest 
+tests/test_arena_pr1.py::test_is_ctrl_b 
+[gw0] [  6%] PASSED tests/test_arena_pr1.py::test_is_ctrl_b 
+tests/test_arena_pr1.py::test_ctrl_b_enters_entity_entry_and_starts_arena 
+[gw0] [  6%] PASSED tests/test_arena_pr1.py::test_ctrl_b_enters_entity_entry_and_starts_arena 
+tests/test_arena_pr1.py::test_entity_entry_rejects_unknown_id 
+[gw0] [  6%] PASSED tests/test_arena_pr1.py::test_entity_entry_rejects_unknown_id 
+tests/test_arena_pr2.py::test_arena_policy_moves_right_when_enemy_not_adjacent 
+[gw0] [  6%] PASSED tests/test_arena_pr2.py::test_arena_policy_moves_right_when_enemy_not_adjacent 
+tests/test_arena_pr2.py::test_arena_policy_attacks_adjacent_enemy 
+[gw0] [  6%] PASSED tests/test_arena_pr2.py::test_arena_policy_attacks_adjacent_enemy 
+tests/test_arena_pr2.py::test_arena_policy_waits_when_stunned 
+[gw0] [  6%] PASSED tests/test_arena_pr2.py::test_arena_policy_waits_when_stunned 
+tests/test_arena_pr2.py::test_arena_victory_hook_sets_active_flag 
+[gw0] [  6%] PASSED tests/test_arena_pr2.py::test_arena_victory_hook_sets_active_flag 
+tests/test_arena_pr2.py::test_arena_sim_run_draw_at_turn_cap 
+[gw0] [  6%] PASSED tests/test_arena_pr2.py::test_arena_sim_run_draw_at_turn_cap 
+tests/test_arena_pr2.py::test_arena_sim_enemy_win_records_hp_after_digestion 
+[gw0] [  6%] PASSED tests/test_arena_pr2.py::test_arena_sim_enemy_win_records_hp_after_digestion 
+tests/test_arena_pr2.py::test_arena_entity_report_wins_and_hp_averages 
+[gw0] [  6%] PASSED tests/test_arena_pr2.py::test_arena_entity_report_wins_and_hp_averages 
+tests/test_arena_pr2.py::test_arena_metric_column_repeats_fields_per_entity 
+[gw0] [  6%] PASSED tests/test_arena_pr2.py::test_arena_metric_column_repeats_fields_per_entity 
+tests/test_arena_pr2.py::test_arena_compare_sheet_layout 
+[gw0] [  6%] PASSED tests/test_arena_pr2.py::test_arena_compare_sheet_layout 
+tests/test_arena_pr2.py::test_write_arena_csv_auto_appends_when_file_exists 
+[gw0] [  7%] PASSED tests/test_arena_pr2.py::test_write_arena_csv_auto_appends_when_file_exists 
+tests/test_arena_pr2.py::test_write_arena_csv_overwrite_replaces_sheet 
+[gw0] [  7%] PASSED tests/test_arena_pr2.py::test_write_arena_csv_overwrite_replaces_sheet 
+tests/test_arena_pr2.py::test_should_append_arena_compare_sheet 
+[gw0] [  7%] PASSED tests/test_arena_pr2.py::test_should_append_arena_compare_sheet 
+tests/test_arena_pr2.py::test_arena_compare_sheet_append_adds_column 
+[gw0] [  7%] PASSED tests/test_arena_pr2.py::test_arena_compare_sheet_append_adds_column 
+tests/test_arena_pr2.py::test_build_arena_column_values_aligns_with_metrics 
+[gw0] [  7%] PASSED tests/test_arena_pr2.py::test_build_arena_column_values_aligns_with_metrics 
+tests/test_arena_pr2.py::test_run_arena_batch_with_fixture_registry 
+[gw0] [  7%] PASSED tests/test_arena_pr2.py::test_run_arena_batch_with_fixture_registry 
+tests/test_arena_pr2.py::test_evil_entity_ids_sorted_by_min_spawn_depth 
+[gw0] [  7%] PASSED tests/test_arena_pr2.py::test_evil_entity_ids_sorted_by_min_spawn_depth 
+tests/test_arena_pr2.py::test_trial_seed_is_deterministic 
+[gw0] [  7%] PASSED tests/test_arena_pr2.py::test_trial_seed_is_deterministic 
+tests/test_autoexplore.py::test_autoexplore_key_is_grave 
+[gw0] [  7%] PASSED tests/test_autoexplore.py::test_autoexplore_key_is_grave 
+tests/test_autoexplore.py::test_begin_blocked_engulfed 
+[gw3] [  7%] PASSED tests/test_enhancements_2.py::test_player_hit_wolf_uses_species_name 
+tests/test_enhancements_2.py::test_wolf_hit_player_uses_species_name 
+[gw0] [  7%] PASSED tests/test_autoexplore.py::test_begin_blocked_engulfed 
+tests/test_autoexplore.py::test_begin_blocked_visible_evil 
+[gw0] [  7%] PASSED tests/test_autoexplore.py::test_begin_blocked_visible_evil 
+tests/test_autoexplore.py::test_begin_blocked_below_half_hp 
+[gw0] [  7%] PASSED tests/test_autoexplore.py::test_begin_blocked_below_half_hp 
+tests/test_autoexplore.py::test_begin_allowed_at_half_hp 
+[gw0] [  7%] PASSED tests/test_autoexplore.py::test_begin_allowed_at_half_hp 
+tests/test_autoexplore.py::test_begin_blocked_stunned 
+[gw3] [  7%] PASSED tests/test_enhancements_2.py::test_wolf_hit_player_uses_species_name 
+tests/test_enhancements_2.py::test_combat_log_never_says_monster 
+[gw0] [  7%] PASSED tests/test_autoexplore.py::test_begin_blocked_stunned 
+tests/test_autoexplore.py::test_start_message_via_key 
+[gw3] [  7%] PASSED tests/test_enhancements_2.py::test_combat_log_never_says_monster 
+tests/test_enhancements_2.py::test_message_templates_actor_hits_target 
+[gw3] [  8%] PASSED tests/test_enhancements_2.py::test_message_templates_actor_hits_target 
+tests/test_enhancements_2.py::test_message_templates_smite_and_shoot 
+[gw3] [  8%] PASSED tests/test_enhancements_2.py::test_message_templates_smite_and_shoot 
+tests/test_enhancements_2.py::test_evil_prefers_nearest_hostile 
+[gw0] [  8%] PASSED tests/test_autoexplore.py::test_start_message_via_key 
+tests/test_autoexplore.py::test_complete_on_fully_explored_floor 
+[gw3] [  8%] PASSED tests/test_enhancements_2.py::test_evil_prefers_nearest_hostile 
+tests/test_enhancements_2.py::test_evil_random_tie_among_equidistant_hostiles 
+[gw3] [  8%] PASSED tests/test_enhancements_2.py::test_evil_random_tie_among_equidistant_hostiles 
+tests/test_enhancements_2.py::test_good_chases_evil_not_player 
+[gw0] [  8%] PASSED tests/test_autoexplore.py::test_complete_on_fully_explored_floor 
+tests/test_autoexplore.py::test_picks_up_known_item_on_explored_tile 
+[gw0] [  8%] PASSED tests/test_autoexplore.py::test_picks_up_known_item_on_explored_tile 
+tests/test_autoexplore.py::test_danger_interrupt_visible_evil 
+[gw1] [  8%] PASSED tests/test_come_here_pr1.py::test_shout_skips_good_outside_fov 
+tests/test_come_here_pr1.py::test_cooldown_blocks_spam_without_turn 
+[gw0] [  8%] PASSED tests/test_autoexplore.py::test_danger_interrupt_visible_evil 
+tests/test_autoexplore.py::test_attack_interrupt 
+[gw0] [  8%] PASSED tests/test_autoexplore.py::test_attack_interrupt 
+tests/test_autoexplore.py::test_manual_cancel_silent 
+[gw0] [  8%] PASSED tests/test_autoexplore.py::test_manual_cancel_silent 
+tests/test_balance_pr1b.py::TestDifficultyHelpers::test_cycle_difficulty_ids 
+[gw0] [  8%] PASSED tests/test_balance_pr1b.py::TestDifficultyHelpers::test_cycle_difficulty_ids 
+tests/test_balance_pr1b.py::TestDifficultyHelpers::test_validate_unknown_falls_back 
+[gw0] [  8%] PASSED tests/test_balance_pr1b.py::TestDifficultyHelpers::test_validate_unknown_falls_back 
+tests/test_balance_pr1b.py::TestDifficultyHelpers::test_validate_legacy_easy_maps_to_easier 
+[gw0] [  8%] PASSED tests/test_balance_pr1b.py::TestDifficultyHelpers::test_validate_legacy_easy_maps_to_easier 
+tests/test_balance_pr1b.py::TestSettingsDifficulty::test_settings_roundtrip 
+[gw0] [  8%] PASSED tests/test_balance_pr1b.py::TestSettingsDifficulty::test_settings_roundtrip 
+tests/test_balance_pr1b.py::TestSettingsDifficulty::test_settings_unknown_difficulty_defaults 
+[gw0] [  8%] PASSED tests/test_balance_pr1b.py::TestSettingsDifficulty::test_settings_unknown_difficulty_defaults 
+tests/test_balance_pr1b.py::TestOptionsDifficultyRow::test_format_line_brackets_active 
+[gw0] [  8%] PASSED tests/test_balance_pr1b.py::TestOptionsDifficultyRow::test_format_line_brackets_active 
+tests/test_balance_pr1b.py::TestOptionsDifficultyRow::test_cycle_on_difficulty_row 
+[gw0] [  9%] PASSED tests/test_balance_pr1b.py::TestOptionsDifficultyRow::test_cycle_on_difficulty_row 
+tests/test_balance_pr1b.py::TestDensityMultiplier::test_doubling_increases_target 
+[gw0] [  9%] PASSED tests/test_balance_pr1b.py::TestDensityMultiplier::test_doubling_increases_target 
+tests/test_balance_pr1b.py::TestRunePiecesMultiplier::test_multiplier_one_applies_immediately 
+[gw0] [  9%] PASSED tests/test_balance_pr1b.py::TestRunePiecesMultiplier::test_multiplier_one_applies_immediately 
+tests/test_balance_pr1b.py::TestRunePiecesMultiplier::test_multiplier_two_needs_two_pieces 
+[gw0] [  9%] PASSED tests/test_balance_pr1b.py::TestRunePiecesMultiplier::test_multiplier_two_needs_two_pieces 
+tests/test_balance_pr1b.py::TestPastRunsDifficulty::test_stats_line_includes_difficulty 
+[gw0] [  9%] PASSED tests/test_balance_pr1b.py::TestPastRunsDifficulty::test_stats_line_includes_difficulty 
+tests/test_balance_pr1b.py::TestPastRunsDifficulty::test_legacy_record_omits_difficulty 
+[gw0] [  9%] PASSED tests/test_balance_pr1b.py::TestPastRunsDifficulty::test_legacy_record_omits_difficulty 
+tests/test_balance_pr1b.py::TestPastRunsDifficulty::test_record_roundtrip 
+[gw0] [  9%] PASSED tests/test_balance_pr1b.py::TestPastRunsDifficulty::test_record_roundtrip 
+tests/test_balance_pr1b.py::TestEngineSnapshotDifficulty::test_new_game_snapshots_difficulty 
+[gw0] [  9%] PASSED tests/test_balance_pr1b.py::TestEngineSnapshotDifficulty::test_new_game_snapshots_difficulty 
+tests/test_balance_pr1b.py::TestEngineSnapshotDifficulty::test_runes_override_from_profile 
+[gw0] [  9%] PASSED tests/test_balance_pr1b.py::TestEngineSnapshotDifficulty::test_runes_override_from_profile 
+tests/test_chase_pursuit_momentum.py::test_momentum_starts_when_memory_reached_without_los 
+[gw0] [  9%] PASSED tests/test_chase_pursuit_momentum.py::test_momentum_starts_when_memory_reached_without_los 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': vore_narratives must be an object-Entity: wolf\n\nProblem:\nvore_narratives must be an object] 
+[gw0] [  9%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': vore_narratives must be an object-Entity: wolf\n\nProblem:\nvore_narratives must be an object] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': invalid vore_narratives entry 'OV'-Entity: wolf\n\nProblem:\ninvalid vore_narratives entry 'OV'] 
+[gw0] [  9%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': invalid vore_narratives entry 'OV'-Entity: wolf\n\nProblem:\ninvalid vore_narratives entry 'OV'] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': vore_narratives.OV must be an object or variant array-Entity: wolf\n\nProblem:\nvore_narratives.OV must be an object or variant array] 
+[gw0] [  9%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': vore_narratives.OV must be an object or variant array-Entity: wolf\n\nProblem:\nvore_narratives.OV must be an object or variant array] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': vore_narratives.OV must not be empty-Entity: wolf\n\nProblem:\nvore_narratives.OV must not be empty] 
+[gw0] [  9%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': vore_narratives.OV must not be empty-Entity: wolf\n\nProblem:\nvore_narratives.OV must not be empty] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': offscreen_vore must be an object-Entity: wolf\n\nProblem:\noffscreen_vore must be an object] 
+[gw0] [  9%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': offscreen_vore must be an object-Entity: wolf\n\nProblem:\noffscreen_vore must be an object] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': invalid offscreen_vore entry 'OV'-Entity: wolf\n\nProblem:\ninvalid offscreen_vore entry 'OV'] 
+[gw0] [  9%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': invalid offscreen_vore entry 'OV'-Entity: wolf\n\nProblem:\ninvalid offscreen_vore entry 'OV'] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': offscreen_vore.OV must be a non-empty string array-Entity: wolf\n\nProblem:\noffscreen_vore.OV must be a non-empty string array] 
+[gw0] [  9%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': offscreen_vore.OV must be a non-empty string array-Entity: wolf\n\nProblem:\noffscreen_vore.OV must be a non-empty string array] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': introduction must be a non-empty string array-Entity: wolf\n\nProblem:\nintroduction must be a non-empty string array] 
+[gw0] [  9%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': introduction must be a non-empty string array-Entity: wolf\n\nProblem:\nintroduction must be a non-empty string array] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': introduction must contain non-empty strings-Entity: wolf\n\nProblem:\nintroduction must contain non-empty strings] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': introduction must contain non-empty strings-Entity: wolf\n\nProblem:\nintroduction must contain non-empty strings] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf'.introduction_log_category: invalid category 'foo'-Entity: wolf\n\nProblem:\nintroduction_log_category: invalid category 'foo'] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf'.introduction_log_category: invalid category 'foo'-Entity: wolf\n\nProblem:\nintroduction_log_category: invalid category 'foo'] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': digestion_player_modal must be an object-Entity: wolf\n\nProblem:\ndigestion_player_modal must be an object] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': digestion_player_modal must be an object-Entity: wolf\n\nProblem:\ndigestion_player_modal must be an object] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': invalid digestion_player_modal entry 'OV'-Entity: wolf\n\nProblem:\ninvalid digestion_player_modal entry 'OV'] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': invalid digestion_player_modal entry 'OV'-Entity: wolf\n\nProblem:\ninvalid digestion_player_modal entry 'OV'] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': alignment must be good, evil, or neutral-Entity: wolf\n\nProblem:\nalignment must be good, evil, or neutral] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': alignment must be good, evil, or neutral-Entity: wolf\n\nProblem:\nalignment must be good, evil, or neutral] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': mobility must be ground, fly, aquatic, or stationary-Entity: wolf\n\nProblem:\nmobility must be ground, fly, aquatic, or stationary] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': mobility must be ground, fly, aquatic, or stationary-Entity: wolf\n\nProblem:\nmobility must be ground, fly, aquatic, or stationary] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': fg must be [r, g, b]-Entity: wolf\n\nProblem:\nfg must be [r, g, b]] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': fg must be [r, g, b]-Entity: wolf\n\nProblem:\nfg must be [r, g, b]] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': fg values must be integers 0-255-Entity: wolf\n\nProblem:\nfg values must be integers 0-255] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': fg values must be integers 0-255-Entity: wolf\n\nProblem:\nfg values must be integers 0-255] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': missing or invalid string 'display_name'-Entity: wolf\n\nProblem:\nmissing or invalid string 'display_name'] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': missing or invalid string 'display_name'-Entity: wolf\n\nProblem:\nmissing or invalid string 'display_name'] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': missing or invalid integer 'max_hp'-Entity: wolf\n\nProblem:\nmissing or invalid integer 'max_hp'] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': missing or invalid integer 'max_hp'-Entity: wolf\n\nProblem:\nmissing or invalid integer 'max_hp'] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': missing or invalid number 'accuracy'-Entity: wolf\n\nProblem:\nmissing or invalid number 'accuracy'] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entity 'wolf': missing or invalid number 'accuracy'-Entity: wolf\n\nProblem:\nmissing or invalid number 'accuracy'] 
+tests/test_entity_validation.py::test_format_entity_load_error_golden[entities file: missing or invalid integer 'schema_version'-Problem:\nmissing or invalid integer 'schema_version'] 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_entity_load_error_golden[entities file: missing or invalid integer 'schema_version'-Problem:\nmissing or invalid integer 'schema_version'] 
+tests/test_entity_validation.py::test_format_json_decode_error 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_format_json_decode_error 
+tests/test_entity_validation.py::test_load_entities_user_facing_duplicate_id 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_load_entities_user_facing_duplicate_id 
+tests/test_entity_validation.py::test_load_entities_user_facing_valid 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_load_entities_user_facing_valid 
+tests/test_entity_validation.py::test_load_entities_user_facing_syntax_error 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_load_entities_user_facing_syntax_error 
+tests/test_entity_validation.py::test_unknown_ability_still_loads_with_warning 
+[gw0] [ 10%] PASSED tests/test_entity_validation.py::test_unknown_ability_still_loads_with_warning 
+tests/test_entity_validation.py::test_format_vore_variant_paths 
+[gw0] [ 11%] PASSED tests/test_entity_validation.py::test_format_vore_variant_paths 
+tests/test_entity_validation.py::test_format_digestion_modal_variant_errors 
+[gw0] [ 11%] PASSED tests/test_entity_validation.py::test_format_digestion_modal_variant_errors 
+tests/test_entity_validation.py::test_parse_entity_registry_still_raises_entity_load_error 
+[gw0] [ 11%] PASSED tests/test_entity_validation.py::test_parse_entity_registry_still_raises_entity_load_error 
+tests/test_entity_validation_startup.py::test_skip_quit_milestone_suppresses_flag 
+[gw0] [ 11%] PASSED tests/test_entity_validation_startup.py::test_skip_quit_milestone_suppresses_flag 
+tests/test_entity_validation_startup.py::test_startup_validation_failure_subprocess 
+[gw0] [ 11%] PASSED tests/test_entity_validation_startup.py::test_startup_validation_failure_subprocess 
+tests/test_entity_validation_startup.py::test_startup_validation_failure_in_process 
+[gw0] [ 11%] PASSED tests/test_entity_validation_startup.py::test_startup_validation_failure_in_process 
+tests/test_examine.py::test_examine_enter_does_not_consume_turn 
+[gw0] [ 11%] PASSED tests/test_examine.py::test_examine_enter_does_not_consume_turn 
+tests/test_examine.py::test_examine_cursor_moves_not_player 
+[gw0] [ 11%] PASSED tests/test_examine.py::test_examine_cursor_moves_not_player 
+tests/test_examine.py::test_examine_wolf_description_in_modal_not_log 
+[gw0] [ 11%] PASSED tests/test_examine.py::test_examine_wolf_description_in_modal_not_log 
+tests/test_examine.py::test_examine_empty_floor_message 
+[gw0] [ 11%] PASSED tests/test_examine.py::test_examine_empty_floor_message 
+tests/test_examine.py::test_examine_potion_on_floor 
+[gw0] [ 11%] PASSED tests/test_examine.py::test_examine_potion_on_floor 
+tests/test_examine.py::test_examine_engulfed_blocked 
+[gw0] [ 11%] PASSED tests/test_examine.py::test_examine_engulfed_blocked 
+tests/test_examine.py::test_escape_cancels_examine_not_quit 
+[gw0] [ 11%] PASSED tests/test_examine.py::test_escape_cancels_examine_not_quit 
+tests/test_examine.py::test_escape_dismisses_description_back_to_cursor 
+[gw0] [ 11%] PASSED tests/test_examine.py::test_escape_dismisses_description_back_to_cursor 
+tests/test_examine.py::test_escape_does_not_quit_from_gameplay 
+[gw2] [ 11%] PASSED tests/test_dungeon_layout_pr1.py::test_default_mix_includes_all_archetypes 
+tests/test_dungeon_layout_pr2.py::test_closed_door_blocks_transparency_and_ground_entry 
+[gw2] [ 11%] PASSED tests/test_dungeon_layout_pr2.py::test_closed_door_blocks_transparency_and_ground_entry 
+tests/test_dungeon_layout_pr2.py::test_closed_door_blocks_fov 
+[gw2] [ 11%] PASSED tests/test_dungeon_layout_pr2.py::test_closed_door_blocks_fov 
+tests/test_dungeon_layout_pr2.py::test_open_door_restores_fov 
+[gw2] [ 12%] PASSED tests/test_dungeon_layout_pr2.py::test_open_door_restores_fov 
+tests/test_dungeon_layout_pr2.py::test_player_opens_door_without_moving 
+[gw0] [ 12%] PASSED tests/test_examine.py::test_escape_does_not_quit_from_gameplay 
+tests/test_examine.py::test_ctrl_q_does_not_quit_engine_directly 
+[gw0] [ 12%] PASSED tests/test_examine.py::test_ctrl_q_does_not_quit_engine_directly 
+tests/test_examine.py::test_ctrl_q_during_examine_still_non_exit_at_engine 
+[gw2] [ 12%] PASSED tests/test_dungeon_layout_pr2.py::test_player_opens_door_without_moving 
+tests/test_dungeon_layout_pr2.py::test_engine_closes_and_misses_open_door 
+[gw2] [ 12%] PASSED tests/test_dungeon_layout_pr2.py::test_engine_closes_and_misses_open_door 
+tests/test_dungeon_layout_pr2.py::test_close_door_blocked_by_entity 
+[gw0] [ 12%] PASSED tests/test_examine.py::test_ctrl_q_during_examine_still_non_exit_at_engine 
+tests/test_examine_floor_items.py::test_floor_item_detail_never_says_wielded 
+[gw0] [ 12%] PASSED tests/test_examine_floor_items.py::test_floor_item_detail_never_says_wielded 
+tests/test_examine_floor_items.py::test_single_floor_stack_shows_quantity_not_wielded 
+[gw0] [ 12%] PASSED tests/test_examine_floor_items.py::test_single_floor_stack_shows_quantity_not_wielded 
+tests/test_examine_floor_items.py::test_multiple_floor_items_list_all_names 
+[gw0] [ 12%] PASSED tests/test_examine_floor_items.py::test_multiple_floor_items_list_all_names 
+tests/test_examine_floor_items.py::test_single_floor_item_keeps_detail_panel 
+[gw0] [ 12%] PASSED tests/test_examine_floor_items.py::test_single_floor_item_keeps_detail_panel 
+tests/test_expand_entity_roster_pr1.py::test_stock_roster_loads_core_ids 
+[gw0] [ 12%] PASSED tests/test_expand_entity_roster_pr1.py::test_stock_roster_loads_core_ids 
+tests/test_expand_entity_roster_pr1.py::test_fox_archer_ranged_stronger_than_melee 
+[gw0] [ 12%] PASSED tests/test_expand_entity_roster_pr1.py::test_fox_archer_ranged_stronger_than_melee 
+tests/test_expand_entity_roster_pr1.py::test_gnoll_has_short_range 
+[gw0] [ 12%] PASSED tests/test_expand_entity_roster_pr1.py::test_gnoll_has_short_range 
+tests/test_expand_entity_roster_pr1.py::test_early_rat_and_deep_dragon_present 
+[gw0] [ 12%] PASSED tests/test_expand_entity_roster_pr1.py::test_early_rat_and_deep_dragon_present 
+tests/test_expand_entity_roster_pr1.py::test_rabbit_weight_zero_no_floor_spawn 
+[gw0] [ 12%] PASSED tests/test_expand_entity_roster_pr1.py::test_rabbit_weight_zero_no_floor_spawn 
+tests/test_explore_bfs_steps.py::test_explore_bfs_step_follows_corridor_not_greedy_cut 
+[gw2] [ 12%] PASSED tests/test_dungeon_layout_pr2.py::test_close_door_blocked_by_entity 
+tests/test_dungeon_layout_pr2.py::test_room_corner_is_not_corridor_mouth 
+[gw2] [ 12%] PASSED tests/test_dungeon_layout_pr2.py::test_room_corner_is_not_corridor_mouth 
+tests/test_dungeon_layout_pr2.py::test_room_interior_is_not_corridor_mouth 
+[gw2] [ 12%] PASSED tests/test_dungeon_layout_pr2.py::test_room_interior_is_not_corridor_mouth 
+tests/test_dungeon_layout_pr2.py::test_corridor_mouth_candidate_on_threshold 
+[gw2] [ 13%] PASSED tests/test_dungeon_layout_pr2.py::test_corridor_mouth_candidate_on_threshold 
+tests/test_dungeon_layout_pr2.py::test_adjacent_doors_are_deduplicated 
+[gw2] [ 13%] PASSED tests/test_dungeon_layout_pr2.py::test_adjacent_doors_are_deduplicated 
+tests/test_dungeon_layout_pr2.py::test_npc_cannot_enter_closed_door 
+[gw2] [ 13%] PASSED tests/test_dungeon_layout_pr2.py::test_npc_cannot_enter_closed_door 
+tests/test_dungeon_layout_pr2.py::test_place_doors_on_corridor_mouth 
+[gw2] [ 13%] PASSED tests/test_dungeon_layout_pr2.py::test_place_doors_on_corridor_mouth 
+tests/test_dungeon_layout_pr2.py::test_generated_maps_may_include_doors 
+[gw0] [ 13%] PASSED tests/test_explore_bfs_steps.py::test_explore_bfs_step_follows_corridor_not_greedy_cut 
+tests/test_explore_bfs_steps.py::test_explore_oscillation_detection 
+[gw0] [ 13%] PASSED tests/test_explore_bfs_steps.py::test_explore_oscillation_detection 
+tests/test_explore_bfs_steps.py::test_explore_oscillation_repick_changes_goal 
+[gw2] [ 13%] PASSED tests/test_dungeon_layout_pr2.py::test_generated_maps_may_include_doors 
+tests/test_dungeon_layout_pr2.py::test_npc_pathfinding_treats_closed_door_as_blocked 
+[gw2] [ 13%] PASSED tests/test_dungeon_layout_pr2.py::test_npc_pathfinding_treats_closed_door_as_blocked 
+tests/test_dungeon_layout_pr3.py::test_floor_items_do_not_block_rune_candidates 
+[gw2] [ 13%] PASSED tests/test_dungeon_layout_pr3.py::test_floor_items_do_not_block_rune_candidates 
+tests/test_dungeon_layout_pr3.py::test_spawn_floor_rune_enforces_pairwise_spread 
+[gw0] [ 13%] PASSED tests/test_explore_bfs_steps.py::test_explore_oscillation_repick_changes_goal 
+tests/test_explore_bfs_steps.py::test_evil_evils_cannot_swap 
+[gw2] [ 13%] PASSED tests/test_dungeon_layout_pr3.py::test_spawn_floor_rune_enforces_pairwise_spread 
+tests/test_dungeon_layout_pr3.py::test_all_placed_runes_are_at_least_twenty_from_entrance 
+[gw0] [ 13%] PASSED tests/test_explore_bfs_steps.py::test_evil_evils_cannot_swap 
+tests/test_explore_bfs_steps.py::test_unreachable_last_known_primary_cleared_at_closed_door 
+[gw0] [ 13%] PASSED tests/test_explore_bfs_steps.py::test_unreachable_last_known_primary_cleared_at_closed_door 
+tests/test_explore_bfs_steps.py::test_unreachable_memory_still_cleared_without_door_partition 
+[gw1] [ 13%] PASSED tests/test_come_here_pr1.py::test_cooldown_blocks_spam_without_turn 
+tests/test_come_here_pr1.py::test_cooldown_expires_after_four_turns 
+[gw0] [ 13%] PASSED tests/test_explore_bfs_steps.py::test_unreachable_memory_still_cleared_without_door_partition 
+tests/test_explore_bfs_steps.py::test_door_spite_waits_then_explores 
+[gw1] [ 13%] PASSED tests/test_come_here_pr1.py::test_cooldown_expires_after_four_turns 
+tests/test_come_here_pr1.py::test_engulfed_fizzle_no_flags_consumes_turn 
+[gw1] [ 13%] PASSED tests/test_come_here_pr1.py::test_engulfed_fizzle_no_flags_consumes_turn 
+tests/test_come_here_pr1.py::test_aistate_come_here_defaults_false_on_spawn 
+[gw0] [ 14%] PASSED tests/test_explore_bfs_steps.py::test_door_spite_waits_then_explores 
+tests/test_explore_bfs_steps.py::test_explore_idle_can_skip_turn 
+[gw1] [ 14%] PASSED tests/test_come_here_pr1.py::test_aistate_come_here_defaults_false_on_spawn 
+tests/test_come_here_pr2.py::test_come_here_prefers_player_over_visible_evil 
+[gw0] [ 14%] PASSED tests/test_explore_bfs_steps.py::test_explore_idle_can_skip_turn 
+tests/test_explore_bfs_steps.py::test_explore_direction_avoids_other_npc_tiles 
+[gw0] [ 14%] PASSED tests/test_explore_bfs_steps.py::test_explore_direction_avoids_other_npc_tiles 
+tests/test_explore_bfs_steps.py::test_explore_distances_to_goal_runs_from_goal 
+[gw0] [ 14%] PASSED tests/test_explore_bfs_steps.py::test_explore_distances_to_goal_runs_from_goal 
+tests/test_explore_frustration.py::test_blocked_explore_step_increments_frustration 
+[gw1] [ 14%] PASSED tests/test_come_here_pr2.py::test_come_here_prefers_player_over_visible_evil 
+tests/test_come_here_pr2.py::test_adjacency_clears_come_here 
+[gw0] [ 14%] PASSED tests/test_explore_frustration.py::test_blocked_explore_step_increments_frustration 
+tests/test_explore_frustration.py::test_explore_progress_resets_frustration 
+[gw0] [ 14%] PASSED tests/test_explore_frustration.py::test_explore_progress_resets_frustration 
+tests/test_explore_frustration.py::test_explore_frustration_limit_triggers_farthest_repick 
+[gw0] [ 14%] PASSED tests/test_explore_frustration.py::test_explore_frustration_limit_triggers_farthest_repick 
+tests/test_explore_frustration.py::test_memory_pursuit_does_not_touch_explore_frustration 
+[gw0] [ 14%] PASSED tests/test_explore_frustration.py::test_memory_pursuit_does_not_touch_explore_frustration 
+tests/test_explore_frustration.py::test_door_explore_frustration_repick_stays_on_near_side 
+[gw1] [ 14%] PASSED tests/test_come_here_pr2.py::test_adjacency_clears_come_here 
+tests/test_come_here_pr2.py::test_frustration_blockers_evil_between_ally_and_player 
+[gw1] [ 14%] PASSED tests/test_come_here_pr2.py::test_frustration_blockers_evil_between_ally_and_player 
+tests/test_come_here_pr2.py::test_come_here_attacks_blocking_evil 
+[gw0] [ 14%] PASSED tests/test_explore_frustration.py::test_door_explore_frustration_repick_stays_on_near_side 
+tests/test_explore_frustration.py::test_new_explore_goal_sets_frustration_limit 
+[gw0] [ 14%] PASSED tests/test_explore_frustration.py::test_new_explore_goal_sets_frustration_limit 
+tests/test_explore_frustration.py::test_explore_frustration_give_up_sets_farthest_flag 
+[gw0] [ 14%] PASSED tests/test_explore_frustration.py::test_explore_frustration_give_up_sets_farthest_flag 
+tests/test_explore_reachable_goals.py::test_closed_door_partitions_explore_reachable_set 
+[gw0] [ 14%] PASSED tests/test_explore_reachable_goals.py::test_closed_door_partitions_explore_reachable_set 
+tests/test_explore_reachable_goals.py::test_open_door_connects_explore_reachable_set 
+[gw1] [ 14%] PASSED tests/test_come_here_pr2.py::test_come_here_attacks_blocking_evil 
+tests/test_come_here_pr2.py::test_give_up_chase_clears_come_here 
+[gw1] [ 15%] PASSED tests/test_come_here_pr2.py::test_give_up_chase_clears_come_here 
+tests/test_come_here_pr2.py::test_clear_all_come_here 
+[gw0] [ 15%] PASSED tests/test_explore_reachable_goals.py::test_open_door_connects_explore_reachable_set 
+tests/test_explore_reachable_goals.py::test_explore_goal_never_beyond_closed_door 
+[gw2] [ 15%] PASSED tests/test_dungeon_layout_pr3.py::test_all_placed_runes_are_at_least_twenty_from_entrance 
+tests/test_dungeon_layout_pr3.py::test_generated_maps_support_spread_rune_placement 
+[gw0] [ 15%] PASSED tests/test_explore_reachable_goals.py::test_explore_goal_never_beyond_closed_door 
+tests/test_explore_reachable_goals.py::test_closed_door_invalidates_existing_explore_goal 
+[gw1] [ 15%] PASSED tests/test_come_here_pr2.py::test_clear_all_come_here 
+tests/test_come_here_pr2.py::test_come_here_without_los_or_memory_drops_order 
+[gw0] [ 15%] PASSED tests/test_explore_reachable_goals.py::test_closed_door_invalidates_existing_explore_goal 
+tests/test_explore_reachable_goals.py::test_weighted_far_bias_prefers_distant_tiles 
+[gw0] [ 15%] PASSED tests/test_explore_reachable_goals.py::test_weighted_far_bias_prefers_distant_tiles 
+tests/test_explore_reachable_goals.py::test_aquatic_explore_reachable_stays_in_water 
+[gw0] [ 15%] PASSED tests/test_explore_reachable_goals.py::test_aquatic_explore_reachable_stays_in_water 
+tests/test_explore_reachable_goals.py::test_hands_stub_allows_closed_door_in_explore_bfs 
+[gw0] [ 15%] PASSED tests/test_explore_reachable_goals.py::test_hands_stub_allows_closed_door_in_explore_bfs 
+tests/test_explore_reachable_goals.py::test_pick_evil_chase_explore_uses_reachable_goal 
+[gw1] [ 15%] PASSED tests/test_come_here_pr2.py::test_come_here_without_los_or_memory_drops_order 
+tests/test_crash_report.py::test_f6_debug_hotkey_raises_force_crash 
+[gw0] [ 15%] PASSED tests/test_explore_reachable_goals.py::test_pick_evil_chase_explore_uses_reachable_goal 
+tests/test_floor_prefetch.py::test_take_returns_none_when_empty 
+[gw0] [ 15%] PASSED tests/test_floor_prefetch.py::test_take_returns_none_when_empty 
+tests/test_floor_prefetch.py::test_schedule_and_take_returns_ready_map 
+[gw0] [ 15%] PASSED tests/test_floor_prefetch.py::test_schedule_and_take_returns_ready_map 
+tests/test_floor_prefetch.py::test_params_mismatch_discards_cached_map 
+[gw0] [ 15%] PASSED tests/test_floor_prefetch.py::test_params_mismatch_discards_cached_map 
+tests/test_floor_prefetch.py::test_cancel_prevents_take 
+[gw0] [ 15%] PASSED tests/test_floor_prefetch.py::test_cancel_prevents_take 
+tests/test_floor_prefetch.py::test_menu_prefetch_params_use_stock_defaults 
+[gw0] [ 15%] PASSED tests/test_floor_prefetch.py::test_menu_prefetch_params_use_stock_defaults 
+tests/test_floor_prefetch.py::test_frozen_app_uses_process_backend 
+[gw0] [ 15%] PASSED tests/test_floor_prefetch.py::test_frozen_app_uses_process_backend 
+tests/test_floor_prefetch.py::test_engine_take_or_generate_uses_prefetch 
+[gw0] [ 16%] PASSED tests/test_floor_prefetch.py::test_engine_take_or_generate_uses_prefetch 
+tests/test_floor_runes_pieces_pr2.py::TestPiecesPerBonus::test_default_one_grants_immediately 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestPiecesPerBonus::test_default_one_grants_immediately 
+tests/test_floor_runes_pieces_pr2.py::TestPiecesPerBonus::test_four_pieces_for_one_ac 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestPiecesPerBonus::test_four_pieces_for_one_ac 
+tests/test_floor_runes_pieces_pr2.py::TestPiecesPerBonus::test_pieces_granted_can_overshoot 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestPiecesPerBonus::test_pieces_granted_can_overshoot 
+tests/test_floor_runes_pieces_pr2.py::TestSeparableAccuracyDamage::test_damage_only_accuracy_damage_does_not_touch_accuracy_bank 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestSeparableAccuracyDamage::test_damage_only_accuracy_damage_does_not_touch_accuracy_bank 
+tests/test_floor_runes_pieces_pr2.py::TestSeparableAccuracyDamage::test_pure_accuracy_separate_from_damage 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestSeparableAccuracyDamage::test_pure_accuracy_separate_from_damage 
+tests/test_floor_runes_pieces_pr2.py::TestStickyFreeze::test_need_does_not_change_after_cycle 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestStickyFreeze::test_need_does_not_change_after_cycle 
+tests/test_floor_runes_pieces_pr2.py::TestLoaderPieces::test_parse_pieces_fields 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestLoaderPieces::test_parse_pieces_fields 
+tests/test_floor_runes_pieces_pr2.py::TestLoaderPieces::test_pieces_per_bonus_must_be_positive 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestLoaderPieces::test_pieces_per_bonus_must_be_positive 
+tests/test_floor_runes_pieces_pr2.py::TestStatusPartial::test_partial_ac_row 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestStatusPartial::test_partial_ac_row 
+tests/test_floor_runes_pieces_pr2.py::TestStatusPartial::test_completed_and_partial_compact 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestStatusPartial::test_completed_and_partial_compact 
+tests/test_floor_runes_pieces_pr2.py::TestMultiplierTimesPieces::test_pieces_times_difficulty_multiplier 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pieces_pr2.py::TestMultiplierTimesPieces::test_pieces_times_difficulty_multiplier 
+tests/test_floor_runes_pr3.py::test_load_default_floor_runes_json 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pr3.py::test_load_default_floor_runes_json 
+tests/test_floor_runes_pr3.py::test_forbidden_wall_glyph_rejected 
+[gw0] [ 16%] PASSED tests/test_floor_runes_pr3.py::test_forbidden_wall_glyph_rejected 
+tests/test_floor_runes_pr3.py::test_new_game_spawns_three_floor_runes 
+[gw1] [ 16%] PASSED tests/test_crash_report.py::test_f6_debug_hotkey_raises_force_crash 
+tests/test_crash_report.py::test_format_crash_report_includes_required_sections 
+[gw1] [ 16%] PASSED tests/test_crash_report.py::test_format_crash_report_includes_required_sections 
+tests/test_crash_report.py::test_format_crash_report_uses_none_placeholders 
+[gw1] [ 16%] PASSED tests/test_crash_report.py::test_format_crash_report_uses_none_placeholders 
+tests/test_crash_report.py::test_build_crash_context_from_play_app 
+[gw1] [ 16%] PASSED tests/test_crash_report.py::test_build_crash_context_from_play_app 
+tests/test_crash_report.py::test_write_crash_report_overwrites_file 
+[gw1] [ 17%] PASSED tests/test_crash_report.py::test_write_crash_report_overwrites_file 
+tests/test_crash_report.py::test_excepthook_writes_crash_log_and_skips_quit 
+[gw1] [ 17%] PASSED tests/test_crash_report.py::test_excepthook_writes_crash_log_and_skips_quit 
+tests/test_crash_report.py::test_excepthook_ignores_system_exit 
+[gw1] [ 17%] PASSED tests/test_crash_report.py::test_excepthook_ignores_system_exit 
+tests/test_credits_menu_pr2.py::test_menu_lists_credits_above_exit 
+[gw1] [ 17%] PASSED tests/test_credits_menu_pr2.py::test_menu_lists_credits_above_exit 
+tests/test_credits_menu_pr2.py::test_menu_enter_on_credits_opens_screen 
+[gw1] [ 17%] PASSED tests/test_credits_menu_pr2.py::test_menu_enter_on_credits_opens_screen 
+tests/test_credits_menu_pr2.py::test_credits_escape_returns_to_menu 
+[gw1] [ 17%] PASSED tests/test_credits_menu_pr2.py::test_credits_escape_returns_to_menu 
+tests/test_credits_menu_pr2.py::test_credits_ctrl_q_is_no_op 
+[gw1] [ 17%] PASSED tests/test_credits_menu_pr2.py::test_credits_ctrl_q_is_no_op 
+tests/test_credits_menu_pr2.py::test_app_render_credits_shows_content 
+[gw1] [ 17%] PASSED tests/test_credits_menu_pr2.py::test_app_render_credits_shows_content 
+tests/test_credits_menu_pr2.py::test_render_credits_screen_matches_app_render 
+[gw1] [ 17%] PASSED tests/test_credits_menu_pr2.py::test_render_credits_screen_matches_app_render 
+tests/test_credits_present_pr2.py::test_present_credits_uses_proportional_when_font_enabled 
+[gw1] [ 17%] PASSED tests/test_credits_present_pr2.py::test_present_credits_uses_proportional_when_font_enabled 
+tests/test_credits_present_pr2.py::test_present_credits_falls_back_to_context_present_without_font 
+[gw1] [ 17%] PASSED tests/test_credits_present_pr2.py::test_present_credits_falls_back_to_context_present_without_font 
+tests/test_credits_present_pr2.py::test_present_credits_falls_back_when_renderer_missing 
+[gw1] [ 17%] PASSED tests/test_credits_present_pr2.py::test_present_credits_falls_back_when_renderer_missing 
+tests/test_credits_screen.py::test_credits_display_line_count 
+[gw1] [ 17%] PASSED tests/test_credits_screen.py::test_credits_display_line_count 
+tests/test_credits_screen.py::test_credits_content_includes_title_and_roles 
+[gw1] [ 17%] PASSED tests/test_credits_screen.py::test_credits_content_includes_title_and_roles 
+tests/test_credits_screen.py::test_credits_content_includes_links 
+[gw1] [ 17%] PASSED tests/test_credits_screen.py::test_credits_content_includes_links 
+tests/test_credits_screen.py::test_credits_content_includes_font_attribution 
+[gw1] [ 17%] PASSED tests/test_credits_screen.py::test_credits_content_includes_font_attribution 
+tests/test_credits_screen.py::test_credits_content_includes_library_attribution 
+[gw1] [ 17%] PASSED tests/test_credits_screen.py::test_credits_content_includes_library_attribution 
+tests/test_credits_screen.py::test_credits_sections_in_order 
+[gw1] [ 18%] PASSED tests/test_credits_screen.py::test_credits_sections_in_order 
+tests/test_credits_screen.py::test_escape_returns_back 
+[gw1] [ 18%] PASSED tests/test_credits_screen.py::test_escape_returns_back 
+tests/test_credits_screen.py::test_other_keys_are_no_op 
+[gw1] [ 18%] PASSED tests/test_credits_screen.py::test_other_keys_are_no_op 
+tests/test_credits_screen.py::test_render_credits_screen_draws_title_and_footer 
+[gw1] [ 18%] PASSED tests/test_credits_screen.py::test_render_credits_screen_draws_title_and_footer 
+tests/test_debug_log.py::test_debug_stdout_disabled_by_default 
+[gw1] [ 18%] PASSED tests/test_debug_log.py::test_debug_stdout_disabled_by_default 
+tests/test_debug_log.py::test_debug_stdout_enabled_values 
+[gw1] [ 18%] PASSED tests/test_debug_log.py::test_debug_stdout_enabled_values 
+tests/test_debug_log.py::test_debug_print_suppressed_without_env 
+[gw1] [ 18%] PASSED tests/test_debug_log.py::test_debug_print_suppressed_without_env 
+tests/test_debug_log.py::test_debug_print_emits_when_env_set 
+[gw1] [ 18%] PASSED tests/test_debug_log.py::test_debug_print_emits_when_env_set 
+tests/test_debug_omniscient_vision.py::test_omniscient_vision_reveals_entire_map_for_player 
+[gw1] [ 18%] PASSED tests/test_debug_omniscient_vision.py::test_omniscient_vision_reveals_entire_map_for_player 
+tests/test_debug_omniscient_vision.py::test_omniscient_vision_does_not_change_npc_line_of_sight 
+[gw1] [ 18%] PASSED tests/test_debug_omniscient_vision.py::test_omniscient_vision_does_not_change_npc_line_of_sight 
+tests/test_debug_omniscient_vision.py::test_toggle_omniscient_vision_restores_normal_fov 
+[gw0] [ 18%] PASSED tests/test_floor_runes_pr3.py::test_new_game_spawns_three_floor_runes 
+tests/test_floor_runes_pr3.py::test_descend_spawns_three_floor_runes 
+[gw0] [ 18%] PASSED tests/test_floor_runes_pr3.py::test_descend_spawns_three_floor_runes 
+tests/test_floor_runes_pr3.py::test_rune_placed_on_floor_not_stairs 
+[gw0] [ 18%] PASSED tests/test_floor_runes_pr3.py::test_rune_placed_on_floor_not_stairs 
+tests/test_floor_runes_pr3.py::test_rune_entrance_distance_never_relaxes_below_twenty 
+[gw0] [ 18%] PASSED tests/test_floor_runes_pr3.py::test_rune_entrance_distance_never_relaxes_below_twenty 
+tests/test_floor_runes_pr3.py::test_rune_entrance_distance_relaxes_only_to_twenty 
+[gw0] [ 18%] PASSED tests/test_floor_runes_pr3.py::test_rune_entrance_distance_relaxes_only_to_twenty 
+tests/test_floor_runes_pr3.py::test_player_can_step_onto_rune_npc_cannot 
+[gw0] [ 18%] PASSED tests/test_floor_runes_pr3.py::test_player_can_step_onto_rune_npc_cannot 
+tests/test_floor_runes_pr3.py::test_rune_has_blocks_movement_tag 
+[gw0] [ 18%] PASSED tests/test_floor_runes_pr3.py::test_rune_has_blocks_movement_tag 
+tests/test_floor_runes_pr3.py::test_bfs_path_distance_cardinal_only 
+[gw0] [ 19%] PASSED tests/test_floor_runes_pr3.py::test_bfs_path_distance_cardinal_only 
+tests/test_floor_runes_pr3.py::test_no_eligible_runes_raises 
+[gw0] [ 19%] PASSED tests/test_floor_runes_pr3.py::test_no_eligible_runes_raises 
+tests/test_floor_runes_pr3.py::test_fixture_registry_from_tmp_path 
+[gw0] [ 19%] PASSED tests/test_floor_runes_pr3.py::test_fixture_registry_from_tmp_path 
+tests/test_floor_runes_pr4.py::test_spawn_three_distinct_rune_tiles 
+[gw0] [ 19%] PASSED tests/test_floor_runes_pr4.py::test_spawn_three_distinct_rune_tiles 
+tests/test_floor_runes_pr4.py::test_apply_rune_effect_max_hp_syncs_fighter 
+[gw1] [ 19%] PASSED tests/test_debug_omniscient_vision.py::test_toggle_omniscient_vision_restores_normal_fov 
+tests/test_depth_jump_pr1.py::test_weapon_strength_prefers_higher_min_damage 
+[gw1] [ 19%] PASSED tests/test_depth_jump_pr1.py::test_weapon_strength_prefers_higher_min_damage 
+tests/test_depth_jump_pr1.py::test_simulated_runes_for_floor_uses_two_thirds_to_full 
+[gw1] [ 19%] PASSED tests/test_depth_jump_pr1.py::test_simulated_runes_for_floor_uses_two_thirds_to_full 
+tests/test_depth_jump_pr1.py::test_depth_entry_rejects_out_of_range_with_exact_message 
+[gw1] [ 19%] PASSED tests/test_depth_jump_pr1.py::test_depth_entry_rejects_out_of_range_with_exact_message 
+tests/test_depth_jump_pr1.py::test_loadout_uses_loot_depth_minus_one 
+[gw1] [ 19%] PASSED tests/test_depth_jump_pr1.py::test_loadout_uses_loot_depth_minus_one 
+tests/test_depth_jump_pr1.py::test_level_warped_skips_past_runs 
+[gw1] [ 19%] PASSED tests/test_depth_jump_pr1.py::test_level_warped_skips_past_runs 
+tests/test_depth_jump_pr1.py::test_is_ctrl_g 
+[gw1] [ 19%] PASSED tests/test_depth_jump_pr1.py::test_is_ctrl_g 
+tests/test_depth_jump_pr1.py::test_ctrl_g_enters_name_then_depth 
+[gw0] [ 19%] PASSED tests/test_floor_runes_pr4.py::test_apply_rune_effect_max_hp_syncs_fighter 
+tests/test_floor_runes_pr4.py::test_effective_fighter_includes_progression_bonuses 
+[gw1] [ 19%] PASSED tests/test_depth_jump_pr1.py::test_ctrl_g_enters_name_then_depth 
+tests/test_depth_jump_pr1.py::test_depth_one_routes_to_normal_new_game 
+[gw0] [ 19%] PASSED tests/test_floor_runes_pr4.py::test_effective_fighter_includes_progression_bonuses 
+tests/test_floor_runes_pr4.py::test_try_activate_floor_rune_removes_entity_and_logs 
+[gw0] [ 19%] PASSED tests/test_floor_runes_pr4.py::test_try_activate_floor_rune_removes_entity_and_logs 
+tests/test_floor_runes_pr4.py::test_npc_cannot_activate_floor_rune 
+[gw0] [ 19%] PASSED tests/test_floor_runes_pr4.py::test_npc_cannot_activate_floor_rune 
+tests/test_floor_runes_pr4.py::test_engine_step_on_rune_activates_once 
+[gw0] [ 19%] PASSED tests/test_floor_runes_pr4.py::test_engine_step_on_rune_activates_once 
+tests/test_floor_runes_pr4.py::test_rune_bonuses_persist_after_descend 
+[gw1] [ 19%] PASSED tests/test_depth_jump_pr1.py::test_depth_one_routes_to_normal_new_game 
+tests/test_depth_scaling_pr1.py::TestDualIntMath::test_floor1_zero_steps 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestDualIntMath::test_floor1_zero_steps 
+tests/test_depth_scaling_pr1.py::TestDualIntMath::test_average_1_25_at_four_steps 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestDualIntMath::test_average_1_25_at_four_steps 
+tests/test_depth_scaling_pr1.py::TestDualIntMath::test_pure_bank_every_four 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestDualIntMath::test_pure_bank_every_four 
+tests/test_depth_scaling_pr1.py::TestDualIntMath::test_every_n_zero_disables_bank 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestDualIntMath::test_every_n_zero_disables_bank 
+tests/test_depth_scaling_pr1.py::TestResolveAndAlignment::test_accuracy_unit 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestResolveAndAlignment::test_accuracy_unit 
+tests/test_depth_scaling_pr1.py::TestResolveAndAlignment::test_evil_only_gate 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestResolveAndAlignment::test_evil_only_gate 
+tests/test_depth_scaling_pr1.py::TestSpawnBake::test_ac_and_hp_bake 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestSpawnBake::test_ac_and_hp_bake 
+tests/test_depth_scaling_pr1.py::TestSpawnBake::test_good_unaffected 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestSpawnBake::test_good_unaffected 
+tests/test_depth_scaling_pr1.py::TestSpawnBake::test_digestion_damage_scales_not_digest_time 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestSpawnBake::test_digestion_damage_scales_not_digest_time 
+tests/test_depth_scaling_pr1.py::TestSpawnBake::test_ranged_gate_stock_zero_stays_zero 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestSpawnBake::test_ranged_gate_stock_zero_stays_zero 
+tests/test_depth_scaling_pr1.py::TestSpawnBake::test_ranged_scales_when_base_positive 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestSpawnBake::test_ranged_scales_when_base_positive 
+tests/test_depth_scaling_pr1.py::TestSpawnBake::test_separable_min_max_damage 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestSpawnBake::test_separable_min_max_damage 
+tests/test_depth_scaling_pr1.py::TestSpawnBake::test_spawn_entity_by_id_forwards_depth 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestSpawnBake::test_spawn_entity_by_id_forwards_depth 
+tests/test_depth_scaling_pr1.py::TestLoader::test_parse_stock_like_zero 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestLoader::test_parse_stock_like_zero 
+tests/test_depth_scaling_pr1.py::TestLoader::test_unknown_stat_rejected 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestLoader::test_unknown_stat_rejected 
+tests/test_depth_scaling_pr1.py::TestLoader::test_shipped_file_loads 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestLoader::test_shipped_file_loads 
+tests/test_depth_scaling_pr1.py::TestLoader::test_roundtrip_fixture_file 
+[gw1] [ 20%] PASSED tests/test_depth_scaling_pr1.py::TestLoader::test_roundtrip_fixture_file 
+tests/test_digestion.py::test_evil_spawn_has_digestion_stats 
+[gw1] [ 21%] PASSED tests/test_digestion.py::test_evil_spawn_has_digestion_stats 
+tests/test_digestion.py::test_engulf_stores_narrative_type_on_predator 
+[gw1] [ 21%] PASSED tests/test_digestion.py::test_engulf_stores_narrative_type_on_predator 
+tests/test_digestion.py::test_npc_release_grants_vore_mercy 
+[gw0] [ 21%] PASSED tests/test_floor_runes_pr4.py::test_rune_bonuses_persist_after_descend 
+tests/test_floor_runes_pr4.py::test_player_has_progression_on_spawn 
+[gw1] [ 21%] PASSED tests/test_digestion.py::test_npc_release_grants_vore_mercy 
+tests/test_digestion.py::test_vore_mercy_blocks_npc_re_engulf 
+[gw0] [ 21%] PASSED tests/test_floor_runes_pr4.py::test_player_has_progression_on_spawn 
+tests/test_floor_runes_pr4.py::test_screen_flash_does_not_repeat_while_standing_still 
+[gw0] [ 21%] PASSED tests/test_floor_runes_pr4.py::test_screen_flash_does_not_repeat_while_standing_still 
+tests/test_floor_runes_pr4.py::test_screen_flash_is_one_shot_per_render 
+[gw0] [ 21%] PASSED tests/test_floor_runes_pr4.py::test_screen_flash_is_one_shot_per_render 
+tests/test_floor_runes_pr4.py::test_screen_flash_only_tints_player_vicinity 
+[gw0] [ 21%] PASSED tests/test_floor_runes_pr4.py::test_screen_flash_only_tints_player_vicinity 
+tests/test_flow_pr4.py::test_quit_confirm_y_and_n 
+[gw0] [ 21%] PASSED tests/test_flow_pr4.py::test_quit_confirm_y_and_n 
+tests/test_flow_pr4.py::test_quit_confirm_rejects_invalid_keys 
+[gw0] [ 21%] PASSED tests/test_flow_pr4.py::test_quit_confirm_rejects_invalid_keys 
+tests/test_flow_pr4.py::test_quit_confirm_bare_shift_does_not_show_error 
+[gw0] [ 21%] PASSED tests/test_flow_pr4.py::test_quit_confirm_bare_shift_does_not_show_error 
+tests/test_flow_pr4.py::test_ctrl_q_in_play_opens_quit_confirm 
+[gw1] [ 21%] PASSED tests/test_digestion.py::test_vore_mercy_blocks_npc_re_engulf 
+tests/test_digestion.py::test_vore_mercy_blocks_npc_combat_damage 
+[gw0] [ 21%] PASSED tests/test_flow_pr4.py::test_ctrl_q_in_play_opens_quit_confirm 
+tests/test_flow_pr4.py::test_quit_confirm_y_returns_to_menu 
+[gw1] [ 21%] PASSED tests/test_digestion.py::test_vore_mercy_blocks_npc_combat_damage 
+tests/test_digestion.py::test_predator_attack_only_while_holding 
+[gw0] [ 21%] PASSED tests/test_flow_pr4.py::test_quit_confirm_y_returns_to_menu 
+tests/test_flow_pr4.py::test_quit_confirm_n_resumes_play 
+[gw1] [ 21%] PASSED tests/test_digestion.py::test_predator_attack_only_while_holding 
+tests/test_digestion.py::test_predator_cannot_move_while_holding 
+[gw1] [ 21%] PASSED tests/test_digestion.py::test_predator_cannot_move_while_holding 
+tests/test_digestion.py::test_holding_predator_cannot_initiate_vore 
+[gw0] [ 22%] PASSED tests/test_flow_pr4.py::test_quit_confirm_n_resumes_play 
+tests/test_flow_pr4.py::test_ctrl_q_during_vore_modal_is_no_op 
+[gw1] [ 22%] PASSED tests/test_digestion.py::test_holding_predator_cannot_initiate_vore 
+tests/test_digestion.py::test_digestion_reduces_hp_before_strikes 
+[gw0] [ 22%] PASSED tests/test_flow_pr4.py::test_ctrl_q_during_vore_modal_is_no_op 
+tests/test_flow_pr4.py::test_ctrl_q_during_digestion_modal_is_no_op 
+[gw1] [ 22%] PASSED tests/test_digestion.py::test_digestion_reduces_hp_before_strikes 
+tests/test_digestion.py::test_no_strike_on_same_tick_as_hp_to_zero 
+[gw1] [ 22%] PASSED tests/test_digestion.py::test_no_strike_on_same_tick_as_hp_to_zero 
+tests/test_digestion.py::test_digest_time_strikes_digests_npc 
+[gw2] [ 22%] PASSED tests/test_dungeon_layout_pr3.py::test_generated_maps_support_spread_rune_placement 
+tests/test_dungeon_layout_pr3.py::test_initialize_floor_regenerates_on_rune_placement_failure 
+[gw0] [ 22%] PASSED tests/test_flow_pr4.py::test_ctrl_q_during_digestion_modal_is_no_op 
+tests/test_flow_pr4.py::test_ctrl_q_during_game_over_recap_is_no_op 
+[gw1] [ 22%] PASSED tests/test_digestion.py::test_digest_time_strikes_digests_npc 
+tests/test_digestion.py::test_digestion_resets_strikes_on_freedom 
+[gw2] [ 22%] PASSED tests/test_dungeon_layout_pr3.py::test_initialize_floor_regenerates_on_rune_placement_failure 
+tests/test_dungeon_layout_pr3.py::test_pairwise_spread_failure_raises 
+[gw2] [ 22%] PASSED tests/test_dungeon_layout_pr3.py::test_pairwise_spread_failure_raises 
+tests/test_dungeon_pr1.py::test_tile_transparency 
+[gw2] [ 22%] PASSED tests/test_dungeon_pr1.py::test_tile_transparency 
+tests/test_dungeon_pr1.py::test_mobility_traversal_matrix 
+[gw2] [ 22%] PASSED tests/test_dungeon_pr1.py::test_mobility_traversal_matrix 
+tests/test_dungeon_pr1.py::test_is_walkable_includes_stairs 
+[gw2] [ 22%] PASSED tests/test_dungeon_pr1.py::test_is_walkable_includes_stairs 
+tests/test_dungeon_pr1.py::test_fov_passes_through_deep_water 
+[gw2] [ 22%] PASSED tests/test_dungeon_pr1.py::test_fov_passes_through_deep_water 
+tests/test_dungeon_pr1.py::test_ground_player_blocked_by_water 
+[gw0] [ 22%] PASSED tests/test_flow_pr4.py::test_ctrl_q_during_game_over_recap_is_no_op 
+tests/test_flow_pr4.py::test_game_over_enter_returns_to_menu_via_app 
+[gw1] [ 22%] PASSED tests/test_digestion.py::test_digestion_resets_strikes_on_freedom 
+tests/test_digestion.py::test_regen_blocked_when_strikes_ge_1 
+[gw2] [ 22%] PASSED tests/test_dungeon_pr1.py::test_ground_player_blocked_by_water 
+tests/test_dungeon_pr1.py::test_player_deep_water_attempt_shows_message 
+[gw1] [ 22%] PASSED tests/test_digestion.py::test_regen_blocked_when_strikes_ge_1 
+tests/test_digestion.py::test_good_plea_message_probabilistic 
+[gw2] [ 23%] PASSED tests/test_dungeon_pr1.py::test_player_deep_water_attempt_shows_message 
+tests/test_dungeon_pr1.py::test_flyer_crosses_water 
+[gw2] [ 23%] PASSED tests/test_dungeon_pr1.py::test_flyer_crosses_water 
+tests/test_dungeon_pr1.py::test_aquatic_stays_in_water 
+[gw2] [ 23%] PASSED tests/test_dungeon_pr1.py::test_aquatic_stays_in_water 
+tests/test_dungeon_pr1.py::test_player_spawns_with_ground_mobility 
+[gw0] [ 23%] PASSED tests/test_flow_pr4.py::test_game_over_enter_returns_to_menu_via_app 
+tests/test_flow_pr4.py::test_engine_recap_dismiss_result 
+[gw0] [ 23%] PASSED tests/test_flow_pr4.py::test_engine_recap_dismiss_result 
+tests/test_flow_pr4.py::test_engine_ctrl_q_no_longer_exits 
+[gw1] [ 23%] PASSED tests/test_digestion.py::test_good_plea_message_probabilistic 
+tests/test_digestion.py::test_neutral_silent_on_digestion_tick 
+[gw0] [ 23%] PASSED tests/test_flow_pr4.py::test_engine_ctrl_q_no_longer_exits 
+tests/test_flow_pr4.py::test_load_game_requires_save_file 
+[gw0] [ 23%] PASSED tests/test_flow_pr4.py::test_load_game_requires_save_file 
+tests/test_flow_pr4.py::test_past_runs_screen_escape_back 
+[gw0] [ 23%] PASSED tests/test_flow_pr4.py::test_past_runs_screen_escape_back 
+tests/test_force_attack.py::test_is_ctrl_direction_detects_movement_keys 
+[gw0] [ 23%] PASSED tests/test_force_attack.py::test_is_ctrl_direction_detects_movement_keys 
+tests/test_force_attack.py::test_hits_adjacent_evil_without_moving 
+[gw0] [ 23%] PASSED tests/test_force_attack.py::test_hits_adjacent_evil_without_moving 
+tests/test_force_attack.py::test_empty_air_consumes_turn 
+[gw1] [ 23%] PASSED tests/test_digestion.py::test_neutral_silent_on_digestion_tick 
+tests/test_digestion.py::test_completion_message_uses_narrative_type 
+[gw2] [ 23%] PASSED tests/test_dungeon_pr1.py::test_player_spawns_with_ground_mobility 
+tests/test_dungeon_pr1.py::test_spawned_npcs_have_ground_mobility 
+[gw2] [ 23%] PASSED tests/test_dungeon_pr1.py::test_spawned_npcs_have_ground_mobility 
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs 
+[gw2] [ 23%] PASSED tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs 
+tests/test_dungeon_pr1.py::test_can_move_to_respects_mobility 
+[gw2] [ 23%] PASSED tests/test_dungeon_pr1.py::test_can_move_to_respects_mobility 
+tests/test_dungeon_pr2.py::test_generated_map_has_connected_land 
+[gw1] [ 23%] PASSED tests/test_digestion.py::test_completion_message_uses_narrative_type 
+tests/test_digestion.py::test_predator_unbound_after_digest_next_turn 
+[gw2] [ 24%] PASSED tests/test_dungeon_pr2.py::test_generated_map_has_connected_land 
+tests/test_dungeon_pr2.py::test_three_stairs_all_reachable 
+[gw2] [ 24%] PASSED tests/test_dungeon_pr2.py::test_three_stairs_all_reachable 
+tests/test_dungeon_pr2.py::test_many_seeds_produce_valid_maps 
+[gw1] [ 24%] PASSED tests/test_digestion.py::test_predator_unbound_after_digest_next_turn 
+tests/test_digestion.py::test_player_digestion_strike_cadence 
+[gw0] [ 24%] PASSED tests/test_force_attack.py::test_empty_air_consumes_turn 
+tests/test_force_attack.py::test_does_not_swap_good 
+[gw0] [ 24%] PASSED tests/test_force_attack.py::test_does_not_swap_good 
+tests/test_force_attack.py::test_does_not_open_door 
+[gw0] [ 24%] PASSED tests/test_force_attack.py::test_does_not_open_door 
+tests/test_force_attack.py::test_stunned_empty_air 
+[gw1] [ 24%] PASSED tests/test_digestion.py::test_player_digestion_strike_cadence 
+tests/test_digestion.py::test_player_digestion_reduces_hp_before_strikes 
+[gw1] [ 24%] PASSED tests/test_digestion.py::test_player_digestion_reduces_hp_before_strikes 
+tests/test_digestion.py::test_player_third_strike_opens_modal 
+[gw1] [ 24%] PASSED tests/test_digestion.py::test_player_third_strike_opens_modal 
+tests/test_digestion.py::test_game_over_screen_shows_digested_by 
+[gw1] [ 24%] PASSED tests/test_digestion.py::test_game_over_screen_shows_digested_by 
+tests/test_digestion.py::test_game_over_enter_dismisses_recap 
+[gw3] [ 24%] PASSED tests/test_enhancements_2.py::test_good_chases_evil_not_player 
+tests/test_enhancements_2.py::test_good_does_not_step_on_player_tile 
+[gw1] [ 24%] PASSED tests/test_digestion.py::test_game_over_enter_dismisses_recap 
+tests/test_digestion.py::test_engulfed_player_immune_to_combat_damage 
+[gw0] [ 24%] PASSED tests/test_force_attack.py::test_stunned_empty_air 
+tests/test_force_attack.py::test_engulfed_routes_to_struggle 
+[gw0] [ 24%] PASSED tests/test_force_attack.py::test_engulfed_routes_to_struggle 
+tests/test_game_over_ending.py::test_format_digested_ending 
+[gw0] [ 24%] PASSED tests/test_game_over_ending.py::test_format_digested_ending 
+tests/test_game_over_ending.py::test_format_macguffin_ending_with_the_prefix 
+[gw0] [ 24%] PASSED tests/test_game_over_ending.py::test_format_macguffin_ending_with_the_prefix 
+tests/test_game_over_ending.py::test_format_macguffin_ending_without_the_prefix 
+[gw0] [ 24%] PASSED tests/test_game_over_ending.py::test_format_macguffin_ending_without_the_prefix 
+tests/test_game_over_ending.py::test_format_boss_ending 
+[gw0] [ 25%] PASSED tests/test_game_over_ending.py::test_format_boss_ending 
+tests/test_game_over_ending.py::test_format_unknown_kind_falls_back_to_detail 
+[gw0] [ 25%] PASSED tests/test_game_over_ending.py::test_format_unknown_kind_falls_back_to_detail 
+tests/test_global_tuning.py::test_parse_stock_like_fixture 
+[gw0] [ 25%] PASSED tests/test_global_tuning.py::test_parse_stock_like_fixture 
+tests/test_global_tuning.py::test_reject_bad_schema 
+[gw0] [ 25%] PASSED tests/test_global_tuning.py::test_reject_bad_schema 
+tests/test_global_tuning.py::test_reject_min_damage_gt_max 
+[gw0] [ 25%] PASSED tests/test_global_tuning.py::test_reject_min_damage_gt_max 
+tests/test_global_tuning.py::test_reject_unknown_top_level 
+[gw0] [ 25%] PASSED tests/test_global_tuning.py::test_reject_unknown_top_level 
+tests/test_global_tuning.py::test_reject_hp_threshold_out_of_range 
+[gw0] [ 25%] PASSED tests/test_global_tuning.py::test_reject_hp_threshold_out_of_range 
+tests/test_global_tuning.py::test_default_stock_file_loads 
+[gw0] [ 25%] PASSED tests/test_global_tuning.py::test_default_stock_file_loads 
+tests/test_global_tuning.py::test_constants_aliases_match_default 
+[gw0] [ 25%] PASSED tests/test_global_tuning.py::test_constants_aliases_match_default 
+tests/test_global_tuning.py::test_mod_whole_file_replace 
+[gw0] [ 25%] PASSED tests/test_global_tuning.py::test_mod_whole_file_replace 
+tests/test_good_follower_descent_buff.py::test_apply_buff_melee_only_ranged_fallback 
+[gw0] [ 25%] PASSED tests/test_good_follower_descent_buff.py::test_apply_buff_melee_only_ranged_fallback 
+tests/test_good_follower_descent_buff.py::test_apply_buff_explicit_ranged_independent 
+[gw0] [ 25%] PASSED tests/test_good_follower_descent_buff.py::test_apply_buff_explicit_ranged_independent 
+tests/test_good_follower_descent_buff.py::test_buff_stacks_on_repeated_apply 
+[gw0] [ 25%] PASSED tests/test_good_follower_descent_buff.py::test_buff_stacks_on_repeated_apply 
+tests/test_good_follower_descent_buff.py::test_hp_buff_does_not_exceed_new_max 
+[gw0] [ 25%] PASSED tests/test_good_follower_descent_buff.py::test_hp_buff_does_not_exceed_new_max 
+tests/test_good_follower_descent_buff.py::test_apply_buffs_to_follower_entities 
+[gw0] [ 25%] PASSED tests/test_good_follower_descent_buff.py::test_apply_buffs_to_follower_entities 
+tests/test_good_neutral_corridor_swap.py::test_can_step_for_chase_rejects_good_into_good_for_follow 
+[gw3] [ 25%] PASSED tests/test_enhancements_2.py::test_good_does_not_step_on_player_tile 
+tests/test_enhancements_2.py::test_neutral_flees_from_visible_evil 
+[gw0] [ 25%] PASSED tests/test_good_neutral_corridor_swap.py::test_can_step_for_chase_rejects_good_into_good_for_follow 
+tests/test_good_neutral_corridor_swap.py::test_can_step_for_chase_allows_good_into_neutral 
+[gw1] [ 25%] PASSED tests/test_digestion.py::test_engulfed_player_immune_to_combat_damage 
+tests/test_digestion.py::test_player_strike_increments_log_digestion_message 
+[gw0] [ 26%] PASSED tests/test_good_neutral_corridor_swap.py::test_can_step_for_chase_allows_good_into_neutral 
+tests/test_good_neutral_corridor_swap.py::test_good_follow_direction_does_not_step_into_blocking_good 
+[gw1] [ 26%] PASSED tests/test_digestion.py::test_player_strike_increments_log_digestion_message 
+tests/test_digestion.py::test_engulfed_player_no_regen_clears_stunned_on_strike_turn 
+[gw0] [ 26%] PASSED tests/test_good_neutral_corridor_swap.py::test_good_follow_direction_does_not_step_into_blocking_good 
+tests/test_good_neutral_corridor_swap.py::test_good_follow_direction_steps_into_blocking_neutral 
+[gw0] [ 26%] PASSED tests/test_good_neutral_corridor_swap.py::test_good_follow_direction_steps_into_blocking_neutral 
+tests/test_good_neutral_corridor_swap.py::test_knight_follows_player_past_rabbit_in_corridor 
+[gw1] [ 26%] PASSED tests/test_digestion.py::test_engulfed_player_no_regen_clears_stunned_on_strike_turn 
+tests/test_digestion.py::test_struggle_and_digestion_same_turn 
+[gw0] [ 26%] PASSED tests/test_good_neutral_corridor_swap.py::test_knight_follows_player_past_rabbit_in_corridor 
+tests/test_good_neutral_corridor_swap.py::test_two_knights_follow_player_without_swap_freeze 
+[gw0] [ 26%] PASSED tests/test_good_neutral_corridor_swap.py::test_two_knights_follow_player_without_swap_freeze 
+tests/test_good_npc_spawn_quota.py::test_good_spawn_count_to_place_cap_semantics 
+[gw0] [ 26%] PASSED tests/test_good_npc_spawn_quota.py::test_good_spawn_count_to_place_cap_semantics 
+tests/test_good_npc_spawn_quota.py::test_no_eligible_goods_spawns_zero_goods 
+[gw0] [ 26%] PASSED tests/test_good_npc_spawn_quota.py::test_no_eligible_goods_spawns_zero_goods 
+tests/test_good_npc_spawn_quota.py::test_quota_fills_with_zero_followers 
+[gw0] [ 26%] PASSED tests/test_good_npc_spawn_quota.py::test_quota_fills_with_zero_followers 
+tests/test_good_npc_spawn_quota.py::test_quota_with_one_follower 
+[gw0] [ 26%] PASSED tests/test_good_npc_spawn_quota.py::test_quota_with_one_follower 
+tests/test_good_npc_spawn_quota.py::test_quota_at_or_over_limit_spawns_no_new_goods 
+[gw0] [ 26%] PASSED tests/test_good_npc_spawn_quota.py::test_quota_at_or_over_limit_spawns_no_new_goods 
+tests/test_good_npc_spawn_quota.py::test_easier_limit_three 
+[gw0] [ 26%] PASSED tests/test_good_npc_spawn_quota.py::test_easier_limit_three 
+tests/test_good_npc_spawn_quota.py::test_density_pass_never_spawns_goods 
+[gw0] [ 26%] PASSED tests/test_good_npc_spawn_quota.py::test_density_pass_never_spawns_goods 
+tests/test_good_npc_spawn_quota.py::test_eligible_good_definitions_requires_tiles 
+[gw0] [ 26%] PASSED tests/test_good_npc_spawn_quota.py::test_eligible_good_definitions_requires_tiles 
+tests/test_good_npc_spawn_quota.py::test_stock_depth_scaling_good_spawn_limits 
+[gw0] [ 26%] PASSED tests/test_good_npc_spawn_quota.py::test_stock_depth_scaling_good_spawn_limits 
+tests/test_good_npc_spawn_quota.py::test_good_spawn_limit_omitted_defaults_to_two 
+[gw0] [ 26%] PASSED tests/test_good_npc_spawn_quota.py::test_good_spawn_limit_omitted_defaults_to_two 
+tests/test_good_npc_spawn_quota.py::test_filter_tiles_by_path_band 
+[gw0] [ 27%] PASSED tests/test_good_npc_spawn_quota.py::test_filter_tiles_by_path_band 
+tests/test_good_npc_spawn_quota.py::test_closed_doors_count_as_path_steps 
+[gw0] [ 27%] PASSED tests/test_good_npc_spawn_quota.py::test_closed_doors_count_as_path_steps 
+tests/test_good_npc_spawn_quota.py::test_no_band_tiles_spawns_zero_goods 
+[gw0] [ 27%] PASSED tests/test_good_npc_spawn_quota.py::test_no_band_tiles_spawns_zero_goods 
+tests/test_help_overlay.py::test_help_content_excludes_debug_keys 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_help_content_excludes_debug_keys 
+tests/test_help_overlay.py::test_help_content_includes_come_here 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_help_content_includes_come_here 
+tests/test_help_overlay.py::test_help_content_includes_meta_bindings 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_help_content_includes_meta_bindings 
+tests/test_help_overlay.py::test_help_content_uses_hyphen_key_format 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_help_content_uses_hyphen_key_format 
+tests/test_help_overlay.py::test_wait_is_under_movement_section 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_wait_is_under_movement_section 
+tests/test_help_overlay.py::test_is_help_open_key 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_is_help_open_key 
+tests/test_help_overlay.py::test_f1_opens_help_and_closes_log 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_f1_opens_help_and_closes_log 
+tests/test_help_overlay.py::test_escape_closes_help 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_escape_closes_help 
+tests/test_help_overlay.py::test_ctrl_p_from_help_opens_log 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_ctrl_p_from_help_opens_log 
+tests/test_help_overlay.py::test_engine_help_available_during_inventory_modal 
+[gw1] [ 27%] PASSED tests/test_digestion.py::test_struggle_and_digestion_same_turn 
+tests/test_inventory_items_pr4.py::test_quaff_consumes_turn 
+[gw1] [ 27%] PASSED tests/test_inventory_items_pr4.py::test_quaff_consumes_turn 
+tests/test_inventory_items_pr4.py::test_quaff_at_full_health_still_consumes_turn 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_engine_help_available_during_inventory_modal 
+tests/test_help_overlay.py::test_engine_render_help_hides_map 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_engine_render_help_hides_map 
+tests/test_help_overlay.py::test_render_help_overlay_draws_footer 
+[gw0] [ 27%] PASSED tests/test_help_overlay.py::test_render_help_overlay_draws_footer 
+tests/test_inventory_items_pr1.py::test_load_item_registry_parses_stock_files 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_load_item_registry_parses_stock_files 
+tests/test_inventory_items_pr1.py::test_load_item_registry_parses_fixture_files 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_load_item_registry_parses_fixture_files 
+tests/test_inventory_items_pr1.py::test_armor_requires_digestion_ac 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_armor_requires_digestion_ac 
+tests/test_inventory_items_pr1.py::test_spawn_items_respects_depth_and_potion_minimum 
+[gw1] [ 28%] PASSED tests/test_inventory_items_pr4.py::test_quaff_at_full_health_still_consumes_turn 
+tests/test_inventory_items_pr4.py::test_stunned_player_can_quaff_via_modal 
+[gw2] [ 28%] PASSED tests/test_dungeon_pr2.py::test_many_seeds_produce_valid_maps 
+tests/test_dungeon_pr2.py::test_water_features_are_shaped_when_present 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_spawn_items_respects_depth_and_potion_minimum 
+tests/test_inventory_items_pr1.py::test_spawn_items_caps_weighted_placements 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_spawn_items_caps_weighted_placements 
+tests/test_inventory_items_pr1.py::test_floor_weapon_carries_durability 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_floor_weapon_carries_durability 
+tests/test_inventory_items_pr1.py::test_pickup_assigns_earliest_letter 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_pickup_assigns_earliest_letter 
+tests/test_inventory_items_pr1.py::test_potion_stacking_reuses_slot 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_potion_stacking_reuses_slot 
+tests/test_inventory_items_pr1.py::test_first_empty_slot_tolerates_sparse_slot_map 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_first_empty_slot_tolerates_sparse_slot_map 
+tests/test_inventory_items_pr1.py::test_auto_pickup_all_until_full_single_message 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_auto_pickup_all_until_full_single_message 
+tests/test_inventory_items_pr1.py::test_manual_pickup_single_item_no_modal 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_manual_pickup_single_item_no_modal 
+tests/test_inventory_items_pr1.py::test_manual_pickup_multiple_opens_modal 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_manual_pickup_multiple_opens_modal 
+tests/test_inventory_items_pr1.py::test_engine_comma_manual_pickup 
+[gw1] [ 28%] PASSED tests/test_inventory_items_pr4.py::test_stunned_player_can_quaff_via_modal 
+tests/test_inventory_items_pr4.py::test_no_potions_message 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr1.py::test_engine_comma_manual_pickup 
+tests/test_inventory_items_pr2.py::test_plural_display_name_for_stacked_potions 
+[gw0] [ 28%] PASSED tests/test_inventory_items_pr2.py::test_plural_display_name_for_stacked_potions 
+tests/test_inventory_items_pr2.py::test_modal_list_rows_are_left_justified 
+[gw1] [ 29%] PASSED tests/test_inventory_items_pr4.py::test_no_potions_message 
+tests/test_inventory_items_pr4.py::test_quaff_modal_lists_potions_only 
+[gw0] [ 29%] PASSED tests/test_inventory_items_pr2.py::test_modal_list_rows_are_left_justified 
+tests/test_inventory_items_pr2.py::test_inspect_list_modal_layout_and_plural 
+[gw1] [ 29%] PASSED tests/test_inventory_items_pr4.py::test_quaff_modal_lists_potions_only 
+tests/test_inventory_items_pr4.py::test_quaff_stacked_potion_decrements_stack 
+[gw0] [ 29%] PASSED tests/test_inventory_items_pr2.py::test_inspect_list_modal_layout_and_plural 
+tests/test_inventory_items_pr2.py::test_item_detail_modal_compact_rows 
+[gw1] [ 29%] PASSED tests/test_inventory_items_pr4.py::test_quaff_stacked_potion_decrements_stack 
+tests/test_inventory_items_pr4.py::test_player_glyph_renders_over_floor_item_on_same_tile 
+[gw0] [ 29%] PASSED tests/test_inventory_items_pr2.py::test_item_detail_modal_compact_rows 
+tests/test_inventory_items_pr2.py::test_inspect_empty_inventory_message 
+[gw0] [ 29%] PASSED tests/test_inventory_items_pr2.py::test_inspect_empty_inventory_message 
+tests/test_inventory_items_pr2.py::test_inspect_list_and_detail_escape_flow 
+[gw2] [ 29%] PASSED tests/test_dungeon_pr2.py::test_water_features_are_shaped_when_present 
+tests/test_dungeon_pr2.py::test_water_testing_mode_increases_coverage 
+[gw3] [ 29%] PASSED tests/test_enhancements_2.py::test_neutral_flees_from_visible_evil 
+tests/test_enhancements_2.py::test_neutral_does_not_attack_player 
+[gw1] [ 29%] PASSED tests/test_inventory_items_pr4.py::test_player_glyph_renders_over_floor_item_on_same_tile 
+tests/test_inventory_items_pr5.py::test_no_wands_message 
+[gw1] [ 29%] PASSED tests/test_inventory_items_pr5.py::test_no_wands_message 
+tests/test_inventory_items_pr5.py::test_wands_with_zero_charges_excluded_from_list 
+[gw1] [ 29%] PASSED tests/test_inventory_items_pr5.py::test_wands_with_zero_charges_excluded_from_list 
+tests/test_inventory_items_pr5.py::test_default_evoke_target_is_nearest_evil 
+[gw3] [ 29%] PASSED tests/test_enhancements_2.py::test_neutral_does_not_attack_player 
+tests/test_enhancements_2.py::test_player_swap_with_good_npc 
+[gw3] [ 29%] PASSED tests/test_enhancements_2.py::test_player_swap_with_good_npc 
+tests/test_enhancements_2.py::test_player_swap_with_neutral_npc 
+[gw3] [ 29%] PASSED tests/test_enhancements_2.py::test_player_swap_with_neutral_npc 
+tests/test_enhancements_2.py::test_player_swap_uses_proper_name 
+[gw3] [ 29%] PASSED tests/test_enhancements_2.py::test_player_swap_uses_proper_name 
+tests/test_enhancements_2.py::test_player_still_attacks_evil_wolf 
+[gw3] [ 29%] PASSED tests/test_enhancements_2.py::test_player_still_attacks_evil_wolf 
+tests/test_enhancements_2.py::test_swap_skips_npc_turn_this_phase 
+[gw2] [ 29%] PASSED tests/test_dungeon_pr2.py::test_water_testing_mode_increases_coverage 
+tests/test_dungeon_pr2.py::test_stairs_are_land_traversable 
+[gw2] [ 30%] PASSED tests/test_dungeon_pr2.py::test_stairs_are_land_traversable 
+tests/test_dungeon_pr2.py::test_adequate_spawn_space_from_entrance 
+[gw2] [ 30%] PASSED tests/test_dungeon_pr2.py::test_adequate_spawn_space_from_entrance 
+tests/test_dungeon_pr2.py::test_land_count_matches_reachable 
+[gw2] [ 30%] PASSED tests/test_dungeon_pr2.py::test_land_count_matches_reachable 
+tests/test_dungeon_pr3.py::test_new_game_starts_at_depth_one 
+[gw2] [ 30%] PASSED tests/test_dungeon_pr3.py::test_new_game_starts_at_depth_one 
+tests/test_dungeon_pr3.py::test_new_game_resets_depth 
+[gw1] [ 30%] PASSED tests/test_inventory_items_pr5.py::test_default_evoke_target_is_nearest_evil 
+tests/test_inventory_items_pr5.py::test_evoke_target_step_has_no_modal_text 
+[gw1] [ 30%] PASSED tests/test_inventory_items_pr5.py::test_evoke_target_step_has_no_modal_text 
+tests/test_inventory_items_pr5.py::test_evoke_pick_opens_target_step 
+[gw2] [ 30%] PASSED tests/test_dungeon_pr3.py::test_new_game_resets_depth 
+tests/test_dungeon_pr3.py::test_unshifted_period_still_waits 
+[gw2] [ 30%] PASSED tests/test_dungeon_pr3.py::test_unshifted_period_still_waits 
+tests/test_dungeon_pr3.py::test_descend_not_on_stairs_no_turn 
+[gw1] [ 30%] PASSED tests/test_inventory_items_pr5.py::test_evoke_pick_opens_target_step 
+tests/test_inventory_items_pr5.py::test_evoke_decrements_charges_and_consumes_turn 
+[gw2] [ 30%] PASSED tests/test_dungeon_pr3.py::test_descend_not_on_stairs_no_turn 
+tests/test_dungeon_pr3.py::test_descend_engulfed_no_turn 
+[gw1] [ 30%] PASSED tests/test_inventory_items_pr5.py::test_evoke_decrements_charges_and_consumes_turn 
+tests/test_inventory_items_pr5.py::test_evoke_at_zero_charges_removes_wand_with_red_break_message 
+[gw2] [ 30%] PASSED tests/test_dungeon_pr3.py::test_descend_engulfed_no_turn 
+tests/test_dungeon_pr3.py::test_descend_with_zero_key_from_stairs 
+[gw1] [ 30%] PASSED tests/test_inventory_items_pr5.py::test_evoke_at_zero_charges_removes_wand_with_red_break_message 
+tests/test_inventory_items_pr5.py::test_evoke_escape_aborts_without_turn 
+[gw1] [ 30%] PASSED tests/test_inventory_items_pr5.py::test_evoke_escape_aborts_without_turn 
+tests/test_inventory_items_pr5.py::test_no_valid_targets_when_only_good_in_range 
+[gw1] [ 30%] PASSED tests/test_inventory_items_pr5.py::test_no_valid_targets_when_only_good_in_range 
+tests/test_inventory_items_pr5.py::test_not_the_best_target_rejects_good_npc 
+[gw2] [ 30%] PASSED tests/test_dungeon_pr3.py::test_descend_with_zero_key_from_stairs 
+tests/test_dungeon_pr3.py::test_descend_with_numpad_zero_from_stairs 
+[gw1] [ 30%] PASSED tests/test_inventory_items_pr5.py::test_not_the_best_target_rejects_good_npc 
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile 
+[gw2] [ 31%] PASSED tests/test_dungeon_pr3.py::test_descend_with_numpad_zero_from_stairs 
+tests/test_dungeon_pr3.py::test_descend_from_stairs_advances_depth_and_regenerates_map 
+[gw2] [ 31%] PASSED tests/test_dungeon_pr3.py::test_descend_from_stairs_advances_depth_and_regenerates_map 
+tests/test_dungeon_pr3.py::test_descend_preserves_player_hp_and_inventory 
+[gw0] [ 31%] PASSED tests/test_inventory_items_pr2.py::test_inspect_list_and_detail_escape_flow 

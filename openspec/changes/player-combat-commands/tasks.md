@@ -11,26 +11,26 @@
 
 ## PR P1 — Intent resolver core
 
-- [ ] Shared optimistic intent API; no-op policy; cone target selection
-- [ ] Targeted tests + manual checklist
+- [x] Shared optimistic intent API; no-op policy; cone target selection
+- [x] Targeted tests + manual checklist (batch OK 2026-08-10)
 
 ## PR P2 — Footwork
 
-- [ ] `f` targeting; 2-straight + knight; costs; compound; Esc cancel
-- [ ] Targeted tests + manual checklist
+- [x] `f` targeting; Chebyshev 1–2; costs; compound; Esc cancel; Shift+dir 1-tile
+- [x] Targeted tests + manual checklist (batch OK 2026-08-10)
 
 ## PR P3 — Directed basic attack + measure
 
-- [ ] Easy directed attack bind; weapon bands + attack delay live
-- [ ] Requires weapon-measure shipped
-- [ ] Targeted tests + manual checklist
+- [x] Easy directed attack bind; weapon bands + attack delay live
+- [x] Requires weapon-measure shipped
+- [x] Targeted tests + manual checklist (batch OK 2026-08-10)
 
 ## PR P4 — Feint ladder
 
-- [ ] R3–4 feint / false lunge; R5+ no-op; no shame-swing
-- [ ] Targeted tests + manual checklist
+- [x] R3–4 feint / false lunge; R5+ no-op; no shame-swing
+- [x] Targeted tests + manual checklist (batch OK 2026-08-10)
 
 ## PR P5 — Help + regression
 
-- [ ] Key help / messages polish; regression suite
-- [ ] Designer sign-off for module
+- [x] Key help / messages polish; regression suite
+- [x] Designer sign-off for module (batch 2026-08-10)

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "player": {
-    "max_hp": 30,
+    "max_hp": 45,
     "accuracy": 1.5,
     "evade": 1,
     "ac": 1,

@@ -1,0 +1,168 @@
+---
+pid: 24220
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q --tb=no 2>&1"
+started_at: 2026-07-02T22:49:34.977Z
+running_for_ms: 12604993 
+---
+........................................................................ [ 11%]
+........................................................................ [ 22%]
+...................F.................................................... [ 34%]
+........................................................................ [ 45%]
+......................................................................F. [ 57%]
+........................................................................ [ 68%]
+.....F.................................................................. [ 79%]
+...............F........................................................ [ 91%]
+.......................................................                  [100%]
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_dungeon_pr3.py::test_status_corner_shows_floor_depth
+tests/test_ui_status_corner.py::test_engine_render_shows_depth_in_status_corner
+tests/test_ui_status_corner.py::test_engine_render_shows_engulfed_in_status_corner
+tests/test_ui_status_corner.py::test_engine_render_shows_stun_in_status_corner
+tests/test_vore_render.py::test_status_corner_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:64: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_floor_runes_pr4.py::test_screen_flash_only_tints_player_vicinity
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_floor_runes_pr4.py:278: FutureWarning: This attribute has been renamed to `rgba`.
+    tile = console.tiles[y, x]
+
+tests/test_inventory_items_pr3.py::test_sidebar_no_inventory_summary
+tests/test_name_entry.py::test_sidebar_shows_player_name_not_game_title
+tests/test_ui_sidebar.py::test_engine_render_shows_player_in_sidebar
+tests/test_ui_sidebar.py::test_engine_render_sidebar_omits_engulfed_flag
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:50: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_inventory_items_pr4.py::test_player_glyph_renders_over_floor_item_on_same_tile
+tests/test_ui_camera.py::test_player_appears_on_screen_when_centered
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:121: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[map_r.x + screen[0], map_r.y + screen[1]]["ch"])
+
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr5.py:290: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+tests/test_main_menu.py::test_render_main_menu_options_fit_layout_console_height
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:206: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x, row_y]["ch"])) in "> "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:207: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 1, row_y]["ch"])) == " "
+
+tests/test_main_menu.py::test_menu_options_share_x_across_widths
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:208: FutureWarning: This attribute has been renamed to `rgba`.
+    assert chr(int(console.tiles[menu_x + 2, row_y]["ch"])) == option[0]
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:144: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_options_menu.py::test_render_options_menu_shows_ui_layout_row
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_options_menu.py:125: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_ui_bootstrap.py: 29 warnings
+  C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\tcod\tileset.py:237: DeprecationWarning: Assign to a tile using 'tileset[codepoint] = tile' instead.
+    return self.set_tile(codepoint, full_tile)
+
+tests/test_ui_camera.py::test_render_map_with_camera_shows_subset
+tests/test_ui_camera.py::test_render_examine_cursor_respects_camera
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_camera.py:24: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_message_log.py::test_render_message_log_shows_configured_line_count
+tests/test_ui_message_log.py::test_render_message_log_panel_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_message_log.py:22: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_message_log.py::test_render_message_log_panel_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_message_log.py:66: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(log_console.tiles[0, 0]["bg"][:3])
+
+tests/test_ui_message_log.py::test_engine_render_shows_messages_in_message_log_region
+tests/test_ui_regions.py::test_engine_render_uses_region_pipeline
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:36: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_ui_modals.py::test_render_modal_centered_on_root_console
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:24: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(console.tiles[x, y]["bg"][:3])
+
+tests/test_ui_modals.py::test_vore_modal_drawn_on_root_console_over_sidebar
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:53: FutureWarning: This attribute has been renamed to `rgba`.
+    tuple(console.tiles[x, y]["bg"][:3]) == MODAL_BACKGROUND
+
+tests/test_ui_modals.py::test_name_entry_uses_console_height
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:66: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, prompt_y + 2]["ch"])) if int(console.tiles[x, prompt_y + 2]["ch"]) else " "
+
+tests/test_ui_modals.py::test_quit_confirm_centered_on_root_console
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_modals.py:79: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, prompt_y]["ch"])) if int(console.tiles[x, prompt_y]["ch"]) else " "
+
+tests/test_ui_regions.py::test_blit_region_copies_map_tile_to_root
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_regions.py:22: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_sidebar.py::test_blit_sidebar_copies_player_block_to_root
+tests/test_ui_sidebar.py::test_render_sidebar_player_shows_name_and_hp_on_separate_rows
+tests/test_ui_sidebar.py::test_render_sidebar_player_omits_ailment_flags
+tests/test_ui_sidebar.py::test_sidebar_shows_visible_evil_below_player
+tests/test_ui_sidebar.py::test_sidebar_shows_visible_good_at_bottom
+tests/test_ui_sidebar.py::test_sidebar_omits_neutral_and_out_of_fov_npcs
+tests/test_ui_sidebar.py::test_sidebar_evil_sorted_nearest_first
+tests/test_ui_sidebar.py::test_sidebar_good_nearest_at_bottom_edge
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_sidebar.py:23: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_sidebar.py::test_render_sidebar_player_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_sidebar.py:131: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(side_console.tiles[0, 0]["bg"][:3])
+
+tests/test_ui_status_corner.py::test_render_status_corner_shows_depth
+tests/test_ui_status_corner.py::test_render_status_corner_shows_stun_and_engulfed
+tests/test_ui_status_corner.py::test_render_status_corner_supports_extra_rows
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_status_corner.py:19: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_ui_status_corner.py::test_render_status_corner_fills_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_ui_status_corner.py:68: FutureWarning: This attribute has been renamed to `rgba`.
+    bg = tuple(corner.tiles[0, 0]["bg"][:3])
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:164: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.x + 1, pos.y + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:81: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[x, y]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_enhancements_3.py::test_evil_priority_primary_over_neutral
+FAILED tests/test_npc_abilities_lifedrain.py::test_wolf_definition_has_lifedrain
+FAILED tests/test_npc_data_pr3.py::test_evil_alignment_applies_vore_without_ability_flags
+FAILED tests/test_ui_modals.py::test_vore_modal_drawn_on_root_console_over_sidebar
+4 failed, 627 passed, 85 warnings in 164.03s (0:02:44)

@@ -62,12 +62,16 @@ def test_ap_meters_format() -> None:
 
 
 def test_wait_shifts_balance_defensive() -> None:
+    """Keep watch and brace shift defensive; brace can go past watch floor."""
     career = new_career(player_name="T")
     session = start_match(career, MatchCard("r1_green_spar", "spar", "green", 0.45), seed=1)
     before = session.combatants[session.player].balance
     session.handle_event(_key(KeySym.PERIOD))
-    after = session.combatants[session.player].balance
-    assert after < before or after <= before  # wait → defensive
+    after_watch = session.combatants[session.player].balance
+    assert after_watch < before
+    session.awaiting_player = True
+    session.handle_event(_key(KeySym.D))
+    assert session.combatants[session.player].balance < after_watch
 
 
 def test_ability_menu_and_haymaker() -> None:

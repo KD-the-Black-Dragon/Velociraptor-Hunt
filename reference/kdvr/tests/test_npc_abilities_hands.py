@@ -182,13 +182,18 @@ def test_hands_breaks_door_on_rng(
 def test_hands_memory_pursuit_bumps_closed_door(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    from tests.map_test_helpers import isolate_other_ais
+
     monkeypatch.setattr("src.systems.movement.HANDS_DOOR_BREAK_CHANCE", 0.0)
     engine = GameEngine()
+    # Horizontal corridor only — suite pollution / stray floor tiles can make
+    # pathing prefer a diagonal and flake on direction == (1, 0).
     carve_floor_tile(engine, 5, 5)
     carve_floor_tile(engine, 6, 5)
     carve_floor_tile(engine, 7, 5)
     carve_floor_tile(engine, 8, 5)
     wolf = spawn_wolf_with_abilities(engine.world, 5, 5, ["Hands", "Range6"])
+    isolate_other_ais(engine, keep=(wolf,))
     engine.game_map.tiles[5, 6] = Tile.DOOR_CLOSED
     player_pos = Position(8, 5)
     engine.player.components[Position] = player_pos

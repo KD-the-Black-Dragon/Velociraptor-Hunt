@@ -1,0 +1,42 @@
+---
+pid: 27628
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_spawn_density_pr2.py tests/test_dungeon_spawn_config.py tests/test_npc_data_pr2.py tests/test_npc_data_pr4.py tests/test_dungeon_pr2.py tests/test_dungeon_pr3.py tests/test_dungeon_pr4.py tests/test_acceptance.py tests/test_enhancements_3.py tests/test_vore_constants.py -q --tb=short 2>&1 | Select-Object -Last 40"
+started_at: 2026-07-02T00:22:22.370Z
+running_for_ms: 930000   
+---
+...............................FF.................F..................... [ 51%]
+....................................................................     [100%]
+================================== FAILURES ===================================
+___________________ test_depth_gates_change_spawned_species ___________________
+tests\test_npc_data_pr4.py:120: in test_depth_gates_change_spawned_species
+    assert names == ["deep only", "wolf"]
+E   AssertionError: assert ['deep only',...only', 'wolf'] == ['deep only', 'wolf']
+E     
+E     At index 1 diff: 'deep only' != 'wolf'
+E     Left contains one more item: 'wolf'
+E     Use -v to get more diff
+______________ test_descend_with_follower_preserves_spawn_budget ______________
+tests\test_npc_data_pr4.py:128: in test_descend_with_follower_preserves_spawn_budget
+    count_without_follower = len(list(baseline.world.Q.all_of(components=[AI])))
+                                                                          ^^
+E   NameError: name 'AI' is not defined
+__________________ test_followers_reduce_fresh_knight_spawns __________________
+tests\test_dungeon_pr3.py:221: in test_followers_reduce_fresh_knight_spawns
+    assert count_with_follower == count_without_follower
+E   assert 15 == 17
+============================== warnings summary ===============================
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:250: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:249: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_npc_data_pr4.py::test_depth_gates_change_spawned_species - ...
+FAILED tests/test_npc_data_pr4.py::test_descend_with_follower_preserves_spawn_budget
+FAILED tests/test_dungeon_pr3.py::test_followers_reduce_fresh_knight_spawns
+3 failed, 137 passed, 2 warnings in 65.98s (0:01:05)

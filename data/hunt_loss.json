@@ -1,0 +1,23 @@
+{
+  "belly_turns": 6,
+  "belly_step_chance": 0.5,
+  "swallow_front": [
+    "The raptor comes in under the gun.",
+    "Jaws close. The jungle tilts.",
+    "You are swallowed whole."
+  ],
+  "swallow_side": [
+    "A blur at your flank.",
+    "The raptor hits you side-on and you fold into its mouth.",
+    "You are swallowed whole."
+  ],
+  "swallow_behind": [
+    "Clever girl.",
+    "It was behind you. The bite takes your shoulders.",
+    "You are swallowed whole."
+  ],
+  "digest": [
+    "Heat. The walls of flesh tighten.",
+    "The hunt is over. You are being digested."
+  ]
+}

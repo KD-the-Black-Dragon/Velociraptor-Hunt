@@ -98,6 +98,14 @@ class DifficultyProfile:
     rune_pieces_multiplier: int = 1
     prefix_spawn: PrefixSpawnConfig = attrs.field(factory=PrefixSpawnConfig)
     spawn_ai_freeze: SpawnAiFreezeConfig = attrs.field(factory=SpawnAiFreezeConfig)
+    # Cap on good allies per floor (followers count first; then weighted new spawns).
+    good_spawn_limit: int = 2
+    # Alternate CV: inclusive daze duration range after CV escape / NPC CV digest.
+    cv_daze_min_turns: int = 5
+    cv_daze_max_turns: int = 5
+    # Max Path/Smite magazine size for RangeN/SmiteN NPCs (by alignment).
+    good_ranged_shots: int = 2
+    evil_ranged_shots: int = 2
 
 
 @attrs.define(frozen=True)

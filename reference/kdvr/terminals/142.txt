@@ -1,0 +1,94 @@
+---
+pid: 20952
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_message_log_categories.py tests/test_rest_until_healed.py tests/test_message_log_wrap.py tests/test_inventory_items_pr3.py tests/test_inventory_items_pr5.py -q 2>&1"
+started_at: 2026-07-04T15:06:16.774Z
+running_for_ms: 39040004 
+---
+..F....................FF.............................                   [100%]
+================================== FAILURES ===================================
+_________________ test_rest_messages_use_expected_categories __________________
+
+    def test_rest_messages_use_expected_categories() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 10
+    
+        def consume() -> None:
+            from src.events import fire_player_combat_targeted
+    
+            fire_player_combat_targeted()
+    
+        try_rest_until_healed_or_danger(
+            player=player,
+            game_map=engine.game_map,
+            world=engine.world,
+            message_log=engine.message_log,
+            consume_turn=consume,
+            max_turns=1,
+        )
+    
+        by_text = {entry.text: entry.category for entry in engine.message_log.entries()}
+>       assert by_text[messages.rest_start()] is MessageCategory.ROUTINE
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'You start resting.'
+
+tests\test_message_log_categories.py:53: KeyError
+_________________ test_render_message_log_shows_wrapped_tail __________________
+
+    def test_render_message_log_shows_wrapped_tail() -> None:
+        width_limit = 20
+        console = make_console(24, 4)
+        long_text = (
+            "You examine the ancient rune-covered door and wonder what lies beyond "
+            "the threshold."
+        )
+        render_message_log(
+            console,
+>           [LogEntry(long_text)],
+             ^^^^^^^^^^^^^^^^^^^
+            line_limit=width_limit,
+            max_lines=4,
+        )
+E       TypeError: LogEntry.__init__() missing 1 required positional argument: 'fg'
+
+tests\test_message_log_wrap.py:59: TypeError
+____________ test_render_message_log_prefers_recent_wrapped_lines _____________
+
+    def test_render_message_log_prefers_recent_wrapped_lines() -> None:
+        console = make_console(24, 3)
+        render_message_log(
+            console,
+            [
+>               LogEntry("first short"),
+                ^^^^^^^^^^^^^^^^^^^^^^^
+                LogEntry(
+                    "second message wraps across many words in the log panel area here"
+                ),
+            ],
+            line_limit=12,
+            max_lines=3,
+        )
+E       TypeError: LogEntry.__init__() missing 1 required positional argument: 'fg'
+
+tests\test_message_log_wrap.py:79: TypeError
+============================== warnings summary ===============================
+tests/test_message_log_categories.py::test_stunned_message_renders_danger_color
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_message_log_categories.py:67: FutureWarning: This attribute has been renamed to `rgba`.
+    int(console.tiles[rect.x + 1, rect.y]["fg"][index]) for index in range(3)
+
+tests/test_inventory_items_pr3.py::test_sidebar_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:50: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr5.py:304: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_message_log_categories.py::test_rest_messages_use_expected_categories
+FAILED tests/test_message_log_wrap.py::test_render_message_log_shows_wrapped_tail
+FAILED tests/test_message_log_wrap.py::test_render_message_log_prefers_recent_wrapped_lines
+3 failed, 51 passed, 3 warnings in 113.05s (0:01:53)

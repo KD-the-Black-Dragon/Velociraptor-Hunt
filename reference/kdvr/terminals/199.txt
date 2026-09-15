@@ -1,0 +1,118 @@
+---
+pid: 3456
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_ui_sidebar.py tests/test_sidebar_npc_layout.py tests/test_ui_layout.py tests/test_ui_preset_apply.py -v --tb=short -n 6 2>&1"
+started_at: 2026-07-10T22:49:45.073Z
+running_for_ms: 5225001  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+created: 6/6 workers
+6 workers [42 items]
+
+scheduling tests via LoadScheduling
+
+tests/test_ui_sidebar.py::test_sidebar_omits_neutral_and_out_of_fov_npcs 
+tests/test_ui_sidebar.py::test_sidebar_blitted_after_map_and_log 
+tests/test_ui_sidebar.py::test_render_sidebar_player_shows_name_and_hp_on_separate_rows 
+tests/test_ui_sidebar.py::test_render_sidebar_player_fills_background 
+tests/test_ui_sidebar.py::test_sidebar_shows_visible_evil_below_player 
+tests/test_ui_sidebar.py::test_engine_render_sidebar_omits_engulfed_flag 
+[gw0] [  2%] PASSED tests/test_ui_sidebar.py::test_sidebar_blitted_after_map_and_log 
+tests/test_ui_sidebar.py::test_blit_sidebar_copies_player_block_to_root 
+[gw1] [  4%] PASSED tests/test_ui_sidebar.py::test_render_sidebar_player_shows_name_and_hp_on_separate_rows 
+[gw2] [  7%] PASSED tests/test_ui_sidebar.py::test_render_sidebar_player_fills_background 
+tests/test_ui_sidebar.py::test_render_sidebar_player_omits_ailment_flags 
+tests/test_ui_sidebar.py::test_engine_render_shows_player_in_sidebar 
+[gw0] [  9%] PASSED tests/test_ui_sidebar.py::test_blit_sidebar_copies_player_block_to_root 
+tests/test_ui_sidebar.py::test_sidebar_evil_overflow_summary_when_height_is_tight 
+[gw1] [ 11%] PASSED tests/test_ui_sidebar.py::test_render_sidebar_player_omits_ailment_flags 
+tests/test_ui_sidebar.py::test_sidebar_good_overflow_summary 
+[gw5] [ 14%] PASSED tests/test_ui_sidebar.py::test_sidebar_omits_neutral_and_out_of_fov_npcs 
+tests/test_ui_sidebar.py::test_sidebar_evil_sorted_nearest_first 
+[gw3] [ 16%] PASSED tests/test_ui_sidebar.py::test_engine_render_sidebar_omits_engulfed_flag 
+tests/test_ui_sidebar.py::test_npc_condition_bar_covers_all_fill_counts 
+[gw3] [ 19%] PASSED tests/test_ui_sidebar.py::test_npc_condition_bar_covers_all_fill_counts 
+tests/test_sidebar_npc_layout.py::test_plan_band_two_columns_parallel_row_uses_both_columns 
+[gw3] [ 21%] PASSED tests/test_sidebar_npc_layout.py::test_plan_band_two_columns_parallel_row_uses_both_columns 
+tests/test_sidebar_npc_layout.py::test_plan_band_keeps_overflow_row_when_height_is_tight 
+[gw3] [ 23%] PASSED tests/test_sidebar_npc_layout.py::test_plan_band_keeps_overflow_row_when_height_is_tight 
+tests/test_sidebar_npc_layout.py::test_resolve_npc_bands_overflow_survives_short_sidebar 
+[gw3] [ 26%] PASSED tests/test_sidebar_npc_layout.py::test_resolve_npc_bands_overflow_survives_short_sidebar 
+tests/test_ui_layout.py::test_load_default_ui_layout_json 
+[gw3] [ 28%] PASSED tests/test_ui_layout.py::test_load_default_ui_layout_json 
+tests/test_ui_layout.py::test_load_wide_sidebar_preset 
+[gw3] [ 30%] PASSED tests/test_ui_layout.py::test_load_wide_sidebar_preset 
+tests/test_ui_layout.py::test_list_ui_preset_ids_includes_standard_and_wide 
+[gw3] [ 33%] PASSED tests/test_ui_layout.py::test_list_ui_preset_ids_includes_standard_and_wide 
+tests/test_ui_layout.py::test_unknown_preset_raises 
+[gw3] [ 35%] PASSED tests/test_ui_layout.py::test_unknown_preset_raises 
+tests/test_ui_layout.py::test_map_viewport_must_match_tile_dims 
+[gw3] [ 38%] PASSED tests/test_ui_layout.py::test_map_viewport_must_match_tile_dims 
+tests/test_ui_layout.py::test_message_log_height_must_fit_lines 
+[gw3] [ 40%] PASSED tests/test_ui_layout.py::test_message_log_height_must_fit_lines 
+tests/test_ui_layout.py::test_region_tiling_rejects_gap 
+[gw3] [ 42%] PASSED tests/test_ui_layout.py::test_region_tiling_rejects_gap 
+tests/test_ui_layout.py::test_region_tiling_rejects_overlap 
+[gw3] [ 45%] PASSED tests/test_ui_layout.py::test_region_tiling_rejects_overlap 
+tests/test_ui_layout.py::test_sidebar_too_narrow_for_hp_bar 
+[gw3] [ 47%] PASSED tests/test_ui_layout.py::test_sidebar_too_narrow_for_hp_bar 
+tests/test_ui_layout.py::test_camera_origin_centers_player 
+[gw3] [ 50%] PASSED tests/test_ui_layout.py::test_camera_origin_centers_player 
+tests/test_ui_layout.py::test_camera_origin_clamps_at_map_edges 
+[gw3] [ 52%] PASSED tests/test_ui_layout.py::test_camera_origin_clamps_at_map_edges 
+tests/test_ui_layout.py::test_camera_origin_when_map_smaller_than_viewport 
+[gw3] [ 54%] PASSED tests/test_ui_layout.py::test_camera_origin_when_map_smaller_than_viewport 
+tests/test_ui_layout.py::test_missing_required_region_raises 
+[gw3] [ 57%] PASSED tests/test_ui_layout.py::test_missing_required_region_raises 
+tests/test_ui_layout.py::test_unknown_top_level_field_raises 
+[gw3] [ 59%] PASSED tests/test_ui_layout.py::test_unknown_top_level_field_raises 
+tests/test_ui_layout.py::test_load_from_custom_path 
+[gw3] [ 61%] PASSED tests/test_ui_layout.py::test_load_from_custom_path 
+tests/test_ui_preset_apply.py::test_new_game_uses_wide_sidebar_preset_from_settings 
+[gw3] [ 64%] PASSED tests/test_ui_preset_apply.py::test_new_game_uses_wide_sidebar_preset_from_settings 
+tests/test_ui_preset_apply.py::test_new_game_uses_standard_preset_from_settings 
+[gw3] [ 66%] PASSED tests/test_ui_preset_apply.py::test_new_game_uses_standard_preset_from_settings 
+tests/test_ui_preset_apply.py::test_options_preset_switch_updates_baseline_before_new_game 
+[gw3] [ 69%] PASSED tests/test_ui_preset_apply.py::test_options_preset_switch_updates_baseline_before_new_game 
+tests/test_ui_preset_apply.py::test_options_toggle_to_wide_via_app_handle_event 
+[gw4] [ 71%] PASSED tests/test_ui_sidebar.py::test_sidebar_shows_visible_evil_below_player 
+tests/test_ui_sidebar.py::test_sidebar_shows_visible_good_at_bottom 
+[gw1] [ 73%] FAILED tests/test_ui_sidebar.py::test_sidebar_good_overflow_summary 
+tests/test_sidebar_npc_layout.py::test_plan_band_second_column_when_more_than_five 
+[gw1] [ 76%] PASSED tests/test_sidebar_npc_layout.py::test_plan_band_second_column_when_more_than_five 
+[gw2] [ 78%] PASSED tests/test_ui_sidebar.py::test_engine_render_shows_player_in_sidebar 
+tests/test_ui_sidebar.py::test_sidebar_good_nearest_at_bottom_edge 
+[gw0] [ 80%] FAILED tests/test_ui_sidebar.py::test_sidebar_evil_overflow_summary_when_height_is_tight 
+tests/test_sidebar_npc_layout.py::test_plan_band_single_column_when_five_or_fewer 
+[gw0] [ 83%] PASSED tests/test_sidebar_npc_layout.py::test_plan_band_single_column_when_five_or_fewer 
+[gw4] [ 85%] PASSED tests/test_ui_sidebar.py::test_sidebar_shows_visible_good_at_bottom 
+tests/test_ui_preset_apply.py::test_standard_and_wide_presets_differ_at_default_console_size 
+[gw4] [ 88%] PASSED tests/test_ui_preset_apply.py::test_standard_and_wide_presets_differ_at_default_console_size 
+[gw5] [ 90%] PASSED tests/test_ui_sidebar.py::test_sidebar_evil_sorted_nearest_first 
+tests/test_sidebar_npc_layout.py::test_plan_band_overflow_when_more_than_two_columns_can_show 
+[gw5] [ 92%] PASSED tests/test_sidebar_npc_layout.py::test_plan_band_overflow_when_more_than_two_columns_can_show 
+[gw2] [ 95%] PASSED tests/test_ui_sidebar.py::test_sidebar_good_nearest_at_bottom_edge 
+[gw3] [ 97%] PASSED tests/test_ui_preset_apply.py::test_options_toggle_to_wide_via_app_handle_event 
+tests/test_ui_preset_apply.py::test_resize_app_console_refreshes_baseline_from_settings 
+[gw3] [100%] PASSED tests/test_ui_preset_apply.py::test_resize_app_console_refreshes_baseline_from_settings 
+
+================================== FAILURES ===================================
+_____________________ test_sidebar_good_overflow_summary ______________________
+[gw1] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+tests\test_ui_sidebar.py:380: in test_sidebar_good_overflow_summary
+    assert shown == 2
+E   assert 1 == 2
+___________ test_sidebar_evil_overflow_summary_when_height_is_tight ___________
+[gw0] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+tests\test_ui_sidebar.py:352: in test_sidebar_evil_overflow_summary_when_height_is_tight
+    assert shown == 4
+E   assert 2 == 4
+=========================== short test summary info ===========================
+FAILED tests/test_ui_sidebar.py::test_sidebar_good_overflow_summary - assert ...
+FAILED tests/test_ui_sidebar.py::test_sidebar_evil_overflow_summary_when_height_is_tight
+======================== 2 failed, 40 passed in 6.90s =========================

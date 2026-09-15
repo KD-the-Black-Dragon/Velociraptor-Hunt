@@ -1,0 +1,37 @@
+---
+pid: 772
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -v -n 4 2>&1 | Tee-Object -FilePath agent-tools/arena-full-suite-step1.txt | Select-Object -Last 30"
+started_at: 2026-07-15T19:00:54.910Z
+running_for_ms: 1814987  
+---
+  C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\tcod\tileset.py:237: DeprecationWarning: Assign to a tile using 'tileset[codepoint] = tile' instead.
+    return self.set_tile(codepoint, full_tile)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_ally_introduction.py::test_wolf_visible_to_player_blocks_introduction
+FAILED tests/test_ally_introduction.py::test_wolf_visible_to_knight_blocks_introduction
+FAILED tests/test_ally_introduction.py::test_player_engulfed_blocks_introduction
+FAILED tests/test_enhancements_2.py::test_wolf_hit_player_uses_species_name
+FAILED tests/test_digestion.py::test_engulfed_player_immune_to_combat_damage
+FAILED tests/test_npc_abilities_range_path.py::test_wolf_shoots_player_at_max_range[2]
+FAILED tests/test_npc_abilities_range_path.py::test_wolf_shoots_player_at_max_range[3]
+FAILED tests/test_enhancements_3.py::test_engulfed_good_npc_invisible_to_evil_ai
+FAILED tests/test_enhancements_3.py::test_engulfed_neutral_invisible_to_evil_ai
+FAILED tests/test_npc_data_pr4.py::test_descend_with_follower_keeps_good_ally_on_new_floor
+FAILED tests/test_npc_mobility_stationary.py::test_stationary_attacks_adjacent_player
+FAILED tests/test_player_effects_pr1.py::test_haste_skips_monster_phase - ass...
+FAILED tests/test_potion_summon_pr5.py::test_good_pool_includes_knight_at_depth_1
+FAILED tests/test_potion_summon_pr5.py::test_quaff_alliance_spawns_good_ally
+FAILED tests/test_potion_summon_pr5.py::test_try_summon_places_adjacent_when_free
+FAILED tests/test_save_coordinator.py::test_engine_post_turn_hook_invokes_coordinator
+FAILED tests/test_dungeon_pr3.py::test_followers_reduce_fresh_knight_spawns
+FAILED tests/test_dungeon_pr4.py::test_sharks_spawn_on_water_tiles_when_drawn
+FAILED tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius
+FAILED tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs
+FAILED tests/test_throwables_pr5.py::test_throwable_pickup_stacks_in_inventory
+FAILED tests/test_vore_constants.py::test_spawn_tags_wolf_vore_capable - asse...
+FAILED tests/test_vore_turn_order.py::test_open_attempt_stores_monster_index_for_resume
+FAILED tests/test_sim_threat.py::test_trajectory_run_latches_bail_on_pinned_easy_seed
+==== 24 failed, 1632 passed, 2 skipped, 30 warnings in 1099.80s (0:18:19) =====

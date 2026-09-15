@@ -1,0 +1,236 @@
+---
+pid: 10052
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "python -m pytest tests/test_inventory_items_pr1.py::test_engine_comma_manual_pickup tests/test_options_menu.py::test_engine_receives_saved_ui_preset tests/test_ui_bootstrap.py::test_load_active_layout_uses_settings_preset tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index tests/test_memory_pursuit_door_detour.py::test_memory_trail_timeout_gives_up_without_los tests/test_save_coordinator.py::test_engine_post_turn_hook_invokes_coordinator tests/test_vore_struggle.py::test_vore_mercy_cleared_after_world_turn tests/test_vore_turn_order.py::test_after_miss_complete_next_player_turn_starts_from_zero tests/test_ranged_path.py tests/test_player_throw_pr6.py tests/test_throwables_pr5.py tests/test_throwables_pr7.py tests/test_projectile_anim.py tests/test_npc_abilities_range_path.py tests/test_npc_abilities_smite.py tests/test_ability_parser.py -v -n 4"
+started_at: 2026-07-11T14:43:41.287Z
+running_for_ms: 30790005 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+created: 4/4 workers
+4 workers [87 items]
+
+scheduling tests via LoadScheduling
+
+tests/test_ranged_path.py::test_perform_npc_path_attack_returns_false_when_blocked 
+tests/test_inventory_items_pr1.py::test_engine_comma_manual_pickup 
+tests/test_save_coordinator.py::test_engine_post_turn_hook_invokes_coordinator 
+tests/test_ranged_path.py::test_player_shot_blocked_by_good_on_path 
+[gw1] [  1%] PASSED tests/test_save_coordinator.py::test_engine_post_turn_hook_invokes_coordinator 
+tests/test_vore_struggle.py::test_vore_mercy_cleared_after_world_turn 
+[gw3] [  2%] PASSED tests/test_ranged_path.py::test_perform_npc_path_attack_returns_false_when_blocked 
+tests/test_ranged_path.py::test_good_archer_path_shot_hits_evil 
+[gw2] [  3%] PASSED tests/test_ranged_path.py::test_player_shot_blocked_by_good_on_path 
+tests/test_ranged_path.py::test_player_beam_hits_first_evil_not_intended 
+[gw2] [  4%] PASSED tests/test_ranged_path.py::test_player_beam_hits_first_evil_not_intended 
+tests/test_ranged_path.py::test_wall_on_path_returns_no_line 
+[gw0] [  5%] PASSED tests/test_inventory_items_pr1.py::test_engine_comma_manual_pickup 
+tests/test_options_menu.py::test_engine_receives_saved_ui_preset 
+[gw2] [  6%] PASSED tests/test_ranged_path.py::test_wall_on_path_returns_no_line 
+tests/test_ranged_path.py::test_stunned_prey_does_not_block_beam 
+[gw3] [  8%] PASSED tests/test_ranged_path.py::test_good_archer_path_shot_hits_evil 
+tests/test_player_throw_pr6.py::test_pick_best_throwable_prefers_earlier_slot_on_tie 
+[gw3] [  9%] PASSED tests/test_player_throw_pr6.py::test_pick_best_throwable_prefers_earlier_slot_on_tie 
+tests/test_player_throw_pr6.py::test_begin_quick_throw_opens_target_cursor_with_rocks 
+[gw1] [ 10%] PASSED tests/test_vore_struggle.py::test_vore_mercy_cleared_after_world_turn 
+tests/test_vore_turn_order.py::test_after_miss_complete_next_player_turn_starts_from_zero 
+[gw0] [ 11%] PASSED tests/test_options_menu.py::test_engine_receives_saved_ui_preset 
+tests/test_ui_bootstrap.py::test_load_active_layout_uses_settings_preset 
+[gw0] [ 12%] PASSED tests/test_ui_bootstrap.py::test_load_active_layout_uses_settings_preset 
+tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index 
+[gw3] [ 13%] PASSED tests/test_player_throw_pr6.py::test_begin_quick_throw_opens_target_cursor_with_rocks 
+tests/test_player_throw_pr6.py::test_throw_at_empty_tile_shows_exact_message 
+[gw2] [ 14%] PASSED tests/test_ranged_path.py::test_stunned_prey_does_not_block_beam 
+tests/test_ranged_path.py::test_perform_npc_path_attack_uses_shoot_logs 
+[gw1] [ 16%] PASSED tests/test_vore_turn_order.py::test_after_miss_complete_next_player_turn_starts_from_zero 
+tests/test_ranged_path.py::test_evil_shot_blocked_by_evil_on_path 
+[gw3] [ 17%] PASSED tests/test_player_throw_pr6.py::test_throw_at_empty_tile_shows_exact_message 
+tests/test_player_throw_pr6.py::test_throw_blocked_by_good_ally_shows_exact_message 
+[gw2] [ 18%] PASSED tests/test_ranged_path.py::test_perform_npc_path_attack_uses_shoot_logs 
+tests/test_throwables_pr5.py::test_apply_starter_loadout_idempotent_preserves_rock_stack 
+[gw0] [ 19%] PASSED tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index 
+tests/test_memory_pursuit_door_detour.py::test_memory_trail_timeout_gives_up_without_los 
+[gw3] [ 20%] PASSED tests/test_player_throw_pr6.py::test_throw_blocked_by_good_ally_shows_exact_message 
+tests/test_player_throw_pr6.py::test_successful_throw_consumes_stack 
+[gw2] [ 21%] PASSED tests/test_throwables_pr5.py::test_apply_starter_loadout_idempotent_preserves_rock_stack 
+tests/test_throwables_pr5.py::test_throwable_pickup_stacks_in_inventory 
+[gw2] [ 22%] PASSED tests/test_throwables_pr5.py::test_throwable_pickup_stacks_in_inventory 
+tests/test_throwables_pr5.py::test_inventory_has_room_for_matching_throwable_stack 
+[gw2] [ 24%] PASSED tests/test_throwables_pr5.py::test_inventory_has_room_for_matching_throwable_stack 
+[gw1] [ 25%] PASSED tests/test_ranged_path.py::test_evil_shot_blocked_by_evil_on_path 
+tests/test_throwables_pr5.py::test_spawn_items_includes_throwables_on_depth_one 
+tests/test_ranged_path.py::test_evil_shot_hits_player_with_clear_path 
+[gw2] [ 26%] PASSED tests/test_throwables_pr5.py::test_spawn_items_includes_throwables_on_depth_one 
+tests/test_throwables_pr7.py::test_throwable_catalog_loads_nine_entries 
+[gw2] [ 27%] PASSED tests/test_throwables_pr7.py::test_throwable_catalog_loads_nine_entries 
+tests/test_throwables_pr7.py::test_rock_fg_is_light_brown 
+[gw2] [ 28%] PASSED tests/test_throwables_pr7.py::test_rock_fg_is_light_brown 
+tests/test_projectile_anim.py::test_smite_projectile_flashes_source_then_target 
+[gw1] [ 29%] PASSED tests/test_ranged_path.py::test_evil_shot_hits_player_with_clear_path 
+tests/test_throwables_pr7.py::test_fox_archer_has_range5 
+[gw1] [ 31%] PASSED tests/test_throwables_pr7.py::test_fox_archer_has_range5 
+tests/test_throwables_pr7.py::test_help_lists_throw_bindings 
+[gw1] [ 32%] PASSED tests/test_throwables_pr7.py::test_help_lists_throw_bindings 
+tests/test_projectile_anim.py::test_advance_projectile_frame_walks_beam_tiles 
+[gw1] [ 33%] PASSED tests/test_projectile_anim.py::test_advance_projectile_frame_walks_beam_tiles 
+tests/test_projectile_anim.py::test_projectile_queue_reset_and_take 
+[gw1] [ 34%] PASSED tests/test_projectile_anim.py::test_projectile_queue_reset_and_take 
+tests/test_projectile_anim.py::test_player_throw_defers_world_turn_until_projectile_finishes 
+[gw2] [ 35%] PASSED tests/test_projectile_anim.py::test_smite_projectile_flashes_source_then_target 
+tests/test_projectile_anim.py::test_render_smite_shows_only_current_flash_tile 
+[gw3] [ 36%] PASSED tests/test_player_throw_pr6.py::test_successful_throw_consumes_stack 
+tests/test_player_throw_pr6.py::test_throw_targets_sorted_near_to_far 
+[gw0] [ 37%] PASSED tests/test_memory_pursuit_door_detour.py::test_memory_trail_timeout_gives_up_without_los 
+tests/test_player_throw_pr6.py::test_nothing_to_throw_without_throwables 
+[gw1] [ 39%] PASSED tests/test_projectile_anim.py::test_player_throw_defers_world_turn_until_projectile_finishes 
+tests/test_projectile_anim.py::test_path_projectile_uses_cyan_asterisk 
+[gw2] [ 40%] PASSED tests/test_projectile_anim.py::test_render_smite_shows_only_current_flash_tile 
+tests/test_projectile_anim.py::test_path_projectile_beam_spans_full_shot_distance 
+[gw1] [ 41%] PASSED tests/test_projectile_anim.py::test_path_projectile_uses_cyan_asterisk 
+tests/test_npc_abilities_range_path.py::test_filter_known_abilities_keeps_range_tokens[2] 
+[gw1] [ 42%] PASSED tests/test_npc_abilities_range_path.py::test_filter_known_abilities_keeps_range_tokens[2] 
+tests/test_npc_abilities_range_path.py::test_filter_known_abilities_keeps_range_tokens[3] 
+[gw1] [ 43%] PASSED tests/test_npc_abilities_range_path.py::test_filter_known_abilities_keeps_range_tokens[3] 
+tests/test_npc_abilities_range_path.py::test_filter_known_abilities_keeps_range_tokens[4] 
+[gw1] [ 44%] PASSED tests/test_npc_abilities_range_path.py::test_filter_known_abilities_keeps_range_tokens[4] 
+tests/test_npc_abilities_range_path.py::test_filter_known_abilities_keeps_range_tokens[5] 
+[gw1] [ 45%] PASSED tests/test_npc_abilities_range_path.py::test_filter_known_abilities_keeps_range_tokens[5] 
+tests/test_npc_abilities_range_path.py::test_spawned_wolf_max_path_range_matches_token[2] 
+[gw2] [ 47%] PASSED tests/test_projectile_anim.py::test_path_projectile_beam_spans_full_shot_distance 
+tests/test_projectile_anim.py::test_render_projectile_draws_trail_through_current_tile 
+[gw0] [ 48%] PASSED tests/test_player_throw_pr6.py::test_nothing_to_throw_without_throwables 
+tests/test_player_throw_pr6.py::test_begin_throw_pick_opens_modal 
+[gw3] [ 49%] PASSED tests/test_player_throw_pr6.py::test_throw_targets_sorted_near_to_far 
+tests/test_player_throw_pr6.py::test_throw_target_cycle_right_then_left_returns_to_nearest 
+[gw3] [ 50%] PASSED tests/test_player_throw_pr6.py::test_throw_target_cycle_right_then_left_returns_to_nearest 
+tests/test_player_throw_pr6.py::test_throw_target_modal_right_then_left_returns_to_start 
+[gw1] [ 51%] PASSED tests/test_npc_abilities_range_path.py::test_spawned_wolf_max_path_range_matches_token[2] 
+tests/test_npc_abilities_range_path.py::test_spawned_wolf_max_path_range_matches_token[3] 
+[gw0] [ 52%] PASSED tests/test_player_throw_pr6.py::test_begin_throw_pick_opens_modal 
+tests/test_throwables_pr5.py::test_throwables_json_loads_rock 
+[gw0] [ 54%] PASSED tests/test_throwables_pr5.py::test_throwables_json_loads_rock 
+tests/test_throwables_pr5.py::test_throwable_min_damage_validation 
+[gw0] [ 55%] PASSED tests/test_throwables_pr5.py::test_throwable_min_damage_validation 
+tests/test_throwables_pr5.py::test_starter_loadout_includes_five_rocks 
+[gw3] [ 56%] PASSED tests/test_player_throw_pr6.py::test_throw_target_modal_right_then_left_returns_to_start 
+tests/test_player_throw_pr6.py::test_throw_target_two_targets_oscillate_with_left_and_right 
+[gw3] [ 57%] PASSED tests/test_player_throw_pr6.py::test_throw_target_two_targets_oscillate_with_left_and_right 
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[2] 
+[gw3] [ 58%] PASSED tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[2] 
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[3] 
+[gw3] [ 59%] PASSED tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[3] 
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[4] 
+[gw3] [ 60%] PASSED tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[4] 
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[5] 
+[gw3] [ 62%] PASSED tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[5] 
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[6] 
+[gw3] [ 63%] PASSED tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[6] 
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[7] 
+[gw1] [ 64%] PASSED tests/test_npc_abilities_range_path.py::test_spawned_wolf_max_path_range_matches_token[3] 
+[gw3] [ 65%] PASSED tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[7] 
+tests/test_npc_abilities_range_path.py::test_wolf_does_not_shoot_adjacent_player 
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[8] 
+[gw3] [ 66%] PASSED tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[8] 
+tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[9] 
+[gw3] [ 67%] PASSED tests/test_npc_abilities_smite.py::test_filter_known_abilities_keeps_all_smite_tokens[9] 
+tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[2] 
+[gw2] [ 68%] PASSED tests/test_projectile_anim.py::test_render_projectile_draws_trail_through_current_tile 
+tests/test_npc_abilities_range_path.py::test_spawned_wolf_max_path_range_matches_token[5] 
+[gw3] [ 70%] PASSED tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[2] 
+tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[3] 
+[gw1] [ 71%] PASSED tests/test_npc_abilities_range_path.py::test_wolf_does_not_shoot_adjacent_player 
+tests/test_npc_abilities_range_path.py::test_path_shot_blocked_by_evil_ally_skips_turn_damage 
+[gw2] [ 72%] PASSED tests/test_npc_abilities_range_path.py::test_spawned_wolf_max_path_range_matches_token[5] 
+tests/test_npc_abilities_range_path.py::test_wolf_shoots_player_at_max_range[2] 
+[gw1] [ 73%] PASSED tests/test_npc_abilities_range_path.py::test_path_shot_blocked_by_evil_ally_skips_turn_damage 
+tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[9] 
+[gw3] [ 74%] PASSED tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[3] 
+tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[5] 
+[gw2] [ 75%] PASSED tests/test_npc_abilities_range_path.py::test_wolf_shoots_player_at_max_range[2] 
+tests/test_npc_abilities_range_path.py::test_wolf_shoots_player_at_max_range[3] 
+[gw2] [ 77%] PASSED tests/test_npc_abilities_range_path.py::test_wolf_shoots_player_at_max_range[3] 
+tests/test_npc_abilities_smite.py::test_wolf_smites_player_at_max_range[5] 
+[gw1] [ 78%] PASSED tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[9] 
+tests/test_npc_abilities_smite.py::test_wolf_smites_player_at_max_range[2] 
+[gw0] [ 79%] PASSED tests/test_throwables_pr5.py::test_starter_loadout_includes_five_rocks 
+tests/test_npc_abilities_range_path.py::test_pick_evil_path_target_requires_clear_beam 
+[gw2] [ 80%] PASSED tests/test_npc_abilities_smite.py::test_wolf_smites_player_at_max_range[5] 
+tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_player_beyond_max_range[2] 
+[gw3] [ 81%] PASSED tests/test_npc_abilities_smite.py::test_spawned_wolf_max_smite_range_matches_token[5] 
+tests/test_npc_abilities_smite.py::test_wolf_smites_player_at_max_range[3] 
+[gw0] [ 82%] PASSED tests/test_npc_abilities_range_path.py::test_pick_evil_path_target_requires_clear_beam 
+tests/test_npc_abilities_range_path.py::test_no_path_shot_stunned_knight_in_range 
+[gw2] [ 83%] PASSED tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_player_beyond_max_range[2] 
+tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_player_beyond_max_range[5] 
+[gw3] [ 85%] PASSED tests/test_npc_abilities_smite.py::test_wolf_smites_player_at_max_range[3] 
+tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_adjacent_player 
+[gw1] [ 86%] PASSED tests/test_npc_abilities_smite.py::test_wolf_smites_player_at_max_range[2] 
+tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_player_beyond_max_range[3] 
+[gw3] [ 87%] PASSED tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_adjacent_player 
+tests/test_ability_parser.py::test_parse_smite_tokens 
+[gw3] [ 88%] PASSED tests/test_ability_parser.py::test_parse_smite_tokens 
+tests/test_ability_parser.py::test_collapse_range_tokens_keeps_max 
+[gw3] [ 89%] PASSED tests/test_ability_parser.py::test_collapse_range_tokens_keeps_max 
+tests/test_ability_parser.py::test_parse_summon_token 
+[gw3] [ 90%] PASSED tests/test_ability_parser.py::test_parse_summon_token 
+tests/test_ability_parser.py::test_collapse_smite_tokens_keeps_max 
+[gw3] [ 91%] PASSED tests/test_ability_parser.py::test_collapse_smite_tokens_keeps_max 
+tests/test_ability_parser.py::test_parse_abilities_round_trip 
+[gw3] [ 93%] PASSED tests/test_ability_parser.py::test_parse_abilities_round_trip 
+[gw2] [ 94%] PASSED tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_player_beyond_max_range[5] 
+tests/test_npc_abilities_smite.py::test_primary_at_three_preferred_over_neutral_at_two_for_smite_pick 
+[gw0] [ 95%] FAILED tests/test_npc_abilities_range_path.py::test_no_path_shot_stunned_knight_in_range 
+tests/test_npc_abilities_smite.py::test_no_smite_stunned_knight_in_range 
+[gw2] [ 96%] PASSED tests/test_npc_abilities_smite.py::test_primary_at_three_preferred_over_neutral_at_two_for_smite_pick 
+[gw0] [ 97%] PASSED tests/test_npc_abilities_smite.py::test_no_smite_stunned_knight_in_range 
+[gw1] [ 98%] PASSED tests/test_npc_abilities_smite.py::test_wolf_does_not_smite_player_beyond_max_range[3] 
+tests/test_ability_parser.py::test_range_tokens_implemented 
+[gw1] [100%] PASSED tests/test_ability_parser.py::test_range_tokens_implemented 
+
+================================== FAILURES ===================================
+__________________ test_no_path_shot_stunned_knight_in_range __________________
+[gw0] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+
+    def test_no_path_shot_stunned_knight_in_range() -> None:
+        engine = GameEngine()
+        wolf = _wolf_with_range(engine, 2)
+        player = engine.player
+        assert player is not None
+        carve_horizontal_line(engine, ARENA_X, ARENA_Y, 4)
+        knight = spawn_test_npc(
+            engine.world,
+            x=ARENA_X + 2,
+            y=ARENA_Y,
+            species="knight",
+            alignment=Alignment.GOOD,
+            hp=0,
+        )
+        knight.tags.add(Stunned)
+        update_fov(engine.game_map, ARENA_X, ARENA_Y)
+>       assert not try_path_engagement(
+            wolf,
+            engine.world,
+            engine.game_map,
+            player,
+            engine.message_log,
+            random.Random(0),
+            alignment=Alignment.EVIL,
+            entity_target=knight,
+        )
+E       AssertionError: assert not True
+E        +  where True = try_path_engagement(<Entity(uid=object at 0x22DD9B4B8C0)>, Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x22DD9B4B6C0)>: {<class 'src.components.Position'>: Position(x=40, y=24), <class 'src.components.Renderable'>: Renderable(ch=64, fg=(255, 255, 255)), <class 'src.components.Fighter'>: Fighter(hp=27, max_hp=30, accuracy=1.5, evade=0, ac=1, min_damage=1, max_damage=2, ranged_accuracy=None, ranged_min_damage=None, ranged_max_damage=None), <class 'src.components.Inventory'>: Inventory(slots={'a': InventoryItemInstance(item_id='dagger', category=<ItemCategory.WEAPON: 1>, durability=80, charges=None, stack_count=1), 'b': InventoryItemInstance(item_id='robes', category=<ItemCategory.ARMOR: 2>, durability=10, charges=None, stack_count=1), 'c': InventoryItemInstance(item_id='rock', category=<ItemCategory.THROWABLE: 5>, durability=None, charges=None, stack_count=5), 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None, 'j': None, 'k': None, 'l': None, 'm': None, 'n': None, 'o': None, 'p': None, 'q': None, 'r': None, 's': None, 't': None, 'u': None, 'v': None, 'w': None, 'x': None, 'y': None, 'z': None}), <class 'src.components.EquipState'>: EquipState(wielded_slot='a', worn_slot='b'), <class 'src...ment'}, <Entity(uid=object at 0x22DD9B4B810)>: {'VoreCapable', Position(x=70, y=40), 'BlocksMovement'}, <Entity(uid=object at 0x22DD9B4B830)>: {Position(x=54, y=15)}, <Entity(uid=object at 0x22DD9B4B820)>: {Position(x=49, y=20)}, <Entity(uid=object at 0x22DD9B4B840)>: {Position(x=37, y=14)}, <Entity(uid=object at 0x22DD9B4B850)>: {Position(x=68, y=6)}, <Entity(uid=object at 0x22DD9B4B860)>: {Position(x=19, y=31)}, <Entity(uid=object at 0x22DD9B4B870)>: {Position(x=37, y=32)}, <Entity(uid=object at 0x22DD9B4B880)>: {Position(x=66, y=3), 'BlocksMovement'}, <Entity(uid=object at 0x22DD9B4B890)>: {'BlocksMovement', Position(x=14, y=7)}, <Entity(uid=object at 0x22DD9B4B8A0)>: {Position(x=50, y=8), 'BlocksMovement'}, <Entity(uid=object at 0x22DD9B4B8C0)>: {'VoreCapable', Position(x=40, y=22), 'BlocksMovement'}, <Entity(uid=object at 0x22DD9B4B8B0)>: {'Stunned', 'BlocksMovement', Position(x=42, y=22)}}), _relation_tags_by_entity=defaultdict(<function _defaultdict_of_set at 0x0000022DDA199B10>, {}), _relation_components_by_entity=defaultdict(<function _defaultdict_of_dict at 0x0000022DDA224E00>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}), GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       ...,\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0]], shape=(44, 80), dtype=int8), explored=array([[False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       ...,\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), visible=array([[False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       ...,\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(40, 24), layout_archetype='hybrid'), <Entity(uid=object at 0x22DD9B4B6C0)>, <src.message_log.MessageLog object at 0x0000022DDB9FB550>, <random.Random object at 0x0000022DDAB69AF0>, alignment=<Alignment.EVIL: 2>, entity_target=<Entity(uid=object at 0x22DD9B4B8B0)>)
+E        +    where Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x22DD9B4B6C0)>: {<class 'src.components.Position'>: Position(x=40, y=24), <class 'src.components.Renderable'>: Renderable(ch=64, fg=(255, 255, 255)), <class 'src.components.Fighter'>: Fighter(hp=27, max_hp=30, accuracy=1.5, evade=0, ac=1, min_damage=1, max_damage=2, ranged_accuracy=None, ranged_min_damage=None, ranged_max_damage=None), <class 'src.components.Inventory'>: Inventory(slots={'a': InventoryItemInstance(item_id='dagger', category=<ItemCategory.WEAPON: 1>, durability=80, charges=None, stack_count=1), 'b': InventoryItemInstance(item_id='robes', category=<ItemCategory.ARMOR: 2>, durability=10, charges=None, stack_count=1), 'c': InventoryItemInstance(item_id='rock', category=<ItemCategory.THROWABLE: 5>, durability=None, charges=None, stack_count=5), 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None, 'j': None, 'k': None, 'l': None, 'm': None, 'n': None, 'o': None, 'p': None, 'q': None, 'r': None, 's': None, 't': None, 'u': None, 'v': None, 'w': None, 'x': None, 'y': None, 'z': None}), <class 'src.components.EquipState'>: EquipState(wielded_slot='a', worn_slot='b'), <class 'src...ment'}, <Entity(uid=object at 0x22DD9B4B810)>: {'VoreCapable', Position(x=70, y=40), 'BlocksMovement'}, <Entity(uid=object at 0x22DD9B4B830)>: {Position(x=54, y=15)}, <Entity(uid=object at 0x22DD9B4B820)>: {Position(x=49, y=20)}, <Entity(uid=object at 0x22DD9B4B840)>: {Position(x=37, y=14)}, <Entity(uid=object at 0x22DD9B4B850)>: {Position(x=68, y=6)}, <Entity(uid=object at 0x22DD9B4B860)>: {Position(x=19, y=31)}, <Entity(uid=object at 0x22DD9B4B870)>: {Position(x=37, y=32)}, <Entity(uid=object at 0x22DD9B4B880)>: {Position(x=66, y=3), 'BlocksMovement'}, <Entity(uid=object at 0x22DD9B4B890)>: {'BlocksMovement', Position(x=14, y=7)}, <Entity(uid=object at 0x22DD9B4B8A0)>: {Position(x=50, y=8), 'BlocksMovement'}, <Entity(uid=object at 0x22DD9B4B8C0)>: {'VoreCapable', Position(x=40, y=22), 'BlocksMovement'}, <Entity(uid=object at 0x22DD9B4B8B0)>: {'Stunned', 'BlocksMovement', Position(x=42, y=22)}}), _relation_tags_by_entity=defaultdict(<function _defaultdict_of_set at 0x0000022DDA199B10>, {}), _relation_components_by_entity=defaultdict(<function _defaultdict_of_dict at 0x0000022DDA224E00>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}) = <src.engine.GameEngine object at 0x0000022DDC07D010>.world
+E        +    and   GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       ...,\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0]], shape=(44, 80), dtype=int8), explored=array([[False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       ...,\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), visible=array([[False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       ...,\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(40, 24), layout_archetype='hybrid') = <src.engine.GameEngine object at 0x0000022DDC07D010>.game_map
+E        +    and   <src.message_log.MessageLog object at 0x0000022DDB9FB550> = <src.engine.GameEngine object at 0x0000022DDC07D010>.message_log
+E        +    and   <random.Random object at 0x0000022DDAB69AF0> = <class 'random.Random'>(0)
+E        +      where <class 'random.Random'> = random.Random
+E        +    and   <Alignment.EVIL: 2> = Alignment.EVIL
+
+tests\test_npc_abilities_range_path.py:166: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_npc_abilities_range_path.py::test_no_path_shot_stunned_knight_in_range
+======================== 1 failed, 86 passed in 16.04s ========================

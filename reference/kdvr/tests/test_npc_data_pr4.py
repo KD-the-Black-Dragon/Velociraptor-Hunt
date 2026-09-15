@@ -6,11 +6,11 @@ import random
 
 from tcod.ecs import Registry
 
-from src.components import Alignment, DisplayName, MobilityType, Position
-from src.data.entity_loader import load_entity_registry, parse_entity_registry
+from src.components import Alignment, DisplayName, MobilityType, NPCAlignment, Position
+from src.data.entity_loader import parse_entity_registry
 from src.engine import GameEngine
 from src.map_gen import GameMap, Tile
-from src.spawn import good_aligned_weight_at_depth, spawn_floor_population
+from src.spawn import spawn_floor_population
 from src.systems.ai import spawn_test_npc
 from src.systems.fov import update_fov
 from src.systems.movement import entity_mobility
@@ -48,13 +48,11 @@ def test_sharks_only_on_water_tiles() -> None:
         assert entity_mobility(shark) == MobilityType.AQUATIC
 
 
-def test_good_follower_reduction_uses_effective_target() -> None:
+def test_floor_one_has_no_good_quota_with_stock_registry() -> None:
+    """Stock goods start at depth 2+; floor 1 density count is goods-free."""
     game_map = _open_spawn_map()
     config = fixed_spawn_config(density_pct=0.2, density_variance=0.0)
     baseline = expected_spawn_count(game_map, 30, 30, floor_depth=1, config=config, rng_seed=5)
-    reg = load_entity_registry()
-    cap = good_aligned_weight_at_depth(reg, floor_depth=1, map_has_water=False)
-    reduction = min(2, cap)
     world = Registry()
     spawned = spawn_floor_population(
         world,
@@ -64,9 +62,14 @@ def test_good_follower_reduction_uses_effective_target() -> None:
         floor_depth=1,
         rng=random.Random(5),
         spawn_config=config,
-        good_follower_reduction=reduction,
+        good_followers_brought=0,
     )
-    assert len(spawned) == max(0, baseline - reduction)
+    assert len(spawned) == baseline
+    assert all(
+        e.components.get(NPCAlignment) is None
+        or e.components[NPCAlignment].alignment != Alignment.GOOD
+        for e in spawned
+    )
 
 
 def test_depth_gates_change_spawned_species() -> None:
@@ -123,14 +126,16 @@ def test_depth_gates_change_spawned_species() -> None:
 
 def test_descend_with_follower_keeps_good_ally_on_new_floor() -> None:
     from src.components import AI
-    from tests.map_test_helpers import isolate_other_ais
+    from tests.map_test_helpers import carve_floor_tile, isolate_other_ais
 
     engine = GameEngine()
     engine.new_game(seed=31)
     isolate_other_ais(engine)
     player = engine.player
     assert player is not None
+    _place_player_on_stairs(engine)
     player_pos = player.components[Position]
+    carve_floor_tile(engine, player_pos.x + 1, player_pos.y)
     spawn_test_npc(
         engine.world,
         x=player_pos.x + 1,
@@ -139,7 +144,6 @@ def test_descend_with_follower_keeps_good_ally_on_new_floor() -> None:
         alignment=Alignment.GOOD,
     )
     update_fov(engine.game_map, player_pos.x, player_pos.y)
-    _place_player_on_stairs(engine)
     _press_descend(engine)
     assert len(_good_npcs(engine)) >= 1
     assert len(list(engine.world.Q.all_of(components=[AI]))) > 0

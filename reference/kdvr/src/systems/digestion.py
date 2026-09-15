@@ -28,11 +28,18 @@ from src.digestion_content import (
     GOOD_PLEA_POOL,
     PLAYER_DIGESTION_MODAL,
 )
+from src.systems.vore_fallback import (
+    GENERIC_DIGESTION_COMPLETE,
+    GENERIC_OFFSCREEN_DIGEST,
+    GENERIC_PLAYER_DIGESTION_MODAL,
+    is_generic_vore_type,
+)
 from src.map_gen import GameMap
 from src.message_log import MessageCategory, MessageLog
 from src.systems.inventory import destroy_item_in_slot, item_registry
 from src.systems.combat import sync_stunned_state
 from src.systems.fov import entity_visible_to_player
+from src.data.depth_scaling_config import DifficultyProfile
 from src.data.narrative_index import get_narrative_index
 from src.systems.naming import entity_display_name, entity_log_name, entity_type_id
 from src.text import enforce_sentence_capitalization
@@ -198,8 +205,13 @@ def player_digestion_modal_phases(
         rng,
     )
     if not templates:
-        fallback = PLAYER_DIGESTION_MODAL.get(narrative_type, PLAYER_DIGESTION_MODAL["OV"])
-        templates = (fallback,)
+        if is_generic_vore_type(narrative_type):
+            templates = GENERIC_PLAYER_DIGESTION_MODAL
+        else:
+            fallback = PLAYER_DIGESTION_MODAL.get(
+                narrative_type, PLAYER_DIGESTION_MODAL["OV"]
+            )
+            templates = (fallback,)
     return [_format_player_digestion_phase(template, predator) for template in templates]
 
 
@@ -295,8 +307,13 @@ def complete_npc_digestion(
     rng: random.Random,
     *,
     skip_turn_entities: set[Entity] | None = None,
+    alternate_cv_mechanics: bool = False,
+    difficulty_profile: DifficultyProfile | None = None,
 ) -> None:
     """Remove digested NPC prey, log completion, and free the predator next turn."""
+    from src.data.depth_scaling_loader import default_depth_scaling_config
+    from src.systems.dazed import apply_daze, roll_cv_daze_turns
+
     predator_state = predator.components.get(Predator)
     narrative_type = predator_state.narrative_type if predator_state else "OV"
     on_screen = entity_visible_to_player(game_map, predator) or entity_visible_to_player(
@@ -309,6 +326,8 @@ def complete_npc_digestion(
         )
         if not templates:
             templates = DIGESTION_COMPLETE_POOL.get(narrative_type, ())
+        if not templates and is_generic_vore_type(narrative_type):
+            templates = GENERIC_DIGESTION_COMPLETE
         if templates:
             line = _format_digestion_line(rng.choice(templates), predator, prey)
             # Witnessed NPC digest complete: caution by default.
@@ -319,6 +338,8 @@ def complete_npc_digestion(
             narrative_type,
             rng,
         )
+        if template is None and is_generic_vore_type(narrative_type):
+            template = rng.choice(GENERIC_OFFSCREEN_DIGEST)
         if template is not None:
             line = _format_digestion_line(template, predator, prey)
             # Offscreen digest: heard only — keep routine default.
@@ -328,6 +349,17 @@ def complete_npc_digestion(
     predator.components.pop(Predator, None)
     if skip_turn_entities is not None:
         skip_turn_entities.add(predator)
+    # GENERIC never uses alternate CV mechanics (standard path only).
+    if alternate_cv_mechanics and narrative_type == "CV":
+        profile = difficulty_profile
+        if profile is None:
+            profile = default_depth_scaling_config().profile_for(None)
+        apply_daze(
+            predator,
+            roll_cv_daze_turns(profile, rng),
+            game_map,
+            message_log,
+        )
 
 
 def apply_digestion_tick(
@@ -338,6 +370,8 @@ def apply_digestion_tick(
     rng: random.Random,
     *,
     skip_turn_entities: set[Entity] | None = None,
+    alternate_cv_mechanics: bool = False,
+    difficulty_profile: DifficultyProfile | None = None,
 ) -> bool:
     """
     Apply one digestion tick to engulfed prey.
@@ -372,6 +406,8 @@ def apply_digestion_tick(
             message_log,
             rng,
             skip_turn_entities=skip_turn_entities,
+            alternate_cv_mechanics=alternate_cv_mechanics,
+            difficulty_profile=difficulty_profile,
         )
         return True
     return False

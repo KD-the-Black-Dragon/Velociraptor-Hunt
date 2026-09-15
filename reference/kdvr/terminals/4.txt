@@ -1,0 +1,40 @@
+---
+pid: 25584
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -c \"
+from src.map_gen import _attempt_generate_dungeon, _carve_land_layout, _prune_disconnected_land, _add_water_features, _place_stairs, validate_land_connectivity, validate_stairs_reachable, GameMap
+import random
+
+def diagnose(seed):
+    rng = random.Random(seed)
+    d = GameMap(80,44)
+    if not _carve_land_layout(d,rng,max_rooms=30,room_min_size=6,room_max_size=10):
+        return 'land_layout'
+    _prune_disconnected_land(d)
+    if not validate_land_connectivity(d):
+        return 'land_connect'
+    _add_water_features(d,rng)
+    if not validate_land_connectivity(d):
+        return 'water_connect'
+    if not _place_stairs(d,rng):
+        return 'stairs_place'
+    if not validate_stairs_reachable(d):
+        return 'stairs_reach'
+    return 'ok'
+
+from collections import Counter
+c = Counter()
+for seed in range(100):
+    for attempt in range(50):
+        reason = diagnose(seed+attempt)
+        if reason == 'ok':
+            break
+        c[reason] += 1
+    else:
+        c['fail_all'] += 1
+print(c)
+\""
+started_at: 2026-06-30T21:45:21.501Z
+running_for_ms: 12014995 
+---
+Counter({'land_connect': 348})

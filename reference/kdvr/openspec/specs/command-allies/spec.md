@@ -1,12 +1,12 @@
-# Spec: command-allies (Come here!)
+# Spec: command-allies (Come here! + Dismiss)
 
 ## Purpose
 
-Player can shout **“Come here!”** so good allies in view temporarily prioritize reaching the player, then resume normal good AI after tagging the player. Midpoint scope only — no permanent follow, no Attack order.
+Player can shout **“Come here!”** so good allies in view temporarily prioritize reaching the player, then resume normal good AI after tagging the player. Player can also **Dismiss** an unwanted good ally via Shift+D targeting so they leave the dungeon without combat.
 
-**Terminology:** defeated, stunned, digested — no kill/die/death.
+**Terminology:** defeated, stunned, digested — no kill/die/death. Dismiss is **exit / remove**, not defeat.
 
-**Depends on:** `enhancements-3` (good AI), `ally-improvement` (engulfed rescue priority), `ui-layout` / help overlay.
+**Depends on:** `enhancements-3` (good AI), `ally-improvement` (engulfed rescue priority), `ui-layout` / help overlay / tutorial.
 
 ---
 
@@ -73,9 +73,51 @@ Come-here flags SHALL be cleared for all entities on **floor descent**.
 - WHEN the knight’s AI runs
 - THEN the knight targets that evil for attack
 
-### Requirement: Help discovery
+### Requirement: Dismiss ally (Shift+D)
 
-The help overlay SHALL list: `1 - shout "Come here!" (good allies in view)`.
+The game SHALL bind **Shift+D** (`KeySym.D` with Shift; plain `d` remains Drop) to a **free** dismiss-targeting mode:
+
+1. Cursor movement and Esc cancel SHALL match the Examine targeting family (map cursor; Esc leaves mode with no message).
+2. Confirm (Enter) on a **good** NPC that is **not engulfed** SHALL **immediately remove** that entity from the world (clean despawn) and log *`{name} exits the dungeon.`* (name via normal log naming). Mode SHALL then end.
+3. Confirm on any other tile/entity SHALL log *`Invalid target. (Allied NPCs only)`*, remove nothing, and **remain** in dismiss targeting.
+4. Opening dismiss, canceling, invalid confirm, and successful dismiss SHALL **not** consume a player turn.
+5. Removal SHALL **not** go through the combat defeat pipeline (`fire_entity_defeated`, XP, defeat run stats).
+6. Entry SHALL be blocked while other gameplay modals already own input (inventory, examine, throw, vore, etc.), same class as Examine.
+
+Goods do not engulf others; an engulfed good is not a valid dismiss target (predator on the tile takes fighter priority → invalid).
+
+#### Scenario: Successful dismiss
+
+- GIVEN a free good ally on an adjacent tile
+- WHEN the player presses Shift+D, moves the cursor onto the ally, and presses Enter
+- THEN the ally is removed from the world
+- AND the log shows *… exits the dungeon.*
+- AND no player turn is consumed
+- AND defeat hooks / defeat stats are unchanged
+
+#### Scenario: Invalid target
+
+- GIVEN dismiss targeting is active
+- WHEN the player confirms on an empty tile, the player, an evil, or a neutral
+- THEN the log shows *Invalid target. (Allied NPCs only)*
+- AND dismiss targeting remains active
+- AND no turn is consumed
+
+#### Scenario: Plain d is Drop
+
+- GIVEN PLAY with no modal
+- WHEN the player presses plain `d` (no Shift)
+- THEN Drop inventory mode opens
+- AND dismiss targeting does not start
+
+### Requirement: Help and tutorial discovery
+
+The help overlay SHALL list:
+
+- `1 - shout "Come here!" (good allies in view)`
+- `Shift+D - dismiss ally (target good NPC)`
+
+The tutorial Actions section SHALL include a short line that Shift+D dismisses an unwanted ally.
 
 ---
 
@@ -85,9 +127,12 @@ The help overlay SHALL list: `1 - shout "Come here!" (good allies in view)`.
 - Attack command / multi-order UI  
 - Neutral allies  
 - Omniscient pathing to the player outside FOV/memory  
+- Dismiss-all / confirmation dialog  
+- Ordering allies to walk off the map  
 
 ## Implementation notes (non-normative)
 
 - `src/systems/come_here.py`, `src/systems/ai.py` (`pick_good_chase`)
 - `COME_HERE_KEY` in `src/input_handlers.py`
+- `src/systems/dismiss.py`, `DISMISS_ALLY_KEY` + Shift in `engine_input`
 - Historical Follow/Attack draft: `openspec/changes/deferred-add-command-allies/` (superseded)

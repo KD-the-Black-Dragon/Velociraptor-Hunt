@@ -44,6 +44,10 @@ def _press_descend(engine: GameEngine) -> bool:
     return _press(engine, KeySym.PERIOD, mod=Modifier.SHIFT)
 
 
+def _press_descend_zero(engine: GameEngine, *, numpad: bool = False) -> bool:
+    return _press(engine, KeySym.KP_0 if numpad else KeySym.N0)
+
+
 def _place_player_on_stairs(engine: GameEngine) -> None:
     player = engine.player
     assert player is not None
@@ -110,6 +114,22 @@ def test_descend_engulfed_no_turn() -> None:
     assert engine.player_turn_count == turns_before
     assert engine.floor_depth == depth_before
     assert messages.going_deeper_wont_help() in engine.message_log.lines()
+
+
+def test_descend_with_zero_key_from_stairs() -> None:
+    engine = GameEngine()
+    _place_player_on_stairs(engine)
+    depth_before = engine.floor_depth
+    _press_descend_zero(engine, numpad=False)
+    assert engine.floor_depth == depth_before + 1
+
+
+def test_descend_with_numpad_zero_from_stairs() -> None:
+    engine = GameEngine()
+    _place_player_on_stairs(engine)
+    depth_before = engine.floor_depth
+    _press_descend_zero(engine, numpad=True)
+    assert engine.floor_depth == depth_before + 1
 
 
 def test_descend_from_stairs_advances_depth_and_regenerates_map() -> None:
@@ -193,14 +213,17 @@ def test_hidden_knight_does_not_follow() -> None:
 
 
 def test_followers_reduce_fresh_knight_spawns() -> None:
-    from tests.map_test_helpers import isolate_other_ais
+    from tests.map_test_helpers import carve_floor_tile, isolate_other_ais
 
     engine = GameEngine()
     engine.new_game(seed=13)
     isolate_other_ais(engine)
     player = engine.player
     assert player is not None
+    _place_player_on_stairs(engine)
+    # Knight must have LOS to player *at descend* (stairs), not only at spawn tile.
     player_pos = player.components[Position]
+    carve_floor_tile(engine, player_pos.x + 1, player_pos.y)
     spawn_test_npc(
         engine.world,
         x=player_pos.x + 1,
@@ -209,7 +232,6 @@ def test_followers_reduce_fresh_knight_spawns() -> None:
         alignment=Alignment.GOOD,
     )
     update_fov(engine.game_map, player_pos.x, player_pos.y)
-    _place_player_on_stairs(engine)
 
     _press_descend(engine)
 

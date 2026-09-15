@@ -1,0 +1,29 @@
+---
+pid: 6584
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_inventory_items_pr1.py tests/test_inventory_items_pr2.py tests/test_inventory_items_pr3.py tests/test_digestion.py -v --tb=line -q"
+started_at: 2026-07-01T16:08:33.767Z
+running_for_ms: 9470003  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+collected 62 items
+
+tests\test_inventory_items_pr1.py ..........                             [ 16%]
+tests\test_inventory_items_pr2.py ...........                            [ 33%]
+tests\test_inventory_items_pr3.py ...............                        [ 58%]
+tests\test_digestion.py ..........................                       [100%]
+
+============================== warnings summary ===============================
+tests/test_inventory_items_pr3.py::test_hud_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:272: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_inventory_items_pr3.py::test_hud_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:271: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 62 passed, 2 warnings in 17.52s =======================

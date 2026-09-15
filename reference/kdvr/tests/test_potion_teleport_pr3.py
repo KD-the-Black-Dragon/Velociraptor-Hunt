@@ -4,9 +4,13 @@ from __future__ import annotations
 
 import random
 
+from tcod.event import KeySym
+
 from src.components import (
     DigestionStats,
+    DigestionStrikes,
     Engulfed,
+    Fighter,
     Inventory,
     PlayerEffects,
     Position,
@@ -21,7 +25,9 @@ from src.systems.player_effects import (
 )
 from src.systems.vore import engulf_player
 
+from tests.digest_test_helpers import pin_predator_digest_stats
 from tests.map_test_helpers import isolate_other_ais
+from tests.test_digestion import _engulf_player_on_wolf, _press
 
 
 def test_stock_teleport_potion_loads() -> None:
@@ -126,3 +132,28 @@ def test_refresh_teleport_replaces_countdown() -> None:
     queue_delayed_teleport(player, 5)
     queue_delayed_teleport(player, 3)
     assert player.components[PlayerEffects].teleport_pending_turns == 3
+
+
+def test_maturing_teleport_beats_same_turn_digest_game_over() -> None:
+    """Teleport that matures on the final digest strike turn must save the player.
+
+    Previously digestion ran before teleport on the same turn, opening the digest
+    modal and then logging a successful teleport — then game over on modal advance.
+    """
+    engine = GameEngine()
+    isolate_other_ais(engine)
+    player, wolf = _engulf_player_on_wolf(engine, player_hp=0, digest_time=3)
+    pin_predator_digest_stats(wolf, digest_time=3)
+    # One strike away from opening the digestion / game-over modal.
+    player.components[DigestionStrikes] = DigestionStrikes(count=2)
+    queue_delayed_teleport(player, 1)
+
+    _press(engine, KeySym.PERIOD)
+
+    assert Engulfed not in player.tags
+    assert Predator not in wolf.components
+    assert player.components.get(DigestionStrikes) is None
+    assert player.components[PlayerEffects].teleport_pending_turns is None
+    assert not engine.digestion_modal.active
+    assert not engine.game_over.active
+    assert player.components[Fighter].hp == 0  # still stunned, but free

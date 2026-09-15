@@ -1,0 +1,1193 @@
+diff --git a/openspec/changes/better-npc-exploration/design.md b/openspec/changes/better-npc-exploration/design.md
+index 654f50f..c2db486 100644
+--- a/openspec/changes/better-npc-exploration/design.md
++++ b/openspec/changes/better-npc-exploration/design.md
+@@ -1,19 +1,47 @@
+ # Design: Better NPC Exploration
+ 
+-## Resolved decisions (2026-07-04)
++## Resolved decisions
++
++### Round 1 (2026-07-04)
+ 
+ | # | Decision |
+ |---|----------|
+ | 1 | **Defer** until `fix-deferred-bugfixes` completes — do not bundle into PR10/PR11 |
+-| 2 | **No full pathfinding rewrite** in v1 — reachable goal pick + explore frustration only |
+-| 3 | **Closed doors** remain NPC-hard-blocks; player-only door open unchanged |
++| 2 | **Explore/wander only** — no pathfinding rewrite for visible chase, follow, flee, or memory pursuit |
++| 3 | **Closed doors** remain NPC-hard-blocks by default; player-only door open unchanged today |
+ | 4 | Explore frustration band: **8–12** failed steps (align with memory chase `CHASE_FRUSTRATION_*`) |
+-| 5 | Reachability: **BFS** on floor + open door tiles from NPC position; walls + closed doors block |
+-| 6 | Re-pick explore goal from **reachable set only**; keep random choice within that set |
+-| 7 | PR3 disperse bias is **optional** — ship only if PR1+PR2 playtest fails door-in-face pack scenario |
+-| 8 | **PR10 playtest follow-up:** reachable BFS goals apply to **all alignments** in explore/wander — not neutral-only |
+-| 9 | **Retire PR10 shim** (`recent_positions`, wait-on-recent) in PR4 after PR1+PR2 sign-off — BFS + explore frustration replaces it |
+-| 10 | Prefer **re-pick reachable goal** over **full stop** when explore is blocked; avoid player-proximity freeze regressions from PR10 |
++| 5 | Reachability: **BFS** from NPC position over mobility-passable tiles; walls + closed doors block (unless `hands`) |
++| 6 | Reachable BFS goals apply to **all alignments** in explore/wander — not neutral-only |
++| 7 | **Retire PR10 shim** (`recent_positions`, wait-on-recent) in PR4 — no temporary hacks |
++| 8 | Prefer **re-pick reachable goal** over **full stop** when explore is blocked |
++
++### Round 2 (2026-07-04 — design review with user)
++
++| # | Decision |
++|---|----------|
++| 9 | **Paradigm B — “Far landmark”:** BFS reachable goals + **BFS one-step** movement for explore only; **greedy steps unchanged** for visible chase / follow / flee / memory |
++| 10 | Goal pick: **weighted random** toward farther reachable tiles (any reachable tile remains possible) |
++| 11 | On explore frustration re-pick: **force farthest-endpoint goal once** (tile(s) at maximum BFS distance from current position within reachable set), then resume weighted-random far picks |
++| 12 | Blocked explore turn: **sidestep** if any legal move exists, even when it does not progress toward goal; only **stand still** when zero legal moves |
++| 13 | **Drop PR3 door-bias / “prefer behind”** — far goals + BFS explore steps replace it |
++| 14 | **Neutral explore:** treat **player tile and player-adjacent tiles** as blocked for goal pick and step selection |
++| 15 | **Hands ability (future):** traversability predicate is per-entity; default NPCs cannot pass closed doors; stub path for rare `"hands"` entities (actual open-on-step behavior is a **future module**) |
++| 16 | **Aquatic NPCs:** same rules using aquatic passable tiles |
++| 17 | Wolves **may linger at a closed door** during frustration — narrative “growl at the door” is intended, not a bug |
++| 18 | **Playtest fix (2026-07-05):** memory pursuit frustration must count **no progress** toward last-known (not only zero-move); otherwise wolves shuffle in open rooms forever without reaching explore |
++| 19 | **PR3:** explore uses **BFS one-step** + sidestep away from goal; **4-step oscillation** (position or path-distance ABAB) triggers immediate opposite-goal re-pick |
++| 20 | **Evil–evil swap disabled** — bump attacks instead; prevents pack ping-pong at doors |
++| 21 | **Door spite:** when only a **closed door** blocks path to `last_known_primary` / `last_known_playewarning: in the working copy of 'openspec/changes/better-npc-exploration/design.md', LF will be replaced by CRLF the next time Git touches it
+r`, **keep memory** so frustration runs at the door (~8–12 turns), then give up → explore; other unreachable memory still clears immediately |
++| 22 | **Explore pathing** treats other NPC-occupied tiles as blocked (plan around allies) |
++| 23 | **Explore idle:** 20% chance per explore turn to wait (no move); **never** during pursuit/chase |
++
++---
++
++## Design philosophy
++
++Explore is **idle wandering after prey is lost**, not a robot march. Evil wolves at a slammed door should **stack and fail to pass** for several turns (frustration band), then **re-pick a distant landmark** and **drift back into the dungeon**. Rear wolves should **resume moving promptly** when space exists; the pack should **unwind from the back** over a reasonable number of turns.
++
++Visible quarry chase stays **greedy** — if they can see it, charging is correct.
+ 
+ ---
+ 
+@@ -30,10 +58,10 @@
+ - After chase give-up (PR9 frustration), wolves still face the door — explore goal may lie **beyond** the door.
+ - Front wolves keep greedy-stepping toward unreachable goals; no re-pick on repeated failure.
+ 
+-**Expected (design intent):**
++**Expected:**
+ 
+-- After chase ends, wolves should **disperse** — pick new idle wander targets they can actually reach.
+-- Once any gap opens, pack should unwind single-file rather than staying frozen at the door face.
++- After chase ends, wolves **linger at the door** briefly, then **pick reachable far goals** and wander off.
++- Once any gap opens, pack unwinds single-file: rearmost wolf moves within 1–2 turns; cascade until front clears.
+ 
+ ### Neutral clustering (PR10 shim)
+ 
+@@ -43,13 +71,12 @@
+ 
+ - Two-tile ping-pong is gone.
+ - Rabbits remain in **small constrained regions** (greedy steps + globally random unreachable goals).
+-- **Wait-on-recent** can cause a **full stop** when the player is adjacent (forbidden player tile + depleted legal moves).
++- **Wait-on-recent** can cause a **full stop** when the player is adjacent.
+ 
+-**Expected (this module):**
++**Expected:**
+ 
+-- Explore goals drawn only from **BFS-reachable** tiles for the NPC's mobility.
+-- Failed progress triggers **explore frustration** and re-pick — not indefinite wait in a pocket.
+-- Same reachable-goal rules for **good/evil/neutral** explore and post-chase wander.
++- Explore goals from **BFS-reachable** tiles; explore frustration + re-pick; no wait shim.
++- Rabbits do not stall near the player (player + adjacent blocked).
+ 
+ ---
+ 
+@@ -60,75 +87,126 @@
+ | Explore goal pick | `_pick_random_walkable_tile()` | Random tile with passable **terrain**; ignores connectivity |
+ | Goal retention | `_ensure_explore_goal()` | Keeps goal until reached or tile type invalid |
+ | Step choice | `_choose_chase_direction()` | Greedy: legal adjacent tile minimizing Euclidean distance² |
+-| Doors (NPC) | `can_enter_tile` / `_TRAVERSABLE_BY_MOBILITY` | `DOOR_CLOSED` not traversable; NPCs cannot open |
+-| Chase give-up | PR9 `chase_frustration` | Applies to **memory reach** and **momentum** only — not explore |
+-| Neutral anti-oscillation (shim) | PR10 `recent_positions` + wait | Neutral explore only; **superseded by this module** |
++| Doors (NPC) | `can_enter_tile` | `DOOR_CLOSED` not traversable; NPCs cannot open |
++| Chase give-up | PR9 `chase_frustration` | Memory reach + momentum only — not explore |
++| Neutral anti-oscillation (shim) | PR10 `recent_positions` + wait | Neutral explore only; **retired in PR4** |
+ 
+ ---
+ 
+-## PR1 — Reachable explore goals
++## Explore paradigm B (target behavior)
+ 
+-### Algorithm
++### Goal pick (PR1 + PR2)
+ 
+ ```text
+-reachable = BFS(origin, passable = FLOOR | STAIRS_DOWN | DOOR_OPEN)
+-goal = rng.choice(reachable - {origin})  # fallback if only origin: hold / re-pick next turn
++reachable = BFS(origin, entity_traversability_predicate)
++candidates = reachable - {origin}
++
++# Normal pick (PR1):
++goal = weighted_random(candidates, weight = bfs_distance_from_origin)
++
++# Frustration re-pick (PR2) — once per frustration event:
++goal = random_among(tiles_with_max_bfs_distance_from_origin)
++
++# Ongoing picks after forced endpoint:
++resume weighted_random far picks
+ ```
+ 
+-### Integration
++- `_ensure_explore_goal()`: if current goal ∉ reachable, re-pick immediately (e.g. door closed).
++- **Hands stub:** `entity_can_traverse_tile(entity, x, y)` — today equals `can_enter_tile`; future `hands` may treat `DOOR_CLOSED` as passable for BFS only.
+ 
+-- Replace or wrap `_pick_random_walkable_tile()` when used for `explore_goal`.
+-- `_ensure_explore_goal()`: if current goal not in reachable set, re-pick immediately (handles door closed after goal was valid).
+-- **All alignments** that enter explore/wander via `pick_good_chase`, `pick_evil_chase`, or neutral explore paths use the same reachable pool.
++### Explore step (PR3)
+ 
+-### Tests
++For explore/wander steps only (not chase/follow/flee/memory):
+ 
+-- Wolf separated from room by closed door: new goal never on far side of door.
+-- Open door in path: goals on connected side remain valid.
++```text
++1. Compute BFS path distances from origin to explore_goal over traversable tiles.
++2. Among legal adjacent steps (respecting blocked_tiles, swaps, mobility):
++   prefer the tile with lowest path distance to goal (one step on shortest route).
++3. If no step reduces path distance (ally/door block):
++   sidestep — any legal adjacent move (deterministic tie-break / rng among legal).
++4. If zero legal moves: stand still (counts as failed explore step in PR2).
++```
+ 
+----
++Chase pipeline continues to use `_choose_chase_direction()` (greedy).
+ 
+-## PR2 — Explore frustration
++### Explore frustration (PR2)
+ 
+-### `AIState` fields (proposed)
++`AIState` fields:
+ 
+ ```python
+ explore_frustration: int = 0
+-explore_frustration_limit: int = 0  # set once per goal: rng.randint(8, 12)
++explore_frustration_limit: int = 0  # rng.randint(8, 12) per goal episode
++explore_force_farthest_on_repick: bool = False  # or equivalent one-shot flag
+ ```
+ 
+-Separate from `chase_frustration` — chase and explore episodes are independent.
++Rules (explore episodes only):
+ 
+-### Rules
++- **Failed step:** no move, **or** moved but BFS path distance to goal did not decrease.
++- **Success:** moved and path distance decreased → reset frustration to 0.
++- **Frustration ≥ limit:** clear goal, reset limit, set one-shot farthest-endpoint pick, then PR1/PR2 re-pick.
++- Sidestep without progress **counts as failed** (growling / pacing at door).
+ 
+-- On explore step (`chase_mode == "explore"` or evil/neutral explore path): if no move or no progress toward goal → increment frustration.
+-- Successful move that reduces distance to goal → reset frustration to 0.
+-- Frustration ≥ limit → clear `explore_goal`, reset limit, re-pick via PR1 reachable pool.
++Do **not** apply explore frustration during memory chase or combat chase.
+ 
+-### Out of scope for PR2
++### Neutral player avoidance (PR4)
+ 
+-- Do not apply explore frustration during memory chase or combat chase.
++When neutral NPC is in explore (not fleeing):
++
++- Add **player position** and **8-neighbor adjacent tiles** to `blocked_tiles` for goal pick and explore step selection.
++
++---
++
++## PR plan
++
++| PR | Scope |
++|----|-------|
++| **PR1** | BFS reachable helper; weighted-random far goal pick; hands traversability stub; re-pick on unreachable goal; all alignments |
++| **PR2** | `explore_frustration` counters; farthest-endpoint once on frustration re-pick |
++| **PR3** | Explore-only BFS one-step toward goal; sidestep fallback when no progress |
++| **PR4** | Remove PR10 shim; neutrals on shared explore path; neutral player-adjacent avoidance |
++
++PR order: PR1 → PR2 → PR3 → PR4 → Acceptance.
+ 
+ ---
+ 
+-## PR4 — Retire PR10 oscillation shim
++## PR1 — Reachable explore goals
+ 
+-After PR1+PR2 sign-off:
++### Tests
+ 
+-- Remove `recent_positions`, `_choose_neutral_explore_direction`, `_on_neutral_explore_moved`, and wait-on-recent from `AIState` / `ai.py`.
+-- Neutral explore uses standard `_choose_chase_direction` toward BFS-picked goals (same as good/evil explore).
+-- Update / remove `tests/test_neutral_explore_antistuck.py` — replace with reachable-goal + frustration tests.
++- warning: in the working copy of 'src/systems/ai.py', LF will be replaced by CRLF the next time Git touches it
+Wolf separated from room by closed door: goal never on far side of door.
++- Weighted pick: farther tiles sampled more often (statistical or seeded fixture).
++- Open door: goals on connected side remain valid.
++- Aquatic entity: goals only on aquatic-reachable tiles.
+ 
+ ---
+ 
+-## PR3 — Disperse bias (optional)
++## PR2 — Explore frustration
+ 
+-If wolves still hug closed doors after PR1+PR2:
++### Tests
++
++- Blocked turns increment frustration; progress resets.
++- At limit: goal cleared, next pick is farthest endpoint.
++- Following picks resume weighted-random far selection.
++
++---
++
++## PR3 — BFS explore steps + sidestep
++
++### Tests
++
++- L-corridor: explore step follows shortest route, not greedy wrong branch.
++- Blocked toward goal: sidestep taken when legal move exists.
++- Zero legal moves: stand still; frustration increments.
++- Chase/follow still use greedy (regression).
++
++---
+ 
+-- When re-picking after explore frustration, score candidates by distance from `last_blocked_direction` or from door tile; prefer moving **away**.
+-- Or: exclude tiles within Chebyshev 2 of last failed frontier tile for one re-pick.
++## PR4 — Retire PR10 shim + neutral avoidance
+ 
+-Ship only if manual checklist fails after PR2.
++- Remove `recent_positions`, `_choose_neutral_explore_direction`, `_on_neutral_explore_moved`, wait-on-recent.
++- Neutral explore uses PR1–PR3 path.
++- Replace `tests/test_neutral_explore_antistuck.py` with reachable-goal / frustration / BFS-step coverage.
++- Rabbit near player: no stall (player + adjacent blocked).
+ 
+ ---
+ 
+@@ -136,10 +214,12 @@ Ship only if manual checklist fails after PR2.
+ 
+ | Approach | Risk | In this module? |
+ |----------|------|-----------------|
+-| Reachable BFS goal pick | Low–medium | PR1 |
+-| Explore frustration + re-pick | Low | PR2 |
+-| Disperse bias | Low | PR3 optional |
++| BFS reachable + weighted far goals | Low–medium | PR1 |
++| Explore frustration + farthest re-pick | Low | PR2 |
++| BFS one-step explore only | Low–medium | PR3 |
++| Sidestep when blocked | Low | PR3 |
+ | Global pathfinding for all AI | **High** | **No** |
++| Door-bias / prefer-behind heuristics | Medium (corner failures) | **No — dropped** |
+ 
+ ---
+ 
+@@ -147,8 +227,13 @@ Ship only if manual checklist fails after PR2.
+ 
+ 1. Spawn/drive large evil pack down corridor toward player.
+ 2. Player closes door in wolf faces; wait many turns.
+-3. **Pass:** wolves gradually disperse — re-pick reachable goals, pack unwinds, front wolves stop staring at door within ~frustration band turns after chase give-up.
+-4. **Regression:** pursuit momentum, neutral flee, good follow, door open (player), combat unchanged.
++3. **Pass:**
++   - Wolves **linger at door** during frustration band (growl phase).
++   - Rearmost wolf moves within **1–2 turns** once space exists behind.
++   - Pack clears corridor within **~frustration band × pack depth** turns (reasonable, not lockstep).
++   - Front wolves stop staring indefinitely after frustration re-pick.
++4. **Regression:** pursuit momentum, neutral flee, good follow, player door open, combat unchanged.
++5. **Neutral:** rabbits wander broader reachable areas; no freeze when player is adjacent.
+ 
+ ---
+ 
+@@ -156,7 +241,8 @@ Ship only if manual checklist fails after PR2.
+ 
+ | Change | Relationship |
+ |--------|----------------|
+-| `fix-deferred-bugfixes` PR9 | Memory chase frustration + momentum — keep; do not merge explore logic there |
+-| `fix-deferred-bugfixes` PR10 | Partial ping-pong fix — **superseded by PR1+PR2+PR4 here** |
++| `fix-deferred-bugfixes` PR9 | Memory chase frustration + momentum — keep |
++| `fix-deferred-bugfixes` PR10 | Shim — **superseded by PR1–PR4** |
+ | `fix-deferred-bugfixes` PR11 | Good–neutral swap — orthogonal |
++| Future `hands` module | Door open on step for flagged entities |
+ | `todo` Performance | Separate module |
+\ No newline at end of file
+diff --git a/src/systems/ai.py b/src/systems/ai.py
+index f9a0962..ecb1501 100644
+--- a/src/systems/ai.py
++++ b/src/systems/ai.py
+@@ -9,6 +9,7 @@ from tcod.ecs import Entity, Registry
+ from src import messages
+ from src.debug_log import debug_print
+ from src.components import (
++    Abilities,
+     AbilityState,
+     AI,
+     AIState,
+@@ -26,8 +27,9 @@ from src.components import (
+     SpeciesId,
+     Stunned,
+ )
++from src.data.ability_parser import FixedAbility
+ from src.constants import DEFAULT_VORE_CONTENT_PREFS, VoreContentPreferences
+-from src.map_gen import GameMap, can_enter_tile
++from src.map_gen import GameMap, Tile, bfs_path_distances, can_enter_tile
+ from src.message_log import MessageLog
+ from src.systems.combat import _fighter_at, try_action
+ from src.systems.fov import can_see
+@@ -67,6 +69,10 @@ CHASE_MOMENTUM_TURNS_MIN = 3
+ CHASE_MOMENTUM_TURNS_MAX = 6
+ CHASE_FRUSTRATION_MIN = 8
+ CHASE_FRUSTRATION_MAX = 12
++EXPLORE_FRUSTRATION_MIN = 8
++EXPLORE_FRUSTRATION_MAX = 12
++EXPLORE_OSCILLATION_HISTORY = 4
++EXPLORE_IDLE_CHANCE = 0.2
+ EXPLORE_RECENT_POSITIONS_MAX = 6
+ GOOD_CHASE_SWAPPABLE_ALIGNMENTS: frozenset[Alignment] = frozenset({Alignment.NEUTRAL})
+ 
+@@ -114,6 +120,10 @@ def _chebyshev(a: Position, b: Position) -> int:
+     return max(abs(a.x - b.x), abs(a.y - b.y))
+ 
+ 
++def _distance_squared_to(origin: Position, target: Position) -> int:
++    return (target.x - origin.x) ** 2 + (target.y - origin.y) ** 2
++
++
+ def _has_los(game_map: GameMap, origin: Position, target: Position) -> bool:
+     return can_see(game_map, origin.x, origin.y, target.x, target.y)
+ 
+@@ -129,6 +139,98 @@ def _forbidden_tiles(monster: Entity, player: Entity) -> frozenset[Position]:
+     return frozenset()
+ 
+ 
++def _explore_can_traverse_including_closed_doors(
++    game_map: GameMap,
++    x: int,
++    y: int,
++    entity: Entity,
++) -> bool:
++    """Routing check: closed doors count as passable (player could have opened them)."""
++    if entity_explore_can_traverse(game_map, x, y, entity):
++        return True
++    if not game_map.in_bounds(x, y):
++        return False
++    return Tile(game_map.tiles[y, x]) == Tile.DOOR_CLOSED
++
++
++def _explore_reachable_including_closed_doors(
++    game_map: GameMap,
++    origin: Position,
++    entity: Entity,
++) -> dict[Position, int]:
++    distances = bfs_path_distances(
++        game_map,
++        (origin.x, origin.y),
++        tile_predicate=lambda x, y: _explore_can_traverse_including_closed_doors(
++            game_map, x, y, entity
++        ),
++        cardinal_only=False,
++    )
++    return {Position(x, y): distance for (x, y), distance in distances.items()}
++
++
++def _memory_blocked_only_by_closed_doors(
++    game_map: GameMap,
++    origin: Position,
++    target: Position,
++    entity: Entity,
++) -> bool:
++    """True when a closed door is the only terrain obstacle to a memory waypoint."""
++    strict = explore_reachable_distances(game_map, origin, entity)
++    if target in strict:
++        return False
++    with_doors = _explore_reachable_including_closed_doors(game_map, origin, entity)
++    return target in with_doors
++
++
++def _sanitize_unreachable_memory_targets(
++    state: AIState,
++    game_map: GameMap,
++    origin: Position,
++    entity: Entity,
++) -> None:
++    """Drop memory waypoints that are no longer terrain-reachable.
++
++    Preserve ``last_known_primary`` when only a closed door blocks the path so
++    memory frustration can run at the door (spite linger) before explore.
++    """
++    reachable = explore_reachable_distances(game_map, origin, entity)
++    if state.last_known_primary is not None and state.last_known_primary not in reachable:
++        if not _memory_blocked_only_by_closed_doors(
++            game_map,
++            origin,
++            state.last_known_primary,
++            entity,
++        ):
++            state.last_known_primary = None
++    if state.last_known_neutral is not None and state.last_known_neutral not in reachable:
++        state.last_known_neutral = None
++    if state.last_known_evil is not None and state.last_known_evil not in reachable:
++        state.last_known_evil = None
++    if state.last_known_player is not None and state.last_known_player not in reachable:
++        if not _memory_blocked_only_by_closed_doors(
++            game_map,
++            origin,
++            state.last_known_player,
++            entity,
++        ):
++            state.last_known_player = None
++
++
++def _blocked_tiles_for_explore(
++    monster: Entity,
++    world: Registry,
++    base_blocked: frozenset[Position],
++) -> frozenset[Position]:
++    """Explore pathing treats other NPC-occupied tiles as impassable."""
++    blocked = set(base_blocked)
++    for entity in world.Q.all_of(components=[AI, Position, BlocksMovement]):
++        if entity is monster:
++            continue
++        blocked.add(entity.components[Position])
++    return frozenset(blocked)
++
++
+ def _visible_evils(
+     monster: Entity,
+     world: Registry,
+@@ -269,21 +371,298 @@ def _pick_random_walkable_tile(
+     return rng.choice(tiles)
+ 
+ 
++def _entity_has_hands_ability(entity: Entity) -> bool:
++    """Future: rare NPCs with hands may traverse closed doors in explore BFS."""
++    abilities = entity.components.get(Abilities)
++    if abilities is None:
++        return False
++    return any(
++        isinstance(parsed, FixedAbility) and parsed.ability_id.lower() == "hands"
++        for parsed in abilities.parsed
++    )
++
++
++def entity_explore_can_traverse(
++    game_map: GameMap,
++    x: int,
++    y: int,
++    entity: Entity,
++) -> bool:
++    """Terrain passable for explore reachability (BFS). Ignores other entities."""
++    if can_enter_tile(game_map, x, y, entity_mobility(entity)):
++        return True
++    if _entity_has_hands_ability(entity):
++        if not game_map.in_bounds(x, y):
++            return False
++        return Tile(game_map.tiles[y, x]) == Tile.DOOR_CLOSED
++    return False
++
++
++def explore_reachable_distances(
++    game_map: GameMap,
++    origin: Position,
++    entity: Entity,
++) -> dict[Position, int]:
++    """BFS path distances from origin over explore-traversable tiles (8-directional)."""
++    distances = bfs_path_distances(
++        game_map,
++        (origin.x, origin.y),
++        tile_predicate=lambda x, y: entity_explore_can_traverse(game_map, x, y, entity),
++        cardinal_only=False,
++    )
++    return {Position(x, y): distance for (x, y), distance in distances.items()}
++
++
++def _pick_weighted_far_explore_goal(
++    reachable: dict[Position, int],
++    origin: Position,
++    rng: random.Random,
++) -> Position | None:
++    candidates = [
++        (position, distance)
++        for position, distance in reachable.items()
++        if position.x != origin.x or position.y != origin.y
++    ]
++    if not candidates:
++        return None
++    positions = [position for position, _distance in candidates]
++    weights = [max(distance, 1) for _position, distance in candidates]
++    return rng.choices(positions, weights=weights, k=1)[0]
++
++
++def _pick_farthest_explore_goal(
++    reachable: dict[Position, int],
++    origin: Position,
++    rng: random.Random,
++) -> Position | None:
++    candidates = [
++        (position, distance)
++        for position, distance in reachable.items()
++        if position.x != origin.x or position.y != origin.y
++    ]
++    if not candidates:
++        return None
++    max_distance = max(distance for _position, distance in candidates)
++    farthest = [
++        position
++        for position, distance in candidates
++        if distance == max_distance
++    ]
++    return rng.choice(farthest)
++
++
++def _pick_explore_goal_from_reachable(
++    reachable: dict[Position, int],
++    origin: Position,
++    state: AIState,
++    rng: random.Random,
++) -> Position | None:
++    if state.explore_force_farthest_on_repick:
++        state.explore_force_farthest_on_repick = False
++        return _pick_farthest_explore_goal(reachable, origin, rng)
++    return _pick_weighted_far_explore_goal(reachable, origin, rng)
++
++
++def _reset_explore_frustration(state: AIState) -> None:
++    state.explore_frustration = 0
++    state.explore_frustration_limit = 0
++
++
++def _begin_explore_goal_episode(state: AIState, goal: Position, rng: random.Random) -> None:
++    state.explore_goal = goal
++    state.explore_frustration = 0
++    state.explore_frustration_limit = rng.randint(
++        EXPLORE_FRUSTRATION_MIN,
++        EXPLORE_FRUSTRATION_MAX,
++    )
++    state.explore_recent_positions.clear()
++    state.explore_recent_goal_distances.clear()
++
++
++def _explore_frustration_give_up(state: AIState) -> None:
++    state.explore_goal = None
++    _reset_explore_frustration(state)
++    state.explore_force_farthest_on_repick = True
++
++
++def explore_distances_to_goal(
++    game_map: GameMap,
++    goal: Position,
++    entity: Entity,
++) -> dict[Position, int]:
++    """BFS path distances to `goal` over explore-traversable tiles."""
++    distances = bfs_path_distances(
++        game_map,
++        (goal.x, goal.y),
++        tile_predicate=lambda x, y: entity_explore_can_traverse(game_map, x, y, entity),
++        cardinal_only=False,
++    )
++    return {Position(x, y): distance for (x, y), distance in distances.items()}
++
++
++def _explore_path_distance_to_goal(
++    game_map: GameMap,
++    origin: Position,
++    goal: Position,
++    entity: Entity,
++) -> int | None:
++    return explore_distances_to_goal(game_map, goal, entity).get(origin)
++
++
++def _pick_opposite_explore_goal(
++    reachable: dict[Position, int],
++    origin: Position,
++    failed_goal: Position,
++    rng: random.Random,
++) -> Position | None:
++    candidates = [
++        position
++        for position in reachable
++        if position.x != origin.x or position.y != origin.y
++    ]
++    if not candidates:
++        return None
++    max_away = max(_chebyshev(position, failed_goal) for position in candidates)
++    away = [position for position in candidates if _chebyshev(position, failed_goal) == max_away]
++    return rng.choice(away)
++
++
++def _explore_positions_oscillating(recent: deque[Position]) -> bool:
++    if len(recent) < EXPLORE_OSCILLATION_HISTORY:
++        return False
++    last_four = list(recent)[-EXPLORE_OSCILLATION_HISTORY:]
++    unique = {(position.x, position.y) for position in last_four}
++    if len(unique) != 2:
++        return False
++    return (
++        last_four[0] == last_four[2]
++        and last_four[1] == last_four[3]
++        and last_four[0] != last_four[1]
++    )
++
++
++def _explore_distances_oscillating(recent: deque[int]) -> bool:
++    if len(recent) < EXPLORE_OSCILLATION_HISTORY:
++        return False
++    last_four = list(recent)[-EXPLORE_OSCILLATION_HISTORY:]
++    if len(set(last_four)) != 2:
++        return False
++    return last_four[0] == last_four[2] and last_four[1] == last_four[3]
++
++
++def _explore_is_oscillating(state: AIState) -> bool:
++    return _explore_positions_oscillating(
++        state.explore_recent_positions
++    ) or _explore_distances_oscillating(state.explore_recent_goal_distances)
++
++
++def _explore_oscillation_repick(
++    state: AIState,
++    entity: Entity,
++    game_map: GameMap,
++    origin: Position,
++    failed_goal: Position,
++    rng: random.Random,
++) -> None:
++    state.explore_goal = None
++    _reset_explore_frustration(state)
++    state.explore_recent_positions.clear()
++    state.explore_recent_goal_distances.clear()
++    reachable = explore_reachable_distances(game_map, origin, entity)
++    picked = _pick_opposite_explore_goal(reachable, origin, failed_goal, rng)
++    if picked is None:
++        _ensure_explore_goal(state, game_map, origin, entity, rng)
++        return
++    _begin_explore_goal_episode(state, picked, rng)
++
++
+ def _ensure_explore_goal(
+     state: AIState,
+     game_map: GameMap,
+     origin: Position,
++    entity: Entity,
+     rng: random.Random,
+-    *,
+-    mobility: MobilityType = MobilityType.GROUND,
+ ) -> Position:
++    reachable = explore_reachable_distances(game_map, origin, entity)
+     goal = state.explore_goal
+-    if goal is not None and goal != origin and can_enter_tile(game_map, goal.x, goal.y, mobility):
++    if goal is not None and goal != origin and goal in reachable:
+         return goal
+-    state.explore_goal = _pick_random_walkable_tile(
+-        game_map, rng, exclude=origin, mobility=mobility
++    picked = _pick_explore_goal_from_reachable(reachable, origin, state, rng)
++    if picked is None:
++        state.explore_goal = None
++        _reset_explore_frustration(state)
++        return origin
++    _begin_explore_goal_episode(state, picked, rng)
++    return picked
++
++
++def _is_explore_step(
++    alignment: Alignment,
++    state: AIState,
++    entity_target: Entity | None,
++    pos_target: Position | None,
++    chase_mode: ChaseMode,
++) -> bool:
++    if entity_target is not None or pos_target is None:
++        return False
++    if alignment == Alignment.GOOD:
++        return chase_mode == "explore"
++    if alignment == Alignment.EVIL:
++        return state.explore_goal is not None and pos_target == state.explore_goal
++    return False
++
++
++def _complete_explore_step(
++    state: AIState,
++    entity: Entity,
++    game_map: GameMap,
++    origin: Position,
++    rng: random.Random,
++    *,
++    moved: bool,
++) -> None:
++    goal = state.explore_goal
++    if goal is None:
++        return
++    if state.explore_frustration_limit == 0:
++        state.explore_frustration_limit = rng.randint(
++            EXPLORE_FRUSTRATION_MIN,
++            EXPLORE_FRUSTRATION_MAX,
++        )
++        state.explore_frustration = 0
++
++    distance_before = _explore_path_distance_to_goal(game_map, origin, goal, entity)
++    if distance_before is None:
++        _ensure_explore_goal(state, game_map, origin, entity, rng)
++        return
++
++    if not moved:
++        state.explore_frustration += 1
++    else:
++        current = entity.components[Position]
++        distance_after = _explore_path_distance_to_goal(game_map, current, goal, entity)
++        if distance_after is None or distance_after >= distance_before:
++            state.explore_frustration += 1
++        else:
++            state.explore_frustration = 0
++
++    current = entity.components[Position]
++    distance_record = (
++        _explore_path_distance_to_goal(game_map, current, goal, entity)
++        if moved
++        else distance_before
+     )
+-    return state.explore_goal
++    if distance_record is not None:
++        state.explore_recent_positions.append(current)
++        state.explore_recent_goal_distances.append(distance_record)
++
++    if _explore_is_oscillating(state):
++        _explore_oscillation_repick(state, entity, game_map, current, goal, rng)
++        return
++
++    if state.explore_frustration >= state.explore_frustration_limit:
++        _explore_frustration_give_up(state)
++        _ensure_explore_goal(state, game_map, current, entity, rng)
+ 
+ 
+ def _position_count_in_recent(recent: deque[Position], pos: Position) -> int:
+@@ -313,17 +692,16 @@ def _is_neutral_explore_step(
+ 
+ def _on_neutral_explore_moved(
+     state: AIState,
++    entity: Entity,
+     pos: Position,
+     game_map: GameMap,
+     rng: random.Random,
+-    *,
+-    mobility: MobilityType = MobilityType.GROUND,
+ ) -> None:
+     state.recent_positions.append(pos)
+     if _position_count_in_recent(state.recent_positions, pos) >= 2:
+         state.explore_goal = None
+         state.recent_positions.clear()
+-        _ensure_explore_goal(state, game_map, pos, rng, mobility=mobility)
++        _ensure_explore_goal(state, game_map, pos, entity, rng)
+ 
+ 
+ def _clear_memory_of_engulfed_prey(state: AIState, world: Registry) -> None:
+@@ -355,6 +733,7 @@ def _consume_reached_memory(state: AIState, pos: Position) -> bool:
+         consumed_quarry = True
+     if state.explore_goal == pos:
+         state.explore_goal = None
++        _reset_explore_frustration(state)
+     return consumed_quarry
+ 
+ 
+@@ -668,6 +1047,9 @@ def _complete_pursuit_step(
+     *,
+     phase: ChaseStepPhase,
+     moved: bool,
++    origin: Position | None = None,
++    current_pos: Position | None = None,
++    memory_target: Position | None = None,
+ ) -> None:
+     if phase == "none":
+         return
+@@ -675,6 +1057,15 @@ def _complete_pursuit_step(
+         if direction is None or not moved:
+             _record_memory_pursuit_blocked(state)
+             return
++        if (
++            memory_target is not None
++            and origin is not None
++            and current_pos is not None
++            and _distance_squared_to(current_pos, memory_target)
++            >= _distance_squared_to(origin, memory_target)
++        ):
++            _record_memory_pursuit_blocked(state)
++            return
+         state.chase_frustration = 0
+         state.chase_momentum_direction = direction
+         return
+@@ -773,6 +1164,7 @@ def pick_evil_chase(
+     """
+     state = _get_ai_state(monster)
+     origin = monster.components[Position]
++    _sanitize_unreachable_memory_targets(state, game_map, origin, monster)
+     primaries = _visible_primary_hostiles(
+         monster, world, game_map, player, player_engulfed=player_engulfed
+     )
+@@ -797,9 +1189,7 @@ def pick_evil_chase(
+     if state.last_known_neutral is not None:
+         return None, state.last_known_neutral, None
+ 
+-    return None, _ensure_explore_goal(
+-        state, game_map, origin, rng, mobility=entity_mobility(monster)
+-    ), None
++    return None, _ensure_explore_goal(state, game_map, origin, monster, rng), None
+ 
+ 
+ def pick_good_chase(
+@@ -814,6 +1204,7 @@ def pick_good_chase(
+     """Good priority: rescue engulfing predator → evil → follow → memory → explore."""
+     state = _get_ai_state(monster)
+     origin = monster.components[Position]
++    _sanitize_unreachable_memory_targets(state, game_map, origin, monster)
+     if player_engulfed:
+         predator = find_predator_holding_prey(world, player)
+         if predator is not None:
+@@ -835,9 +1226,7 @@ def pick_good_chase(
+     if state.last_known_player is not None:
+         return None, state.last_known_player, "memory"
+ 
+-    return None, _ensure_explore_goal(
+-        state, game_map, origin, rng, mobility=entity_mobility(monster)
+-    ), "explore"
++    return None, _ensure_explore_goal(state, game_map, origin, monster, rng), "explore"
+ 
+ 
+ def _visible_hostiles(
+@@ -952,6 +1341,132 @@ def _choose_chase_direction(
+     return best_direction
+ 
+ 
++def _is_explore_target_step(
++    monster: Entity,
++    state: AIState | None,
++    target_position: Position | None,
++    chase_mode: ChaseMode,
++) -> bool:
++    if state is None or target_position is None or state.explore_goal is None:
++        return False
++    if target_position != state.explore_goal:
++        return False
++    if chase_mode == "explore":
++        return True
++    return _npc_alignment(monster) == Alignment.EVIL
++
++
++def _choose_explore_sidestep(
++    world: Registry,
++    game_map: GameMap,
++    monster: Entity,
++    origin: Position,
++    goal: Position,
++    entity: Entity,
++    rng: random.Random,
++    *,
++    blocked_tiles: frozenset[Position] = frozenset(),
++    recent_positions: deque[Position],
++) -> tuple[int, int] | None:
++    distances = explore_distances_to_goal(game_map, goal, entity)
++    origin_dist = distances.get(origin)
++    candidates: list[tuple[int, int, int, int]] = []
++    for direction in MOVEMENT_DIRECTIONS:
++        dest = origin + direction
++        if dest in blocked_tiles:
++            continue
++        if not can_move_to(
++            world,
++            game_map,
++            monster,
++            origin,
++            direction,
++            blocked_tiles=blocked_tiles,
++        ):
++            continue
++        dest_dist = distances.get(dest, origin_dist)
++        recent_penalty = 1 if dest in recent_positions else 0
++        away_score = 0 if origin_dist is None or dest_dist is None else dest_dist - origin_dist
++        candidates.append((recent_penalty, -away_score, direction[0], direction[1]))
++    if not candidates:
++        return None
++    candidates.sort()
++    best = candidates[0]
++    tied = [entry for entry in candidates if entry[:2] == best[:2]]
++    choice = rng.choice(tied)
++    return (choice[2], choice[3])
++
++
++def _choose_explore_direction(
++    world: Registry,
++    game_map: GameMap,
++    monster: Entity,
++    origin: Position,
++    goal: Position,
++    entity: Entity,
++    rng: random.Random,
++    *,
++    blocked_tiles: frozenset[Position] = frozenset(),
++    recent_positions: deque[Position],
++) -> tuple[int, int] | None:
++    """BFS one-step toward goal; sidestep away from goal when blocked."""
++    if rng.random() < EXPLORE_IDLE_CHANCE:
++        return None
++    distances = explore_distances_to_goal(game_map, goal, entity)
++    origin_dist = distances.get(origin)
++    if origin_dist is None:
++        return _choose_explore_sidestep(
++            world,
++            game_map,
++            monster,
++            origin,
++            goal,
++            entity,
++            rng,
++            blocked_tiles=blocked_tiles,
++            recent_positions=recent_positions,
++        )
++
++    best_distance = origin_dist
++    best_directions: list[tuple[int, int]] = []
++    for direction in MOVEMENT_DIRECTIONS:
++        dest = origin + direction
++        if dest in blocked_tiles:
++            continue
++        if not can_move_to(
++            world,
++            game_map,
++            monster,
++            origin,
++            direction,
++            blocked_tiles=blocked_tiles,
++        ):
++            continue
++        dest_dist = distances.get(dest)
++        if dest_dist is None:
++            continue
++        if dest_dist < best_distance:
++            best_distance = dest_dist
++            best_directions = [direction]
++        elif dest_dist == best_distance:
++            best_directions.append(direction)
++
++    if best_distance < origin_dist and best_directions:
++        return rng.choice(best_directions)
++
++    return _choose_explore_sidestep(
++        world,
++        game_map,
++        monster,
++        origin,
++        goal,
++        entity,
++        rng,
++        blocked_tiles=blocked_tiles,
++        recent_positions=recent_positions,
++    )
++
++
+ def _choose_neutral_explore_direction(
+     world: Registry,
+     game_map: GameMap,
+@@ -1172,6 +1687,26 @@ def _resolve_chase_direction(
+             "none",
+         )
+     if target_position is not None:
++        if (
++            state is not None
++            and rng is not None
++            and _is_explore_target_step(monster, state, target_position, chase_mode)
++        ):
++            explore_blocked = _blocked_tiles_for_explore(monster, world, blocked)
++            return (
++                _choose_explore_direction(
++                    world,
++                    game_map,
++                    monster,
++                    origin,
++                    target_position,
++                    monster,
++                    rng,
++                    blocked_tiles=explore_blocked,
++                    recent_positions=state.explore_recent_positions,
++                ),
++                "none",
++            )
+         swappable = (
+             GOOD_CHASE_SWAPPABLE_ALIGNMENTS
+             if _npc_alignment(monster) == Alignment.GOOD
+@@ -1375,6 +1910,7 @@ def _resolve_monster_move_direction(
+ ) -> tuple[tuple[int, int] | None, ChaseStepPhase]:
+     """Alignment-aware chase/explore/wander without the attack pipeline."""
+     player_pos = player.components[Position]
++    explore_blocked = _blocked_tiles_for_explore(monster, world, blocked)
+     if alignment == Alignment.NEUTRAL:
+         evils = _visible_evils(monster, world, game_map)
+         if evils:
+@@ -1384,7 +1920,7 @@ def _resolve_monster_move_direction(
+                 and not coward_should_flee(monster)
+             ):
+                 return (
+-                    _choose_neutral_explore_direction(
++                    _choose_explore_direction(
+                         world,
+                         game_map,
+                         monster,
+@@ -1393,11 +1929,13 @@ def _resolve_monster_move_direction(
+                             state,
+                             game_map,
+                             monster_pos,
++                            monster,
+                             rng,
+-                            mobility=entity_mobility(monster),
+                         ),
+-                        blocked_tiles=blocked,
+-                        recent_positions=state.recent_positions,
++                        monster,
++                        rng,
++                        blocked_tiles=explore_blocked,
++                        recent_positions=state.explore_recent_positions,
+                     ),
+                     "none",
+                 )
+@@ -1415,7 +1953,7 @@ def _resolve_monster_move_direction(
+                 "none",
+             )
+         return (
+-            _choose_neutral_explore_direction(
++            _choose_explore_direction(
+                 world,
+                 game_map,
+                 monster,
+@@ -1424,11 +1962,13 @@ def _resolve_monster_move_direction(
+                     state,
+                     game_map,
+                     monster_pos,
++                    monster,
+                     rng,
+-                    mobility=entity_mobility(monster),
+                 ),
+-                blocked_tiles=blocked,
+-                recent_positions=state.recent_positions,
++                monster,
++                rng,
++                blocked_tiles=explore_blocked,
++                recent_positions=state.explore_recent_positions,
+             ),
+             "none",
+         )
+@@ -1519,9 +2059,28 @@ def _try_monster_move(
+     state: AIState,
+     pursuit_phase: ChaseStepPhase,
+     skipped: set[Entity] | None,
++    explore_step: bool = False,
++    memory_target: Position | None = None,
+ ) -> None:
+     if direction is None:
+-        _complete_pursuit_step(state, None, phase=pursuit_phase, moved=False)
++        _complete_pursuit_step(
++            state,
++            None,
++            phase=pursuit_phase,
++            moved=False,
++            origin=origin,
++            current_pos=origin,
++            memory_target=memory_target,
++        )
++        if explore_step:
++            _complete_explore_step(
++                state,
++                monster,
++                game_map,
++                origin,
++                rng,
++                moved=False,
++            )
+         return
+     try_action(
+         world,
+@@ -1533,14 +2092,32 @@ def _try_monster_move(
+         skip_turn_entities=skipped,
+     )
+     moved = monster.components[Position] != origin
+-    _complete_pursuit_step(state, direction, phase=pursuit_phase, moved=moved)
++    current_pos = monster.components[Position]
++    _complete_pursuit_step(
++        state,
++        direction,
++        phase=pursuit_phase,
++        moved=moved,
++        origin=origin,
++        current_pos=current_pos,
++        memory_target=memory_target,
++    )
++    if explore_step:
++        _complete_explore_step(
++            state,
++            monster,
++            game_map,
++            origin,
++            rng,
++            moved=moved,
++        )
+     if moved and _is_neutral_explore_step(monster, world, game_map):
+         _on_neutral_explore_moved(
+             state,
++            monster,
+             monster.components[Position],
+             game_map,
+             rng,
+-            mobility=entity_mobility(monster),
+         )
+ 
+ 
+@@ -1818,6 +2395,8 @@ def _execute_intent_pipeline(
+     ):
+         return "end_visit"
+ 
++    explore_step = False
++    memory_target: Position | None = None
+     if alignment == Alignment.EVIL:
+         entity_target, pos_target, blocked_primary = pick_evil_chase(
+             monster,
+@@ -1827,6 +2406,13 @@ def _execute_intent_pipeline(
+             rng,
+             player_engulfed=player_engulfed,
+         )
++        explore_step = _is_explore_step(
++            Alignment.EVIL,
++            state,
++            entity_target,
++            pos_target,
++            "explore",
++        )
+         if blocked_primary is not None and entity_target is not None:
+             debug_print(
+                 messages.evil_frustrated_by_blocker(
+@@ -1860,6 +2446,8 @@ def _execute_intent_pipeline(
+             player_engulfed=player_engulfed,
+             monster_pos=monster_pos,
+         )
++        if pursuit_phase == "memory":
++            memory_target = pos_target
+     elif alignment == Alignment.GOOD:
+         entity_target, pos_target, chase_mode = pick_good_chase(
+             monster,
+@@ -1869,6 +2457,13 @@ def _execute_intent_pipeline(
+             rng,
+             player_engulfed=player_engulfed,
+         )
++        explore_step = _is_explore_step(
++            Alignment.GOOD,
++            state,
++            entity_target,
++            pos_target,
++            chase_mode,
++        )
+         if try_ranged_engagement(
+             monster,
+             world,
+@@ -1896,7 +2491,10 @@ def _execute_intent_pipeline(
+             alignment=alignment,
+             player_engulfed=player_engulfed,
+         )
++        if pursuit_phase == "memory":
++            memory_target = pos_target
+     else:
++        explore_step = _is_neutral_explore_step(monster, world, game_map)
+         direction, pursuit_phase = _resolve_monster_move_direction(
+             monster,
+             world,
+@@ -1921,6 +2519,8 @@ def _execute_intent_pipeline(
+         state=state,
+         pursuit_phase=pursuit_phase,
+         skipped=skipped,
++        explore_step=explore_step,
++        memory_target=memory_target,
+     )
+     return "next_step"
+ 

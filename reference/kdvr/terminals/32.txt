@@ -1,0 +1,15 @@
+---
+pid: 2660
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; foreach ($n in 1..5) { python -m pytest tests/ -q --tb=no 2>&1 | Select-String 'passed|failed' }"
+started_at: 2026-06-30T23:19:34.608Z
+running_for_ms: 6360012  
+---
+
+317 passed, 16 warnings in 43.80s
+317 passed, 16 warnings in 43.59s
+317 passed, 16 warnings in 43.87s
+317 passed, 17 warnings in 43.90s
+317 passed, 16 warnings in 43.14s
+
+

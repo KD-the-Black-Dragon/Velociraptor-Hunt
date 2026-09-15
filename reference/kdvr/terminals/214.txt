@@ -1,0 +1,27 @@
+---
+pid: 16672
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cmd /c \"cd /d C:\\VS Code Projects\\kds-vore-roguelike && python -m pytest tests/test_sim_navigation.py::test_first_step_toward_goal tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility -v --tb=short\""
+started_at: 2026-07-11T22:49:28.815Z
+running_for_ms: 1644995  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 3 items
+
+tests/test_sim_navigation.py::test_first_step_toward_goal FAILED         [ 33%]
+tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs PASSED [ 66%]
+tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility PASSED [100%]
+
+================================== FAILURES ===================================
+_________________________ test_first_step_toward_goal _________________________
+tests\test_sim_navigation.py:57: in test_first_step_toward_goal
+    assert direction == (1, 0)
+E   assert None == (1, 0)
+=========================== short test summary info ===========================
+FAILED tests/test_sim_navigation.py::test_first_step_toward_goal - assert Non...
+=================== 1 failed, 2 passed in 66.33s (0:01:06) ====================

@@ -52,8 +52,24 @@ def test_spawned_wolf_max_path_range_matches_token(distance: int) -> None:
 
 @pytest.mark.parametrize("distance", [2, 3])
 def test_wolf_shoots_player_at_max_range(distance: int) -> None:
+    from src.components import Fighter
+
     engine = GameEngine()
     wolf = _wolf_with_range(engine, distance)
+    # Pin high accuracy so continuous evade does not mask the RangeN log line.
+    fighter = wolf.components[Fighter]
+    wolf.components[Fighter] = Fighter(
+        hp=fighter.hp,
+        max_hp=fighter.max_hp,
+        accuracy=10.0,
+        evade=fighter.evade,
+        ac=fighter.ac,
+        min_damage=fighter.min_damage,
+        max_damage=fighter.max_damage,
+        ranged_accuracy=10.0,
+        ranged_min_damage=fighter.ranged_min_damage,
+        ranged_max_damage=fighter.ranged_max_damage,
+    )
     player = engine.player
     assert player is not None
     carve_horizontal_line(engine, ARENA_X, ARENA_Y, distance + 2)

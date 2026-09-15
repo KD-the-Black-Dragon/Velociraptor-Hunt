@@ -1,0 +1,15 @@
+---
+pid: 24136
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q --tb=line 2>&1 | Select-Object -Last 8"
+started_at: 2026-07-02T00:29:09.647Z
+running_for_ms: 519988   
+---
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_enhancements_2.py::test_player_hit_wolf_uses_species_name
+FAILED tests/test_vore_engulfed.py::test_defeating_predator_releases_player_same_turn
+FAILED tests/test_vore_render.py::test_engine_render_blind_while_engulfed - S...
+FAILED tests/test_vore_struggle.py::test_directional_escape_moves_player - As...
+4 failed, 431 passed, 19 warnings in 128.17s (0:02:08)

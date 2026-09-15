@@ -1,0 +1,310 @@
+---
+pid: 15556
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_floor_runes_pr3.py tests/test_dungeon_layout_pr3.py -q"
+started_at: 2026-07-03T16:08:47.687Z
+running_for_ms: 24209994 
+---
+....F.FFF....F...F                                                       [100%]
+================================== FAILURES ===================================
+____________________ test_rune_placed_on_floor_not_stairs _____________________
+
+    def test_rune_placed_on_floor_not_stairs() -> None:
+        world = Registry()
+        game_map = rune_placement_arena()
+        stairs_x, stairs_y = 10, game_map.height // 2
+        game_map.tiles[stairs_y, stairs_x] = Tile.STAIRS_DOWN
+        registry = load_floor_rune_registry(FLOOR_RUNES_PATH)
+>       rune = spawn_floor_rune(
+            world,
+            game_map,
+            floor_depth=1,
+            rng=random.Random(0),
+            registry=registry,
+            min_distance=5,
+            count=1,
+        )[0]
+
+tests\test_floor_runes_pr3.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = Registry(_components_by_entity=defaultdict(<class 'dict'>, {}), _components_by_type=defaultdict(<class 'dict'>, {}), _... at 0x0000015EFEE62B90>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={})
+game_map = GameMap(width=40, height=20, tiles=array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0...False, False, False, False, False, False,
+        False, False, False, False]]), enter_xy=(2, 10), layout_archetype='')
+floor_depth = 1, rng = <random.Random object at 0x0000015E86098DE0>
+registry = FloorRuneRegistry(schema_version=1, runes=(FloorRuneDefinition(id='vitality_rune', display_name='rune of vitality', gl...h=1, max_depth=1000, effect=RuneEffect(type='natural_ac', amount=1, accuracy=None, min_damage=None, max_damage=None))))
+min_distance = 5, min_pairwise = 20, count = 1
+
+    def spawn_floor_rune(
+        world: Registry,
+        game_map: GameMap,
+        floor_depth: int,
+        *,
+        rng: random.Random | None = None,
+        registry: FloorRuneRegistry | None = None,
+        min_distance: int = RUNE_SPAWN_MIN_DISTANCE,
+        min_pairwise: int = MIN_PAIRWISE_SPREAD_BFS,
+        count: int = RUNES_PER_FLOOR,
+    ) -> list[Entity]:
+        """Place floor runes for this depth on distinct, spread tiles."""
+        rng = rng or random.Random()
+        reg = registry or default_floor_rune_registry()
+        eligible = reg.eligible_at_depth(floor_depth)
+        if not eligible:
+            raise RunePlacementError(f"no runes eligible at depth {floor_depth}")
+    
+        placed: list[Entity] = []
+        placed_positions: list[tuple[int, int]] = []
+        for index in range(count):
+            candidates = rune_candidates_with_path_distance(
+                game_map,
+                world,
+                game_map.enter_xy,
+            )
+            candidates = [
+                (x, y, dist)
+                for x, y, dist in candidates
+                if (x, y) not in placed_positions
+            ]
+            candidates = filter_candidates_by_entrance_distance(
+                candidates,
+                minimum=min_pairwise,
+            )
+            if not candidates:
+>               raise RunePlacementError("no valid rune tiles")
+E               src.systems.floor_runes.RunePlacementError: no valid rune tiles
+
+src\systems\floor_runes.py:249: RunePlacementError
+_____________ test_rune_entrance_distance_relaxes_only_to_twenty ______________
+
+    def test_rune_entrance_distance_relaxes_only_to_twenty() -> None:
+        world = Registry()
+        game_map = rune_placement_arena(width=40, height=10)
+        registry = load_floor_rune_registry(FLOOR_RUNES_PATH)
+        candidates = rune_candidates_with_path_distance(game_map, world, game_map.enter_xy)
+        _x, _y, achieved = choose_rune_placement(
+            candidates,
+            min_distance=RUNE_SPAWN_MIN_DISTANCE,
+            min_relax_to=MIN_PAIRWISE_SPREAD_BFS,
+            rng=random.Random(1),
+        )
+        assert achieved >= MIN_PAIRWISE_SPREAD_BFS
+        rune = spawn_floor_rune(
+            world,
+            game_map,
+            floor_depth=1,
+            rng=random.Random(1),
+            registry=registry,
+            min_distance=RUNE_SPAWN_MIN_DISTANCE,
+            count=1,
+        )[0]
+>       assert rune.components[Position] == Position(_x, _y)
+E       AssertionError: assert Position(x=38, y=5) == Position(x=33, y=5)
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing attributes:
+E         ['x']
+E         
+E         Drill down into differing attribute x:
+E           x: 38 != 33
+
+tests\test_floor_runes_pr3.py:133: AssertionError
+__________________ test_player_can_step_onto_rune_npc_cannot __________________
+
+    def test_player_can_step_onto_rune_npc_cannot() -> None:
+        from src.spawn import spawn_entity_by_id
+    
+        world = Registry()
+        game_map = rune_placement_arena(width=20, height=10)
+        registry = load_floor_rune_registry(FLOOR_RUNES_PATH)
+>       rune = spawn_floor_rune(
+            world,
+            game_map,
+            floor_depth=1,
+            rng=random.Random(3),
+            registry=registry,
+            min_distance=3,
+            count=1,
+        )[0]
+
+tests\test_floor_runes_pr3.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world = Registry(_components_by_entity=defaultdict(<class 'dict'>, {}), _components_by_type=defaultdict(<class 'dict'>, {}), _... at 0x0000015EFEE62B90>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={})
+game_map = GameMap(width=20, height=10, tiles=array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, ... False, False, False, False, False, False, False, False,
+        False, False]]), enter_xy=(2, 5), layout_archetype='')
+floor_depth = 1, rng = <random.Random object at 0x0000015E86085920>
+registry = FloorRuneRegistry(schema_version=1, runes=(FloorRuneDefinition(id='vitality_rune', display_name='rune of vitality', gl...h=1, max_depth=1000, effect=RuneEffect(type='natural_ac', amount=1, accuracy=None, min_damage=None, max_damage=None))))
+min_distance = 3, min_pairwise = 20, count = 1
+
+    def spawn_floor_rune(
+        world: Registry,
+        game_map: GameMap,
+        floor_depth: int,
+        *,
+        rng: random.Random | None = None,
+        registry: FloorRuneRegistry | None = None,
+        min_distance: int = RUNE_SPAWN_MIN_DISTANCE,
+        min_pairwise: int = MIN_PAIRWISE_SPREAD_BFS,
+        count: int = RUNES_PER_FLOOR,
+    ) -> list[Entity]:
+        """Place floor runes for this depth on distinct, spread tiles."""
+        rng = rng or random.Random()
+        reg = registry or default_floor_rune_registry()
+        eligible = reg.eligible_at_depth(floor_depth)
+        if not eligible:
+            raise RunePlacementError(f"no runes eligible at depth {floor_depth}")
+    
+        placed: list[Entity] = []
+        placed_positions: list[tuple[int, int]] = []
+        for index in range(count):
+            candidates = rune_candidates_with_path_distance(
+                game_map,
+                world,
+                game_map.enter_xy,
+            )
+            candidates = [
+                (x, y, dist)
+                for x, y, dist in candidates
+                if (x, y) not in placed_positions
+            ]
+            candidates = filter_candidates_by_entrance_distance(
+                candidates,
+                minimum=min_pairwise,
+            )
+            if not candidates:
+>               raise RunePlacementError("no valid rune tiles")
+E               src.systems.floor_runes.RunePlacementError: no valid rune tiles
+
+src\systems\floor_runes.py:249: RunePlacementError
+______________________ test_rune_has_blocks_movement_tag ______________________
+
+    def test_rune_has_blocks_movement_tag() -> None:
+        world = Registry()
+        game_map = rune_placement_arena()
+        registry = load_floor_rune_registry(FLOOR_RUNES_PATH)
+>       rune = spawn_floor_rune(
+            world,
+            game_map,
+            floor_depth=1,
+            rng=random.Random(5),
+            registry=registry,
+            min_distance=3,
+            count=1,
+        )[0]
+
+tests\test_floor_runes_pr3.py:168: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\systems\floor_runes.py:253: in spawn_floor_rune
+    x, y, _achieved = choose_rune_placement(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidates = [(22, 10, 20), (23, 10, 21), (24, 10, 22), (25, 10, 23), (26, 10, 24), (27, 10, 25), ...]
+min_distance = 3, min_relax_to = 20
+rng = <random.Random object at 0x0000015EEC8EA570>
+
+    def choose_rune_placement(
+        candidates: list[tuple[int, int, int]],
+        *,
+        min_distance: int,
+        min_relax_to: int,
+        rng: random.Random,
+    ) -> tuple[int, int, int]:
+        """Return (x, y, achieved_distance).
+    
+        Tries `min_distance` first, relaxing downward only to `min_relax_to`.
+        """
+        if not candidates:
+            raise RunePlacementError("no valid rune tiles")
+    
+        for threshold in range(min_distance, min_relax_to - 1, -1):
+            pool = [(x, y, dist) for x, y, dist in candidates if dist >= threshold]
+            if pool:
+                x, y, achieved = rng.choice(pool)
+                return x, y, achieved
+    
+>       raise RunePlacementError("no rune tile satisfies entrance min distance")
+E       src.systems.floor_runes.RunePlacementError: no rune tile satisfies entrance min distance
+
+src\systems\floor_runes.py:182: RunePlacementError
+_______________ test_spawn_floor_rune_enforces_pairwise_spread ________________
+
+    def test_spawn_floor_rune_enforces_pairwise_spread() -> None:
+        world = Registry()
+        game_map = GameMap(60, 40)
+        game_map.tiles[:, :] = Tile.WALL
+        game_map.tiles[10:30, 10:50] = Tile.FLOOR
+        game_map.enter_xy = (12, 20)
+    
+        from src.data.floor_rune_loader import load_floor_rune_registry
+    
+        registry = load_floor_rune_registry()
+>       runes = spawn_floor_rune(
+            world,
+            game_map,
+            floor_depth=1,
+            registry=registry,
+            min_distance=5,
+            min_pairwise=MIN_PAIRWISE_SPREAD_BFS,
+            count=RUNES_PER_FLOOR,
+        )
+
+tests\test_dungeon_layout_pr3.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\systems\floor_runes.py:253: in spawn_floor_rune
+    x, y, _achieved = choose_rune_placement(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidates = [(32, 20, 20), (31, 19, 20), (31, 21, 20), (30, 18, 20), (30, 22, 20), (29, 17, 20), ...]
+min_distance = 5, min_relax_to = 20
+rng = <random.Random object at 0x0000015EECA16D20>
+
+    def choose_rune_placement(
+        candidates: list[tuple[int, int, int]],
+        *,
+        min_distance: int,
+        min_relax_to: int,
+        rng: random.Random,
+    ) -> tuple[int, int, int]:
+        """Return (x, y, achieved_distance).
+    
+        Tries `min_distance` first, relaxing downward only to `min_relax_to`.
+        """
+        if not candidates:
+            raise RunePlacementError("no valid rune tiles")
+    
+        for threshold in range(min_distance, min_relax_to - 1, -1):
+            pool = [(x, y, dist) for x, y, dist in candidates if dist >= threshold]
+            if pool:
+                x, y, achieved = rng.choice(pool)
+                return x, y, achieved
+    
+>       raise RunePlacementError("no rune tile satisfies entrance min distance")
+E       src.systems.floor_runes.RunePlacementError: no rune tile satisfies entrance min distance
+
+src\systems\floor_runes.py:182: RunePlacementError
+_____________________ test_pairwise_spread_failure_raises _____________________
+
+    def test_pairwise_spread_failure_raises() -> None:
+        world = Registry()
+        game_map = rune_placement_arena(width=25, height=8)
+        from src.data.floor_rune_loader import load_floor_rune_registry
+    
+        registry = load_floor_rune_registry()
+>       with pytest.raises(RunePlacementError, match="pairwise"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'pairwise'
+E         Actual message: 'no rune tile satisfies entrance min distance'
+
+tests\test_dungeon_layout_pr3.py:165: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_floor_runes_pr3.py::test_rune_placed_on_floor_not_stairs - ...
+FAILED tests/test_floor_runes_pr3.py::test_rune_entrance_distance_relaxes_only_to_twenty
+FAILED tests/test_floor_runes_pr3.py::test_player_can_step_onto_rune_npc_cannot
+FAILED tests/test_floor_runes_pr3.py::test_rune_has_blocks_movement_tag - src...
+FAILED tests/test_dungeon_layout_pr3.py::test_spawn_floor_rune_enforces_pairwise_spread
+FAILED tests/test_dungeon_layout_pr3.py::test_pairwise_spread_failure_raises
+6 failed, 12 passed in 33.14s

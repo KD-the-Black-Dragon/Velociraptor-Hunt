@@ -1,0 +1,19 @@
+---
+pid: 25820
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_digestion.py tests/test_npc_data_pr1.py tests/test_npc_data_pr3.py tests/test_inventory_items_pr3.py tests/test_flow_pr4.py -q --tb=short 2>&1"
+started_at: 2026-07-04T02:30:09.257Z
+running_for_ms: 2655013  
+---
+........................................................................ [ 85%]
+............                                                             [100%]
+============================== warnings summary ===============================
+tests/test_inventory_items_pr3.py::test_sidebar_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\ui_test_helpers.py:50: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+84 passed, 1 warning in 39.90s
+[prefetch] ready depth=1
+[prefetch] ready depth=1
+[prefetch] ready depth=1

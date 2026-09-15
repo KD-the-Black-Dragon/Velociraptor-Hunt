@@ -1,0 +1,290 @@
+Metadata-Version: 2.4
+Name: kds-vore-roguelike
+Version: 0.1.0
+Summary: KD's Vore Roguelike — minimal Python/libtcod dungeon crawler
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: tcod>=16.0
+Requires-Dist: tcod-ecs>=5.0
+Requires-Dist: numpy>=1.26
+Requires-Dist: Pillow>=10.0
+Requires-Dist: platformdirs>=4.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: pytest-xdist>=3.5; extra == "dev"
+
+# KD's Vore Roguelike
+
+Minimal Python/libtcod turn-based dungeon crawler.
+
+## Setup
+
+```bash
+pip install -e .
+```
+
+Requires the tileset at `data/Alloy_curses_12x12.png` (included after first setup).
+
+## Run
+
+```bash
+python -m src.main
+```
+
+The game opens to a **main menu** (black screen, title, five options). **New Game** prompts for a display name, then starts a dungeon run.
+
+## User data
+
+Saves, settings, past-run history, and diagnostic logs are stored outside the game directory under **KD's Vore Roguelike**:
+
+| OS | Path |
+|----|------|
+| Windows | `%LOCALAPPDATA%\KD's Vore Roguelike\` |
+| Linux | `~/.local/share/KD's Vore Roguelike/` |
+| macOS | `~/Library/Application Support/KD's Vore Roguelike/` |
+
+| File / folder | Contents |
+|---------------|----------|
+| `saves/` | Autosave chain (`autosave.json` + rotating backups) |
+| `past_runs.json` | Completed run history |
+| `settings.json` | Vore toggles, UI layout preset, and window size/position/mode |
+| `mods/` | Player mods (one folder per mod; see **Modding** below) |
+| `logs/` | Crash reports, session milestones, startup errors |
+
+Shipped game content (`data/entities.json`, tileset, etc.) stays in the install directory and is not user-specific.
+
+## Modding
+
+Official JSON modding is supported. Drop each mod in a **subfolder** under `{user_data}/mods/`:
+
+```text
+mods/
+  CoolDragons/
+    mod.state          # auto-created if missing (E/D + load order)
+    entities.json     # optional — any subset of the files below
+    weapons.json
+    ...
+```
+
+| Rule | Detail |
+|------|--------|
+| Core first | Install `data/*.json` always loads first |
+| Entities by id | Later enabled mod **deep-merges** onto that species: omit a field to keep stock (or earlier-mod) values; set a field to overwrite. Nested objects (e.g. `spawn`) merge; **arrays** replace when present |
+| Other ids | `weapons`, `armor`, `potions`, `wands`, `floor_runes`, `macguffins`, `names` — later mod **fully replaces** that id’s entry |
+| Whole-file | `dungeon_spawn.json`, `depth_scaling.json`, `global_tuning.json`, `npc_prefixes.json`, `rescue_gratitude.json`, `ui_layout.json` — if present, replace the whole previous layer |
+| Enable / order | **Options → Mods...** (toggle, Page Up/Down reorder). New mods default **Enabled** |
+| Bad JSON | Windows error dialog names **mod + file**; that file is skipped; game continues |
+| Guide / Sample | `mods/MODDING_README.txt` and `mods/Sample Mod/entities.json` refresh on launch when missing or out of date (game-owned). Sample Mod `mod.state` (enabled/order) is kept. Copy Sample Mod to a new folder before customizing. |
+| Saves | A run pins its exact enabled mod list. Entering Mods with a save **deletes** the save (capital **Y** confirm). Load Game refuses if current mods do not match the save |
+
+**Entity patch examples** (mod `entities.json` may list only the species you change):
+
+```json
+{
+  "schema_version": 1,
+  "entities": [
+    { "id": "wolf", "spawn": { "weight": 0 } }
+  ]
+}
+```
+
+That turns off new wolf spawns while keeping stock combat stats and narratives. Brand-new species ids still need a **complete** entity object (all mandatory fields — see `data/SCHEMA.md`).
+
+Gate a species on enabled vore types with `spawn.requires_vore_types` (capability list: spawn if **any** listed `OV` / `CV` / `AV` is enabled; empty/omitted = no gate):
+
+```json
+{
+  "schema_version": 1,
+  "entities": [
+    { "id": "ball_python", "spawn": { "requires_vore_types": ["CV"] } }
+  ]
+}
+```
+
+Example: `["CV", "AV"]` still appears when only CV is enabled; it is excluded only when the player has neither CV nor AV. The same list also limits which types that species will **attempt** (capability ∩ player prefs).
+
+Supported filenames (same shapes as stock — see `data/SCHEMA.md`):  
+`entities`, `weapons`, `armor`, `potions`, `wands`, `floor_runes`, `macguffins`, `names`, `dungeon_spawn`, `rescue_gratitude`, `ui_layout`.
+
+Tileset/fonts and Python code are **not** moddable.
+
+## Windows alpha release (itch.io)
+
+Use this checklist whenever you want to publish a new alpha build.
+
+1. Activate the project virtual environment in PowerShell:
+
+   ```powershell
+   .\.venv\Scripts\Activate.ps1
+   ```
+
+2. Install or refresh the project and packaging tools:
+
+   ```powershell
+   python -m pip install -e .
+   python -m pip install --upgrade build pyinstaller
+   ```
+
+3. Build the Windows package:
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_alpha.ps1
+   ```
+
+4. Verify the output files in the dist folder:
+   - [dist/kds-vore-roguelike/kds-vore-roguelike.exe](dist/kds-vore-roguelike/kds-vore-roguelike.exe)
+   - [dist/kds-vore-roguelike-win-alpha.zip](dist/kds-vore-roguelike-win-alpha.zip)
+
+5. Smoke-test the executable before uploading. Confirm that the title screen opens and the game starts. Launching a second copy while the first is still running should show an "already running" dialog and exit without opening another window.
+
+6. Upload the zip archive to itch.io as a Windows build.
+
+The packaging script is stored in [scripts/build_windows_alpha.ps1](scripts/build_windows_alpha.ps1). It zips via [scripts/zip_release_dir.py](scripts/zip_release_dir.py) (forward-slash paths) so itch.io’s extractor does not reject the archive.
+
+## Reporting bugs
+
+Diagnostics are always on. After a crash or failed launch, check the **`logs/`** folder inside your user data directory (see table above):
+
+| File | Contents |
+|------|----------|
+| `crash.log` | Latest crash only — version, exception, stack trace, floor/turn/seed, UI state |
+| `session_*.log` | Milestone trail for that launch (new game, floors, pickups, defeats, quit) |
+| `startup_error.log` | Append-only log when stock `entities.json` blocks startup |
+
+Attach `crash.log` and the matching `session_*.log` when reporting issues. Field-by-field interpretation for developers and AI triage: **`openspec/changes/archive/2026-07-06-add-debug-support/log-interpretation-guide.md`**. Live spec: `openspec/specs/debug-support/spec.md`.
+
+**Test crash (destructive):** during PLAY, debug hotkey **F6** forces a logged crash (`ForceCrashError`).
+
+## Verify (acceptance tests)
+
+```bash
+python -m pytest tests/ -v
+```
+
+### Main menu
+
+- **Navigate:** **Up / Down** highlight; **Enter** activates
+- **New Game** → name entry (max 24 chars; blank → **Anonymous**); **Escape** cancels
+- **Load Game** → restore autosave when present (refuses if enabled mods no longer match that save)
+- **Options** → **Oral Vore** / **Cock Vore** / **Anal Vore** toggles (at least one must stay on); **UI Layout** cycles **Standard** / **Wide**; **Fullscreen** toggles **Off** / **On**; **4K UI scaling** Off/On (F10); **Alternate CV Mechanics** No/Yes (default No; snapshotted on New Game — CV struggle deals no damage, CV escape / NPC CV digest-complete dazes the predator); **Mods...** enable/order mods; saved to user data `settings.json` (including `window` block for size, position, maximized state)
+- **Exit** or window **X** → quit the application
+- **Ctrl+Q** on menu, name entry, options, or stubs → **no-op**
+
+### Controls (gameplay)
+
+- **Move:** arrows, numpad, or **Shift+TYUGHJBNM** (uppercase `Y` north, `N` south, `G` west, `J` east, `T`/`U`/`B`/`M` diagonals)
+- **Wait:** **Shift+H**, numpad **5**, or **.** (pass turn; natural regen every 8 turns)
+- **Rest:** **`5`** (main keyboard digit) — wait repeatedly until full HP, danger, attack, ally alarm, or 100 turns
+- **Descend:** **Shift+.** (`>`), **0**, or **NumPad0** while standing on downstairs — new floor, depth +1; **`.`** alone still waits
+- **Pickup:** **,** (comma) on current tile — free; walkover auto-picks all items on a tile
+- **Inventory:** **i** inspect (list → detail), **d** drop — free
+- **Equip / use:** **w** wield weapon, **Shift+w** wear armor, **q** quaff potion, **v** evoke wand — consume a turn on success
+- **Examine:** **x** (free; move cursor with arrows; **Enter** for description; **Escape** to cancel)
+- **Full log:** **Ctrl+P** — scrollable message history (up to 100 entries); **Esc** or **Ctrl+P** closes; arrows / **TYUGHJBNM** / numpad scroll one wrapped line; **PgUp** / **PgDn** scroll one page. Works during modals and rest.
+- **Help:** **F1** or **?** (Shift+/) — control reference overlay; **Esc** closes. Works during modals and rest. **Ctrl+P** from help closes help and opens the full log.
+- **Quit to menu:** **Ctrl+Q** → `Do you want to quit? (Y/n)` — capital **Y** returns to main menu, lowercase **n** resumes
+- **Cancel:** **Escape** exits examine only — does not quit
+- **Debug:** **R** new dungeon, **S** stun toggle, **F2** weaken all monsters to 1 HP, **F3** water-heavy map generation, **F4** cycle layout archetype, **F5** omniscient vision, **F6** force crash (logs to user data `logs/crash.log`)
+
+During vore, digestion, and post-digestion recap modals, **Ctrl+Q** is a no-op; **Enter** advances only.
+
+Wait and regen are silent. While stunned, movement and wait show *"You're too tired to move."* and pass the turn; **q** quaff still works. While engulfed, all pack commands log *"You cannot reach your pack while engulfed."* (worn armor still mitigates digestion passively).
+
+### Combat and identity
+
+**Population:** density-driven from `data/dungeon_spawn.json` — NPC count scales with valid spawn tiles and depth band. Species are weighted random draws from `data/entities.json` (no fixed 6/5/6/2 quotas). Sharks (`s`, evil, aquatic) compete for the same spawn budget on water floors; count is probabilistic, not guaranteed.
+
+**Melee combat:** hit check `accuracy − evade roll`; damage `min..max − ac roll`. Player defaults are in code; NPC stats are in JSON. You may miss — *"You miss the wolf."*
+
+### Dungeon (maps, water, descent)
+
+- **Varied maps:** mixed rooms, organic caves, wide/narrow corridors; three **`>`** downstairs per floor (all reachable from entrance).
+- **Deep water (`~`):** blue tiles; impassable to you; FOV passes through. Lakes/rivers appear probabilistically; use **F3** for water-heavy test generation, then **R** to regen.
+- **Depth:** status corner (bottom-right) shows **Depth N** (starts at 1). Stand on `>`, press **Shift+.**, **0**, or **NumPad0** to descend. Off stairs: *"There are no stairs here."* While engulfed: *"Going deeper won't help you here!"* (no turn either way).
+- **Descent** preserves HP, inventory (slots, durability, charges), wielded/worn equip, rune progression buffs, name, and options; regenerates map, items, NPCs, and floor runes. **Good** allies in line of sight follow to the new floor near the entrance.
+- **Sharks** swim in deep water only; they **bump-attack** targets on adjacent land without leaving the water.
+- **Floor runes:** three **`0`** glyphs per floor (color shows effect type); step on to absorb a permanent buff (max HP, accuracy, AC, etc.). Brief colored flash around the player; rune vanishes; buffs persist across floors and stack with equipment.
+- **R** still full-regenerates the current run and resets depth to **1**.
+
+- Wolves are **evil**; knights **good**; rabbits **neutral**. Logs use species names (*"the wolf"*, *"the knight"*, *"the rabbit"*).
+- Bump **evil** NPCs to attack; bump **good** or **neutral** NPCs to **swap** positions (player-initiated only).
+- **NPC↔NPC:** same-alignment pairs swap (knights, rabbits, wolves); cross-alignment bumps attack.
+- Good/neutral at **0 HP** are **stunned** (not removed); wolves at 0 HP are **defeated**. Stunned allies regen 1 HP every 8 player turns (wolves every 12).
+- Off-screen NPC combat, regen, and vore messages do not appear in the log until you can see a participant.
+
+### Vore (when HP ≤ 50% max)
+
+- Adjacent wolves may open a **center-screen modal** — press **Enter** to advance phases; modal text never copies to the log.
+- On a hit, you become **engulfed**: map goes blind (only `@` plus a dark-red `#` ring); status corner shows engulfed.
+- **Direction keys** while engulfed (HP > 0): struggle — random log line, damage predator, escape chance.
+- **Direction keys** while engulfed at 0 HP: tired message only (no struggle).
+- **Wait** while engulfed: pass turn without struggling.
+- **Inventory** (`,`, `i`, `d`, `w`, Shift+w, `q`, `v`) blocked while engulfed.
+- **x** while engulfed: *"You can't see anything!"* (no examine).
+- After escape, brief **mercy invincibility** during that monster phase.
+
+### NPC vore (evil wolves on good/neutral)
+
+- Weakened stunned knights/rabbits adjacent to wolves may be vored — **log only**, no modal.
+- Holding wolf shows **`o` on a dark red tile**; engulfed prey glyph is never drawn.
+- Defeat the holding wolf (you or a knight) to **free** engulfed allies (*"The rabbit is freed from the wolf."* when visible).
+- Holding wolf may **bump-attack** adjacent hostiles but does not move or vore again while holding.
+
+### Digestion
+
+- Engulfed prey take **digestion damage** per tick (`digestion_damage_per_tick` per predator); at **0 HP**, **strikes** accumulate until `digest_time` (wolf **3**, shark **10**, default **6**).
+- **NPC** digestion ticks at the prey's AI slot; prey is **removed** with an OV/CV/AV completion log when visible.
+- **Player** digestion ticks each consumed turn (after struggle); strike increments log *"You are being digested!!"*
+- While engulfed: **no external combat damage**, **no natural regen** — only digestion changes HP.
+- Final player strike (predator `digest_time`) → **digestion modal** → **recap** (your display name and digested-by fate; no score); **Enter** returns to the **main menu**.
+- Freed prey (player or NPC) get **mercy** for the rest of the world phase.
+
+## Status
+
+**Core roguelike v1** — `openspec/specs/core-roguelike/spec.md` (archived: `openspec/changes/archive/2026-06-29-implement-core-roguelike/`).
+
+**Enhancements 1** — `openspec/specs/enhancements-1/spec.md` (archived: `openspec/changes/archive/2026-06-29-add-enhancements-1/`).
+
+**Vore mechanics v1** — `openspec/specs/vore/spec.md` (archived: `openspec/changes/archive/2026-06-29-add-vore-mechanics/`).
+
+**Enhancements 2** — NPC identity, alignment, examine, faction AI (`openspec/specs/enhancements-2/spec.md`, archived: `openspec/changes/archive/2026-06-29-add-enhancements-2/`).
+
+**Enhancements 3** — Knights, rabbits, exploration AI, NPC stunned/regen, NPC swap, log-only NPC vore, rescue (`openspec/specs/enhancements-3/spec.md`, archived: `openspec/changes/archive/2026-06-30-add-enhancements-3/`).
+
+**Digestion** — NPC and player defeat via vore digestion, strikes, mercy, predator holding (`openspec/specs/digestion/spec.md`, archived: `openspec/changes/archive/2026-06-30-add-digestion/`).
+
+**Main menu** — title screen, name entry, vore content options, quit confirmation, recap → menu (`openspec/specs/main-menu/spec.md`, archived: `openspec/changes/archive/2026-06-30-add-main-menu/`).
+
+**Dungeon** — mixed map generation, deep water, mobility, multi-floor descent, sharks (`openspec/specs/dungeon/spec.md`, archived: `openspec/changes/archive/2026-06-30-add-dungeon-enhancement/`).
+
+**NPC data** — `data/entities.json`, alignment profiles, weight spawn, combat range, vore text from data (`openspec/specs/npc-data/spec.md`, archived: `openspec/changes/archive/2026-07-01-add-npc-data-driven/`).
+
+**Inventory and items** — data-driven weapons, armor, potions, wands; category commands; equip, durability, wand evoke (`openspec/specs/inventory-items/spec.md`, archived: `openspec/changes/archive/2026-07-01-add-inventory-items/`).
+
+**Equipment catalog** — 12 weapons, 9 armors, 3 potions, 5 wands; depth overlap, sparse floors, starter gear (`openspec/specs/equipment-catalog/spec.md`, archived: `openspec/changes/archive/2026-07-01-add-equipment-catalog/`).
+
+**Dungeon progression pass** — density-driven NPC spawning from `dungeon_spawn.json`, species-agnostic good-follower deduction, floor runes with permanent step-on buffs (`openspec/specs/dungeon/spec.md`, `openspec/specs/floor-runes/spec.md`, archived: `openspec/changes/archive/2026-07-02-add-dungeon-progression-pass/`).
+
+**UI layout** — region-based playfield (camera map viewport, sidebar, 8-line message log, status corner), JSON presets, dynamic window resize with 1360×768 client minimum (`openspec/specs/ui-layout/spec.md`, archived: `openspec/changes/archive/2026-07-02-add-ui-overhaul/`).
+
+**Debug support** — crash reports, session milestone logs, friendly `entities.json` startup errors (`openspec/specs/debug-support/spec.md`, archived: `openspec/changes/archive/2026-07-06-add-debug-support/`).
+
+## Playfield layout
+
+- **Map viewport:** smaller than the full 80×44 dungeon; camera centers on the player.
+- **Sidebar (right):** your name, exact HP + bar; evil NPCs under you, good NPCs at the bottom (FOV only); NPC bars are coarse 6-wide estimates.
+- **Message log (bottom):** up to **8** lines; no name/HP/depth there.
+- **Status corner (bottom-right):** depth, stunned, engulfed.
+- **Window:** drag to resize; map grows/shrinks first; minimum client size **1360×768** (title bar/borders are extra).
+- **Options → UI Layout:** **Standard** (wider map) vs **Wide** (wider sidebar); applies on **New Game**.
+
+## Inventory and items
+
+- **Starter loadout:** dagger in slot `a` (wielded), robes in slot `b` (worn); next pickup uses `c`.
+- **Slots:** 26 letters `a`–`z` assigned on pickup; stable until drop. Potions of the same type **stack** in one slot.
+- **Floor spawn:** depth-filtered weighted pool; **≤5** weighted drops per floor; at least one health potion on depth 1 (`spawn_min`). Gear is **rare** — weapons/armor/wands weight 1.
+- **Wield / wear:** one weapon and one armor; changes bump combat stats via `effective_fighter()`.
+- **Durability:** weapons −1 per successful player hit; armor −1 per point of **digestion** damage mitigated (`digestion_ac`); destroyed at 0 with a **red** log.
+- **Wands:** `v` → pick wand → cursor targeting (map only, no modal); **evil NPCs only**; `Not the best target.` / `No valid targets in range.` when applicable.
+- **Inspect:** `i` for pack; `x` on floor shows full stats (not description only).
+- Letter keys **only work inside inventory modals** — not globally.

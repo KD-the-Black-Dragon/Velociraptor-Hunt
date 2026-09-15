@@ -10,11 +10,188 @@ Terminology policy: use defeated / stunned / digested — never kill, die, or de
 
 
 def welcome() -> str:
-    return "Welcome to Gladiavore."
+    return "Welcome to Velociraptor Hunt."
+
+
+def hunt_you_fire(weapon_name: str) -> str:
+    return f"You fire your {weapon_name}!"
+
+
+def hunt_raptor_tranquilized() -> str:
+    return "The raptor is tranquilized!!"
+
+
+def hunt_you_win() -> str:
+    return "You win!"
+
+
+def hunt_time_win() -> str:
+    return "Time over — you hold the ring."
+
+
+def hunt_time_loss() -> str:
+    return "Time over — the raptor holds the ring."
+
+
+def hunt_game_over() -> str:
+    return "GAME OVER"
+
+
+def hunt_digested_over() -> str:
+    return "You were swallowed and digested."
+
+
+def hunt_shot_blocked() -> str:
+    return "The shot slams into a tree."
+
+
+def hunt_shot_miss() -> str:
+    return "The shot finds only rain and mud."
+
+
+def hunt_shot_hit() -> str:
+    return "The dart finds flesh."
+
+
+def hunt_no_ammo() -> str:
+    return "No rounds left."
+
+
+def hunt_aim_pick() -> str:
+    return "Aim at a visible tile. Enter or A confirms. Esc cancels."
+
+
+def hunt_fire_wrong_facing() -> str:
+    return "You must fire in the same direction you're facing."
+
+
+def hunt_bask_hint() -> str:
+    return "Press any key to view the final results."
+
+
+def hunt_sound_move(direction: str) -> str:
+    return f"Movement {direction}."
+
+
+def hunt_false_rain() -> str:
+    return "Rain in the canopy."
+
+
+def hunt_false_wind(direction: str) -> str:
+    return f"Wind from the {direction}."
+
+
+def hunt_thought_rush() -> str:
+    return "Close - rushing."
+
+
+def hunt_thought_heave() -> str:
+    return "Clock - all-in."
+
+
+def hunt_thought_scramble() -> str:
+    return "Aimed at me - sprinting off the line."
+
+
+def hunt_thought_shy() -> str:
+    return "Staring back - breaking contact."
+
+
+def hunt_thought_circle() -> str:
+    return "Staredown - circling at range."
+
+
+def hunt_thought_observe() -> str:
+    return "Watching from behind."
+
+
+def hunt_thought_sneak() -> str:
+    return "Staring that way - sneaking up."
+
+
+def hunt_thought_sprint_in() -> str:
+    return "Too late to turn - sprinting in."
+
+
+def hunt_thought_ambush() -> str:
+    return "Busy hunter - stalking the long grass."
+
+
+def hunt_thought_grass() -> str:
+    return "Winning - careful in the grass."
+
+
+def hunt_thought_gunshot() -> str:
+    return "Gunshot - somewhere in that patch."
+
+
+def hunt_thought_sound() -> str:
+    return "A noise that still fits - checking it."
+
+
+def hunt_thought_ignore_sound() -> str:
+    return "A noise that does not fit - ignoring it."
+
+
+def hunt_thought_print() -> str:
+    return "Hunter prints - they were here."
+
+
+def hunt_thought_scan() -> str:
+    return "No fix - scanning."
+
+
+def hunt_thought_patrol() -> str:
+    return "Patrolling the center ring."
+
+
+def hunt_thought_contest() -> str:
+    return "Hunter on the ring - contesting center."
+
+
+def hunt_thought_hide() -> str:
+    return "Milking the lead in the grass."
+
+
+def hunt_thought_relay() -> str:
+    return "Heavy rain - switching grass."
+
+
+def hunt_thought_watch() -> str:
+    return "Watching. Waiting for an opening."
+
+
+def hunt_thought_break() -> str:
+    return "Aimed - breaking contact, circling."
+
+
+def hunt_thought_cover() -> str:
+    return "Running for cover."
 
 
 def game_saved() -> str:
     return "Game saved."
+
+
+def instant_action_not_saved() -> str:
+    return "Instant action — not saved."
+
+
+def instant_enter_card_id() -> str:
+    return "Enter a match card id."
+
+
+def instant_unknown_card_id() -> str:
+    return "Unknown match card id."
+
+
+def instant_wrong_kind_card(kind: str) -> str:
+    label = "green" if kind == "green" else "red"
+    return f"That card is not a {label} match."
+
+
+def instant_not_solo_card() -> str:
+    return "That card is not a 1-on-1 duel (multi-opponent sets are retired for now)."
 
 
 def save_failed() -> str:

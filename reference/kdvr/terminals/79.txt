@@ -1,0 +1,12 @@
+---
+pid: 25240
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q --tb=line 2>&1 | Select-Object -Last 5"
+started_at: 2026-07-01T21:34:48.470Z
+running_for_ms: 10979986 
+---
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+421 passed, 20 warnings in 89.24s (0:01:29)

@@ -1,0 +1,19 @@
+---
+pid: 11904
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "python -m pytest tests/test_run_stats.py tests/test_game_over_ending.py tests/test_past_runs_store.py tests/test_past_runs_menu_pr4.py tests/test_name_entry.py tests/test_digestion.py -k \"game_over or render_game_over\" tests/test_save_game_over_pr5.py tests/test_main_menu.py tests/test_flow_pr4.py tests/test_save_menu_pr4.py tests/test_save_snapshot.py -q"
+started_at: 2026-07-05T19:03:03.456Z
+running_for_ms: 14300001 
+---
+..............                                                           [100%]
+============================== warnings summary ===============================
+tests/test_name_entry.py::test_render_game_over_shows_run_stats
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:151: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_digestion.py::test_game_over_screen_shows_digested_by
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_digestion.py:624: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+14 passed, 109 deselected, 2 warnings in 16.04s

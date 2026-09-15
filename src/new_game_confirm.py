@@ -12,7 +12,7 @@ from tcod.event import KeySym, Modifier
 from src.ui.menu_dialog import render_confirm_dialog
 
 NEW_GAME_OVERWRITE_PROMPT = (
-    "A saved game exists and will be overwritten. Proceed? (Y/n)"
+    "A saved hunt exists and will be abandoned. Proceed? (Y/n)"
 )
 NEW_GAME_OVERWRITE_INVALID = "Please type capital 'Y' or lowercase 'n' only."
 

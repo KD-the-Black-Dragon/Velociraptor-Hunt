@@ -1,10 +1,12 @@
 # AGENTS.md
 
-Master instructions for AI agents and contributors working on **Gladiavore**. Read this file at the start of every task, especially after conversation compaction.
+Master instructions for AI agents and contributors working on **Velociraptor Hunt**. Read this file at the start of every task, especially after conversation compaction.
 
 Active feature work lives under `openspec/changes/<change-name>/`. Live specs live under `openspec/specs/`.
 
-**Lineage:** This tree began as a clone of **K.D.'s Vore Roguelike (KDVR)**. The product is **Gladiavore**, not KDVR. Read **`KDVR_REFERENCE.md`** before harvesting. KDVR-only modules live under **`reference/kdvr/`** (not product runtime). Do not continue dungeon-crawl as the product loop.
+**Lineage:** This folder is a **copy** of **Gladiavore**, which itself spun off **K.D.'s Vore Roguelike (KDVR)**. Those two projects live in **other folders** and must not be edited from this tree. The product here is **Velociraptor Hunt**, not Gladiavore and not KDVR. Donor code in `src/`, `data/`, and `reference/kdvr/` exists so we can harvest engine pieces. Do **not** continue the Gladiavore career/hub/match loop or the KDVR dungeon crawl as the product.
+
+Harvest notes: [`KDVR_REFERENCE.md`](KDVR_REFERENCE.md) (lineage + what not to import at runtime).
 
 ---
 
@@ -12,25 +14,28 @@ Active feature work lives under `openspec/changes/<change-name>/`. Live specs li
 
 | Item | Detail |
 |------|--------|
-| Game | **Gladiavore** — career roguelike; curated arena matches + downtime hub; libtcod ASCII/turn-based |
-| Fantasy | Gladiatorial career (WWAATD / Battle Brothers–inspired); predators may digest fighters in red matches |
+| Game | **Velociraptor Hunt** — small-scope / 7DRL-style roguelike; **one hunt**, not a campaign |
+| Fantasy | Jurassic Park–type park; player stalks (and is stalked by) an extremely smart velociraptor; weather, obscuring terrain, and dirty tricks; pounce and devour |
 | Language | Python 3.11+ |
-| Engine | libtcod 16.x |
-| Architecture | Lightweight ECS (`tcod.ecs` or thin custom registry) |
-| Run | `python -m src.main` |
+| Engine | libtcod 16.x (ASCII, turn-based) |
+| Architecture | Lightweight ECS (`tcod.ecs` or thin custom registry) — harvest from the donor snapshot |
+| Run | `python -m src.main` (hunt shell: New Hunt → name → weapon → stub paddock) |
 | Tests | `python -m pytest tests/ -v -n 4` (see **Full test suite runs**; targeted runs: **Test parallelization**) |
-| Game data | `data/*.json` — schema reference in `data/SCHEMA.md` (will retarget as Gladiavore content lands) |
-| User data | Outside install dir — product name **Gladiavore** (see `README.md`; rebrand in foundation PR1 if still KDVR-named in code) |
+| Game data | `data/*.json` — donor Gladiavore/KDVR content until hunt data is designed |
+| User data | Outside install dir — **Velociraptor Hunt** (`VELOCIRAPTOR_HUNT_USER_DATA_DIR`) |
 | Profiling | `tools/profile_turn.py` (use when investigating turn cost) |
-| Foundation design | `openspec/changes/gladiavore-foundation/` |
-| **Permanent Q&A / design canon** | `openspec/changes/gladiavore-foundation/DESIGN_CANON.md` — **read after compact; do not re-ask locked decisions** |
-| KDVR harvest rules | `KDVR_REFERENCE.md`; quarantined code under `reference/kdvr/` |
+| Foundation design | `openspec/changes/archive/2026-09-04-velociraptor-hunt/` (PR1–PR11 accepted) |
+| **Active follow-through** | none — `hunt-deferred` archived 2026-09-12 (provisional) |
+| **Permanent Q&A / design canon** | `openspec/changes/archive/2026-09-04-velociraptor-hunt/DESIGN_CANON.md` plus `openspec/changes/archive/2026-09-12-hunt-deferred/DESIGN_CANON.md` — **read after compact; do not re-ask locked decisions** |
+| Donor / harvest | This tree’s Gladiavore `src/` plus `reference/kdvr/`; originals are **not** in this folder |
 
-**Terminology (mandatory):** enemies are **defeated** (never killed); fighters at 0 stamina HP are **stunned** / incapacitated; permanent removal via vore is **digested**. Do not use kill / die / death in code, logs, specs, or agent prose.
+**Terminology (mandatory):** the raptor is **tranquilized** on hunter success (never killed); if the raptor lands **one melee**, the hunter is **finished**, then **swallowed** / **digested**. Do not use kill / die / death in code, logs, specs, or agent prose.
 
-**Combat motifs (Gladiavore):** **base stats** vs **actual stats** (resolution always uses actual); **balance** meter from actions (not stance toggles); **ability points**; openings/vulnerabilities over pure chip damage. Details: foundation `design.md`.
+**Design motifs (Velociraptor Hunt):** one paddock, one raptor; **tranq vs swallow**; **URW tank**; **Q/W/R/S** gait; **A** pick visible tile then heading/cone (Ctrl+7/9 yaw; run/quick **steps** drop aim; D snaps to 45°); **F** targeting then confirm (blind linear shot; factors only after F); **deterministic** damage; **AUT** tenths, v1 0.0 or 1.0; fair FoW; rain; raptor **profiles** and **heaves**. Gladiavore career hub is **not** the product loop.
 
-**Modding:** KDVR-era modding shipped in tree — re-evaluate for Gladiavore; do not expand unless the active change says so. Spec: `openspec/specs/modding/spec.md` (historical until revised).
+**Modding:** KDVR-era modding shipped in the donor tree. Do **not** expand it for a 7DRL-shaped hunt unless the active change says so.
+
+**7DRL scope:** Prefer a complete, unique hunt over systems built for “more monsters, more floors, more items.” Dedicated raptor AI is allowed; do not over-generalize for a campaign that is out of scope.
 
 ---
 
@@ -38,7 +43,7 @@ Active feature work lives under `openspec/changes/<change-name>/`. Live specs li
 
 Update this line when starting or archiving a change:
 
-**Active change:** long-lived pillars `openspec/changes/gladiavore-foundation/`; recently signed off: `openspec/changes/grapple-swallow-modals/`, `openspec/changes/match-hud-ux/`; **Battle Sport (design frozen, not implemented):** `openspec/changes/battle-pace-program/BATTLE_SPORT_SPEC.md` + `openspec/specs/battle-sport/spec.md` + module `design.md` files (`weapon-measure`, `ready-actions`, `player-combat-commands`, `footwork-momentum`, `ai-personality-fuzzy`) — implement only after designer authorizes whole batch; superseded product work: `openspec/changes/balance-pass/` (KDVR-era); last archived: `openspec/changes/archive/2026-07-15-convenience-controls/`
+**Active change:** none. Foundation archived `2026-09-04-velociraptor-hunt`. Deferred pack archived `2026-09-12-hunt-deferred` (provisional sign-off). Canon: both archive `DESIGN_CANON.md` files. Live spec: `openspec/specs/hunt/spec.md`. Next work needs a **new** `openspec/changes/<name>/`. Gladiavore-era folders under `openspec/changes/` are **donor history**.
 
 ---
 
@@ -50,7 +55,7 @@ When the user proposes a technical solution, interpret it as an expression of **
 
 The user is not a programming or Python expert. Requests that sound technical may still be **creative direction**. Your role is to find the best technical path to achieve that vision.
 
-- **Creative direction** (e.g. good vs evil NPCs, vore tone, UI feel) — implement faithfully; clarify mechanical meaning if needed, but do not push back on the creative choice itself.
+- **Creative direction** (e.g. park atmosphere, raptor cunning, vore tone, UI feel) — implement faithfully; clarify mechanical meaning if needed, but do not push back on the creative choice itself.
 - **Technical direction** (e.g. "use a double here") — you own the engineering decision; explain tradeoffs and recommend the better approach when it differs from what was said.
 
 If a different implementation better satisfies the design while improving performance, maintainability, readability, extensibility, or robustness, explain the tradeoffs and recommend the better approach. Do not silently substitute your preference — discuss first when the choice is non-obvious.
@@ -65,8 +70,8 @@ Before implementing any feature:
 
 - Consider its asymptotic complexity.
 - Consider worst-case behavior.
-- Consider large numbers of NPCs.
-- Consider future content growth.
+- Consider large numbers of NPCs (unlikely for this hunt — still avoid accidental O(n²) on FOV, weather, and AI).
+- Consider future content growth only where it is cheap; this product is **one hunt**, not a content pipeline.
 - Avoid per-frame work unless absolutely necessary.
 
 After implementation, perform a second review asking:
@@ -88,7 +93,8 @@ Do not assume "fast enough" merely because current content is small.
 
 Whenever optimizing or refactoring:
 
-- Preserve gameplay behavior unless explicitly instructed otherwise.
+- Preserve **hunt** gameplay behavior unless explicitly instructed otherwise.
+- The Gladiavore career/match loop in this copy is **donor**, not sacred product behavior. Do not spend effort keeping the arena hub playable once hunt work is authorized to replace it.
 - Prefer implementation improvements over gameplay compromises.
 - Only recommend simplifying gameplay if meaningful performance gains cannot reasonably be achieved otherwise — and only after presenting tradeoffs to the user.
 
@@ -107,24 +113,24 @@ Whenever introducing a hardcoded value, ask whether it belongs in data instead.
 **Hardcoding policy:**
 
 - **No new hardcoded gameplay values without user approval.** Existing hardcoding is grandfathered unless the user asks to change it.
-- **No logic hardcoded to a single entity type** (e.g. no `if id == "wolf"`). Use data, abilities, and shared systems instead.
-- **Secondary attribute traits may be hardcoded** when they describe behavior classes shared across many entities — e.g. `good`, `evil`, `ranged2`, `erratic`, alignment rules, FOV rules, UI patterns.
+- **No logic hardcoded to a single filler entity type** (e.g. no `if id == "wolf"` for park wildlife). Use data, abilities, and shared systems for supporting fauna if any.
+- **The velociraptor is the game.** Dedicated raptor AI, tricks, and presentation may be hardcoded or data-driven as the designer prefers — do not force a generic-monster framework for one apex predator.
+- **Secondary attribute traits may be hardcoded** when they describe behavior classes (FOV, weather, UI patterns, alignment-like factions if used).
 
 ---
 
 ## Extensibility
 
-Assume future additions.
+Assume the hunt may grow **within 7DRL bounds** (more terrain tags, weather states, raptor tricks, hunter tools) — not a second campaign.
 
 Design code that naturally supports:
 
-- more monsters
-- more items
-- more abilities
-- more dungeon generators
-- more equipment
-- more dialogue
-- mods (shipped — see Modding line above)
+- more **terrain and weather** states
+- more **raptor tricks** without rewriting the AI from scratch
+- more hunter tools if the designer adds them
+- reuse of FOV, input, message log, save, UI chrome from the donor
+
+Do **not** build a monster roster, item encyclopedia, dungeon generator, career hub, or mod pipeline “for later” unless the active change asks for it.
 
 Avoid implementations that require future copy-and-paste.
 
@@ -245,9 +251,9 @@ Do not leave specs contradicting the game.
 ### Session startup (after compact or new chat)
 
 1. Read this file (`AGENTS.md`).
-2. Find active change: `openspec/changes/` (non-archive folders only).
-3. **If active change is `gladiavore-foundation`:** read **`openspec/changes/gladiavore-foundation/DESIGN_CANON.md`** first (locked designer Q&A). Do not re-ask those decisions.
-4. Read `tasks.md` — identify first unchecked PR.
+2. Find active change: `openspec/changes/` (non-archive folders only). Gladiavore-era folders are donor history. If none, there is no active change until the designer opens one.
+3. Read **`openspec/changes/archive/2026-09-04-velociraptor-hunt/DESIGN_CANON.md`**, then **`openspec/changes/archive/2026-09-12-hunt-deferred/DESIGN_CANON.md`**. Do not re-ask locked decisions. Do not treat Gladiavore `DESIGN_CANON.md` as product canon.
+4. Read the active change `tasks.md` — identify first unchecked PR.
 5. Read that PR's section in `design.md` if implementing.
 6. **Do not code** until the user has authorized that PR (see **PR implementation gate**). If unclear which PR is active or whether implementation is authorized, ask.
 
@@ -352,8 +358,8 @@ If a user-facing error is possible, prefer a friendly dialog over a traceback.
 
 ## Content and visibility rules
 
-- **AV content:** Clean scope only — engulfment and abdominal crushing. No expanded AV semantics unless the user explicitly approves.
-- **NPC log visibility:** Combat, regen, vore, rescue, and digestion messages are gated on player FOV unless a spec explicitly says otherwise.
+- **AV content:** Clean scope only — engulfment and abdominal crushing (raptor pounce / swallow / digest). No expanded AV semantics unless the user explicitly approves.
+- **Log visibility:** Combat, weather, raptor tells, vore, and digestion messages are gated on player FOV / awareness unless a spec explicitly says otherwise (the raptor acting off-screen is a design topic — do not invent a rule).
 
 ---
 

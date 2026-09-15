@@ -1,0 +1,82 @@
+---
+pid: 22588
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_explore_bfs_steps.py tests/test_explore_reachable_goals.py tests/test_explore_frustration.py tests/test_neutral_explore_antistuck.py tests/test_enhancements_3.py -q"
+started_at: 2026-07-05T12:30:23.454Z
+running_for_ms: 37859991 
+---
+...........................F............................................ [ 96%]
+...                                                                      [100%]
+================================== FAILURES ===================================
+________________ test_corner_ping_pong_stops_after_oscillation ________________
+
+    def test_corner_ping_pong_stops_after_oscillation() -> None:
+        engine = GameEngine()
+        isolate_other_ais(engine)
+        left = Position(ARENA_X, ARENA_Y)
+        mid = Position(ARENA_X + 1, ARENA_Y)
+        right = Position(ARENA_X + 2, ARENA_Y)
+        carve_floor_rect(engine, left.x, left.y, right.x, right.y)
+        for y in range(left.y - 1, left.y + 2):
+            for x in range(left.x - 1, right.x + 2):
+                if y == left.y and left.x <= x <= right.x:
+                    continue
+                if engine.game_map.in_bounds(x, y):
+                    engine.game_map.tiles[y, x] = Tile.WALL
+    
+        rabbit = spawn_test_npc(
+            engine.world,
+            x=left.x,
+            y=left.y,
+            species="rabbit",
+            alignment=Alignment.NEUTRAL,
+        )
+        state = _get_ai_state(rabbit)
+        state.explore_goal = right
+    
+        player = engine.player
+        assert player is not None
+        player.components[Position] = Position(70, 40)
+        update_fov(engine.game_map, left.x, left.y)
+    
+        run_monster_turns(
+            engine.world,
+            engine.game_map,
+            player,
+            engine.message_log,
+            rng=random.Random(0),
+        )
+        assert rabbit.components[Position] == mid
+    
+        state.explore_goal = left
+        run_monster_turns(
+            engine.world,
+            engine.game_map,
+            player,
+            engine.message_log,
+            rng=random.Random(0),
+        )
+        assert rabbit.components[Position] == left
+    
+        state.explore_goal = right
+        run_monster_turns(
+            engine.world,
+            engine.game_map,
+            player,
+            engine.message_log,
+            rng=random.Random(0),
+        )
+>       assert rabbit.components[Position] == left
+E       AssertionError: assert Position(x=41, y=22) == Position(x=40, y=22)
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing attributes:
+E         ['x']
+E         
+E         Drill down into differing attribute x:
+E           x: 41 != 40
+
+tests\test_neutral_explore_antistuck.py:155: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_neutral_explore_antistuck.py::test_corner_ping_pong_stops_after_oscillation
+1 failed, 74 passed in 62.37s (0:01:02)

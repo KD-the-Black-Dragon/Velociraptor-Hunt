@@ -1,0 +1,9 @@
+---
+pid: 28496
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_floor_runes_pr4.py::test_spawn_three_distinct_rune_tiles tests/test_dungeon_spawn_config.py::test_valid_spawn_tile_distribution tests/test_enhancements_2.py::test_good_chases_evil_not_player tests/test_inventory_items_pr5.py::test_evoke_decrements_charges_and_consumes_turn -q --tb=line 2>&1"
+started_at: 2026-07-03T23:53:16.629Z
+running_for_ms: 12070010 
+---
+....                                                                     [100%]
+4 passed in 74.20s (0:01:14)

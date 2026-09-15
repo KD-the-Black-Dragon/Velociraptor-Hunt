@@ -1,12 +1,28 @@
-# Gladiavore
+# Velociraptor Hunt
 
-Career roguelike: curated arena matches, downtime management, and beast-pit combat.
-Built in Python with libtcod (ASCII, turn-based / AUT-based tactical combat).
+Small-scope roguelike: **one hunt** in a Jurassic Park–type setting. You are trying
+to take a velociraptor that is trying to take you — weather, tall grass, and an
+animal that uses every dirty trick, in the spirit of the *Jurassic Park* “clever
+girl” scene.
 
-This repository began as a clone of **K.D.'s Vore Roguelike (KDVR)**. The product is
-**Gladiavore**. See [`KDVR_REFERENCE.md`](KDVR_REFERENCE.md) and
-[`openspec/changes/gladiavore-foundation/`](openspec/changes/gladiavore-foundation/)
-for design and harvest rules.
+Built in Python with libtcod (ASCII, turn-based). The intended shape is closer to
+a **Seven Day Roguelike** than a long career or a many-floor dungeon.
+
+## This folder vs other projects
+
+This tree is a **copy** of **Gladiavore**, which itself spun off **K.D.'s Vore
+Roguelike (KDVR)**. Those two games live in **other folders** and stay untouched.
+
+This copy exists so hunt work can **harvest** engine code (FOV, input, message log,
+saves, UI chrome, vore hooks) without risking the originals.
+
+| | This folder | Not this folder |
+|--|-------------|-----------------|
+| Product | **Velociraptor Hunt** | Gladiavore, KDVR |
+| Loop (target) | One enclosed hunt | Career hub / dungeon crawl |
+| Current `src/` | Hunt loop (menu → weapon → paddock); last change archived `openspec/changes/archive/2026-09-12-hunt-deferred/` | — |
+
+See [`AGENTS.md`](AGENTS.md) and [`KDVR_REFERENCE.md`](KDVR_REFERENCE.md).
 
 ## Setup
 
@@ -22,50 +38,29 @@ Requires the tileset at `data/Alloy_curses_12x12.png` (included).
 python -m src.main
 ```
 
-Or, after install: `gladiavore`
-
-The game opens to a **main menu**. Gameplay is mid-migration from the KDVR dungeon
-loop toward the Gladiavore career/hub/match loop (see foundation design).
+Opens a **main menu**: New Hunt, Stats, Options, Quit.
 
 ## User data
 
-Saves, settings, past-run history, and diagnostic logs are stored outside the game
-directory under **Gladiavore**:
+Saves, settings, and logs live under **Velociraptor Hunt**. Override with
+`VELOCIRAPTOR_HUNT_USER_DATA_DIR` (legacy: `GLADIAVORE_USER_DATA_DIR`,
+`KDS_USER_DATA_DIR`).
 
-| OS | Path |
-|----|------|
-| Windows | `%LOCALAPPDATA%\Gladiavore\` |
-| Linux | `~/.local/share/Gladiavore/` |
-| macOS | `~/Library/Application Support/Gladiavore/` |
+| OS | Target path |
+|----|-------------|
+| Windows | `%LOCALAPPDATA%\Velociraptor Hunt\` |
+| Linux | `~/.local/share/Velociraptor Hunt/` |
+| macOS | `~/Library/Application Support/Velociraptor Hunt/` |
 
-| File / folder | Contents |
-|---------------|----------|
-| `saves/` | Autosave chain |
-| `past_runs.json` | Completed run history |
-| `settings.json` | Preferences, UI layout, window state |
-| `mods/` | Player mods (if enabled) |
-| `logs/` | Crash reports, session logs |
-
-Override for tests/dev: env `GLADIAVORE_USER_DATA_DIR` (legacy: `KDS_USER_DATA_DIR`).
-
-## Design docs (agents & contributors)
+## Design docs
 
 | Path | Role |
 |------|------|
-| `AGENTS.md` | Project rules |
-| `KDVR_REFERENCE.md` | Clone lineage / harvest policy |
-| `openspec/changes/gladiavore-foundation/` | Active foundation change (`proposal.md`, `design.md`, `tasks.md`) |
+| `AGENTS.md` | Project rules for agents |
+| `KDVR_REFERENCE.md` | Lineage and harvest policy |
+| `openspec/changes/archive/2026-09-04-velociraptor-hunt/` | Accepted foundation (`DESIGN_CANON.md`, PR1–PR11) |
 
-## Windows alpha release
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-python -m pip install -e ".[dev]"
-python -m pip install --upgrade build pyinstaller
-powershell -ExecutionPolicy Bypass -File .\scripts\build_windows_alpha.ps1
-```
-
-Output defaults to `dist/gladiavore/` and a zip archive (see script).
+Gladiavore OpenSpec folders remaining in this copy are **historical donor docs**.
 
 ## Verify
 

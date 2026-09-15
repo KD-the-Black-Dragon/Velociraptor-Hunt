@@ -1,0 +1,79 @@
+Balance sim seed scan summary
+Completed UTC: 2026-07-12T07:29:04.309660+00:00
+Total wall time: 6.94 h
+CSV rows: 323 (balance_seed_scan.csv)
+
+Placement checks: 100
+Seeds with 0 runes on map: 25
+  examples: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 76, 77, 78, 79, 80, 81, 82, 83]
+
+Best normal sim (runes collected):
+{'phase': 'sim_normal', 'seed': '23', 'difficulty': 'normal', 'max_turns': '5000', 'runes_on_map': '3', 'quota': '3', 'depth_reached': '6', 'runes_collected': '16', 'monsters_defeated': '36', 'termination': 'TURN_CAP', 'turns_played': '5000', 'hp_at_end': '0', 'elapsed_s': '73.8'}
+Best normal sim (depth >= 2):
+{'phase': 'sim_normal', 'seed': '23', 'difficulty': 'normal', 'max_turns': '5000', 'runes_on_map': '3', 'quota': '3', 'depth_reached': '6', 'runes_collected': '16', 'monsters_defeated': '36', 'termination': 'TURN_CAP', 'turns_played': '5000', 'hp_at_end': '0', 'elapsed_s': '73.8'}
+Best easy sim (depth >= 2):
+{'phase': 'sim_deep_easy', 'seed': '25', 'difficulty': 'easy', 'max_turns': '12000', 'runes_on_map': '3', 'quota': '3', 'depth_reached': '8', 'runes_collected': '30', 'monsters_defeated': '44', 'termination': 'TURN_CAP', 'turns_played': '12000', 'hp_at_end': '72', 'elapsed_s': '253.2'}
+
+Rows with runes_collected >= 1 (normal, phase sim_normal):
+  seed=23 runes=16 depth=6 hp=0 end=TURN_CAP
+  seed=1 runes=12 depth=5 hp=0 end=TURN_CAP
+  seed=26 runes=12 depth=5 hp=0 end=TURN_CAP
+  seed=94 runes=12 depth=5 hp=0 end=TURN_CAP
+  seed=47 runes=10 depth=4 hp=0 end=TURN_CAP
+  seed=60 runes=9 depth=4 hp=0 end=TURN_CAP
+  seed=67 runes=9 depth=3 hp=0 end=TURN_CAP
+  seed=20 runes=7 depth=3 hp=0 end=TURN_CAP
+  seed=36 runes=6 depth=3 hp=0 end=TURN_CAP
+  seed=62 runes=6 depth=3 hp=0 end=TURN_CAP
+  seed=100 runes=6 depth=3 hp=0 end=TURN_CAP
+  seed=24 runes=5 depth=2 hp=0 end=TURN_CAP
+  seed=50 runes=5 depth=2 hp=0 end=TURN_CAP
+  seed=75 runes=5 depth=2 hp=0 end=TURN_CAP
+  seed=15 runes=4 depth=2 hp=0 end=TURN_CAP
+  seed=33 runes=4 depth=2 hp=0 end=TURN_CAP
+  seed=41 runes=4 depth=2 hp=0 end=TURN_CAP
+  seed=46 runes=4 depth=2 hp=0 end=TURN_CAP
+  seed=48 runes=4 depth=2 hp=0 end=TURN_CAP
+  seed=93 runes=4 depth=2 hp=0 end=TURN_CAP
+  seed=96 runes=4 depth=2 hp=0 end=TURN_CAP
+  seed=21 runes=3 depth=2 hp=0 end=TURN_CAP
+  seed=25 runes=3 depth=2 hp=0 end=TURN_CAP
+  seed=43 runes=3 depth=2 hp=0 end=TURN_CAP
+  seed=92 runes=3 depth=2 hp=0 end=TURN_CAP
+  seed=28 runes=2 depth=1 hp=36 end=TURN_CAP
+  seed=42 runes=2 depth=1 hp=0 end=TURN_CAP
+  seed=51 runes=2 depth=1 hp=0 end=TURN_CAP
+  seed=59 runes=2 depth=1 hp=0 end=TURN_CAP
+  seed=66 runes=2 depth=1 hp=30 end=TURN_CAP
+
+Rows with depth >= 2:
+  seed=25 easy depth=8 runes=30 hp=72 phase=sim_deep_easy
+  seed=67 easy depth=6 runes=21 hp=0 phase=sim_deep_easy
+  seed=23 normal depth=6 runes=16 hp=0 phase=sim_normal
+  seed=41 easy depth=5 runes=17 hp=0 phase=sim_easy
+  seed=47 easy depth=5 runes=17 hp=0 phase=sim_easy
+  seed=50 easy depth=5 runes=16 hp=1 phase=sim_deep_easy
+  seed=47 normal depth=5 runes=14 hp=45 phase=sim_deep_normal
+  seed=51 normal depth=5 runes=13 hp=0 phase=sim_deep_normal
+  seed=1 normal depth=5 runes=12 hp=0 phase=sim_normal
+  seed=26 normal depth=5 runes=12 hp=0 phase=sim_normal
+  seed=94 normal depth=5 runes=12 hp=0 phase=sim_normal
+  seed=15 easy depth=4 runes=15 hp=39 phase=sim_deep_easy
+  seed=1 easy depth=4 runes=14 hp=0 phase=sim_deep_easy
+  seed=47 normal depth=4 runes=10 hp=0 phase=sim_normal
+  seed=60 normal depth=4 runes=9 hp=0 phase=sim_normal
+  seed=33 easy depth=3 runes=11 hp=0 phase=sim_deep_easy
+  seed=41 easy depth=3 runes=11 hp=48 phase=sim_deep_easy
+  seed=56 easy depth=3 runes=11 hp=45 phase=sim_deep_easy
+  seed=50 easy depth=3 runes=10 hp=0 phase=sim_easy
+  seed=62 easy depth=3 runes=10 hp=0 phase=sim_deep_easy
+  seed=67 normal depth=3 runes=9 hp=0 phase=sim_normal
+  seed=25 easy depth=3 runes=8 hp=0 phase=sim_easy
+  seed=92 easy depth=3 runes=8 hp=0 phase=sim_deep_easy
+  seed=96 easy depth=3 runes=8 hp=0 phase=sim_deep_easy
+  seed=20 normal depth=3 runes=7 hp=0 phase=sim_normal
+  seed=21 normal depth=3 runes=7 hp=0 phase=sim_deep_normal
+  seed=67 normal depth=3 runes=7 hp=0 phase=sim_deep_normal
+  seed=36 normal depth=3 runes=6 hp=0 phase=sim_normal
+  seed=62 normal depth=3 runes=6 hp=0 phase=sim_normal
+  seed=100 normal depth=3 runes=6 hp=0 phase=sim_normal

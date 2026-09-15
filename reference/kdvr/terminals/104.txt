@@ -1,0 +1,33 @@
+---
+pid: 24588
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_dungeon_layout_pr2.py tests/test_dungeon_layout_pr0.py tests/test_dungeon_layout_pr1.py -q --tb=line 2>&1"
+started_at: 2026-07-03T13:58:57.434Z
+running_for_ms: 32000006 
+---
+................F.......                                                 [100%]
+================================== FAILURES ===================================
+E   AssertionError: assert False
+     +  where False = validate_rune_sites_feasible(GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, .....      [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(50, 30), layout_archetype='organic'))
+---------------------------- Captured stdout call -----------------------------
+[map_gen] rejected attempt 1: disconnected_land_after_water
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 1: rune_sites_infeasible
+C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_layout_pr0.py:112: AssertionError: assert False
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_layout_pr0.py::test_many_seeds_pass_sanity_gates - ...
+1 failed, 23 passed in 35.19s

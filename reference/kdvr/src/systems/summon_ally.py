@@ -7,16 +7,18 @@ import random
 from tcod.ecs import Entity, Registry
 
 from src.components import Alignment, BlocksMovement, Player, Position
+from src.constants import VoreContentPreferences
 from src.data.entity_loader import load_entity_registry
 from src.data.entity_registry import EntityDefinition, EntityRegistry
 from src.map_gen import GameMap, can_enter_tile
-from src.spawn import spawn_from_definition
+from src.spawn import meets_vore_type_requirements, spawn_from_definition
 
 
 def good_summon_pool(
     registry: EntityRegistry,
     *,
     floor_depth: int,
+    vore_prefs: VoreContentPreferences | None = None,
 ) -> list[EntityDefinition]:
     """Good-aligned defs with positive weight eligible at this depth."""
     pool: list[EntityDefinition] = []
@@ -26,6 +28,8 @@ def good_summon_pool(
         if definition.spawn.weight <= 0:
             continue
         if not (definition.spawn.min_depth <= floor_depth <= definition.spawn.max_depth):
+            continue
+        if not meets_vore_type_requirements(definition, vore_prefs):
             continue
         pool.append(definition)
     return pool
@@ -96,6 +100,7 @@ def try_summon_ally(
     difficulty_id: str | None = None,
     rng: random.Random | None = None,
     registry: EntityRegistry | None = None,
+    vore_prefs: VoreContentPreferences | None = None,
 ) -> Entity | None:
     """
     Spawn one weighted good ally as close as possible to the player.
@@ -106,7 +111,7 @@ def try_summon_ally(
         return None
     rng = rng or random.Random()
     reg = registry or load_entity_registry()
-    pool = good_summon_pool(reg, floor_depth=floor_depth)
+    pool = good_summon_pool(reg, floor_depth=floor_depth, vore_prefs=vore_prefs)
     if not pool:
         return None
     weights = [max(0.0, float(d.spawn.weight)) for d in pool]
@@ -126,4 +131,5 @@ def try_summon_ally(
         difficulty_id=difficulty_id,
         roll_prefix=False,
         rng=rng,
+        vore_prefs=vore_prefs,
     )

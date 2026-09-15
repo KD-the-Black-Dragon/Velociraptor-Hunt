@@ -66,7 +66,7 @@ def test_narrow_console_confirm_stays_on_screen() -> None:
     console = tcod.console.Console(40, 20, order="F")
     render_confirm_dialog(
         console,
-        ["A saved game exists and will be overwritten. Proceed? (Y/n)"],
+        ["A saved hunt exists and will be abandoned. Proceed? (Y/n)"],
         band="lower",
     )
     assert _has_dialog_bg(console)

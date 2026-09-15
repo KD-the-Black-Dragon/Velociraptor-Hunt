@@ -16,8 +16,13 @@ Turn-based AUT combat in curated sand-pit arenas for Gladiavore career matches.
 ### Combat skeleton
 
 - AP regenerates with world AUT; balance meter from actions.
+- **Balance severity (Battle Sport):** steep past ±5; +10 ≈ 5% land rate; cowering tanks damage not accuracy; see `openspec/specs/battle-sport/spec.md`.
 - Smart bump profiles; reaction modal on incoming PC attacks (not while grappled prey).
 - Flanking, pushback, abilities via `data/match_combat.json`.
+- **Weapon measure:** attack delay + range-band mults (`data/weapons.json`); everyone has a weapon (natural OK).
+- **Ready:** `.` / Numpad 5 = keep watch; `d` = brace; step slight aggression.
+- **Footwork / directed attack:** `f` + dir (2-step); ctrl+dir measure attack; R5+ no-op; feint at poor measure.
+- **Fuzzy AI:** personality attrs + measure-aware intents for enemies and allies; Talk orders Attack! / Help me! / Stay close!
 - **Ally bump:** moving into an ally is a **no-op** (no AUT). Message log reports `"{AllyName} is standing there."`
 
 ### Match HUD (fight phase)
@@ -41,7 +46,7 @@ Turn-based AUT combat in curated sand-pit arenas for Gladiavore career matches.
 - PC never initiates vore; PC digested ends career.
 - Ally digest (red): roster remove + gold refund fraction.
 - **Grapple (PC prey):** red low-right crisis modal; copy `{PredatorName} grapples you!` (wrestling stub; full revamp later).
-- **Swallow (PC prey):** centered interface-blocking modal (not full-screen); narrative top of panel with padding; bottom `1 - struggle | 2 - conserve strength` (no explanations).
+- **Swallow (PC prey):** centered interface-blocking modal (not full-screen); narrative top of panel with padding; bottom `1 - struggle | 2 - conserve strength | 3 - call for help` (option 3 advances swallow, 50% hear chance).
 - **Swallow self-escape:** ~**1%** per struggle (`swallow_struggle_escape_chance` in JSON); not grapple break-away odds. Ally damage / predator defeat may free mid-swallow.
 - **Conserve strength:** no escape roll; each conserve adds +1 digest endurance once engulfed (**no hard cap**).
 - **Green:** control grabs OK; **must release before lethal digest** (swallow phases may run; no finishing digest).

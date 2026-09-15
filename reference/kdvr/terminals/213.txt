@@ -1,0 +1,95 @@
+---
+pid: 7084
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cmd /c \"cd /d C:\\VS Code Projects\\kds-vore-roguelike && python -m pytest tests/test_sim_navigation.py -v --tb=short\""
+started_at: 2026-07-11T22:45:46.936Z
+running_for_ms: 1864987  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 8 items
+
+tests/test_sim_navigation.py::test_nearest_goal_tie_break_is_deterministic_with_rng PASSED [ 12%]
+tests/test_sim_navigation.py::test_first_step_toward_goal FAILED         [ 25%]
+tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored FAILED [ 37%]
+tests/test_sim_navigation.py::test_flee_goal_increases_distance_from_shark PASSED [ 50%]
+tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility FAILED [ 62%]
+tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius FAILED [ 75%]
+tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs FAILED [ 87%]
+tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_seed FAILED [100%]
+
+================================== FAILURES ===================================
+_________________________ test_first_step_toward_goal _________________________
+tests\test_sim_navigation.py:67: in test_first_step_toward_goal
+    assert direction == (1, 0)
+E   assert None == (1, 0)
+____________ test_explore_frontier_includes_adjacent_to_unexplored ____________
+tests\test_sim_navigation.py:72: in test_explore_frontier_includes_adjacent_to_unexplored
+    frontier = explore_frontier_tiles(game_map)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\sim\navigation.py:100: in explore_frontier_tiles
+    if game_map.explored[nx, ny]:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: index 8 is out of bounds for axis 0 with size 8
+___________________ test_is_aquatic_evil_shark_and_mobility ___________________
+tests\test_sim_navigation.py:100: in test_is_aquatic_evil_shark_and_mobility
+    assert not is_aquatic_evil(wolf)
+               ^^^^^^^^^^^^^^^^^^^^^
+src\sim\perception.py:36: in is_aquatic_evil
+    return mobility is not None and mobility.mobility == MobilityType.AQUATIC
+                                    ^^^^^^^^^^^^^^^^^
+E   AttributeError: 'Mobility' object has no attribute 'mobility'
+_______________ test_policy_flees_visible_aquatic_within_radius _______________
+tests\test_sim_navigation.py:119: in test_policy_flees_visible_aquatic_within_radius
+    action = policy.decide(engine, tracking=tracking)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\sim\policy.py:109: in decide
+    frontier = explore_frontier_tiles(engine.game_map)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\sim\navigation.py:100: in explore_frontier_tiles
+    if game_map.explored[nx, ny]:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: index 44 is out of bounds for axis 0 with size 44
+________________ test_policy_descend_when_quota_met_on_stairs _________________
+tests\test_sim_navigation.py:151: in test_policy_descend_when_quota_met_on_stairs
+    assert action.kind is SimActionKind.DESCEND
+E   assert <SimActionKind.WAIT: 1> is <SimActionKind.DESCEND: 4>
+E    +  where <SimActionKind.WAIT: 1> = SimAction(kind=<SimActionKind.WAIT: 1>, direction=(0, 0)).kind
+E    +  and   <SimActionKind.DESCEND: 4> = SimActionKind.DESCEND
+________________ test_trajectory_run_reaches_depth_two_on_seed ________________
+tests\test_sim_navigation.py:161: in test_trajectory_run_reaches_depth_two_on_seed
+    result = run.run()
+             ^^^^^^^^^
+src\sim\runner.py:131: in run
+    step = _run_one_turn(engine, tracking=tracking)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\sim\runner.py:63: in _run_one_turn
+    execute_policy_turn(engine, tracking=tracking)
+src\sim\policy.py:172: in execute_policy_turn
+    action = policy.decide(engine, tracking=tracking)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\sim\policy.py:74: in decide
+    adjacent_attack = adjacent_evil_entities(engine, aquatic=False)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\sim\perception.py:108: in adjacent_evil_entities
+    if aquatic is False and not is_non_aquatic_evil(entity):
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\sim\perception.py:43: in is_non_aquatic_evil
+    return not is_aquatic_evil(entity)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+src\sim\perception.py:36: in is_aquatic_evil
+    return mobility is not None and mobility.mobility == MobilityType.AQUATIC
+                                    ^^^^^^^^^^^^^^^^^
+E   AttributeError: 'Mobility' object has no attribute 'mobility'
+=========================== short test summary info ===========================
+FAILED tests/test_sim_navigation.py::test_first_step_toward_goal - assert Non...
+FAILED tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored
+FAILED tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility
+FAILED tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius
+FAILED tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs
+FAILED tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_seed
+=================== 6 failed, 2 passed in 146.53s (0:02:26) ===================

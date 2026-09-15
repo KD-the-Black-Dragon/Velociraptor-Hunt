@@ -1,0 +1,74 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Programs\Python\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 6 items
+
+tests/test_dungeon_layout_pr3.py::test_initialize_floor_regenerates_on_rune_placement_failure FAILED [ 16%]
+tests/test_npc_abilities_hands.py::test_hands_memory_pursuit_bumps_closed_door FAILED [ 33%]
+tests/test_performance_distant_throttle.py::test_within_r_still_pursues_last_known_when_busy PASSED [ 50%]
+tests/test_save_coordinator.py::test_engine_post_turn_hook_invokes_coordinator PASSED [ 66%]
+tests/test_dungeon_pr4.py::test_aquatic_shore_attack_hits_land_target FAILED [ 83%]
+tests/test_mod_seed_readme.py::test_stock_entities_ship_empty_requires_vore_types FAILED [100%]
+
+================================== FAILURES ===================================
+_________ test_initialize_floor_regenerates_on_rune_placement_failure _________
+tests\test_dungeon_layout_pr3.py:153: in test_initialize_floor_regenerates_on_rune_placement_failure
+    engine.initialize_floor(seed=0, mode="new")
+src\engine.py:301: in initialize_floor
+    engine_floor.initialize_floor(
+src\engine_floor.py:323: in initialize_floor
+    engine._initialize_floor_new(
+src\engine.py:322: in _initialize_floor_new
+    engine_floor.initialize_floor_new(
+src\engine_floor.py:372: in initialize_floor_new
+    engine._spawn_floor_population_and_runes(engine.floor_depth)
+tests\test_dungeon_layout_pr3.py:138: in flaky_spawn
+    return original_spawn(self, floor_depth, followers=followers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\engine.py:285: in _spawn_floor_population_and_runes
+    engine_floor.spawn_floor_population_and_runes(
+src\engine_floor.py:282: in spawn_floor_population_and_runes
+    vore_prefs=engine.vore_content_prefs,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'GameEngine' object has no attribute 'vore_content_prefs'
+_________________ test_hands_memory_pursuit_bumps_closed_door _________________
+tests\test_npc_abilities_hands.py:211: in test_hands_memory_pursuit_bumps_closed_door
+    assert direction == (1, 0)
+E   AssertionError: assert (1, -1) == (1, 0)
+E     
+E     At index 1 diff: -1 != 0
+E     
+E     Full diff:
+E       (
+E           1,
+E     -     0,...
+E     
+E     ...Full output truncated (4 lines hidden), use '-vv' to show
+_________________ test_aquatic_shore_attack_hits_land_target __________________
+tests\test_dungeon_pr4.py:79: in test_aquatic_shore_attack_hits_land_target
+    assert try_action(world, game_map, shark, (-1, 0), log)
+E   AssertionError: assert False
+E    +  where False = try_action(Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x24D4BE2EAC0)>: {<class 'src.components.Position'>: Position(x=10, y=6), <class 'src.components.Renderable'>: Renderable(ch=115, fg=(128, 128, 128)), <class 'src.components.Fighter'>: Fighter(hp=23, max_hp=23, accuracy=1.5, evade=2.0, ac=3, min_damage=6, max_damage=9, ranged_accuracy=0.0, ranged_min_damage=0, ranged_max_damage=0), <class 'src.components.AI'>: AI(), <class 'src.components.AIState'>: AIState(last_known_primary=None, last_known_neutral=None, last_known_evil=None, last_known_player=None, explore_goal=None, chase_momentum_direction=None, chase_momentum_turns_left=0, chase_frustration=0, chase_frustration_limit=0, explore_frustration=0, explore_frustration_limit=0, door_spite_turns_left=0, memory_blind_turns=0, memory_blind_limit=0, explore_force_farthest_on_repick=False, ai_turn_salt=0, spawn_freeze_remaining=0, spawn_freeze_consumed=False, come_here=False, explore_recent_positions=deque([], maxlen=4), explore_recent_goal_distances=deque([], maxlen=4)), <class 'src.components.AbilityState'>: AbilityState(summon_consumed=False, erratic_index=0, plan_step_index=0), <class 'src.components....g wet, rubbery as a drowned tire. Flat black eyes sit in its skull like holes punched through to nowhere, fixed on you without a flicker of intelligence behind them.')}, <class 'src.components.VoreNarratives'>: {<Entity(uid=object at 0x24D4BE2EAC0)>: VoreNarratives(types=('OV', 'CV', 'AV'))}, <class 'src.components.DigestionStats'>: {<Entity(uid=object at 0x24D4BE2EAC0)>: DigestionStats(damage_per_tick=4, digest_time=5)}}), _tags_by_key=defaultdict(<class 'set'>, {Position(x=10, y=6): {<Entity(uid=object at 0x24D4BE2EAC0)>}, 'BlocksMovement': {<Entity(uid=object at 0x24D4BE2EAC0)>}, 'VoreCapable': {<Entity(uid=object at 0x24D4BE2EAC0)>}, Position(x=9, y=6): {<Entity(uid=object at 0x24D4BE2EAA0)>}}), _tags_by_entity=defaultdict(<class 'set'>, {<Entity(uid=object at 0x24D4BE2EAC0)>: {'BlocksMovement', Position(x=10, y=6), 'VoreCapable'}, <Entity(uid=object at 0x24D4BE2EAA0)>: {Position(x=9, y=6)}}), _relation_tags_by_entity=defaultdict(<function _defaultdict_of_set at 0x0000024D4C4716F0>, {}), _relation_components_by_entity=defaultdict(<function _defaultdict_of_dict at 0x0000024D4C4FC9E0>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}), GameMap(width=16, height=12, tiles=array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\n       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\n       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\n       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\n       [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0],\n       [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0],\n       [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0],\n       [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0],\n       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\n       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\n       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\n       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], dtype=int8), explored=array([[False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False...      [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False],\n       [False, False, False, False, False, False, False, False, False,\n        False, False, False, False, False, False, False]]), enter_xy=(6, 6), layout_archetype=''), <Entity(uid=object at 0x24D4BE2EAC0)>, (-1, 0), <src.message_log.MessageLog object at 0x0000024D4E3D5A70>)
+_____________ test_stock_entities_ship_empty_requires_vore_types ______________
+tests\test_mod_seed_readme.py:122: in test_stock_entities_ship_empty_requires_vore_types
+    assert entity.spawn.requires_vore_types == frozenset(), entity.id
+E   AssertionError: rat
+E   assert frozenset({'OV'}) == frozenset()
+E     
+E     Extra items in the left set:
+E     'OV'
+E     
+E     Full diff:
+E     - frozenset()
+E     ?           ^...
+E     
+E     ...Full output truncated (4 lines hidden), use '-vv' to show
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_layout_pr3.py::test_initialize_floor_regenerates_on_rune_placement_failure
+FAILED tests/test_npc_abilities_hands.py::test_hands_memory_pursuit_bumps_closed_door
+FAILED tests/test_dungeon_pr4.py::test_aquatic_shore_attack_hits_land_target
+FAILED tests/test_mod_seed_readme.py::test_stock_entities_ship_empty_requires_vore_types
+========================= 4 failed, 2 passed in 3.58s =========================

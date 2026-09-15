@@ -1,0 +1,62 @@
+---
+pid: 7636
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_sim_navigation.py tests/test_sim_runner.py -v -n 4 --tb=short"
+started_at: 2026-07-12T00:21:28.757Z
+running_for_ms: 37620010 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+created: 4/4 workers
+4 workers [21 items]
+
+scheduling tests via LoadScheduling
+
+tests/test_sim_navigation.py::test_nearest_goal_tie_break_is_deterministic_with_rng 
+tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored 
+tests/test_sim_navigation.py::test_first_step_toward_prefers_goal_direction_over_cardinal_order 
+tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility 
+[gw0] [  4%] PASSED tests/test_sim_navigation.py::test_nearest_goal_tie_break_is_deterministic_with_rng 
+tests/test_sim_navigation.py::test_first_step_toward_goal 
+[gw1] [  9%] PASSED tests/test_sim_navigation.py::test_first_step_toward_prefers_goal_direction_over_cardinal_order 
+tests/test_sim_navigation.py::test_player_walk_distances_on_carved_floor 
+[gw0] [ 14%] PASSED tests/test_sim_navigation.py::test_first_step_toward_goal 
+tests/test_sim_navigation.py::test_policy_waits_on_visible_rune_tile 
+[gw2] [ 19%] PASSED tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored 
+[gw1] [ 23%] PASSED tests/test_sim_navigation.py::test_player_walk_distances_on_carved_floor 
+tests/test_sim_navigation.py::test_flee_goal_increases_distance_from_shark 
+tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs 
+[gw2] [ 28%] PASSED tests/test_sim_navigation.py::test_flee_goal_increases_distance_from_shark 
+tests/test_sim_runner.py::test_install_stock_game_data_fingerprint_stable 
+[gw2] [ 33%] PASSED tests/test_sim_runner.py::test_install_stock_game_data_fingerprint_stable 
+tests/test_sim_runner.py::test_trajectory_run_records_floor_one_visit 
+[gw3] [ 38%] PASSED tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility 
+tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius 
+[gw2] [ 42%] PASSED tests/test_sim_runner.py::test_trajectory_run_records_floor_one_visit 
+tests/test_sim_runner.py::test_wait_turn_advances_counter 
+[gw2] [ 47%] PASSED tests/test_sim_runner.py::test_wait_turn_advances_counter 
+tests/test_sim_runner.py::test_compare_sheet_append_column 
+[gw2] [ 52%] PASSED tests/test_sim_runner.py::test_compare_sheet_append_column 
+tests/test_sim_runner.py::test_wide_curve_format 
+[gw2] [ 57%] PASSED tests/test_sim_runner.py::test_wide_curve_format 
+tests/test_sim_runner.py::test_build_compare_values_includes_floor_metric 
+[gw2] [ 61%] PASSED tests/test_sim_runner.py::test_build_compare_values_includes_floor_metric 
+tests/test_sim_runner.py::test_trajectory_pass_respects_time_budget 
+[gw2] [ 66%] PASSED tests/test_sim_runner.py::test_trajectory_pass_respects_time_budget 
+tests/test_sim_runner.py::test_balance_analysis_short_budget 
+[gw2] [ 71%] PASSED tests/test_sim_runner.py::test_balance_analysis_short_budget 
+[gw0] [ 76%] PASSED tests/test_sim_navigation.py::test_policy_waits_on_visible_rune_tile 
+tests/test_sim_navigation.py::test_trajectory_run_collects_floor_rune_on_seed 
+[gw1] [ 80%] PASSED tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs 
+tests/test_sim_runner.py::test_trajectory_run_completes_ten_turns 
+[gw1] [ 85%] PASSED tests/test_sim_runner.py::test_trajectory_run_completes_ten_turns 
+[gw3] [ 90%] PASSED tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius 
+tests/test_sim_runner.py::test_compare_sheet_layout 
+[gw3] [ 95%] PASSED tests/test_sim_runner.py::test_compare_sheet_layout 
+[gw0] [100%] PASSED tests/test_sim_navigation.py::test_trajectory_run_collects_floor_rune_on_seed 
+
+======================= 21 passed in 179.11s (0:02:59) ========================

@@ -137,6 +137,8 @@ def test_initialize_floor_regenerates_on_rune_placement_failure() -> None:
             raise RunePlacementError("mock failure")
         return original_spawn(self, floor_depth, followers=followers)
 
+    from src.constants import DEFAULT_VORE_CONTENT_PREFS
+
     engine = GameEngine.__new__(GameEngine)
     engine.water_testing_mode = False
     engine.layout_archetype_force = None
@@ -145,6 +147,8 @@ def test_initialize_floor_regenerates_on_rune_placement_failure() -> None:
     engine.difficulty_id = "normal"
     engine.floor_prefetch = None
     engine.rng = __import__("random").Random(0)
+    # initialize_floor / spawn path reads run prefs (GameEngine.__new__ skips __init__).
+    engine.vore_content_prefs = DEFAULT_VORE_CONTENT_PREFS
 
     with (
         patch("src.engine_floor.generate_dungeon", side_effect=counting_generate),

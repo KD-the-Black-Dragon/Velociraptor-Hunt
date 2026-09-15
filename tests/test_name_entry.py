@@ -1,4 +1,4 @@
-"""Name entry and new-career flow (Gladiavore product path)."""
+"""Name entry and new-hunt flow."""
 
 from __future__ import annotations
 
@@ -57,42 +57,21 @@ def test_name_entry_confirm_and_cancel() -> None:
     assert handle_name_entry_event(state, _key(KeySym.ESCAPE)) is NameEntryAction.CANCEL
 
 
-def test_app_new_game_goes_to_name_entry_then_downtime(tmp_path) -> None:
+def test_app_new_hunt_skips_name_goes_to_weapon(tmp_path) -> None:
     from tests.save_test_helpers import app_with_isolated_save
     from tests.ui_test_helpers import make_console
 
     app = app_with_isolated_save(tmp_path)
     console = make_console()
     app.handle_event(_key(KeySym.RETURN), console=console)
-    assert app.phase is AppPhase.NAME_ENTRY
-
-    app.handle_event(_key(KeySym.A), console=console)
-    app.handle_event(_key(KeySym.L), console=console)
-    app.handle_event(_key(KeySym.E), console=console)
-    app.handle_event(_key(KeySym.X), console=console)
+    assert app.phase is AppPhase.WEAPON_SELECT
     app.handle_event(_key(KeySym.RETURN), console=console)
-    assert app.phase is AppPhase.BACKGROUND_PICK
-    app.handle_event(_key(KeySym.RETURN), console=console)
-    assert app.phase is AppPhase.DOWNTIME
+    assert app.phase is AppPhase.HUNT
     assert app.engine is None
-    assert app.career is not None
-    assert app.career.player_name == "alex"
-    assert app.career.background_id
-
-
-def test_app_blank_name_becomes_anonymous(tmp_path) -> None:
-    from tests.save_test_helpers import app_with_isolated_save
-    from tests.ui_test_helpers import make_console
-
-    app = app_with_isolated_save(tmp_path)
-    console = make_console()
-    app.handle_event(_key(KeySym.RETURN), console=console)
-    app.handle_event(_key(KeySym.RETURN), console=console)
-    assert app.phase is AppPhase.BACKGROUND_PICK
-    app.handle_event(_key(KeySym.RETURN), console=console)
-    assert app.phase is AppPhase.DOWNTIME
-    assert app.career is not None
-    assert app.career.player_name == ANONYMOUS_NAME
+    assert app.career is None
+    assert app.hunt is not None
+    assert app.hunt.hunter_name == ""
+    assert app.hunt.weapon_id == "rifle"
 
 
 def test_app_name_entry_escape_returns_to_menu(tmp_path) -> None:

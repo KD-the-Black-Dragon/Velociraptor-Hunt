@@ -1,0 +1,18 @@
+---
+pid: 22048
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -u -c \"
+from src.sim.data_loader import install_stock_game_data
+install_stock_game_data()
+from src.sim.runner import SimTrajectoryRun
+for seed in [4242, 100, 200, 300, 500]:
+    r = SimTrajectoryRun(difficulty_id='easy', seed=seed, max_turns=8000, floors_max=20).run()
+    print(seed, r.depth_reached, r.runes_collected, r.termination.name, r.hp_at_end, flush=True)
+\""
+started_at: 2026-07-12T00:21:06.307Z
+running_for_ms: 37640003 
+---
+4242 1 1 TURN_CAP 0
+100 1 0 TURN_CAP 0
+200 4 14 TURN_CAP 0
+300 1 1 TURN_CAP 0

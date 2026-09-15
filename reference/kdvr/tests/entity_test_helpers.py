@@ -81,7 +81,9 @@ def spawn_fixture_wolf(
     registry = parse_entity_registry({"schema_version": 1, "entities": [payload]})
     definition = registry.get("wolf")
     assert definition is not None
-    return spawn_from_definition(world, definition, x, y)
+    entity = spawn_from_definition(world, definition, x, y)
+    assert entity is not None
+    return entity
 
 
 def spawn_fixture_wolf_with_abilities(
@@ -96,6 +98,9 @@ def spawn_fixture_wolf_with_abilities(
     parsed = parse_abilities(abilities)
     if parsed:
         wolf.components[Abilities] = Abilities(parsed=parsed)
+        from src.systems.ranged_magazine import ensure_ranged_magazine
+
+        ensure_ranged_magazine(wolf, maximum=2)
     else:
         wolf.components.pop(Abilities, None)
     return wolf

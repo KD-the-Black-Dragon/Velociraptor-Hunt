@@ -1,0 +1,43 @@
+---
+pid: 11072
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -c \"
+from src.sim.data_loader import install_stock_game_data
+install_stock_game_data()
+from src.sim.runner import SimTrajectoryRun
+from src.engine import GameEngine
+from src.sim.policy import SimPolicy
+from src.sim.snapshots import FloorTrackingState
+from src.components import FloorRune, Position
+
+engine = GameEngine(save_coordinator=None, skip_new_game=True)
+engine.new_game(seed=7, log_session_milestones=False)
+runes = [(e.components[Position].x, e.components[Position].y) for e in engine.world.Q.all_of(components=[FloorRune, Position])]
+print('runes on map', len(runes), runes[:5])
+print('quota', engine.runes_per_floor())
+tracking = FloorTrackingState()
+tracking.begin_floor(floor=engine.floor_depth, seed=7, runes_collected=engine.run_stats.runes_collected)
+policy = SimPolicy()
+for i in range(200):
+    if engine.player is None: break
+    p = engine.player.components[Position]
+    action = policy.decide(engine, tracking=tracking)
+    policy.execute(engine, action, tracking=tracking)
+    engine._run_npc_turns()
+    if engine.run_stats.runes_collected > 0:
+        print('collected at turn', i+1)
+        break
+    if i in (0,1,2,3,4,10,50,100,199):
+        print(f't{i}: pos=({p.x},{p.y}) action={action.kind} dir={action.direction} runes={engine.run_stats.runes_collected} explored={engine.game_map.explored.sum()}')
+print('final runes', engine.run_stats.runes_collected)
+\""
+started_at: 2026-07-11T23:44:38.946Z
+running_for_ms: 39830013 
+---
+runes on map 0 []
+quota 3
+Traceback (most recent call last):
+  File "<string>", line 23, in <module>
+    engine._run_npc_turns()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'GameEngine' object has no attribute '_run_npc_turns'

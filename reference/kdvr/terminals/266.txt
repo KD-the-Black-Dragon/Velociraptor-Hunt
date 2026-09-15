@@ -1,0 +1,7 @@
+---
+pid: 21944
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q -n 4 --tb=no 2>&1 | Out-File -FilePath agent-tools/arena-step1-summary.txt -Encoding utf8"
+started_at: 2026-07-15T19:11:27.231Z
+running_for_ms: 1180002  
+---

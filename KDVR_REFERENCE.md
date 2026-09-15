@@ -1,42 +1,54 @@
-# KDVR reference (for AI agents and contributors)
+# Lineage and harvest (for AI agents and contributors)
 
 ## What this file is
 
-This repository **is Gladiavore**. It began as a clone of **K.D.'s Vore Roguelike (KDVR)**. The original KDVR project may also exist elsewhere as a separate install.
+This repository **is Velociraptor Hunt**. The folder began as a **copy of
+Gladiavore**, which began as a clone of **K.D.'s Vore Roguelike (KDVR)**.
 
-**KDVR-only code lives under `reference/kdvr/`**, not in product `src/` / `tests/` core.
+**Gladiavore and KDVR originals live in other folders.** Do not treat this tree
+as those games. Do not try to “keep Gladiavore working” as the product.
+
+KDVR-only dungeon modules in this copy live under `reference/kdvr/`, not as
+product runtime.
 
 ## Product truth
 
-| | **Gladiavore** (product) | **KDVR** (reference only) |
-|--|--------------------------|---------------------------|
-| Location | repo root (`src/`, `data/`, `tests/`, `openspec/changes/gladiavore-foundation/`) | `reference/kdvr/` |
-| Loop | Career hub → curated arena matches | Multi-floor dungeon delve |
-| Run | `python -m src.main` | not launched as the product |
-| Specs | `openspec/specs/gladiavore-*` | historical under `reference/kdvr/openspec/` |
+| | **Velociraptor Hunt** (product) | **Gladiavore** (donor snapshot) | **KDVR** (reference only) |
+|--|--------------------------------|---------------------------------|---------------------------|
+| Location | this repo’s design + future hunt `src/` | current `src/`, `data/`, Gladiavore OpenSpec | `reference/kdvr/` |
+| Loop | One hunt: hunter vs velociraptor | Career hub → arena matches | Multi-floor dungeon delve |
+| Run | `python -m src.main` (donor until hunt lands) | not the product | not the product |
+| Specs | `openspec/changes/archive/2026-09-04-velociraptor-hunt/` | historical in this copy | historical under `reference/kdvr/openspec/` |
 
-**Canonical design:** `openspec/changes/gladiavore-foundation/` — especially **`DESIGN_CANON.md`**.
+**Canonical design:** `openspec/changes/archive/2026-09-04-velociraptor-hunt/` — especially
+**`DESIGN_CANON.md`**. Gladiavore’s `DESIGN_CANON.md` is donor history.
 
 ## Harvest rules
 
-1. Read product design first; do not re-add dungeon as New Game.
-2. When you need a system (AI, inventory, FOV…), **copy from `reference/kdvr/` into product** and adapt — do not import `reference` at runtime.
-3. Terminology: defeated / stunned / digested — never kill/die/death.
-4. User data directory name: **Gladiavore**.
+1. Read hunt design first. Do not re-add a career hub or a dungeon as New Game.
+2. When you need a system (AI, FOV, inventory, weather hooks, vore, save codec),
+   **copy from this tree’s donor `src/` or `reference/kdvr/`** and adapt — do not
+   import `reference` at runtime, and do not edit the original Gladiavore/KDVR
+   folders.
+3. Terminology: defeated / stunned / digested (devoured) — never kill/die/death.
+4. User data directory name (target): **Velociraptor Hunt**.
 
-## Soft prune status
+## What the snapshot still contains
 
-- Product App path is career-only (menu → name → background → hub → match).
-- Dungeon engine, map gen, depth jump, macguffins, dungeon AI, sim, bulk KDVR tests: **moved to `reference/kdvr/`**.
-- Some data loaders remain under product `src/data/` and `data/*.json` so mods/entity JSON still load; treat dungeon-only JSON as **inert content** until pruned further.
+- Gladiavore App path (menu → name → background → hub → match) is still the
+  running donor loop.
+- KDVR dungeon engine, map gen, and bulk dungeon tests: under `reference/kdvr/`.
+- Some data loaders remain under product `src/data/` and `data/*.json` so the
+  donor still loads; treat Gladiavore/KDVR JSON as **inert** for the hunt until
+  replaced.
 
-## Dual install warning
+## Dual / triple install warning
 
-If both `kds-vore-roguelike` and `gladiavore` are editable installs sharing the `src` package name, Python may mix modules. Prefer:
+If `kds-vore-roguelike`, `gladiavore`, and this hunt tree are all editable
+installs sharing the `src` package name, Python may mix modules. Prefer a
+**single** editable install of **this** folder when working on Velociraptor Hunt:
 
 ```bash
-pip uninstall kds-vore-roguelike -y
+pip uninstall kds-vore-roguelike gladiavore -y
 pip install -e ".[dev]"
 ```
-
-when working on Gladiavore.

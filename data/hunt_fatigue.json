@@ -1,0 +1,7 @@
+{
+  "per_run_step": 1,
+  "max_stack": 4,
+  "vision_per_stack": 1,
+  "accuracy_per_stack": 10,
+  "recovery_turns": 3
+}

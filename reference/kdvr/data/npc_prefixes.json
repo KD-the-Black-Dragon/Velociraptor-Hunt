@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "prefixes": [
+    {
+      "id": "elite",
+      "display_prefix": "Elite ",
+      "apply_to_alignments": [
+        "evil"
+      ],
+      "min_depth": 1,
+      "max_depth": 1000,
+      "weight": 1,
+      "stat_bonuses": {
+        "max_hp": 6,
+        "ac": 1,
+        "evade": 0,
+        "accuracy": 0.05,
+        "min_damage": 1,
+        "max_damage": 1,
+        "digestion_damage_per_tick": 1
+      }
+    },
+    {
+      "id": "brute",
+      "display_prefix": "Brute ",
+      "apply_to_alignments": [
+        "evil"
+      ],
+      "min_depth": 1,
+      "max_depth": 1000,
+      "weight": 1,
+      "grant_abilities": [
+        "Slow"
+      ],
+      "stat_bonuses": {
+        "min_damage": 2,
+        "max_damage": 2,
+        "accuracy": -0.1
+      }
+    },
+    {
+      "id": "berserk",
+      "display_prefix": "Berserk ",
+      "apply_to_alignments": [
+        "evil"
+      ],
+      "min_depth": 1,
+      "max_depth": 1000,
+      "weight": 1,
+      "stat_bonuses": {
+        "max_hp": -4,
+        "min_damage": 2,
+        "max_damage": 2
+      }
+    },
+    {
+      "id": "veteran",
+      "display_prefix": "Veteran ",
+      "apply_to_alignments": [
+        "evil"
+      ],
+      "min_depth": 1,
+      "max_depth": 1000,
+      "weight": 1,
+      "stat_bonuses": {
+        "max_hp": 3,
+        "ac": 1,
+        "min_damage": 1,
+        "max_damage": 0
+      }
+    },
+    {
+      "id": "starving",
+      "display_prefix": "Starving ",
+      "apply_to_alignments": [
+        "evil"
+      ],
+      "min_depth": 1,
+      "max_depth": 1000,
+      "weight": 1,
+      "grant_abilities": [
+        "PreferVore"
+      ],
+      "stat_bonuses": {
+        "max_hp": -3
+      }
+    },
+    {
+      "id": "sniper",
+      "display_prefix": "Sniper ",
+      "apply_to_alignments": [
+        "evil"
+      ],
+      "min_depth": 1,
+      "max_depth": 1000,
+      "weight": 1,
+      "requirements": {
+        "ability_families": [
+          "RangeN"
+        ]
+      },
+      "stat_bonuses": {
+        "ranged_accuracy": 0.1
+      }
+    },
+    {
+      "id": "bloated",
+      "display_prefix": "Bloated ",
+      "apply_to_alignments": [
+        "evil"
+      ],
+      "min_depth": 1,
+      "max_depth": 1000,
+      "weight": 1,
+      "grant_abilities": [
+        "Slow"
+      ],
+      "stat_bonuses": {
+        "max_hp": 6
+      }
+    }
+  ]
+}

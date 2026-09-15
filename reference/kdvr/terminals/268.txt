@@ -1,0 +1,349 @@
+---
+pid: 22040
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_autoexplore.py tests/test_rest_until_healed.py tests/test_modal_snapshot.py -v -n 4"
+started_at: 2026-07-16T01:57:43.845Z
+running_for_ms: 2975000  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+created: 4/4 workers
+4 workers [35 items]
+
+scheduling tests via LoadScheduling
+
+tests/test_autoexplore.py::test_start_message_via_key 
+tests/test_autoexplore.py::test_begin_blocked_visible_evil 
+tests/test_autoexplore.py::test_autoexplore_key_is_grave 
+tests/test_autoexplore.py::test_begin_allowed_at_half_hp 
+[gw0] [  2%] PASSED tests/test_autoexplore.py::test_autoexplore_key_is_grave 
+tests/test_autoexplore.py::test_begin_blocked_engulfed 
+[gw2] [  5%] PASSED tests/test_autoexplore.py::test_begin_allowed_at_half_hp 
+tests/test_autoexplore.py::test_begin_blocked_stunned 
+[gw0] [  8%] PASSED tests/test_autoexplore.py::test_begin_blocked_engulfed 
+tests/test_autoexplore.py::test_picks_up_known_item_on_explored_tile 
+[gw1] [ 11%] PASSED tests/test_autoexplore.py::test_begin_blocked_visible_evil 
+tests/test_autoexplore.py::test_begin_blocked_below_half_hp 
+[gw2] [ 14%] PASSED tests/test_autoexplore.py::test_begin_blocked_stunned 
+tests/test_autoexplore.py::test_attack_interrupt 
+[gw1] [ 17%] PASSED tests/test_autoexplore.py::test_begin_blocked_below_half_hp 
+tests/test_rest_until_healed.py::test_rest_key_is_main_keyboard_five_not_numpad 
+[gw1] [ 20%] PASSED tests/test_rest_until_healed.py::test_rest_key_is_main_keyboard_five_not_numpad 
+tests/test_rest_until_healed.py::test_pre_check_full_health_blocks_without_turn 
+[gw2] [ 22%] FAILED tests/test_autoexplore.py::test_attack_interrupt 
+tests/test_autoexplore.py::test_manual_cancel_silent 
+[gw3] [ 25%] PASSED tests/test_autoexplore.py::test_start_message_via_key 
+tests/test_autoexplore.py::test_complete_on_fully_explored_floor 
+[gw0] [ 28%] FAILED tests/test_autoexplore.py::test_picks_up_known_item_on_explored_tile 
+tests/test_autoexplore.py::test_danger_interrupt_visible_evil 
+[gw2] [ 31%] PASSED tests/test_autoexplore.py::test_manual_cancel_silent 
+tests/test_rest_until_healed.py::test_pre_check_visible_evil_blocks_without_turn 
+[gw1] [ 34%] PASSED tests/test_rest_until_healed.py::test_pre_check_full_health_blocks_without_turn 
+tests/test_rest_until_healed.py::test_pre_check_engulfed_blocks_without_turn 
+[gw2] [ 37%] PASSED tests/test_rest_until_healed.py::test_pre_check_visible_evil_blocks_without_turn 
+tests/test_rest_until_healed.py::test_rest_cap_ends_with_finish_message 
+[gw0] [ 40%] FAILED tests/test_autoexplore.py::test_danger_interrupt_visible_evil 
+tests/test_rest_until_healed.py::test_attack_interrupt_ends_rest_with_alert 
+[gw1] [ 42%] PASSED tests/test_rest_until_healed.py::test_pre_check_engulfed_blocks_without_turn 
+tests/test_rest_until_healed.py::test_numpad_five_still_single_wait 
+[gw2] [ 45%] PASSED tests/test_rest_until_healed.py::test_rest_cap_ends_with_finish_message 
+tests/test_rest_until_healed.py::test_stunned_rest_is_silent_per_turn 
+[gw0] [ 48%] PASSED tests/test_rest_until_healed.py::test_attack_interrupt_ends_rest_with_alert 
+tests/test_rest_until_healed.py::test_find_good_ally_alarm_shouter_prefers_visible_ally_with_evil_los 
+[gw1] [ 51%] PASSED tests/test_rest_until_healed.py::test_numpad_five_still_single_wait 
+tests/test_rest_until_healed.py::test_ally_alarm_when_evil_visible_to_ally_not_player 
+[gw2] [ 54%] PASSED tests/test_rest_until_healed.py::test_stunned_rest_is_silent_per_turn 
+tests/test_rest_until_healed.py::test_main_keyboard_five_starts_incremental_rest 
+[gw0] [ 57%] FAILED tests/test_rest_until_healed.py::test_find_good_ally_alarm_shouter_prefers_visible_ally_with_evil_los 
+tests/test_rest_until_healed.py::test_manual_interrupt_cancels_rest_and_waits_one_turn 
+[gw1] [ 60%] FAILED tests/test_rest_until_healed.py::test_ally_alarm_when_evil_visible_to_ally_not_player 
+tests/test_rest_until_healed.py::test_manual_interrupt_cancels_rest_and_opens_inventory 
+[gw2] [ 62%] PASSED tests/test_rest_until_healed.py::test_main_keyboard_five_starts_incremental_rest 
+tests/test_rest_until_healed.py::test_manual_interrupt_cancels_rest_and_moves 
+[gw0] [ 65%] PASSED tests/test_rest_until_healed.py::test_manual_interrupt_cancels_rest_and_waits_one_turn 
+tests/test_rest_until_healed.py::test_rest_frame_batches_silent_turns_without_dirty_screen 
+[gw0] [ 68%] PASSED tests/test_rest_until_healed.py::test_rest_frame_batches_silent_turns_without_dirty_screen 
+tests/test_modal_snapshot.py::test_help_overlay_broader_than_modal_blocks_quit 
+[gw0] [ 71%] PASSED tests/test_modal_snapshot.py::test_help_overlay_broader_than_modal_blocks_quit 
+tests/test_modal_snapshot.py::test_log_overlay_and_examine_labels 
+[gw0] [ 74%] PASSED tests/test_modal_snapshot.py::test_log_overlay_and_examine_labels 
+tests/test_modal_snapshot.py::test_game_over_beats_lower_priority_modals 
+[gw0] [ 77%] PASSED tests/test_modal_snapshot.py::test_game_over_beats_lower_priority_modals 
+tests/test_modal_snapshot.py::test_rest_modal_label 
+[gw0] [ 80%] PASSED tests/test_modal_snapshot.py::test_rest_modal_label 
+tests/test_modal_snapshot.py::test_macguffin_discovery_is_not_a_modal_label 
+[gw0] [ 82%] PASSED tests/test_modal_snapshot.py::test_macguffin_discovery_is_not_a_modal_label 
+[gw1] [ 85%] PASSED tests/test_rest_until_healed.py::test_manual_interrupt_cancels_rest_and_opens_inventory 
+tests/test_modal_snapshot.py::test_menu_new_game_confirm_has_priority 
+[gw1] [ 88%] PASSED tests/test_modal_snapshot.py::test_menu_new_game_confirm_has_priority 
+[gw2] [ 91%] PASSED tests/test_rest_until_healed.py::test_manual_interrupt_cancels_rest_and_moves 
+tests/test_modal_snapshot.py::test_menu_phase_labels 
+[gw2] [ 94%] PASSED tests/test_modal_snapshot.py::test_menu_phase_labels 
+[gw3] [ 97%] PASSED tests/test_autoexplore.py::test_complete_on_fully_explored_floor 
+tests/test_rest_until_healed.py::test_rest_start_message_and_healed_end 
+[gw3] [100%] PASSED tests/test_rest_until_healed.py::test_rest_start_message_and_healed_end 
+
+================================== FAILURES ===================================
+____________________________ test_attack_interrupt ____________________________
+[gw2] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+
+    def test_attack_interrupt() -> None:
+>       engine = _autoexplore_corridor_engine()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_autoexplore.py:295: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_autoexplore.py:261: in _autoexplore_corridor_engine
+    player.components[Position].x = 2
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Position(x=56, y=22), name = 'x', value = 2
+
+    def _frozen_setattrs(self, name, value):
+        """
+        Attached to frozen classes as __setattr__.
+        """
+        if isinstance(self, BaseException) and name in (
+            "__cause__",
+            "__context__",
+            "__traceback__",
+            "__suppress_context__",
+            "__notes__",
+        ):
+            BaseException.__setattr__(self, name, value)
+            return
+    
+>       raise FrozenInstanceError
+E       attr.exceptions.FrozenInstanceError: can't set attribute
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\attr\_make.py:573: FrozenInstanceError
+__________________ test_picks_up_known_item_on_explored_tile __________________
+[gw0] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+
+    def test_picks_up_known_item_on_explored_tile() -> None:
+        engine = GameEngine()
+        _clear_npcs(engine)
+        player = engine.player
+        assert player is not None
+        fighter = player.components[Fighter]
+        fighter.hp = fighter.max_hp
+    
+        game_map = _corridor_map()
+        mid_y = game_map.height // 2
+>       player.components[Position].x = 2
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_autoexplore.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Position(x=65, y=8), name = 'x', value = 2
+
+    def _frozen_setattrs(self, name, value):
+        """
+        Attached to frozen classes as __setattr__.
+        """
+        if isinstance(self, BaseException) and name in (
+            "__cause__",
+            "__context__",
+            "__traceback__",
+            "__suppress_context__",
+            "__notes__",
+        ):
+            BaseException.__setattr__(self, name, value)
+            return
+    
+>       raise FrozenInstanceError
+E       attr.exceptions.FrozenInstanceError: can't set attribute
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\attr\_make.py:573: FrozenInstanceError
+_____________________ test_danger_interrupt_visible_evil ______________________
+[gw0] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+
+    def test_danger_interrupt_visible_evil() -> None:
+>       engine = _autoexplore_corridor_engine()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_autoexplore.py:270: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_autoexplore.py:261: in _autoexplore_corridor_engine
+    player.components[Position].x = 2
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Position(x=67, y=8), name = 'x', value = 2
+
+    def _frozen_setattrs(self, name, value):
+        """
+        Attached to frozen classes as __setattr__.
+        """
+        if isinstance(self, BaseException) and name in (
+            "__cause__",
+            "__context__",
+            "__traceback__",
+            "__suppress_context__",
+            "__notes__",
+        ):
+            BaseException.__setattr__(self, name, value)
+            return
+    
+>       raise FrozenInstanceError
+E       attr.exceptions.FrozenInstanceError: can't set attribute
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\attr\_make.py:573: FrozenInstanceError
+____ test_find_good_ally_alarm_shouter_prefers_visible_ally_with_evil_los _____
+[gw0] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+
+    def test_find_good_ally_alarm_shouter_prefers_visible_ally_with_evil_los() -> None:
+        engine = GameEngine()
+        _clear_npcs(engine)
+        player = engine.player
+        assert player is not None
+        pos = player.components[Position]
+    
+        ally = spawn_test_npc(
+            engine.world,
+            x=pos.x + 1,
+            y=pos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+            species_id="knight",
+        )
+        evil = spawn_test_npc(
+            engine.world,
+            x=pos.x + 2,
+            y=pos.y,
+            species="wolf",
+            alignment=Alignment.EVIL,
+            species_id="wolf",
+        )
+        update_fov(engine.game_map, pos.x, pos.y)
+    
+        def fake_visible_good_evils(monster, world, game_map):
+            if monster is ally:
+                return [evil]
+            return []
+    
+>       with patch("src.systems.rest._visible_good_evils", side_effect=fake_visible_good_evils):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_rest_until_healed.py:261: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\unittest\mock.py:1510: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x00000148564C5550>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'src.systems.rest' from 'C:\\VS Code Projects\\kds-vore-roguelike\\src\\systems\\rest.py'> does not have the attribute '_visible_good_evils'
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\unittest\mock.py:1480: AttributeError
+____________ test_ally_alarm_when_evil_visible_to_ally_not_player _____________
+[gw1] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+
+    def test_ally_alarm_when_evil_visible_to_ally_not_player() -> None:
+        engine = GameEngine()
+        _clear_npcs(engine)
+        player = engine.player
+        assert player is not None
+        player.components[Fighter].hp = 15
+        pos = player.components[Position]
+    
+        ally = spawn_test_npc(
+            engine.world,
+            x=pos.x + 1,
+            y=pos.y,
+            species="knight",
+            alignment=Alignment.GOOD,
+            species_id="knight",
+        )
+        ally.components[ProperName] = ProperName(name="Sir Bob")
+    
+        evil = spawn_test_npc(
+            engine.world,
+            x=pos.x + 2,
+            y=pos.y,
+            species="wolf",
+            alignment=Alignment.EVIL,
+            species_id="wolf",
+        )
+        update_fov(engine.game_map, pos.x, pos.y)
+        evil_pos = evil.components[Position]
+        engine.game_map.visible[evil_pos.y, evil_pos.x] = False
+    
+        def fake_visible_good_evils(monster, world, game_map):
+            if monster is ally:
+                return [evil]
+            return []
+    
+>       with patch("src.engine_turn.run_monster_turns"), patch(
+            "src.systems.rest._visible_good_evils",
+            side_effect=fake_visible_good_evils,
+        ), patch("src.systems.rest.player_has_visible_evil", return_value=False):
+
+tests\test_rest_until_healed.py:300: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\unittest\mock.py:1510: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x000002197803A990>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'src.systems.rest' from 'C:\\VS Code Projects\\kds-vore-roguelike\\src\\systems\\rest.py'> does not have the attribute '_visible_good_evils'
+
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\unittest\mock.py:1480: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_autoexplore.py::test_attack_interrupt - attr.exceptions.Fro...
+FAILED tests/test_autoexplore.py::test_picks_up_known_item_on_explored_tile
+FAILED tests/test_autoexplore.py::test_danger_interrupt_visible_evil - attr.e...
+FAILED tests/test_rest_until_healed.py::test_find_good_ally_alarm_shouter_prefers_visible_ally_with_evil_los
+FAILED tests/test_rest_until_healed.py::test_ally_alarm_when_evil_visible_to_ally_not_player
+======================== 5 failed, 30 passed in 15.65s ========================

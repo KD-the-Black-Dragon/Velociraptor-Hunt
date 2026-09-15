@@ -29,6 +29,9 @@ _ITEM_FILE_KEYS = {
             "spawn_min_depth",
             "spawn_max_depth",
             "abilities",
+            "attack_delay",
+            "measure",
+            "swappable",
         }
     ),
     "armor": frozenset(

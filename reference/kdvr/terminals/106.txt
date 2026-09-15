@@ -1,0 +1,14 @@
+---
+pid: 21312
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_dungeon_layout_pr2.py tests/test_dungeon_layout_pr0.py tests/test_dungeon_layout_pr1.py -q --tb=line 2>&1"
+started_at: 2026-07-03T14:02:50.060Z
+running_for_ms: 31769993 
+---
+........F...............                                                 [100%]
+================================== FAILURES ===================================
+E   ValueError: empty range in randint(18, 17)
+C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\Lib\random.py:341: ValueError: empty range in randint(18, 17)
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_layout_pr2.py::test_npc_pathfinding_treats_closed_door_as_blocked
+1 failed, 23 passed in 40.65s

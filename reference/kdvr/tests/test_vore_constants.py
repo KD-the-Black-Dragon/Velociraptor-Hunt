@@ -114,15 +114,13 @@ def test_get_narrative_phases_unknown_species_empty() -> None:
 
 def test_spawn_tags_wolf_vore_capable() -> None:
     engine = GameEngine()
-    from tests.map_test_helpers import iter_wolves
+    from tests.map_test_helpers import ensure_wolf
 
-    monsters = list(iter_wolves(engine))
-    assert len(monsters) >= 1
-    for monster in monsters:
-        assert monster.components[DisplayName].name == "wolf"
-        assert monster.components[NPCAlignment].alignment == Alignment.EVIL
-        assert monster.components[ExamineDescription].text == WOLF_EXAMINE_DESCRIPTION
-        assert monster.components[VoreNarratives].types == ("OV", "CV", "AV")
+    monster = ensure_wolf(engine)
+    assert monster.components[DisplayName].name == "wolf"
+    assert monster.components[NPCAlignment].alignment == Alignment.EVIL
+    assert monster.components[ExamineDescription].text == WOLF_EXAMINE_DESCRIPTION
+    assert monster.components[VoreNarratives].types == ("OV", "CV", "AV")
 
 
 def test_new_game_seeded_rng() -> None:
@@ -139,7 +137,21 @@ def test_new_game_seeded_rng() -> None:
     assert a_monsters == b_monsters
 
 
-def test_f2_debug_weakens_monsters() -> None:
+def test_debug_hotkeys_disabled_by_default() -> None:
+    engine = GameEngine()
+    monsters = list(engine.world.Q.all_of(components=[AI, Fighter]))
+    assert monsters
+    for monster in monsters:
+        assert monster.components[Fighter].hp == monster.components[Fighter].max_hp
+    engine.handle_event(
+        tcod.event.KeyDown(sym=KeySym.F2, scancode=Scancode.UNKNOWN, mod=Modifier.NONE),
+    )
+    assert all(m.components[Fighter].hp == m.components[Fighter].max_hp for m in monsters)
+    assert not any("Debug:" in line for line in engine.message_log.lines())
+
+
+def test_f2_debug_weakens_monsters(monkeypatch) -> None:
+    monkeypatch.setattr("src.engine_input.DEBUG_GAMEPLAY_HOTKEYS_ENABLED", True)
     engine = GameEngine()
     monsters = list(engine.world.Q.all_of(components=[AI, Fighter]))
     assert monsters
@@ -153,8 +165,9 @@ def test_f2_debug_weakens_monsters() -> None:
     assert "Debug: all monsters weakened." in engine.message_log.lines()[-1]
 
 
-def test_f2_before_inventory_routing() -> None:
+def test_f2_before_inventory_routing(monkeypatch) -> None:
     """F2 must not be treated as inventory slot 'f' (not in INVENTORY_KEYS)."""
+    monkeypatch.setattr("src.engine_input.DEBUG_GAMEPLAY_HOTKEYS_ENABLED", True)
     engine = GameEngine()
     engine.handle_event(
         tcod.event.KeyDown(sym=KeySym.F2, scancode=Scancode.UNKNOWN, mod=Modifier.NONE),

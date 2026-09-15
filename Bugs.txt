@@ -1,4 +1,5 @@
-Bugs:
+Bugs (donor Gladiavore snapshot — not Velociraptor Hunt product bugs):
+
 
 Pressing 'a' for ability and then 'g' attempts to surrender the match. It should attempt to use whatever ability is in g, or say "No ability bound to 'g'." if there is no ability there.
 

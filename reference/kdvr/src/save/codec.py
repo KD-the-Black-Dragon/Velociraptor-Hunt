@@ -15,6 +15,7 @@ from src.components import (
     AbilityState,
     Alignment,
     BlocksMovement,
+    Dazed,
     DigestionStats,
     DigestionStrikes,
     DisplayName,
@@ -28,6 +29,7 @@ from src.components import (
     InventoryItemInstance,
     Item,
     ItemCategory,
+    empty_inventory_slots,
     Mobility,
     MobilityType,
     NPCAlignment,
@@ -38,6 +40,7 @@ from src.components import (
     Position,
     Predator,
     ProperName,
+    RangedMagazine,
     Renderable,
     SpeciesId,
     Stunned,
@@ -352,6 +355,16 @@ def _encode_components(entity: Entity, id_map: EntityIdMap) -> dict[str, Any]:
             "count": entity.components[DigestionStrikes].count
         }
 
+    if Dazed in entity.components:
+        components["Dazed"] = {"remaining": entity.components[Dazed].remaining}
+
+    if RangedMagazine in entity.components:
+        mag = entity.components[RangedMagazine]
+        components["RangedMagazine"] = {
+            "current": mag.current,
+            "maximum": mag.maximum,
+        }
+
     if Predator in entity.components:
         predator = entity.components[Predator]
         prey = predator.prey
@@ -361,6 +374,7 @@ def _encode_components(entity: Entity, id_map: EntityIdMap) -> dict[str, Any]:
             "prey_id": id_map[prey],
             "narrative_type": predator.narrative_type,
             "failed_struggles": predator.failed_struggles,
+            "engulfed_flavor_phases": predator.engulfed_flavor_phases,
         }
 
     return components
@@ -466,12 +480,14 @@ def _decode_components(
         )
 
     if "Inventory" in components:
-        slots = {
-            slot: (
+        # Always materialize full a–z so pickup/UI never KeyError on sparse saves.
+        slots = empty_inventory_slots()
+        for slot, instance in components["Inventory"].items():
+            if not isinstance(slot, str) or len(slot) != 1 or slot not in slots:
+                continue
+            slots[slot] = (
                 _decode_inventory_item(instance) if instance is not None else None
             )
-            for slot, instance in components["Inventory"].items()
-        }
         entity.components[Inventory] = Inventory(slots=slots)
 
     if "EquipState" in components:
@@ -610,6 +626,30 @@ def _decode_components(
             count=int(components["DigestionStrikes"]["count"])
         )
 
+    if "Dazed" in components:
+        entity.components[Dazed] = Dazed(
+            remaining=int(components["Dazed"]["remaining"])
+        )
+
+    if "RangedMagazine" in components:
+        raw_mag = components["RangedMagazine"]
+        maximum = max(1, int(raw_mag.get("maximum", 2)))
+        current = int(raw_mag.get("current", maximum))
+        current = max(0, min(maximum, current))
+        entity.components[RangedMagazine] = RangedMagazine(
+            current=current,
+            maximum=maximum,
+        )
+    else:
+        # Pre-magazine saves: RangeN/SmiteN NPCs start with a full default magazine.
+        from src.systems.ranged_magazine import (
+            attach_ranged_magazine,
+            entity_has_path_or_smite,
+        )
+
+        if entity_has_path_or_smite(entity):
+            attach_ranged_magazine(entity, maximum=2)
+
     if "Predator" in components:
         predator = components["Predator"]
         prey_id = int(predator["prey_id"])
@@ -618,6 +658,7 @@ def _decode_components(
             prey=prey,
             narrative_type=str(predator["narrative_type"]),
             failed_struggles=int(predator.get("failed_struggles", 0)),
+            engulfed_flavor_phases=int(predator.get("engulfed_flavor_phases", 0)),
         )
 
 

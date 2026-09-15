@@ -1,0 +1,20 @@
+---
+pid: 3028
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_sim_navigation.py::test_policy_waits_on_visible_rune_tile tests/test_sim_navigation.py::test_first_step_toward_prefers_goal_direction_over_cardinal_order tests/test_sim_navigation.py::test_first_step_toward_goal -v"
+started_at: 2026-07-12T00:02:38.157Z
+running_for_ms: 38750002 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 3 items
+
+tests/test_sim_navigation.py::test_policy_waits_on_visible_rune_tile PASSED [ 33%]
+tests/test_sim_navigation.py::test_first_step_toward_prefers_goal_direction_over_cardinal_order PASSED [ 66%]
+tests/test_sim_navigation.py::test_first_step_toward_goal PASSED         [100%]
+
+======================== 3 passed in 64.42s (0:01:04) =========================

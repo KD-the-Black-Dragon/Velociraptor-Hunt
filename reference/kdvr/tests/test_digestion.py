@@ -26,8 +26,8 @@ from src.components import (
 from src import messages
 from src.constants import (
     NATURAL_REGEN_EVERY_N_PLAYER_TURNS,
-    VORE_STRUGGLE_DAMAGE,
 )
+from src.systems.inventory import effective_fighter
 from src.components import EquipState
 from src.systems.combat import try_action
 from src.digestion_content import DIGESTION_COMPLETE_POOL
@@ -101,7 +101,7 @@ def test_evil_spawn_has_digestion_stats() -> None:
 def test_engulf_stores_narrative_type_on_predator() -> None:
     engine = GameEngine()
     wolf, knight = _adjacent_stunned_knight_setup(engine)
-    with patch("src.systems.vore.pick_narrative_type", return_value="AV"):
+    with patch("src.systems.vore.pick_attempt_narrative_type", return_value="AV"):
         with patch("src.systems.vore.resolve_vore_hit", return_value=True):
             with patch("src.systems.vore.should_attempt_vore", return_value=True):
                 assert try_resolve_npc_vore(
@@ -249,6 +249,122 @@ def test_predator_attack_only_while_holding() -> None:
 
     assert wolf.components[Position] == wolf_pos_before
     assert target.components[Fighter].hp < target_hp_before
+
+
+def test_holding_predator_does_not_attack_adjacent_evil() -> None:
+    """Evil holding prey must never melee another evil (player or NPC prey)."""
+    engine = GameEngine()
+    _clear_npcs(engine)
+    player = engine.player
+    assert player is not None
+    carve_floor_rect(engine, ARENA_X, ARENA_Y, ARENA_X + 2, ARENA_Y)
+    wolf_pos = Position(ARENA_X + 1, ARENA_Y)
+    other_pos = Position(ARENA_X, ARENA_Y)
+    player.components[Position] = Position(0, 0)
+
+    wolf = spawn_entity_by_id(engine.world, "wolf", wolf_pos.x, wolf_pos.y)
+    other = spawn_entity_by_id(engine.world, "wolf", other_pos.x, other_pos.y)
+    prey = spawn_test_npc(
+        engine.world,
+        x=wolf_pos.x,
+        y=wolf_pos.y,
+        species="rabbit",
+        alignment=Alignment.NEUTRAL,
+        hp=1,
+        accuracy=10.0,
+        evade=0,
+        ac=0,
+        min_damage=0,
+        max_damage=0,
+    )
+    engulf_npc(engine.world, prey, wolf, narrative_type="OV")
+
+    other_hp_before = other.components[Fighter].hp
+    run_monster_turns(
+        engine.world,
+        engine.game_map,
+        player,
+        engine.message_log,
+        rng=random.Random(0),
+    )
+    assert other.components[Fighter].hp == other_hp_before
+
+
+def test_holding_predator_skips_evil_to_hit_adjacent_good() -> None:
+    """When an evil neighbor is scanned first, still punch a valid good target."""
+    from src.systems.ai import _try_predator_holding_attack
+
+    engine = GameEngine()
+    _clear_npcs(engine)
+    player = engine.player
+    assert player is not None
+    # West = evil (MOVEMENT_DIRECTIONS typically tries W before E), east = good
+    carve_floor_rect(engine, ARENA_X, ARENA_Y, ARENA_X + 2, ARENA_Y)
+    wolf_pos = Position(ARENA_X + 1, ARENA_Y)
+    evil_pos = Position(ARENA_X, ARENA_Y)
+    good_pos = Position(ARENA_X + 2, ARENA_Y)
+    player.components[Position] = Position(0, 0)
+
+    wolf = spawn_entity_by_id(engine.world, "wolf", wolf_pos.x, wolf_pos.y)
+    packmate = spawn_entity_by_id(engine.world, "wolf", evil_pos.x, evil_pos.y)
+    knight = spawn_test_npc(
+        engine.world,
+        x=good_pos.x,
+        y=good_pos.y,
+        species="knight",
+        alignment=Alignment.GOOD,
+        hp=20,
+        accuracy=10.0,
+        evade=0,
+        ac=0,
+        min_damage=0,
+        max_damage=0,
+    )
+    prey = spawn_test_npc(
+        engine.world,
+        x=wolf_pos.x,
+        y=wolf_pos.y,
+        species="rabbit",
+        alignment=Alignment.NEUTRAL,
+        hp=1,
+        accuracy=10.0,
+        evade=0,
+        ac=0,
+        min_damage=0,
+        max_damage=0,
+    )
+    engulf_npc(engine.world, prey, wolf, narrative_type="OV")
+
+    pack_hp = packmate.components[Fighter].hp
+    knight_hp = knight.components[Fighter].hp
+    _try_predator_holding_attack(
+        engine.world,
+        engine.game_map,
+        wolf,
+        engine.message_log,
+        rng=random.Random(0),
+    )
+    assert packmate.components[Fighter].hp == pack_hp
+    assert knight.components[Fighter].hp < knight_hp
+
+
+def test_try_action_evil_does_not_melee_evil() -> None:
+    engine = GameEngine()
+    _clear_npcs(engine)
+    carve_floor_rect(engine, ARENA_X, ARENA_Y, ARENA_X + 1, ARENA_Y)
+    a = spawn_entity_by_id(engine.world, "wolf", ARENA_X, ARENA_Y)
+    b = spawn_entity_by_id(engine.world, "wolf", ARENA_X + 1, ARENA_Y)
+    hp_before = b.components[Fighter].hp
+    asserted = try_action(
+        engine.world,
+        engine.game_map,
+        a,
+        (1, 0),
+        engine.message_log,
+        rng=random.Random(0),
+    )
+    assert asserted is False
+    assert b.components[Fighter].hp == hp_before
 
 
 def test_predator_cannot_move_while_holding() -> None:
@@ -641,9 +757,12 @@ def test_game_over_enter_dismisses_recap() -> None:
 
 
 def test_engulfed_player_immune_to_combat_damage() -> None:
+    from tests.map_test_helpers import ensure_wolves
+
     engine = GameEngine()
     player, wolf = _engulf_player_on_wolf(engine, player_hp=10)
-    hunter = next(e for e in iter_wolves(engine) if e is not wolf)
+    wolves = ensure_wolves(engine, 2)
+    hunter = next(e for e in wolves if e is not wolf)
     hunter.components[Position] = Position(
         wolf.components[Position].x + 1,
         wolf.components[Position].y,
@@ -685,11 +804,19 @@ def test_struggle_and_digestion_same_turn() -> None:
     if equip is not None:
         equip.worn_slot = None
     raw_tick = wolf.components[DigestionStats].damage_per_tick
+    # Deterministic half-melee struggle damage (min == max).
+    from src.components import PlayerProgression
+
+    progression = player.components.get(PlayerProgression) or PlayerProgression()
+    player.components[PlayerProgression] = progression
+    ef = effective_fighter(player)
+    progression.bonus_min_damage += 4 - ef.min_damage
+    progression.bonus_max_damage += 4 - ef.max_damage
     with patch.object(engine.rng, "random", return_value=1.0):
         _press(engine, KeySym.UP)
     assert Engulfed in player.tags
     assert player.components[Fighter].hp == 6 - raw_tick
-    assert wolf.components[Fighter].hp == 30 - VORE_STRUGGLE_DAMAGE
+    assert wolf.components[Fighter].hp == 30 - 2  # half of 4
     assert player.components.get(DigestionStrikes) is None
 
 

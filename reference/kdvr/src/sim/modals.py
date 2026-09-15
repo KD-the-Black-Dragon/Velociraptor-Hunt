@@ -71,6 +71,8 @@ def execute_engulfed_struggle(engine: GameEngine) -> None:
         engine.message_log,
         engine.rng,
         run_stats=engine.run_stats,
+        alternate_cv_mechanics=engine.alternate_cv_mechanics,
+        difficulty_profile=engine.difficulty_profile(),
     )
     engine._consume_player_turn()
 

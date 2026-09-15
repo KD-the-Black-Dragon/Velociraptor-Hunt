@@ -127,9 +127,11 @@ def test_non_adjacent_knight_does_not_introduce() -> None:
 
 
 def test_wolf_visible_to_player_blocks_introduction() -> None:
+    from tests.map_test_helpers import ensure_wolf
+
     engine = GameEngine()
     knight = _setup_adjacent_knight(engine)
-    wolf = next(iter_wolves(engine))
+    wolf = ensure_wolf(engine)
     wolf_pos = ensure_adjacent_floor(engine, knight.components[Position], (1, 0))
     wolf.components[Position] = wolf_pos
     _introduce(engine)
@@ -138,6 +140,8 @@ def test_wolf_visible_to_player_blocks_introduction() -> None:
 
 
 def test_wolf_visible_to_knight_blocks_introduction() -> None:
+    from tests.map_test_helpers import ensure_wolf
+
     engine = GameEngine()
     isolate_other_ais(engine)
     player_pos = relocate_player(engine, ARENA_X, ARENA_Y)
@@ -150,7 +154,7 @@ def test_wolf_visible_to_knight_blocks_introduction() -> None:
         alignment=Alignment.GOOD,
         species_id="knight",
     )
-    wolf = next(iter_wolves(engine))
+    wolf = ensure_wolf(engine)
     wolf_pos = ensure_adjacent_floor(engine, knight_pos, (0, -1))
     wolf.components[Position] = wolf_pos
     _introduce(engine)
@@ -159,10 +163,12 @@ def test_wolf_visible_to_knight_blocks_introduction() -> None:
 
 
 def test_player_engulfed_blocks_introduction() -> None:
+    from tests.map_test_helpers import ensure_wolf
+
     engine = GameEngine()
     knight = _setup_adjacent_knight(engine)
     player = engine.player
-    wolf = next(iter_wolves(engine))
+    wolf = ensure_wolf(engine)
     wolf_pos = ensure_adjacent_floor(engine, player.components[Position], (-1, 0))
     wolf.components[Position] = wolf_pos
     from src.systems.vore import engulf_player

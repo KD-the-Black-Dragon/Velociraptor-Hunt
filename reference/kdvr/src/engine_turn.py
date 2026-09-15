@@ -82,6 +82,8 @@ def begin_projectile_session_from_queue(engine: GameEngine) -> None:
 
 def run_world_turn(engine: GameEngine) -> None:
     """World phase after a player action consumes a turn (monsters, FOV, etc.)."""
+    from src.systems.engulfed_flavor import maybe_emit_engulfed_flavor
+
     reset_projectile_queue()
     if engine.player is not None:
         run_monster_turns(
@@ -96,12 +98,20 @@ def run_world_turn(engine: GameEngine) -> None:
             player_turn_count=engine.player_turn_count,
             floor_depth=engine.floor_depth,
             difficulty_id=engine.difficulty_id,
+            alternate_cv_mechanics=engine.alternate_cv_mechanics,
         )
     engine.skipped_this_phase.clear()
     engine._update_fov()
     begin_projectile_session_from_queue(engine)
     for entity in list(engine.world.Q.all_of(tags=[VoreMercy])):
         entity.tags.discard(VoreMercy)
+    if engine.player is not None:
+        maybe_emit_engulfed_flavor(
+            engine.world,
+            engine.player,
+            engine.message_log,
+            engine.rng,
+        )
 
 
 def advance_vore_modal(engine: GameEngine) -> None:
@@ -137,6 +147,7 @@ def advance_vore_modal(engine: GameEngine) -> None:
                 player_turn_count=engine.player_turn_count,
                 floor_depth=engine.floor_depth,
                 difficulty_id=engine.difficulty_id,
+                alternate_cv_mechanics=engine.alternate_cv_mechanics,
             ):
                 return
             modal.reset()
@@ -260,6 +271,14 @@ def advance_digestion_modal(engine: GameEngine) -> None:
     predator = engine.digestion_modal.predator
     player = engine.player
     if predator is None or player is None:
+        engine.digestion_modal.reset()
+        return
+    # Teleport (or other escape) after the modal opened: do not finish as digested.
+    if Engulfed not in player.tags:
+        engine.digestion_modal.reset()
+        return
+    predator_state = predator.components.get(Predator)
+    if predator_state is None or predator_state.prey is not player:
         engine.digestion_modal.reset()
         return
     if not engine.digestion_modal.advance():
@@ -447,9 +466,24 @@ def consume_player_turn(engine: GameEngine) -> None:
     """Advance player turn counter, apply natural regen, fire hook, run world phase."""
     if engine.player is None:
         return
-    from src.systems.player_effects import haste_skips_world_phase, tick_player_effects
+    from src.systems.player_effects import (
+        haste_skips_world_phase,
+        resolve_maturing_delayed_teleport,
+        tick_player_effects,
+    )
 
     engine.player_turn_count += 1
+    # Maturing teleport before digestion: escape (incl. clearing strikes) wins
+    # over a same-turn final digest strike / game-over modal.
+    resolve_maturing_delayed_teleport(
+        engine.player,
+        engine.world,
+        engine.game_map,
+        engine.rng,
+        engine.message_log,
+    )
+    if Engulfed not in engine.player.tags and engine.digestion_modal.active:
+        engine.digestion_modal.reset()
     skip_world = engine._maybe_apply_player_digestion()
     engine._apply_natural_regen()
     engine._update_fov()
@@ -472,6 +506,8 @@ def consume_player_turn(engine: GameEngine) -> None:
     )
     # Teleport may have moved the player; refresh FOV before world phase.
     engine._update_fov()
+    if Engulfed not in engine.player.tags and engine.digestion_modal.active:
+        engine.digestion_modal.reset()
     # Haste: 2 player actions per 1 monster phase while Fast remains.
     if haste_skips_world_phase(engine.player):
         skip_world = True

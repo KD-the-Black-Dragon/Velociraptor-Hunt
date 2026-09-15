@@ -1,0 +1,27 @@
+---
+pid: 16948
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cmd /c \"cd /d C:\\VS Code Projects\\kds-vore-roguelike && python -m pytest tests/test_sim_runner.py -v\""
+started_at: 2026-07-11T22:41:58.271Z
+running_for_ms: 2094993  
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+collecting ... collected 10 items
+
+tests/test_sim_runner.py::test_install_stock_game_data_fingerprint_stable PASSED [ 10%]
+tests/test_sim_runner.py::test_trajectory_run_completes_ten_turns PASSED [ 20%]
+tests/test_sim_runner.py::test_trajectory_run_records_floor_one_visit PASSED [ 30%]
+tests/test_sim_runner.py::test_wait_turn_advances_counter PASSED         [ 40%]
+tests/test_sim_runner.py::test_compare_sheet_layout PASSED               [ 50%]
+tests/test_sim_runner.py::test_compare_sheet_append_column PASSED        [ 60%]
+tests/test_sim_runner.py::test_wide_curve_format PASSED                  [ 70%]
+tests/test_sim_runner.py::test_build_compare_values_includes_floor_metric PASSED [ 80%]
+tests/test_sim_runner.py::test_trajectory_pass_respects_time_budget PASSED [ 90%]
+tests/test_sim_runner.py::test_balance_analysis_short_budget PASSED      [100%]
+
+============================= 10 passed in 49.91s =============================

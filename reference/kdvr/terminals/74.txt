@@ -1,0 +1,237 @@
+---
+pid: 19612
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q 2>&1"
+started_at: 2026-07-01T21:01:56.363Z
+running_for_ms: 12954995 
+---
+...............................F......F................................. [ 15%]
+........................................................................ [ 31%]
+....................................F..F..F.............F............... [ 47%]
+.......................F..............................F................. [ 63%]
+...................................F.................................... [ 79%]
+........................................................................ [ 94%]
+.......................                                                  [100%]
+================================== FAILURES ===================================
+_______________ test_player_digestion_reduces_hp_before_strikes _______________
+
+    def test_player_digestion_reduces_hp_before_strikes() -> None:
+        engine = GameEngine()
+        player, wolf = _engulf_player_on_wolf(engine, player_hp=5)
+        apply_player_digestion_tick(player, wolf)
+>       assert player.components[Fighter].hp == 2
+E       assert 3 == 2
+E        +  where 3 = Fighter(hp=3, max_hp=30, accuracy=1.5, evade=0, ac=1, min_damage=1, max_damage=2).hp
+
+tests\test_digestion.py:562: AssertionError
+____________________ test_struggle_and_digestion_same_turn ____________________
+
+    def test_struggle_and_digestion_same_turn() -> None:
+        engine = GameEngine()
+        player, wolf = _engulf_player_on_wolf(engine, player_hp=6)
+        wolf.components[Fighter].hp = 30
+        with patch.object(engine.rng, "random", return_value=1.0):
+            _press(engine, KeySym.UP)
+        assert Engulfed in player.tags
+>       assert player.components[Fighter].hp == 3
+E       assert 4 == 3
+E        +  where 4 = Fighter(hp=4, max_hp=30, accuracy=1.5, evade=0, ac=1, min_damage=1, max_damage=2).hp
+
+tests\test_digestion.py:650: AssertionError
+___________________ test_short_sword_beats_dagger_and_club ____________________
+
+    def test_short_sword_beats_dagger_and_club() -> None:
+        registry = load_item_registry()
+        dagger = _weapon(registry, "dagger")
+        club = _weapon(registry, "club")
+        short_sword = _weapon(registry, "short_sword")
+        assert _avg_damage(short_sword) >= max(_avg_damage(dagger), _avg_damage(club))
+>       assert short_sword.accuracy_bonus >= max(dagger.accuracy_bonus, club.accuracy_bonus)
+E       AssertionError: assert 0.12 >= 0.16
+E        +  where 0.12 = WeaponDefinition(id='short_sword', display_name='short sword', glyph='/', fg=(210, 210, 220), examine='A lightweight s...=8, accuracy_bonus=0.12, durability_max=100, spawn=ItemSpawnConfig(weight=1.0, min_depth=2, max_depth=18, spawn_min=0)).accuracy_bonus
+E        +  and   0.16 = max(0.16, 0.04)
+E        +    where 0.16 = WeaponDefinition(id='dagger', display_name='dagger', glyph=')', fg=(200, 200, 200), examine='A short blade, easy to pl...e=5, accuracy_bonus=0.16, durability_max=80, spawn=ItemSpawnConfig(weight=1.0, min_depth=1, max_depth=10, spawn_min=0)).accuracy_bonus
+E        +    and   0.04 = WeaponDefinition(id='club', display_name='club', glyph='(', fg=(160, 120, 80), examine='A knotted wooden club — crude ...e=8, accuracy_bonus=0.04, durability_max=90, spawn=ItemSpawnConfig(weight=1.0, min_depth=1, max_depth=12, spawn_min=0)).accuracy_bonus
+
+tests\test_equipment_catalog_pr1.py:79: AssertionError
+____________________ test_broadsword_beats_spear_and_mace _____________________
+
+    def test_broadsword_beats_spear_and_mace() -> None:
+        registry = load_item_registry()
+        spear = _weapon(registry, "spear")
+        mace = _weapon(registry, "mace")
+        broadsword = _weapon(registry, "broadsword")
+        assert _avg_damage(broadsword) >= max(_avg_damage(spear), _avg_damage(mace))
+>       assert broadsword.accuracy_bonus >= max(spear.accuracy_bonus, mace.accuracy_bonus)
+E       AssertionError: assert 0.14 >= 0.18
+E        +  where 0.14 = WeaponDefinition(id='broadsword', display_name='broadsword', glyph='}', fg=(190, 195, 210), examine='A typical arming ...12, accuracy_bonus=0.14, durability_max=120, spawn=ItemSpawnConfig(weight=1.0, min_depth=5, max_depth=28, spawn_min=0)).accuracy_bonus
+E        +  and   0.18 = max(0.18, 0.06)
+E        +    where 0.18 = WeaponDefinition(id='spear', display_name='spear', glyph='|', fg=(180, 180, 160), examine='A long stick with a pointy ...e=8, accuracy_bonus=0.18, durability_max=90, spawn=ItemSpawnConfig(weight=1.0, min_depth=3, max_depth=22, spawn_min=0)).accuracy_bonus
+E        +    and   0.06 = WeaponDefinition(id='mace', display_name='mace', glyph='{', fg=(140, 140, 150), examine='A flanged mace built to crush...12, accuracy_bonus=0.06, durability_max=110, spawn=ItemSpawnConfig(weight=1.0, min_depth=4, max_depth=24, spawn_min=0)).accuracy_bonus
+
+tests\test_equipment_catalog_pr1.py:106: AssertionError
+________________ test_greatsword_beats_longsword_and_battleaxe ________________
+
+    def test_greatsword_beats_longsword_and_battleaxe() -> None:
+        registry = load_item_registry()
+        longsword = _weapon(registry, "longsword")
+        battleaxe = _weapon(registry, "battleaxe")
+        greatsword = _weapon(registry, "greatsword")
+        assert _avg_damage(greatsword) >= max(_avg_damage(longsword), _avg_damage(battleaxe))
+>       assert greatsword.accuracy_bonus >= max(
+            longsword.accuracy_bonus, battleaxe.accuracy_bonus
+        )
+E       AssertionError: assert 0.16 >= 0.2
+E        +  where 0.16 = WeaponDefinition(id='greatsword', display_name='greatsword', glyph='&', fg=(175, 180, 195), examine='A two-handed swor...17, accuracy_bonus=0.16, durability_max=150, spawn=ItemSpawnConfig(weight=1.0, min_depth=9, max_depth=40, spawn_min=0)).accuracy_bonus
+E        +  and   0.2 = max(0.2, 0.08)
+E        +    where 0.2 = WeaponDefinition(id='longsword', display_name='longsword', glyph='=', fg=(200, 200, 215), examine='A proper longsword ...=11, accuracy_bonus=0.2, durability_max=130, spawn=ItemSpawnConfig(weight=1.0, min_depth=6, max_depth=32, spawn_min=0)).accuracy_bonus
+E        +    and   0.08 = WeaponDefinition(id='battleaxe', display_name='battleaxe', glyph='+', fg=(150, 150, 160), examine='A brutal battleaxe ...17, accuracy_bonus=0.08, durability_max=140, spawn=ItemSpawnConfig(weight=1.0, min_depth=7, max_depth=34, spawn_min=0)).accuracy_bonus
+
+tests\test_equipment_catalog_pr1.py:129: AssertionError
+_______________ test_starter_loadout_applies_effective_fighter ________________
+
+    def test_starter_loadout_applies_effective_fighter() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        fighter = effective_fighter(player)
+        dagger = load_item_registry().get_weapon("dagger")
+        assert fighter.min_damage == dagger.min_damage
+        assert fighter.max_damage == dagger.max_damage
+>       assert fighter.ac == PLAYER_AC  # robes add 0 AC bonus
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert 2 == 1
+E        +  where 2 = Fighter(hp=30, max_hp=30, accuracy=1.66, evade=0, ac=2, min_damage=3, max_damage=5).ac
+
+tests\test_equipment_catalog_pr2.py:113: AssertionError
+_____________________ test_load_item_registry_stock_files _____________________
+
+    def test_load_item_registry_stock_files() -> None:
+        registry = load_item_registry()
+        assert registry.schema_version == 1
+        dagger = registry.get_weapon("dagger")
+        assert dagger.durability_max == 80
+        assert len(registry.weapons) == 12
+        assert len(registry.armor) == 9
+        armor = registry.get_armor("leather_armor")
+>       assert armor.digestion_ac == 1
+E       AssertionError: assert 2 == 1
+E        +  where 2 = ArmorDefinition(id='leather_armor', display_name='leather armor', glyph='[', fg=(139, 90, 43), examine='Light leather ..._bonus=2, digestion_ac=2, durability_max=20, spawn=ItemSpawnConfig(weight=1.0, min_depth=1, max_depth=14, spawn_min=0)).digestion_ac
+
+tests\test_inventory_items_pr1.py:45: AssertionError
+______________ test_worn_armor_mitigates_digestion_and_degrades _______________
+
+    def test_worn_armor_mitigates_digestion_and_degrades() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        wolf = first_wolf(engine)
+        pos = player.components[Position]
+        carve_east_of(engine, pos, 2)
+        wolf.components[Position] = Position(pos.x + 1, pos.y)
+    
+        instance = make_armor_instance(durability=10)
+        player.components[Inventory].slots["b"] = instance
+        player.components[EquipState].worn_slot = "b"
+        player.components[Fighter].hp = 10
+    
+        apply_player_digestion_tick(player, wolf, engine.message_log)
+    
+>       assert player.components[Fighter].hp == 8
+E       assert 9 == 8
+E        +  where 9 = Fighter(hp=9, max_hp=30, accuracy=1.5, evade=0, ac=1, min_damage=1, max_damage=2).hp
+
+tests\test_inventory_items_pr3.py:226: AssertionError
+_________________ test_load_game_data_includes_item_registry __________________
+
+    def test_load_game_data_includes_item_registry() -> None:
+        data = load_game_data()
+        assert len(data.entities.entities) == 4
+        assert len(data.items.weapons) == 12
+        assert len(data.items.armor) == 9
+        assert len(data.items.potions) == 3
+        assert len(data.items.wands) == 5
+        assert any(weapon.id == "dagger" for weapon in data.items.weapons)
+        leather = next(a for a in data.items.armor if a.id == "leather_armor")
+>       assert leather.digestion_ac == 1
+E       AssertionError: assert 2 == 1
+E        +  where 2 = ArmorDefinition(id='leather_armor', display_name='leather armor', glyph='[', fg=(139, 90, 43), examine='Light leather ..._bonus=2, digestion_ac=2, durability_max=20, spawn=ItemSpawnConfig(weight=1.0, min_depth=1, max_depth=14, spawn_min=0)).digestion_ac
+
+tests\test_npc_data_pr1.py:76: AssertionError
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:130: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:245: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_dungeon_pr3.py::test_render_hud_shows_floor_depth
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr3.py:244: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_inventory_items_pr3.py::test_hud_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:286: FutureWarning: This attribute has been renamed to `rgba`.
+    if int(console.tiles[x, MAP_HEIGHT]["ch"])
+
+tests/test_inventory_items_pr3.py::test_hud_no_inventory_summary
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr3.py:285: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, MAP_HEIGHT]["ch"]))
+
+tests/test_inventory_items_pr4.py::test_player_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr4.py:143: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+tests/test_inventory_items_pr5.py::test_npc_glyph_renders_over_floor_item_on_same_tile
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_inventory_items_pr5.py:291: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[pos.x, pos.y]["ch"])
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:71: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:163: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:76: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+  C:\VS Code Projects\kds-vore-roguelike\src\systems\fov.py:23: RuntimeWarning: Given pov index (44, 66) is outside the array of shape (44, 80).
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_digestion.py::test_player_digestion_reduces_hp_before_strikes
+FAILED tests/test_digestion.py::test_struggle_and_digestion_same_turn - asser...
+FAILED tests/test_equipment_catalog_pr1.py::test_short_sword_beats_dagger_and_club
+FAILED tests/test_equipment_catalog_pr1.py::test_broadsword_beats_spear_and_mace
+FAILED tests/test_equipment_catalog_pr1.py::test_greatsword_beats_longsword_and_battleaxe
+FAILED tests/test_equipment_catalog_pr2.py::test_starter_loadout_applies_effective_fighter
+FAILED tests/test_inventory_items_pr1.py::test_load_item_registry_stock_files
+FAILED tests/test_inventory_items_pr3.py::test_worn_armor_mitigates_digestion_and_degrades
+FAILED tests/test_npc_data_pr1.py::test_load_game_data_includes_item_registry
+9 failed, 446 passed, 21 warnings in 94.37s (0:01:34)

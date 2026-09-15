@@ -1,0 +1,10 @@
+---
+pid: 11500
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_explore_bfs_steps.py tests/test_explore_reachable_goals.py tests/test_explore_frustration.py tests/test_chase_pursuit_momentum.py tests/test_enhancements_3.py -q"
+started_at: 2026-07-05T12:35:14.012Z
+running_for_ms: 37570006 
+---
+........................................................................ [ 85%]
+............                                                             [100%]
+84 passed in 71.27s (0:01:11)

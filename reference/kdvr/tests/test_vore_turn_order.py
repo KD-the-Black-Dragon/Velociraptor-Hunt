@@ -44,6 +44,10 @@ def _stun_player(engine: GameEngine) -> None:
 
 
 def _sorted_wolves(engine: GameEngine) -> list[object]:
+    from tests.map_test_helpers import ensure_wolves
+
+    # F1 is rat-only; spawn wolves when the floor has none.
+    ensure_wolves(engine, 2)
     wolves = [m for m in iter_wolves(engine) if Position in m.components]
     return sorted(
         wolves,

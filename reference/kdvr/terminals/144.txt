@@ -1,0 +1,19 @@
+---
+pid: 13724
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_chase_pursuit_momentum.py tests/test_enhancements_3.py -q --tb=short 2>&1 | Select-Object -Last 40"
+started_at: 2026-07-04T19:00:53.605Z
+running_for_ms: 24964999 
+---
+.F...................................................                    [100%]
+================================== FAILURES ===================================
+____________ test_momentum_direction_skips_backtrack_when_blocked _____________
+tests\test_chase_pursuit_momentum.py:69: in test_momentum_direction_skips_backtrack_when_blocked
+    assert direction == (1, 0)
+E   assert (-1, 0) == (1, 0)
+E     
+E     At index 0 diff: -1 != 1
+E     Use -v to get more diff
+=========================== short test summary info ===========================
+FAILED tests/test_chase_pursuit_momentum.py::test_momentum_direction_skips_backtrack_when_blocked
+1 failed, 52 passed in 45.93s

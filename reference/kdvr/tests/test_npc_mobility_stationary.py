@@ -81,9 +81,30 @@ def test_stationary_attacks_adjacent_player() -> None:
     carve_floor_tile(engine, 5, 5)
     carve_floor_tile(engine, 6, 5)
     wolf = _stationary_wolf(engine.world, 5, 5)
+    # Guaranteed hit under continuous evade (do not pin live wolf accuracy).
+    wf = wolf.components[Fighter]
+    wolf.components[Fighter] = Fighter(
+        hp=wf.hp,
+        max_hp=wf.max_hp,
+        accuracy=10.0,
+        evade=wf.evade,
+        ac=wf.ac,
+        min_damage=wf.min_damage,
+        max_damage=wf.max_damage,
+    )
     player = engine.player
     assert player is not None
     player.components[Position] = Position(6, 5)
+    pf = player.components[Fighter]
+    player.components[Fighter] = Fighter(
+        hp=pf.hp,
+        max_hp=pf.max_hp,
+        accuracy=pf.accuracy,
+        evade=0.0,
+        ac=0,
+        min_damage=pf.min_damage,
+        max_damage=pf.max_damage,
+    )
     hp_before = player.components[Fighter].hp
     assert try_action(
         engine.world,

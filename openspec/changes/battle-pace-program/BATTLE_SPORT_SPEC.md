@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|--------|
-| **Status** | **Design frozen** — documentation complete; **no implementation until designer authorizes the whole batch** |
+| **Status** | **Shipped + designer sign-off** (manual checklist OK 2026-08-10; playtest fixes: keep-watch floors, footwork 1–2 tiles, balance effect HUD) |
 | **Product** | Gladiavore |
 | **Parent** | `openspec/changes/gladiavore-foundation/` + `DESIGN_CANON.md` |
 | **Roadmap** | `ROADMAP.md` (module dependency map) |
@@ -112,9 +112,10 @@ Geometry: **Chebyshev** distance actor→target. Knight-move adjacency treated a
 | Input | Intent |
 |-------|--------|
 | Arrows / numpad step | Move; **very slight** aggressive balance lean (JSON) |
-| **`.`** and **Numpad 5** | **Same command:** keep watch / stand ready — near-neutral; tiny defensive only from inactivity (**not** turtle dump) |
-| **`d`** | **Brace** — raise guard / timid commitment; real defensive balance + defensive actual-stat lean (JSON) |
-| **`f`** | **Footwork** targeting: legal **2 in straight line** or **knight-move**; destination free/valid; costs AP + aggression; **compound** cost on successive footworks; Esc/invalid = cancel / no-op |
+| **`.`** and **Numpad 5** | **Keep watch** — sliding defensive (−2 if balance ≥1, else −1); **floor −5** (cannot turtle-dump with watch alone) |
+| **`d`** | **Brace** — stronger defensive slide (−3/−2); **floor −10** |
+| Normal step | Slow walk AUT **1.0**; sliding aggression (+2 if balance ≤−1, else +1); **ceiling +5** (attacks/abilities may go higher) |
+| **`f`** | **Footwork** targeting: cursor; legal = any open tile **1..max_chebyshev (default 2)** away; **Enter** confirm; **Esc** cancel; **Shift+dir** = quick 1-tile footwork; AP + aggression with **ceiling** (default 8) |
 | **ctrl + direction** | Directed basic attack: cone/homing; uses weapon measure + delay |
 | Reaction dodge | **Emergency evade** (blow already coming) — **not** footwork |
 | Invalid command | **No-op** (no AUT / AP / balance) |

@@ -1,0 +1,9 @@
+---
+pid: 2804
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; python -m pytest tests/test_rest_until_healed.py tests/test_enhancements_1.py -q"
+started_at: 2026-07-04T12:47:39.008Z
+running_for_ms: 47355005 
+---
+...........................                                              [100%]
+27 passed in 20.77s

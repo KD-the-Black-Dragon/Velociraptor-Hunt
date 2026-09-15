@@ -1,0 +1,33 @@
+---
+pid: 18400
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/test_dungeon_layout_pr2.py tests/test_dungeon_layout_pr0.py tests/test_dungeon_layout_pr1.py -q --tb=line 2>&1"
+started_at: 2026-07-03T14:00:35.553Z
+running_for_ms: 31904998 
+---
+................F.......                                                 [100%]
+================================== FAILURES ===================================
+E   AssertionError: assert 0 >= 20
+     +  where 0 = min_pairwise_bfs_distance(GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, .....      [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(42, 20), layout_archetype='organic'), [(44, 24), (39, 33), (47, 40)], tile_predicate=<function test_many_seeds_pass_sanity_gates.<locals>.<lambda> at 0x00000216A5DAEC40>)
+---------------------------- Captured stdout call -----------------------------
+[map_gen] rejected attempt 1: disconnected_land_after_water
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 4: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 3: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 2: layout_carve_failed
+[map_gen] rejected attempt 1: layout_carve_failed
+[map_gen] rejected attempt 1: rune_sites_infeasible
+C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_layout_pr0.py:107: AssertionError: assert 0 >= 20
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_layout_pr0.py::test_many_seeds_pass_sanity_gates - ...
+1 failed, 23 passed in 36.10s

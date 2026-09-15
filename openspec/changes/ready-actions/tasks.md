@@ -9,12 +9,12 @@
 
 ## PR R1 — Wait vs brace
 
-- [ ] Split keep-watch (5) from brace (`d`)
-- [ ] JSON balance deltas; no rapid turtle on 5
-- [ ] Targeted tests + manual checklist
+- [x] Split keep-watch (5) from brace (`d`)
+- [x] JSON sliding balance; watch floor −5
+- [x] Targeted tests + manual checklist (batch OK 2026-08-10)
 
 ## PR R2 — Step lean + clarity
 
-- [ ] Normal step slight aggression
-- [ ] Log/HUD clarity
-- [ ] Designer sign-off for module
+- [x] Step sliding aggression; ceiling +5
+- [x] Log/HUD clarity
+- [x] Designer sign-off for module (batch 2026-08-10)

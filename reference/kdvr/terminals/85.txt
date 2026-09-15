@@ -1,0 +1,15 @@
+---
+pid: 20308
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q --tb=line 2>&1 | Select-Object -Last 8"
+started_at: 2026-07-02T11:58:56.747Z
+running_for_ms: 51644994 
+---
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_enhancements_3.py::test_engulfed_neutral_invisible_to_evil_ai
+FAILED tests/test_inventory_items_pr3.py::test_starter_loadout_improves_effective_fighter
+FAILED tests/test_vore_turn_order.py::test_open_attempt_stores_monster_index_for_resume
+3 failed, 443 passed, 20 warnings in 113.95s (0:01:53)

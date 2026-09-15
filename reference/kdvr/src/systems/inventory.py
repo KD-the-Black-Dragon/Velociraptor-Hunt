@@ -22,6 +22,7 @@ from src.constants import (
     PLAYER_ACCURACY,
     PLAYER_MAX_DAMAGE,
     PLAYER_MIN_DAMAGE,
+    VoreContentPreferences,
 )
 from src.data.item_loader import load_item_registry
 from src.data.item_registry import (
@@ -54,14 +55,15 @@ def reset_item_registry_cache() -> None:
 
 def first_empty_slot(inventory: Inventory) -> str | None:
     for letter in string.ascii_lowercase:
-        if inventory.slots[letter] is None:
+        # .get: tolerate incomplete maps (e.g. legacy depth-jump / partial save decode)
+        if inventory.slots.get(letter) is None:
             return letter
     return None
 
 
 def find_potion_stack_slot(inventory: Inventory, item_id: str) -> str | None:
     for letter in string.ascii_lowercase:
-        instance = inventory.slots[letter]
+        instance = inventory.slots.get(letter)
         if (
             instance is not None
             and instance.category == ItemCategory.POTION
@@ -73,7 +75,7 @@ def find_potion_stack_slot(inventory: Inventory, item_id: str) -> str | None:
 
 def find_throwable_stack_slot(inventory: Inventory, item_id: str) -> str | None:
     for letter in string.ascii_lowercase:
-        instance = inventory.slots[letter]
+        instance = inventory.slots.get(letter)
         if (
             instance is not None
             and instance.category == ItemCategory.THROWABLE
@@ -371,6 +373,7 @@ def quaff_potion_from_slot(
     floor_depth: int = 1,
     difficulty_id: str | None = None,
     rng: object | None = None,
+    vore_prefs: VoreContentPreferences | None = None,
 ) -> bool:
     """
     Quaff the potion in a letter slot. Return True when a turn should advance.
@@ -505,6 +508,7 @@ def quaff_potion_from_slot(
             floor_depth=floor_depth,
             difficulty_id=difficulty_id,
             rng=use_rng,
+            vore_prefs=vore_prefs,
         )
         _consume_one_potion_charge(inventory, slot, instance)
         fire_item_used(player, instance.item_id)
@@ -537,6 +541,7 @@ def use_inventory_slot(
     floor_depth: int = 1,
     difficulty_id: str | None = None,
     rng: object | None = None,
+    vore_prefs: VoreContentPreferences | None = None,
 ) -> bool:
     """Backward-compatible alias for tests that quaff by slot directly."""
     return quaff_potion_from_slot(
@@ -548,6 +553,7 @@ def use_inventory_slot(
         floor_depth=floor_depth,
         difficulty_id=difficulty_id,
         rng=rng,
+        vore_prefs=vore_prefs,
     )
 
 

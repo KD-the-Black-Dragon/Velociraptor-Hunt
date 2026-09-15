@@ -1,0 +1,267 @@
+---
+pid: 15768
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; python -m pytest tests/test_entity_abilities_content_pr6.py tests/test_entity_placeholder_pr4b.py tests/test_npc_data_pr2.py::test_spawn_from_definition_uses_json_combat_stats tests/test_ally_introduction.py tests/test_digestion.py::test_engulfed_player_immune_to_combat_damage tests/test_depth_scaling_pr1.py::TestSpawnBake::test_spawn_entity_by_id_forwards_depth tests/test_sim_threat.py tests/test_sim_navigation.py -v -n 4"
+started_at: 2026-07-12T14:51:53.384Z
+running_for_ms: 10420013 
+---
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+cachedir: .pytest_cache
+rootdir: C:\VS Code Projects\kds-vore-roguelike
+configfile: pyproject.toml
+plugins: xdist-3.8.0
+created: 4/4 workers
+4 workers [41 items]
+
+scheduling tests via LoadScheduling
+
+tests/test_entity_placeholder_pr4b.py::TestPlaceholderFlag::test_placeholder_default_false 
+tests/test_entity_abilities_content_pr6.py::test_fixture_entity_preserves_abilities_and_mobility 
+tests/test_entity_abilities_content_pr6.py::test_no_chase_on_territorial_evils 
+tests/test_entity_abilities_content_pr6.py::test_hands_on_door_opening_species 
+[gw3] [  2%] PASSED tests/test_entity_placeholder_pr4b.py::TestPlaceholderFlag::test_placeholder_default_false 
+[gw2] [  4%] PASSED tests/test_entity_abilities_content_pr6.py::test_fixture_entity_preserves_abilities_and_mobility 
+[gw0] [  7%] PASSED tests/test_entity_abilities_content_pr6.py::test_hands_on_door_opening_species 
+[gw1] [  9%] PASSED tests/test_entity_abilities_content_pr6.py::test_no_chase_on_territorial_evils 
+tests/test_entity_placeholder_pr4b.py::TestPlaceholderFlag::test_placeholder_must_be_bool 
+tests/test_entity_placeholder_pr4b.py::TestPlaceholderFlag::test_placeholder_true_parses 
+tests/test_entity_abilities_content_pr6.py::test_wander_on_mindless_hazard_not_rabbit 
+tests/test_entity_abilities_content_pr6.py::test_stationary_tunnel_slug_turret 
+[gw3] [ 12%] PASSED tests/test_entity_placeholder_pr4b.py::TestPlaceholderFlag::test_placeholder_must_be_bool 
+tests/test_entity_placeholder_pr4b.py::TestPlaceholderFlag::test_non_placeholder_fixture_parses_false 
+[gw1] [ 14%] PASSED tests/test_entity_abilities_content_pr6.py::test_stationary_tunnel_slug_turret 
+[gw2] [ 17%] PASSED tests/test_entity_placeholder_pr4b.py::TestPlaceholderFlag::test_placeholder_true_parses 
+tests/test_ally_introduction.py::test_introduction_once_per_entity 
+tests/test_ally_introduction.py::test_wolf_visible_to_knight_blocks_introduction 
+[gw3] [ 19%] PASSED tests/test_entity_placeholder_pr4b.py::TestPlaceholderFlag::test_non_placeholder_fixture_parses_false 
+tests/test_npc_data_pr2.py::test_spawn_from_definition_uses_json_combat_stats 
+[gw3] [ 21%] PASSED tests/test_npc_data_pr2.py::test_spawn_from_definition_uses_json_combat_stats 
+tests/test_ally_introduction.py::test_knight_introduces_when_adjacent_and_coast_clear 
+[gw0] [ 24%] FAILED tests/test_entity_abilities_content_pr6.py::test_wander_on_mindless_hazard_not_rabbit 
+tests/test_ally_introduction.py::test_non_adjacent_knight_does_not_introduce 
+[gw3] [ 26%] PASSED tests/test_ally_introduction.py::test_knight_introduces_when_adjacent_and_coast_clear 
+tests/test_ally_introduction.py::test_engine_hook_introduces_on_consumed_turn 
+[gw0] [ 29%] PASSED tests/test_ally_introduction.py::test_non_adjacent_knight_does_not_introduce 
+tests/test_ally_introduction.py::test_wolf_visible_to_player_blocks_introduction 
+[gw2] [ 31%] PASSED tests/test_ally_introduction.py::test_introduction_once_per_entity 
+tests/test_ally_introduction.py::test_stunned_knight_does_not_introduce 
+[gw0] [ 34%] PASSED tests/test_ally_introduction.py::test_wolf_visible_to_player_blocks_introduction 
+tests/test_digestion.py::test_engulfed_player_immune_to_combat_damage 
+[gw1] [ 36%] PASSED tests/test_ally_introduction.py::test_wolf_visible_to_knight_blocks_introduction 
+tests/test_ally_introduction.py::test_player_engulfed_blocks_introduction 
+[gw2] [ 39%] PASSED tests/test_ally_introduction.py::test_stunned_knight_does_not_introduce 
+tests/test_depth_scaling_pr1.py::TestSpawnBake::test_spawn_entity_by_id_forwards_depth 
+[gw2] [ 41%] FAILED tests/test_depth_scaling_pr1.py::TestSpawnBake::test_spawn_entity_by_id_forwards_depth 
+tests/test_sim_threat.py::test_lethal_risk_active_when_multiple_evils_visible 
+[gw0] [ 43%] PASSED tests/test_digestion.py::test_engulfed_player_immune_to_combat_damage 
+tests/test_sim_threat.py::test_stunned_recovery_uses_heal_potion 
+[gw0] [ 46%] PASSED tests/test_sim_threat.py::test_stunned_recovery_uses_heal_potion 
+tests/test_sim_threat.py::test_policy_returns_rest_when_hurt_and_safe 
+[gw3] [ 48%] PASSED tests/test_ally_introduction.py::test_engine_hook_introduces_on_consumed_turn 
+tests/test_ally_introduction.py::test_introduction_hidden_when_not_in_player_fov 
+[gw3] [ 51%] PASSED tests/test_ally_introduction.py::test_introduction_hidden_when_not_in_player_fov 
+tests/test_sim_threat.py::test_bail_policy_seeks_stairs_over_runes 
+[gw1] [ 53%] PASSED tests/test_ally_introduction.py::test_player_engulfed_blocks_introduction 
+tests/test_sim_threat.py::test_stunned_recovery_uses_teleport_without_heal 
+[gw3] [ 56%] PASSED tests/test_sim_threat.py::test_bail_policy_seeks_stairs_over_runes 
+tests/test_sim_threat.py::test_trajectory_run_latches_bail_on_pinned_easy_seed 
+[gw3] [ 58%] PASSED tests/test_sim_threat.py::test_trajectory_run_latches_bail_on_pinned_easy_seed 
+tests/test_sim_navigation.py::test_nearest_goal_tie_break_is_deterministic_with_rng 
+[gw3] [ 60%] PASSED tests/test_sim_navigation.py::test_nearest_goal_tie_break_is_deterministic_with_rng 
+tests/test_sim_navigation.py::test_first_step_toward_goal 
+[gw3] [ 63%] PASSED tests/test_sim_navigation.py::test_first_step_toward_goal 
+tests/test_sim_navigation.py::test_first_step_toward_prefers_goal_direction_over_cardinal_order 
+[gw3] [ 65%] PASSED tests/test_sim_navigation.py::test_first_step_toward_prefers_goal_direction_over_cardinal_order 
+tests/test_sim_navigation.py::test_player_walk_distances_on_carved_floor 
+[gw3] [ 68%] PASSED tests/test_sim_navigation.py::test_player_walk_distances_on_carved_floor 
+tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored 
+[gw3] [ 70%] PASSED tests/test_sim_navigation.py::test_explore_frontier_includes_adjacent_to_unexplored 
+tests/test_sim_navigation.py::test_flee_goal_increases_distance_from_shark 
+[gw3] [ 73%] PASSED tests/test_sim_navigation.py::test_flee_goal_increases_distance_from_shark 
+tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility 
+[gw3] [ 75%] PASSED tests/test_sim_navigation.py::test_is_aquatic_evil_shark_and_mobility 
+tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius 
+[gw0] [ 78%] PASSED tests/test_sim_threat.py::test_policy_returns_rest_when_hurt_and_safe 
+tests/test_sim_threat.py::test_policy_stunned_returns_consume 
+[gw2] [ 80%] PASSED tests/test_sim_threat.py::test_lethal_risk_active_when_multiple_evils_visible 
+tests/test_sim_threat.py::test_bail_latches_without_heal_and_low_hp 
+[gw1] [ 82%] PASSED tests/test_sim_threat.py::test_stunned_recovery_uses_teleport_without_heal 
+tests/test_sim_threat.py::test_rest_imperfection_skips_at_high_hp 
+[gw0] [ 85%] PASSED tests/test_sim_threat.py::test_policy_stunned_returns_consume 
+tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs 
+[gw1] [ 87%] PASSED tests/test_sim_threat.py::test_rest_imperfection_skips_at_high_hp 
+[gw2] [ 90%] PASSED tests/test_sim_threat.py::test_bail_latches_without_heal_and_low_hp 
+tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_pinned_normal_seed 
+[gw3] [ 92%] PASSED tests/test_sim_navigation.py::test_policy_flees_visible_aquatic_within_radius 
+tests/test_sim_navigation.py::test_policy_waits_on_visible_rune_tile 
+[gw0] [ 95%] PASSED tests/test_sim_navigation.py::test_policy_descend_when_quota_met_on_stairs 
+[gw3] [ 97%] PASSED tests/test_sim_navigation.py::test_policy_waits_on_visible_rune_tile 
+[gw2] [100%] PASSED tests/test_sim_navigation.py::test_trajectory_run_reaches_depth_two_on_pinned_normal_seed 
+
+================================== FAILURES ===================================
+__________________ test_wander_on_mindless_hazard_not_rabbit __________________
+[gw0] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+
+    def test_wander_on_mindless_hazard_not_rabbit() -> None:
+>       reg = _registry(
+            minimal_entity_payload("slime", abilities=["Smite3", "Wander"]),
+            minimal_entity_payload("rabbit", alignment="neutral", abilities=[]),
+        )
+
+tests\test_entity_abilities_content_pr6.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_entity_abilities_content_pr6.py:11: in _registry
+    return parse_entity_registry({"schema_version": 1, "entities": list(entities)})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\entity_loader.py:205: in parse_entity_registry
+    entity = _parse_entity(entry, warnings, known_ids=known_ids)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+raw = {'id': 'rabbit', 'display_name': 'rabbit', 'glyph': 'x', 'fg': [100, 100, 100], ...}
+warnings = <src.data.warnings.LoadWarnings object at 0x000001E087B920D0>
+known_ids = {'rabbit', 'slime'}
+
+    def _parse_entity(
+        raw: dict[str, Any],
+        warnings: LoadWarnings,
+        *,
+        known_ids: frozenset[str] | set[str],
+    ) -> EntityDefinition:
+        entity_id = _require_str(raw, "id")
+        _reject_deprecated_offscreen_keys(raw, entity_id)
+        _scan_unknown_traits(raw, entity_id, warnings)
+    
+        alignment = _parse_alignment(_require_str(raw, "alignment"), entity_id)
+        mobility = _parse_mobility(_require_str(raw, "mobility"), entity_id)
+        glyph = _require_str(raw, "glyph")
+        if len(glyph) != 1:
+            raise EntityLoadError(f"entity '{entity_id}': glyph must be exactly one character")
+    
+        min_damage = _require_int(raw, "min_damage", entity_id=entity_id)
+        max_damage = _require_int(raw, "max_damage", entity_id=entity_id)
+        if min_damage > max_damage:
+            raise EntityLoadError(
+                f"entity '{entity_id}': min_damage ({min_damage}) cannot exceed max_damage ({max_damage})"
+            )
+    
+        spawn_raw = raw.get("spawn")
+        if not isinstance(spawn_raw, dict):
+            raise EntityLoadError(f"entity '{entity_id}': missing required object 'spawn'")
+    
+        abilities_raw = raw.get("abilities", [])
+        if not isinstance(abilities_raw, list) or not all(
+            isinstance(item, str) for item in abilities_raw
+        ):
+            raise EntityLoadError(f"entity '{entity_id}': abilities must be a string array")
+        abilities = filter_known_abilities(entity_id, abilities_raw, warnings)
+        for ability in abilities:
+            parsed = parse_ability_token(ability)
+            if isinstance(parsed, SummonAbility) and parsed.entity_id not in known_ids:
+                raise EntityLoadError(
+                    f"entity '{entity_id}': summon target '{parsed.entity_id}' "
+                    "is not a known entity id"
+                )
+        if any(
+            ability.startswith("Smite") or ability.startswith("Range") for ability in abilities
+        ):
+            if (
+                raw.get("ranged_accuracy") is None
+                or raw.get("ranged_min_damage") is None
+                or raw.get("ranged_max_damage") is None
+            ):
+                warnings.warn_ranged_stats_defaulted(entity_id)
+    
+        accuracy = _require_number(raw, "accuracy", entity_id=entity_id)
+        ranged_accuracy = (
+            accuracy
+            if raw.get("ranged_accuracy") is None
+            else _require_number(raw, "ranged_accuracy", entity_id=entity_id)
+        )
+        ranged_min_damage = (
+            min_damage
+            if raw.get("ranged_min_damage") is None
+            else _require_int(raw, "ranged_min_damage", entity_id=entity_id)
+        )
+        ranged_max_damage = (
+            max_damage
+            if raw.get("ranged_max_damage") is None
+            else _require_int(raw, "ranged_max_damage", entity_id=entity_id)
+        )
+        if ranged_min_damage > ranged_max_damage:
+            raise EntityLoadError(
+                f"entity '{entity_id}': ranged_min_damage ({ranged_min_damage}) "
+                f"cannot exceed ranged_max_damage ({ranged_max_damage})"
+            )
+    
+        digestion = raw.get("digestion_damage_per_tick")
+        if digestion is not None and not isinstance(digestion, int):
+            raise EntityLoadError(
+                f"entity '{entity_id}': digestion_damage_per_tick must be an integer"
+            )
+    
+        digest_time = raw.get("digest_time")
+        if digest_time is not None:
+            if not isinstance(digest_time, int):
+                raise EntityLoadError(f"entity '{entity_id}': digest_time must be an integer")
+            if digest_time < 1:
+                raise EntityLoadError(
+                    f"entity '{entity_id}': digest_time must be an integer >= 1"
+                )
+            if alignment != Alignment.EVIL:
+>               raise EntityLoadError(
+                    f"entity '{entity_id}': digest_time is only valid for evil entities"
+                )
+E               src.data.entity_loader.EntityLoadError: entity 'rabbit': digest_time is only valid for evil entities
+
+src\data\entity_loader.py:309: EntityLoadError
+____________ TestSpawnBake.test_spawn_entity_by_id_forwards_depth _____________
+[gw2] win32 -- Python 3.14.6 C:\Users\hybri\AppData\Local\Python\pythoncore-3.14-64\python.exe
+
+self = <test_depth_scaling_pr1.TestSpawnBake object at 0x0000015E77E18F30>
+
+    def test_spawn_entity_by_id_forwards_depth(self) -> None:
+        # Use stock wolf via real registry is ok if we inject depth_scaling that
+        # only affects ac with fixture config — still pins math not stock wolf AC.
+        world = Registry()
+        profile = _profile(
+            stats={"ac": _schedule(per_floor=1, every_n_floors=0, start_depth=1)}
+        )
+        config = _config(profile)
+        from src.data.entity_loader import parse_entity_registry
+        from tests.entity_test_helpers import fixture_wolf_payload
+    
+        reg = parse_entity_registry(
+>           {"schema_version": 1, "entities": [fixture_wolf_payload(ac=2)]},
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+
+tests\test_depth_scaling_pr1.py:317: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+overrides = {'ac': 2}
+
+    def fixture_wolf_payload(**overrides: object) -> dict[str, Any]:
+        """Pinned wolf-shaped payload — abilities/stats independent of data/entities.json."""
+>       return minimal_entity_payload(
+            "wolf",
+            display_name="wolf",
+            glyph="w",
+            fg=[80, 80, 80],
+            max_hp=10,
+            evade=2,
+            ac=2,
+            accuracy=0.5,
+            min_damage=4,
+            max_damage=6,
+            abilities=[],
+            **overrides,
+        )
+E       TypeError: tests.entity_test_helpers.minimal_entity_payload() got multiple values for keyword argument 'ac'
+
+tests\entity_test_helpers.py:57: TypeError
+=========================== short test summary info ===========================
+FAILED tests/test_entity_abilities_content_pr6.py::test_wander_on_mindless_hazard_not_rabbit
+FAILED tests/test_depth_scaling_pr1.py::TestSpawnBake::test_spawn_entity_by_id_forwards_depth
+================== 2 failed, 39 passed in 249.07s (0:04:09) ===================

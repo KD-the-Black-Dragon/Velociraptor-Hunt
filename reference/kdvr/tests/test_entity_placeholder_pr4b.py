@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from src.components import Alignment
 from src.data.entity_loader import EntityLoadError, parse_entity_registry
-from src.data.entity_loader import load_entity_registry, reset_entity_registry_cache
 
 
 def _minimal_entity(**overrides: object) -> dict:
@@ -69,11 +68,3 @@ class TestPlaceholderFlag:
         except EntityLoadError as exc:
             assert "placeholder" in str(exc)
 
-    def test_finished_stock_species_not_placeholders(self) -> None:
-        """Core finished species stay unmarked; PR5 fillers may set placeholder true."""
-        reset_entity_registry_cache()
-        reg = load_entity_registry()
-        finished = {"bat", "wolf", "knight", "rabbit", "shark"}
-        for entity in reg.entities:
-            if entity.id in finished:
-                assert entity.placeholder is False

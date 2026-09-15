@@ -11,7 +11,7 @@ from tcod.ecs import Registry
 from tcod.event import KeySym
 
 from src import messages
-from src.components import Inventory, Item, Player, Position
+from src.components import Inventory, InventoryItemInstance, Item, Player, Position
 from src.constants import MAX_FLOOR_ITEM_PLACEMENTS
 from src.data.item_loader import ItemLoadError, load_item_registry
 from src.data.item_registry import ItemCategory
@@ -204,6 +204,25 @@ def test_potion_stacking_reuses_slot() -> None:
     assert stack is not None
     assert stack.stack_count == 2
     assert first_empty_slot(player.components[Inventory]) == "b"
+
+
+def test_first_empty_slot_tolerates_sparse_slot_map() -> None:
+    """Depth-jump once cleared slots; missing letters must not KeyError on pickup."""
+    inventory = Inventory(slots={"a": None, "b": None})
+    assert first_empty_slot(inventory) == "a"
+    inventory.slots["a"] = InventoryItemInstance(
+        item_id="dagger",
+        category=ItemCategory.WEAPON,
+        durability=100,
+    )
+    # Missing 'c'..'z' still count as empty via .get
+    assert first_empty_slot(inventory) == "b"
+    inventory.slots["b"] = InventoryItemInstance(
+        item_id="dagger",
+        category=ItemCategory.WEAPON,
+        durability=100,
+    )
+    assert first_empty_slot(inventory) == "c"
 
 
 def test_auto_pickup_all_until_full_single_message() -> None:

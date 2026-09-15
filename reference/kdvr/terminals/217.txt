@@ -1,0 +1,7 @@
+---
+pid: 23088
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cmd /c \"cd /d C:\\VS Code Projects\\kds-vore-roguelike && python tools/_find_sim_seed.py\""
+started_at: 2026-07-11T22:58:07.488Z
+running_for_ms: 1124999  
+---

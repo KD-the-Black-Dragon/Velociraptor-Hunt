@@ -1,0 +1,126 @@
+---
+pid: 2620
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest tests/ -q"
+started_at: 2026-06-30T21:55:24.985Z
+running_for_ms: 11409992 
+---
+........................................................................ [ 24%]
+..........................................................F............. [ 49%]
+.F...................................................................... [ 74%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+================================== FAILURES ===================================
+___________________________ test_npc_evil_evil_swap ___________________________
+
+    def test_npc_evil_evil_swap() -> None:
+        engine = GameEngine()
+        (ax, ay), (bx, by), direction = _walkable_bump_pair(engine)
+        wolf_a = spawn_test_npc(
+            engine.world,
+            x=ax,
+            y=ay,
+            species="wolf",
+            alignment=Alignment.EVIL,
+        )
+        wolf_b = spawn_test_npc(
+            engine.world,
+            x=bx,
+            y=by,
+            species="wolf",
+            alignment=Alignment.EVIL,
+        )
+        pos_a_before = wolf_a.components[Position]
+        pos_b_before = wolf_b.components[Position]
+        assert try_action(
+            engine.world,
+            engine.game_map,
+            wolf_a,
+            direction,
+            engine.message_log,
+        )
+>       assert wolf_a.components[Position] == pos_b_before
+E       AssertionError: assert Position(x=63, y=6) == Position(x=63, y=7)
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing attributes:
+E         ['y']
+E         
+E         Drill down into differing attribute y:
+E           y: 6 != 7
+
+tests\test_enhancements_3.py:829: AssertionError
+___________________ test_defeating_predator_frees_npc_prey ____________________
+
+    def test_defeating_predator_frees_npc_prey() -> None:
+        engine = GameEngine()
+        player = engine.player
+        assert player is not None
+        wolf, rabbit, player_pos = _wolf_holding_stunned_rabbit(engine)
+        wolf_pos = wolf.components[Position]
+        player.components[Position] = Position(player_pos.x, player_pos.y)
+        wolf.components[Fighter].hp = 1
+        predator_tile_before = wolf_pos
+        rabbit_tile_before = rabbit.components[Position]
+        assert rabbit_tile_before == predator_tile_before
+    
+>       assert try_action(
+            engine.world,
+            engine.game_map,
+            player,
+            (1, 0),
+            engine.message_log,
+        )
+E       AssertionError: assert False
+E        +  where False = try_action(Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1118998A4B0)>: {<class 'src.compon... at 0x00000111FFDD07D0>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}), GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ........, False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(20, 29)), <Entity(uid=object at 0x1118998A4B0)>, (1, 0), <src.message_log.MessageLog object at 0x0000011189BB65D0>)
+E        +    where Registry(_components_by_entity=defaultdict(<class 'dict'>, {<Entity(uid=object at 0x1118998A4B0)>: {<class 'src.compon... at 0x00000111FFDD07D0>, {}), _relations_lookup=defaultdict(<class 'set'>, {}), _names_by_name={}, _names_by_entity={}) = <src.engine.GameEngine object at 0x000001118927BE90>.world
+E        +    and   GameMap(width=80, height=44, tiles=array([[0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ..., 0, 0, 0],\n       [0, 0, 0, ........, False, False, False],\n       [False, False, False, ..., False, False, False]], shape=(44, 80)), enter_xy=(20, 29)) = <src.engine.GameEngine object at 0x000001118927BE90>.game_map
+E        +    and   <src.message_log.MessageLog object at 0x0000011189BB65D0> = <src.engine.GameEngine object at 0x000001118927BE90>.message_log
+
+tests\test_enhancements_3.py:1327: AssertionError
+============================== warnings summary ===============================
+tests/test_dungeon_pr1.py::test_render_map_draws_water_and_stairs
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_dungeon_pr1.py:114: FutureWarning: This attribute has been renamed to `rgba`.
+    return chr(int(console.tiles[x, y]["ch"]))
+
+tests/test_main_menu.py::test_render_main_menu_clears_to_title_and_options
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_main_menu.py:123: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[x, y]["ch"])
+
+tests/test_name_entry.py::test_render_hud_shows_player_name_not_game_title
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:120: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, 44]["ch"])) if int(console.tiles[x, 44]["ch"]) else " "
+
+tests/test_name_entry.py::test_render_game_over_omits_score_line
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_name_entry.py:138: FutureWarning: This attribute has been renamed to `rgba`.
+    chr(int(console.tiles[x, y]["ch"])) if int(console.tiles[x, y]["ch"]) else " "
+
+tests/test_vore_render.py::test_render_map_blind_skips_tiles
+tests/test_vore_render.py::test_render_entities_blind_shows_only_player
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+tests/test_vore_render.py::test_render_hud_shows_engulfed_indicator
+tests/test_vore_render.py::test_engine_render_blind_while_engulfed
+tests/test_vore_render.py::test_render_skips_engulfed_npc_prey_glyph
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+tests/test_vore_render.py::test_engine_render_normal_after_escape
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:68: FutureWarning: This attribute has been renamed to `rgba`.
+    ch = int(console.tiles[y, x]["ch"])
+
+tests/test_vore_render.py::test_render_engulfed_overlay_draws_adjacent_hashes
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:159: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.y + 1, pos.x + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:73: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[y, x]["bg"][:3])
+
+tests/test_vore_turn_order.py::test_miss_resumes_at_next_monster_index
+  C:\VS Code Projects\kds-vore-roguelike\src\systems\fov.py:23: RuntimeWarning: Given pov index (61, 52) is outside the array of shape (44, 80).
+  This will raise an error in future versions.
+    return tcod.map.compute_fov(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_enhancements_3.py::test_npc_evil_evil_swap - AssertionError...
+FAILED tests/test_enhancements_3.py::test_defeating_predator_frees_npc_prey
+2 failed, 287 passed, 15 warnings in 37.94s

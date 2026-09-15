@@ -6,7 +6,10 @@ from tcod.ecs import Entity, Registry
 from src import messages
 from src.components import ExamineDescription, Fighter, Item, Player, Position
 from src.map_gen import GameMap
-from src.systems.item_modals import format_floor_item_detail_text
+from src.systems.item_modals import (
+    format_floor_item_detail_text,
+    format_floor_items_list_text,
+)
 
 
 @attrs.define
@@ -56,17 +59,34 @@ def inspectable_at(world: Registry, x: int, y: int) -> Entity | None:
     return None
 
 
+def floor_item_entities_at(world: Registry, x: int, y: int) -> list[Entity]:
+    """All floor item entities on a tile (stable query order)."""
+    target = Position(x, y)
+    return list(world.Q.all_of(tags=[target], components=[Item]))
+
+
 def description_for_tile(world: Registry, x: int, y: int) -> str:
     """Description text for examine Enter on a tile."""
-    entity = inspectable_at(world, x, y)
-    if entity is None:
-        return messages.examine_nothing_here()
+    target = Position(x, y)
+    for entity in world.Q.all_of(tags=[target], components=[ExamineDescription, Fighter]):
+        if Player in entity.tags:
+            continue
+        desc = entity.components.get(ExamineDescription)
+        if desc is None:
+            return messages.examine_nothing_here()
+        return desc.text
 
-    floor_item = entity.components.get(Item)
-    if floor_item is not None:
-        return format_floor_item_detail_text(floor_item)
+    items = floor_item_entities_at(world, x, y)
+    if items:
+        if len(items) == 1:
+            return format_floor_item_detail_text(items[0].components[Item])
+        return format_floor_items_list_text([e.components[Item] for e in items])
 
-    desc = entity.components.get(ExamineDescription)
-    if desc is None:
-        return messages.examine_nothing_here()
-    return desc.text
+    for entity in world.Q.all_of(tags=[target], components=[ExamineDescription]):
+        if Player in entity.tags:
+            continue
+        desc = entity.components.get(ExamineDescription)
+        if desc is None:
+            continue
+        return desc.text
+    return messages.examine_nothing_here()

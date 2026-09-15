@@ -47,8 +47,18 @@ def test_sand_pit_size() -> None:
 
 
 def test_start_match_spawns_enemies() -> None:
-    career = new_career(player_name="Gladiator")
-    card = MatchCard("r1_rats", "3 dire rats", "red", 1.0)
+    from src.career import CAMPAIGN_STYLE_COMPANY
+
+    # Company style still spawns multi packs; solo would clamp to 1
+    career = new_career(player_name="Gladiator", campaign_style=CAMPAIGN_STYLE_COMPANY)
+    career.starter_picks_done = True
+    card = MatchCard(
+        "r1_rats",
+        "3 dire rats",
+        "red",
+        1.0,
+        enemies=(("rat", 3),),
+    )
     session = start_match(career, card, seed=1)
     assert session.phase is MatchPhase.FIGHT
     assert len(session.living_enemies()) == 3
@@ -95,18 +105,17 @@ def test_hub_select_match_enters_match_phase(tmp_path) -> None:
     app.handle_event(_key(KeySym.RETURN), console=console)  # background
     assert app.phase is AppPhase.DOWNTIME
     assert app.career is not None
-    # Skip starter gate for this navigation test
-    app.career.starter_picks_done = True
     app.downtime_hub.reset_to_root()
 
-    # Navigate to Select next match
-    from src.downtime_hub import HUB_ROOT_OPTIONS
+    # Navigate to Select next match (solo hub options)
+    from src.downtime_hub import hub_root_options
 
-    select_idx = next(i for i, o in enumerate(HUB_ROOT_OPTIONS) if o.startswith("Select"))
+    opts = hub_root_options(app.career)
+    select_idx = next(i for i, o in enumerate(opts) if o.startswith("Select"))
     app.downtime_hub.highlight = select_idx
     app.handle_event(_key(KeySym.RETURN), console=console)
     assert app.downtime_hub.view.name == "MATCH_SELECT"
     app.handle_event(_key(KeySym.RETURN), console=console)
     assert app.phase is AppPhase.MATCH
     assert app.match_session is not None
-    assert len(app.match_session.living_enemies()) >= 1
+    assert len(app.match_session.living_enemies()) == 1

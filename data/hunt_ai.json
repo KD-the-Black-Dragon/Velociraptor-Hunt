@@ -1,0 +1,14 @@
+{
+  "habit_observations": 8,
+  "habit_ratio": 0.6,
+  "stare_streak": 6,
+  "edge_weight": 0.35,
+  "danger_close": 4,
+  "observe_clock_frac": 0.33,
+  "sprint_close": 5,
+  "gunshot_jitter": 3,
+  "gunshot_blur": 4,
+  "scan_memory_aut": 8.0,
+  "max_observe_dist": 7,
+  "speed_mult": 2.0
+}

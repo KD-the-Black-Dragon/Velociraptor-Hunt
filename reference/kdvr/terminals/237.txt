@@ -1,0 +1,17 @@
+---
+pid: 22852
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -c \"
+from src.sim.data_loader import install_stock_game_data
+install_stock_game_data()
+from src.sim.runner import SimTrajectoryRun
+for seed in range(1, 21):
+    r = SimTrajectoryRun(difficulty_id='normal', seed=seed, max_turns=5000, floors_max=20).run()
+    if r.runes_collected > 0 or r.depth_reached >= 2:
+        print('***', seed, r.depth_reached, r.runes_collected, r.termination.name, r.hp_at_end)
+    else:
+        print(seed, r.depth_reached, r.runes_collected, r.termination.name, r.hp_at_end)
+\""
+started_at: 2026-07-12T00:08:08.864Z
+running_for_ms: 38420010 
+---

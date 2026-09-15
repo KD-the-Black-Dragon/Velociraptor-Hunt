@@ -31,7 +31,7 @@ from src.ui.help_overlay import (
 
 HUB_INTRO = "You have some downtime before your next match. Here are ways you can spend it."
 
-HUB_ROOT_OPTIONS: tuple[str, ...] = (
+HUB_ROOT_OPTIONS_COMPANY: tuple[str, ...] = (
     "Shop (buy equipment)",
     "Hire personnel",
     "Manage equipment",
@@ -41,6 +41,25 @@ HUB_ROOT_OPTIONS: tuple[str, ...] = (
     "Select next match",
     "Return to main menu",
 )
+
+# Solo Duels: no hire / assign (company systems on ice)
+HUB_ROOT_OPTIONS_SOLO: tuple[str, ...] = (
+    "Shop (buy equipment)",
+    "Manage equipment",
+    "Training",
+    "Healing (injuries)",
+    "Select next match",
+    "Return to main menu",
+)
+
+# Back-compat alias (company layout)
+HUB_ROOT_OPTIONS: tuple[str, ...] = HUB_ROOT_OPTIONS_COMPANY
+
+
+def hub_root_options(career: CareerState) -> tuple[str, ...]:
+    if career.is_solo():
+        return HUB_ROOT_OPTIONS_SOLO
+    return HUB_ROOT_OPTIONS_COMPANY
 
 _NAV_UP = frozenset({KeySym.UP, KeySym.KP_8})
 _NAV_DOWN = frozenset({KeySym.DOWN, KeySym.KP_2})
@@ -101,6 +120,7 @@ def stub_cards_for_round(
     *,
     difficulty_id: str = "normal",
     seed: int | None = None,
+    solo_only: bool = False,
 ) -> tuple[MatchCard, ...]:
     """Pick up to 3 cards for this round (compat name; data-driven)."""
     from src.match_cards import pick_match_offers
@@ -110,6 +130,7 @@ def stub_cards_for_round(
         round_index,
         difficulty_id=difficulty_id,
         rng=rng,
+        solo_only=solo_only,
     )
 
 
@@ -153,6 +174,7 @@ class DowntimeHubState:
             career.round_index,
             difficulty_id=career.difficulty_id,
             seed=seed,
+            solo_only=career.is_solo(),
         )
 
     def open_hire(
@@ -189,7 +211,11 @@ class DowntimeHubState:
         self.view = HubView.HEAL
 
     def ensure_starter_gate(self, career: CareerState) -> None:
-        """If starter picks incomplete, force STARTER_PICK view."""
+        """If starter picks incomplete, force STARTER_PICK view (company only)."""
+        if career.is_solo():
+            career.starter_picks_done = True
+            career.max_deployed_allies = 0
+            return
         if career.starter_picks_done:
             return
         tuning = load_roster_tuning()
@@ -234,12 +260,19 @@ def downtime_display_lines(
             + f"  |  Diff: {career.difficulty_id}",
             BODY_FG,
         ),
-        HelpTextLine(
-            f"Roster: {len(career.roster)}/{tuning.max_allies}  |  "
-            f"Deployed: {count_deployed(career.allies())}/{career.max_deployed_allies}",
-            DIM_FG,
-        ),
     ]
+    if career.is_solo():
+        lines.append(
+            HelpTextLine("Campaign: Solo Duels  |  1-on-1 only", SECTION_FG)
+        )
+    else:
+        lines.append(
+            HelpTextLine(
+                f"Roster: {len(career.roster)}/{tuning.max_allies}  |  "
+                f"Deployed: {count_deployed(career.allies())}/{career.max_deployed_allies}",
+                DIM_FG,
+            )
+        )
     patrons_line = format_patrons_roster_line()
     if patrons_line:
         lines.append(HelpTextLine(patrons_line, DIM_FG))
@@ -378,7 +411,7 @@ def downtime_display_lines(
             )
         )
         lines.append(HelpTextLine("", BODY_FG))
-    if not career.starter_picks_done:
+    if not career.is_solo() and not career.starter_picks_done:
         lines.append(
             HelpTextLine(
                 "Complete free starter ally picks before other hub actions.",
@@ -388,7 +421,11 @@ def downtime_display_lines(
         lines.append(HelpTextLine("", BODY_FG))
     lines.append(HelpTextLine(HUB_INTRO, DIM_FG))
     lines.append(HelpTextLine("", BODY_FG))
-    for i, option in enumerate(HUB_ROOT_OPTIONS):
+    options = hub_root_options(career)
+    # Clamp highlight if switching styles mid-session (shouldn't happen often)
+    if hub.highlight >= len(options):
+        hub.highlight = 0
+    for i, option in enumerate(options):
         marker = ">" if i == hub.highlight else " "
         fg = HIGHLIGHT_FG if i == hub.highlight else BODY_FG
         lines.append(HelpTextLine(f"{marker} {option}", fg))
@@ -439,8 +476,8 @@ def handle_downtime_event(
     if hub.view is HubView.HEAL:
         return _handle_heal(hub, career, sym)
 
-    # ROOT — block most actions until starter picks done
-    if not career.starter_picks_done:
+    # ROOT — company: block most actions until starter picks done
+    if not career.is_solo() and not career.starter_picks_done:
         if sym in _CONFIRM or sym in _NAV_UP or sym in _NAV_DOWN:
             hub.open_hire(career, free=True, starter=True)
             return HubAction.NONE
@@ -448,7 +485,10 @@ def handle_downtime_event(
             return HubAction.REQUEST_LEAVE_MENU
         return HubAction.NONE
 
-    count = len(HUB_ROOT_OPTIONS)
+    options = hub_root_options(career)
+    count = len(options)
+    if hub.highlight >= count:
+        hub.highlight = 0
     if sym in _NAV_UP:
         hub.highlight = (hub.highlight - 1) % count
     elif sym in _NAV_DOWN:
@@ -571,7 +611,10 @@ def _handle_assign(
 
 
 def _activate_root_option(hub: DowntimeHubState, career: CareerState) -> HubAction:
-    label = HUB_ROOT_OPTIONS[hub.highlight]
+    options = hub_root_options(career)
+    if hub.highlight < 0 or hub.highlight >= len(options):
+        return HubAction.NONE
+    label = options[hub.highlight]
     if label.startswith("Shop"):
         hub.open_stub(
             "Shop",
@@ -581,12 +624,19 @@ def _activate_root_option(hub: DowntimeHubState, career: CareerState) -> HubActi
             f"You have {career.gold} gold.",
         )
     elif label.startswith("Hire"):
+        if career.is_solo():
+            return HubAction.NONE
         hub.open_hire(career, free=False, starter=False)
     elif label.startswith("Manage"):
+        manage_blurb = (
+            "Outfit yourself for the next duel."
+            if career.is_solo()
+            else "Outfit yourself and your employees from the shared armory."
+        )
         hub.open_stub(
             "Manage equipment",
             "",
-            "Outfit yourself and your employees from the shared armory.",
+            manage_blurb,
             "(Stub — loadout UI arrives later.)",
         )
     elif label.startswith("Training"):
@@ -599,6 +649,8 @@ def _activate_root_option(hub: DowntimeHubState, career: CareerState) -> HubActi
     elif label.startswith("Healing"):
         hub.open_heal(career)
     elif label.startswith("Assign"):
+        if career.is_solo():
+            return HubAction.NONE
         hub.open_assign()
     elif label.startswith("Select"):
         hub.open_match_select(career)

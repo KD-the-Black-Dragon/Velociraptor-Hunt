@@ -1,0 +1,16 @@
+---
+pid: 10748
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "Set-Location 'C:\\VS Code Projects\\kds-vore-roguelike'; python -c \"
+from src.map_gen import generate_dungeon, water_positions
+from src.constants import MAP_WIDTH, MAP_HEIGHT
+for label, testing in [('normal', False), ('testing', True)]:
+    n=200
+    with_water=sum(1 for s in range(n) if water_positions(generate_dungeon(MAP_WIDTH, MAP_HEIGHT, seed=s, water_testing=testing)))
+    print(f'{label}: {with_water}/{n} ({100*with_water/n:.1f}%)')
+\""
+started_at: 2026-07-01T00:04:40.529Z
+running_for_ms: 3654999  
+---
+normal: 164/200 (82.0%)
+testing: 200/200 (100.0%)

@@ -44,6 +44,9 @@ def _spawn_fox(world: Registry, x: int, y: int) -> object:
     e.components[AIState] = AIState()
     e.components[AbilityState] = AbilityState()
     e.components[Abilities] = Abilities(parsed=parse_abilities(["Range5", "NoChase"]))
+    from src.systems.ranged_magazine import ensure_ranged_magazine
+
+    ensure_ranged_magazine(e, maximum=2)
     e.components[Fighter] = Fighter(
         hp=10,
         max_hp=10,

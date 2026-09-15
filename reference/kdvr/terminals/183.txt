@@ -1,0 +1,22 @@
+---
+pid: 732
+cwd: "C:\VS Code Projects\kds-vore-roguelike"
+command: "cd \"C:\\VS Code Projects\\kds-vore-roguelike\"; python -m pytest -q --tb=no 2>&1 | Select-Object -Last 15"
+started_at: 2026-07-05T21:46:57.357Z
+running_for_ms: 4464998  
+---
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:164: FutureWarning: This attribute has been renamed to `rgba`.
+    assert tuple(console.tiles[pos.x + 1, pos.y + 1]["fg"][:3]) == ENGULFED_OVERLAY_FG
+
+tests/test_vore_render.py::test_render_predator_holding_prey_uses_dark_red_background
+  C:\VS Code Projects\kds-vore-roguelike\tests\test_vore_render.py:81: FutureWarning: This attribute has been renamed to `rgba`.
+    return tuple(console.tiles[x, y]["bg"][:3])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_dungeon_pr3.py::test_followers_reduce_fresh_knight_spawns
+FAILED tests/test_dungeon_spawn_config.py::test_load_default_dungeon_spawn_json
+FAILED tests/test_npc_abilities_rangen.py::test_primary_at_three_preferred_over_neutral_at_two_for_ranged_pick
+FAILED tests/test_npc_data_pr1.py::test_load_default_entities_json - Assertio...
+FAILED tests/test_vore_engulfed.py::test_roaming_wolf_wanders_while_player_engulfed
+5 failed, 933 passed, 104 warnings in 1629.02s (0:27:09)
