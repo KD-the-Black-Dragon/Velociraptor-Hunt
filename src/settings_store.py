@@ -11,6 +11,7 @@ from src.constants import (
     VORE_NARRATIVE_TYPES_V1,
     VoreContentPreferences,
 )
+from src.hunt_loss import POST_SWALLOW_DIGEST, normalize_post_swallow
 from src.ui.window_state import WindowPreferences, window_from_dict, window_to_dict
 from src.user_data import SETTINGS_PATH
 
@@ -81,6 +82,7 @@ class SettingsStore:
     window_saved_on_disk: bool = False
     tutorial_prompt_answered: bool = False
     vore_prefs_onboarding_complete: bool = False
+    post_swallow: str = POST_SWALLOW_DIGEST
     path: Path = SETTINGS_PATH
 
     @classmethod
@@ -126,6 +128,9 @@ class SettingsStore:
             vore_prefs_onboarding_complete=bool(
                 data.get("vore_prefs_onboarding_complete", False),
             ),
+            post_swallow=normalize_post_swallow(
+                str(data["post_swallow"]) if "post_swallow" in data else None
+            ),
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -138,6 +143,7 @@ class SettingsStore:
             "window": window_to_dict(self.window),
             "tutorial_prompt_answered": self.tutorial_prompt_answered,
             "vore_prefs_onboarding_complete": self.vore_prefs_onboarding_complete,
+            "post_swallow": normalize_post_swallow(self.post_swallow),
         }
 
     def save(self, path: Path | None = None) -> None:
@@ -168,6 +174,14 @@ class SettingsStore:
         if validated == self.difficulty_id:
             return
         self.difficulty_id = validated
+        self.save()
+
+    def set_post_swallow(self, value: str) -> None:
+        """Update post-swallow stance and persist immediately."""
+        validated = normalize_post_swallow(value)
+        if validated == normalize_post_swallow(self.post_swallow):
+            return
+        self.post_swallow = validated
         self.save()
 
     def mark_tutorial_prompt_answered(self) -> None:

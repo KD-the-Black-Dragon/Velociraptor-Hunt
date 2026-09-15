@@ -14,6 +14,7 @@ import tcod.event
 from tcod.event import KeySym
 
 from src.difficulties import load_difficulties, resolve_difficulty
+from src.hunt_loss import POST_SWALLOW_ENDOSOMA, normalize_post_swallow
 from src.text import cp437_safe
 from src.ui.help_overlay import (
     HELP_BODY_FG,
@@ -272,16 +273,22 @@ def hunt_stats_lines(
     stats: HuntCareerStats | None = None,
     *,
     difficulty_id: str = "normal",
+    post_swallow: str = "digest",
 ) -> tuple[HelpTextLine, ...]:
     data = stats if stats is not None else empty_board()
     label = resolve_difficulty(difficulty_id).label
+    swallowed_label = (
+        "Times swallowed"
+        if normalize_post_swallow(post_swallow) == POST_SWALLOW_ENDOSOMA
+        else "Times digested"
+    )
     lines: list[HelpTextLine] = [
         HelpTextLine(f"STATISTICS — {label}", HELP_TITLE_FG),
         HelpTextLine("", HELP_BODY_FG),
         HelpTextLine(f"Total games played: {data.games_played}", HELP_BODY_FG),
         HelpTextLine(f"Games abandoned: {data.abandoned}", HELP_BODY_FG),
         HelpTextLine(f"Times raptor tranquilized: {data.tranquilized}", HELP_BODY_FG),
-        HelpTextLine(f"Times digested: {data.digested}", HELP_BODY_FG),
+        HelpTextLine(f"{swallowed_label}: {data.digested}", HELP_BODY_FG),
         HelpTextLine(f"Wins by time over: {data.time_wins}", HELP_BODY_FG),
         HelpTextLine(f"Losses by time over: {data.time_losses}", HELP_BODY_FG),
     ]
@@ -305,10 +312,13 @@ def render_hunt_stats(
     stats: HuntCareerStats | None = None,
     *,
     difficulty_id: str = "normal",
+    post_swallow: str = "digest",
 ) -> None:
     console.clear()
     y = 2
-    for line in hunt_stats_lines(stats, difficulty_id=difficulty_id):
+    for line in hunt_stats_lines(
+        stats, difficulty_id=difficulty_id, post_swallow=post_swallow,
+    ):
         if y >= console.height - 2:
             break
         console.print(2, y, cp437_safe(line.text)[: console.width - 4], fg=line.fg)

@@ -16,8 +16,19 @@
     "It was behind you. The bite takes your shoulders.",
     "You are swallowed whole."
   ],
-  "digest": [
-    "Heat. The walls of flesh tighten.",
-    "The hunt is over. You are being digested."
+  "endosoma_swallow_front": [
+    ["The raptor swallows you whole."]
+  ],
+  "endosoma_swallow_side": [
+    ["The raptor swallows you whole."]
+  ],
+  "endosoma_swallow_behind": [
+    ["The raptor swallows you whole."]
+  ],
+  "digest_paths": [
+    ["The raptor digests you."]
+  ],
+  "endosoma_paths": [
+    ["The raptor enjoys keeping you within her belly for a long time."]
   ]
 }

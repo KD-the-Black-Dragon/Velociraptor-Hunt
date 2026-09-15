@@ -144,7 +144,7 @@ def tutorial_page_lines(page_index: int) -> tuple[HelpTextLine, ...]:
             ),
             HelpTextLine(
                 "When you are vulnerable, monsters can vore you. "
-                "If you are digested, the run ends.",
+                "If you are swallowed, the run ends.",
                 accent,
             ),
             HelpTextLine("", body),

@@ -1,9 +1,9 @@
 # Velociraptor Hunt
 
 Small-scope roguelike: **one hunt** in a Jurassic Park–type setting. You are trying
-to take a velociraptor that is trying to take you — weather, tall grass, and an
-animal that uses every dirty trick, in the spirit of the *Jurassic Park* “clever
-girl” scene.
+to tranquilize a velociraptor that is trying to **swallow you whole** — weather,
+tall grass, and an animal that uses every dirty trick, in the spirit of the
+*Jurassic Park* “clever girl” scene.
 
 Built in Python with libtcod (ASCII, turn-based). The intended shape is closer to
 a **Seven Day Roguelike** than a long career or a many-floor dungeon.
@@ -20,7 +20,7 @@ saves, UI chrome, vore hooks) without risking the originals.
 |--|-------------|-----------------|
 | Product | **Velociraptor Hunt** | Gladiavore, KDVR |
 | Loop (target) | One enclosed hunt | Career hub / dungeon crawl |
-| Current `src/` | Hunt loop (menu → weapon → paddock); last change archived `openspec/changes/archive/2026-09-12-hunt-deferred/` | — |
+| Current `src/` | Hunt loop (menu → weapon → paddock); last change archived `openspec/changes/archive/2026-09-14-endosoma-friendly/` | — |
 
 See [`AGENTS.md`](AGENTS.md) and [`KDVR_REFERENCE.md`](KDVR_REFERENCE.md).
 

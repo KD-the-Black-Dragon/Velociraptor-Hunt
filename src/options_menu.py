@@ -10,6 +10,11 @@ from tcod.event import KeySym
 
 from src.constants import VoreContentPreferences
 from src.difficulties import load_difficulties
+from src.hunt_loss import (
+    POST_SWALLOW_DIGEST,
+    POST_SWALLOW_ENDOSOMA,
+    normalize_post_swallow,
+)
 from src.input_handlers import MODAL_ADVANCE_KEYS
 from src.settings_store import SettingsStore
 from src.text import cp437_safe
@@ -21,9 +26,10 @@ VORE_OPTION_ROWS: tuple[tuple[str, str], ...] = (
     ("Anal Vore", "AV"),
 )
 
-UI_LAYOUT_ROW_INDEX = len(VORE_OPTION_ROWS)
+UI_LAYOUT_ROW_INDEX = 0
 DIFFICULTY_ROW_INDEX = UI_LAYOUT_ROW_INDEX + 1
-FULLSCREEN_ROW_INDEX = DIFFICULTY_ROW_INDEX + 1
+POST_SWALLOW_ROW_INDEX = DIFFICULTY_ROW_INDEX + 1
+FULLSCREEN_ROW_INDEX = POST_SWALLOW_ROW_INDEX + 1
 TUTORIAL_ROW_INDEX = FULLSCREEN_ROW_INDEX + 1
 MODS_ROW_INDEX = TUTORIAL_ROW_INDEX + 1
 
@@ -65,12 +71,12 @@ class OptionsAction(Enum):
 
 
 def option_row_count() -> int:
-    return len(VORE_OPTION_ROWS) + 5
+    return 6
 
 
 @attrs.define
 class OptionsMenuState:
-    """Highlight index for options rows (vore, UI, difficulty, fullscreen, Mods)."""
+    """Highlight index for options rows (UI, difficulty, post-swallow, fullscreen, Mods)."""
 
     highlight: int = 0
 
@@ -87,6 +93,10 @@ class OptionsMenuState:
     @property
     def on_difficulty_row(self) -> bool:
         return self.highlight == DIFFICULTY_ROW_INDEX
+
+    @property
+    def on_post_swallow_row(self) -> bool:
+        return self.highlight == POST_SWALLOW_ROW_INDEX
 
     @property
     def on_fullscreen_row(self) -> bool:
@@ -160,6 +170,25 @@ def cycle_difficulty_id(current: str, *, step: int = 1) -> str:
     return ids[idx]
 
 
+def cycle_post_swallow(current: str, *, step: int = 1) -> str:
+    ids = (POST_SWALLOW_DIGEST, POST_SWALLOW_ENDOSOMA)
+    cur = normalize_post_swallow(current)
+    idx = ids.index(cur)
+    return ids[(idx + step) % len(ids)]
+
+
+def format_post_swallow_line(value: str) -> str:
+    """Format Post-swallow row; active stance is bracketed."""
+    current = normalize_post_swallow(value)
+    parts: list[str] = []
+    for stance, label in (
+        (POST_SWALLOW_DIGEST, "Digest"),
+        (POST_SWALLOW_ENDOSOMA, "Endosoma"),
+    ):
+        parts.append(f"[{label}]" if stance == current else label)
+    return f"Post-swallow:  {' ► '.join(parts)}"
+
+
 def format_difficulty_line(difficulty_id: str) -> str:
     """Format difficulty row; active difficulty is bracketed."""
     cfg = load_difficulties()
@@ -204,6 +233,10 @@ def handle_options_event(
             step = _ui_layout_toggle_step(sym)
             new_id = cycle_difficulty_id(settings.difficulty_id, step=step)
             settings.set_difficulty_id(new_id)
+        elif state.on_post_swallow_row:
+            step = _ui_layout_toggle_step(sym)
+            new_stance = cycle_post_swallow(settings.post_swallow, step=step)
+            settings.set_post_swallow(new_stance)
         elif state.on_fullscreen_row:
             if toggle_fullscreen is not None:
                 toggle_fullscreen()
@@ -212,10 +245,6 @@ def handle_options_event(
                     settings.window,
                     fullscreen=not settings.window.fullscreen,
                 )
-        elif state.highlight < len(VORE_OPTION_ROWS):
-            new_prefs = try_toggle_vore_type(settings.vore_content, state.highlighted_code)
-            if new_prefs is not settings.vore_content:
-                settings.set_vore_content(new_prefs)
     return OptionsAction.NONE
 
 
@@ -233,7 +262,7 @@ def render_options_menu(
     *,
     settings: SettingsStore,
 ) -> None:
-    """Draw the options screen (vore, UI, difficulty, fullscreen, Mods)."""
+    """Draw the options screen (UI, difficulty, post-swallow, fullscreen, Mods)."""
     console.clear()
 
     title = "Options"
@@ -242,13 +271,6 @@ def render_options_menu(
     console.print(_centered_x(console, title), center_y - 8, cp437_safe(title), fg=(255, 220, 120))
 
     start_y = center_y - 5
-    for index, (label, code) in enumerate(VORE_OPTION_ROWS):
-        prefix = "> " if index == state.highlight else "  "
-        status = _on_off_label(settings.vore_content, code)
-        line = f"{prefix}{label}:  {status}"
-        fg = (255, 255, 220) if index == state.highlight else (140, 140, 140)
-        console.print(_centered_x(console, line), start_y + index, cp437_safe(line), fg=fg)
-
     ui_index = UI_LAYOUT_ROW_INDEX
     ui_prefix = "> " if state.highlight == ui_index else "  "
     ui_line = f"{ui_prefix}{format_ui_layout_line(settings.ui_preset)}"
@@ -269,6 +291,17 @@ def render_options_menu(
         start_y + diff_index,
         cp437_safe(diff_line),
         fg=diff_fg,
+    )
+
+    post_index = POST_SWALLOW_ROW_INDEX
+    post_prefix = "> " if state.highlight == post_index else "  "
+    post_line = f"{post_prefix}{format_post_swallow_line(settings.post_swallow)}"
+    post_fg = (255, 255, 220) if state.highlight == post_index else (140, 140, 140)
+    console.print(
+        _centered_x(console, post_line),
+        start_y + post_index,
+        cp437_safe(post_line),
+        fg=post_fg,
     )
 
     fullscreen_index = FULLSCREEN_ROW_INDEX

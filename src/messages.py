@@ -41,6 +41,10 @@ def hunt_digested_over() -> str:
     return "You were swallowed and digested."
 
 
+def hunt_endosoma_over() -> str:
+    return "The raptor got you."
+
+
 def hunt_shot_blocked() -> str:
     return "The shot slams into a tree."
 

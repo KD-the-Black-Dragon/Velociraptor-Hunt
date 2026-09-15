@@ -60,10 +60,11 @@ def test_options_escape_returns_to_menu() -> None:
 def test_options_toggle_persists(tmp_path) -> None:
     path = tmp_path / "settings.json"
     settings = SettingsStore.load(path)
-    state = OptionsMenuState()
-    state.highlight = 1  # Cock Vore
+    from src.options_menu import POST_SWALLOW_ROW_INDEX
+
+    state = OptionsMenuState(highlight=POST_SWALLOW_ROW_INDEX)
     handle_options_event(state, _key(KeySym.RETURN), settings=settings)
-    assert settings.vore_content.enabled == frozenset({"OV", "AV"})
+    assert settings.post_swallow == "endosoma"
     assert path.is_file()
 
 

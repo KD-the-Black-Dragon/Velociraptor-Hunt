@@ -20,8 +20,8 @@ def _key(sym: KeySym) -> tcod.event.KeyDown:
 
 
 def test_option_row_count_includes_fullscreen_and_mods() -> None:
-    # vore(3) + UI + difficulty + fullscreen + tutorial + mods
-    assert option_row_count() == 8
+    # UI + difficulty + post-swallow + fullscreen + tutorial + mods
+    assert option_row_count() == 6
 
 
 def test_format_fullscreen_line() -> None:

@@ -19,7 +19,6 @@ from src.tutorial_prompt import (
     handle_tutorial_prompt_event,
 )
 from src.ui.onboarding_notice import (
-    ONBOARDING_ALL_SET_LINES,
     OnboardingNoticeAction,
     handle_onboarding_notice_event,
 )
@@ -69,12 +68,14 @@ def test_app_boots_to_tutorial_prompt(tmp_path) -> None:
     assert app.tutorial_prompt is not None
 
 
-def test_app_boots_to_vore_prefs_when_prompt_done(tmp_path) -> None:
+def test_app_boots_to_menu_when_prompt_done(tmp_path) -> None:
     path = tmp_path / "settings.json"
     settings = SettingsStore(tutorial_prompt_answered=True, path=path)
     settings.save(path)
     app = App(settings=SettingsStore.load(path))
-    assert app.phase is AppPhase.VORE_PREFS_ONBOARDING
+    assert app.phase is AppPhase.MENU
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    assert raw["vore_prefs_onboarding_complete"] is True
 
 
 def test_app_boots_to_menu_when_onboarding_complete(tmp_path) -> None:
@@ -82,7 +83,7 @@ def test_app_boots_to_menu_when_onboarding_complete(tmp_path) -> None:
     assert app.phase is AppPhase.MENU
 
 
-def test_no_path_shows_notice_then_vore_prefs(tmp_path) -> None:
+def test_no_path_shows_notice_then_menu(tmp_path) -> None:
     path = tmp_path / "settings.json"
     app = App(settings=SettingsStore(path=path))
     app.tutorial_prompt.move_down()
@@ -91,13 +92,13 @@ def test_no_path_shows_notice_then_vore_prefs(tmp_path) -> None:
     assert app.phase is AppPhase.ONBOARDING_NOTICE
     assert app.onboarding_notice_lines == (TUTORIAL_DECLINED_NOTICE,)
     app.handle_event(_key(KeySym.RETURN))
-    assert app.phase is AppPhase.VORE_PREFS_ONBOARDING
+    assert app.phase is AppPhase.MENU
     raw = json.loads(path.read_text(encoding="utf-8"))
     assert raw["tutorial_prompt_answered"] is True
-    assert raw["vore_prefs_onboarding_complete"] is False
+    assert raw["vore_prefs_onboarding_complete"] is True
 
 
-def test_yes_path_runs_tutorial_pages_then_vore_prefs(tmp_path) -> None:
+def test_yes_path_runs_tutorial_pages_then_menu(tmp_path) -> None:
     path = tmp_path / "settings.json"
     app = App(settings=SettingsStore(path=path))
     app.tutorial_prompt.move_down()
@@ -109,22 +110,19 @@ def test_yes_path_runs_tutorial_pages_then_vore_prefs(tmp_path) -> None:
     app.handle_event(_key(KeySym.RETURN))
     assert app.tutorial_screen.page_index == PAGE_REMINDER
     app.handle_event(_key(KeySym.RETURN))
-    assert app.phase is AppPhase.VORE_PREFS_ONBOARDING
+    assert app.phase is AppPhase.MENU
 
 
-def test_vore_prefs_confirm_shows_all_set_then_menu(tmp_path) -> None:
+def test_vore_prefs_handler_still_confirms(tmp_path) -> None:
     path = tmp_path / "settings.json"
     settings = SettingsStore(tutorial_prompt_answered=True, path=path)
     settings.save(path)
-    app = App(settings=SettingsStore.load(path))
-    app.vore_prefs_onboarding.highlight = CONFIRM_ROW_INDEX
-    app.handle_event(_key(KeySym.RETURN))
-    assert app.phase is AppPhase.ONBOARDING_NOTICE
-    assert app.onboarding_notice_lines == ONBOARDING_ALL_SET_LINES
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    assert raw["vore_prefs_onboarding_complete"] is True
-    app.handle_event(_key(KeySym.RETURN))
-    assert app.phase is AppPhase.MENU
+    state = VorePrefsOnboardingState()
+    state.highlight = CONFIRM_ROW_INDEX
+    assert (
+        handle_vore_prefs_onboarding_event(state, _key(KeySym.RETURN), settings=settings)
+        is VorePrefsOnboardingAction.CONFIRMED
+    )
 
 
 def test_vore_prefs_enter_no_op_without_selection(tmp_path) -> None:
@@ -166,7 +164,7 @@ def test_tutorial_content_includes_key_topics() -> None:
     assert "F1 or ? to list all commands" in text
     assert "turn-based" in text.lower()
     assert "permanent stat bonuses" in text
-    assert "digested" in text.lower()
+    assert "swallowed" in text.lower()
     assert TUTORIAL_REMINDER_TEXT in tutorial_page_lines(PAGE_REMINDER)[0].text
 
 

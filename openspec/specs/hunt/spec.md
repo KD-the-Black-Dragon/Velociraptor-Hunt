@@ -3,11 +3,13 @@
 ## Purpose
 
 One-hunt 7DRL-style paddock hunt: a nameable hunter tranquilizes a single
-velociraptor, or is swallowed and digested. Live product behavior for
+velociraptor, or is swallowed whole. Live product behavior for
 Velociraptor Hunt (not Gladiavore career/match, not a KDVR dungeon crawl).
 
 Terminology: hunter success is **tranquilized**; melee connect is **finished**
-then **swallowed** / **digested**. Do not use kill / die / death.
+then **swallowed**. Player-facing general copy uses **swallow** / **swallow
+you whole**. **Digested** is Digest-stance loss copy only. Do not use kill /
+die / death.
 
 ## Requirements
 
@@ -38,7 +40,8 @@ then **swallowed** / **digested**. Do not use kill / die / death.
 - Sounds are one map `?` (real movement and rain/wind false alarms). Real step chance: run 100 / quick 67 / walk 33 / sneak 0; medium −10, heavy −20; the mark is the tile **left**. Two adjacent heard steps in a short AUT window are a near-certain hunter smear. Live `r` (in FOV) beats last-known dim `r` beats `?`. No bottom-line “Movement N / Rain in the canopy / Wind from the SE.”
 - Hunt clock and center-weighted ring live at the top of a **right-side panel**, then a reserved slot for raptor info, then always-on hunter stats in lime (Facing, Weapon, Ammo, Speed, Aim level, Fatigue). Weather is on its own line (light blue / medium indigo / heavy purple). Targeting adds yellow **Range: N**. When the raptor is in hunter sight the reserved slot lists **Velociraptor**, Chebyshev **Distance**, **Facing** (append **!** only if the raptor currently sees the hunter), **State**, and fuzzy **Health** (Perfect / Steady / Rattled / Wavering / Weary; overlapping bands keep the last label while HP stays inside it). The bottom line is notices and end-prompt only.
 - Hunt clock duration is data (`duration_aut`; playtest **320.0**, ~400 walk-steps at walk 0.8). Time-over is a hunter win only if Hunter definitely winning; Close or raptor-ahead is a time-over loss. A **lower-right proportional log** (same TTF as the donor log) shows hunt notices and a live raptor-thought line.
-- Instant raptor win (swallow) when Chebyshev 1 **and** the hunter is in the **raptor’s own FOV**. Adjacent but behind / out of its cone is safe. Check after hunter step, raptor step, and raptor facing change. Swallow angle is still front / side / behind from the geometry. Swallow, digest, and GAME OVER are **opaque centered modals** (dark fill, centered text). After swallow, the paddock stays **hidden** through belly, digest, and GAME OVER. Belly: **full black** void; eight `#` around the raptor’s map tile; camera is **locked at the swallow tile** so a raptor step **slides the ring**. Each wasted still/move: **50%** idle, **50%** a random walkable step (hunter is carried). Only `@` and `#` **darken** toward GAME OVER; the background stays black. Tranq bask stays a frozen map; **results** and **time-over** are opaque centered GAME OVER boxes.
+- Instant raptor win (swallow) when Chebyshev 1 **and** the hunter is in the **raptor’s own FOV**. Adjacent but behind / out of its cone is safe. Check after hunter step, raptor step, and raptor facing change. Swallow angle is still front / side / behind from the geometry. Swallow, post-belly, and GAME OVER are **opaque centered modals** (dark fill, centered text). After swallow, the paddock stays **hidden** through belly, post-belly, and GAME OVER. Belly: **full black** void; eight `#` around the raptor’s map tile; camera is **locked at the swallow tile** so a raptor step **slides the ring**. Each wasted still/move: **50%** idle, **50%** a random walkable step (hunter is carried). On **Digest** (default Options **Post-swallow**), `@` and `#` **darken** toward GAME OVER. On **Endosoma**, the belly does **not** darken. Tranq bask stays a frozen map; **results** and **time-over** are opaque centered GAME OVER boxes.
+- Options **Post-swallow** is **Digest** (default) or **Endosoma**, persisted immediately, read live at loss copy and Stats. Digest uses current swallow-angle lines, digest path pool, GAME OVER *You were swallowed and digested.*, Stats **Times digested**. Endosoma uses its own swallow-angle path pools and post-belly path pool, GAME OVER *The raptor got you.*, Stats **Times swallowed** (same persisted `digested` counter). Paths are data-driven; a process-lifetime shuffle bag shows each path in a pool once before reshuffling. Donor OV/CV/AV Options rows and first-run vore-prefs onboarding are hidden; that code remains.
 
 ### Raptor mind
 
@@ -46,7 +49,7 @@ then **swallowed** / **digested**. Do not use kill / die / death.
 
 ### Stats and help
 
-- Stats screen (main menu) persists **per difficulty** (Easier, Normal, Hard, Nightmare): total games, games abandoned, tranquilized, digested, time-over wins/losses; per weapon shots fired, landed, perfect (would deal 100% damage), one-shot KOs (100% HP to 0% in one shot). Left/Right cycles boards.
+- Stats screen (main menu) persists **per difficulty** (Easier, Normal, Hard, Nightmare): total games, games abandoned, tranquilized, swallowed (counter stored as `digested`; label **Times digested** or **Times swallowed** from live Post-swallow), time-over wins/losses; per weapon shots fired, landed, perfect (would deal 100% damage), one-shot KOs (100% HP to 0% in one shot). Left/Right cycles boards.
 - In-progress hunts autosave (KDVR rotating `autosave.json` chain). Ctrl+Q and closing the window write a save. Continue Hunt resumes. Esc to menu pauses (save, no game counted). New Hunt with a save prompts to abandon; Yes counts a game and a game abandoned for that hunt’s difficulty, then wipes the save.
 - In-hunt F1 or ? lists hunt commands. Esc closes help without leaving. Bottom hunt chrome does not list movement keys.
 
@@ -141,6 +144,14 @@ then **swallowed** / **digested**. Do not use kill / die / death.
 - **WHEN** the hunter is otherwise still in play
 - **THEN** the hunt is not lost on adjacency alone
 
+### Post-swallow Endosoma
+
+- **GIVEN** Options Post-swallow is Endosoma
+- **WHEN** the raptor swallows the hunter
+- **THEN** the swallow modal uses an endosoma swallow path, the belly glyphs do not darken, the post-belly modal is an endosoma path, and GAME OVER says The raptor got you.
+- **WHEN** the player opens Stats
+- **THEN** the swallow counter is labeled Times swallowed
+
 ### Loss spectacle
 
 - **GIVEN** the raptor swallows the hunter
@@ -149,7 +160,7 @@ then **swallowed** / **digested**. Do not use kill / die / death.
 - **WHEN** the hunter wastes still/move turns
 - **THEN** each turn the raptor has a 50% chance to take a random step (hunter carried, camera follows)
 - **WHEN** belly ends
-- **THEN** a digest modal, then a GAME OVER modal, dismissible with Enter or Esc only
+- **THEN** a post-belly narrative modal (Digest or Endosoma path from Options), then a GAME OVER modal, dismissible with Enter or Esc only
 
 ### Dart flies then resolves
 

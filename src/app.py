@@ -181,6 +181,7 @@ from src.weapon_select import (
     weapon_select_footer,
     weapon_select_lines,
 )
+from src.hunt_loss import HuntNarrativeDecks
 from src.hunt_session import (
     HuntAction,
     HuntMode,
@@ -282,6 +283,7 @@ class App:
     past_runs_display: tuple = attrs.field(factory=tuple)
     hunt_stats_store: HuntStatsStore = attrs.field(factory=HuntStatsStore)
     stats_screen: HuntStatsScreenState = attrs.field(factory=HuntStatsScreenState)
+    hunt_narrative_decks: HuntNarrativeDecks = attrs.field(factory=HuntNarrativeDecks)
 
     def __attrs_post_init__(self) -> None:
         if self.window_controller is None:
@@ -289,15 +291,12 @@ class App:
         self._boot_onboarding()
 
     def _boot_onboarding(self) -> None:
-        """Route first launch through tutorial prompt and vore prefs."""
+        """Route first launch through tutorial prompt; skip hidden vore-prefs UI."""
         if not self.settings.tutorial_prompt_answered:
             self.phase = AppPhase.TUTORIAL_PROMPT
             self.tutorial_prompt = TutorialPromptState()
             return
-        if not self.settings.vore_prefs_onboarding_complete:
-            self.phase = AppPhase.VORE_PREFS_ONBOARDING
-            self.vore_prefs_onboarding = VorePrefsOnboardingState()
-            return
+        self.settings.mark_vore_prefs_onboarding_complete()
         self.phase = AppPhase.MENU
         self._on_menu_enter()
 
@@ -327,10 +326,7 @@ class App:
         self.phase = AppPhase.ONBOARDING_NOTICE
 
     def _maybe_enter_vore_prefs_or_menu(self) -> None:
-        if not self.settings.vore_prefs_onboarding_complete:
-            self.phase = AppPhase.VORE_PREFS_ONBOARDING
-            self.vore_prefs_onboarding = VorePrefsOnboardingState()
-            return
+        self.settings.mark_vore_prefs_onboarding_complete()
         self.phase = AppPhase.MENU
         self._on_menu_enter()
 
@@ -518,16 +514,23 @@ class App:
             apply_background_to_career(career, background_id)
         self._enter_downtime(career)
 
+    def _bind_hunt_presentation(self, session: HuntSession) -> HuntSession:
+        session.post_swallow = lambda: self.settings.post_swallow
+        session.narrative_decks = self.hunt_narrative_decks
+        return session
+
     def _start_new_hunt(self, weapon: WeaponSelectState) -> None:
         sel = weapon.selected
         if sel is None:
             return
         session_log.log(f"Started hunt ({sel.weapon_id})")
-        self.hunt = HuntSession(
-            hunter_name="",
-            weapon_id=sel.weapon_id,
-            weapon_name=sel.name,
-            difficulty_id=self.settings.difficulty_id,
+        self.hunt = self._bind_hunt_presentation(
+            HuntSession(
+                hunter_name="",
+                weapon_id=sel.weapon_id,
+                weapon_name=sel.name,
+                difficulty_id=self.settings.difficulty_id,
+            )
         )
         self.engine = None
         self.career = None
@@ -538,12 +541,14 @@ class App:
 
     def _start_training(self) -> None:
         session_log.log("Started training mode")
-        self.hunt = HuntSession(
-            hunter_name="",
-            weapon_id="rifle",
-            weapon_name="Bolt-action rifle",
-            difficulty_id=self.settings.difficulty_id,
-            training=True,
+        self.hunt = self._bind_hunt_presentation(
+            HuntSession(
+                hunter_name="",
+                weapon_id="rifle",
+                weapon_name="Bolt-action rifle",
+                difficulty_id=self.settings.difficulty_id,
+                training=True,
+            )
         )
         self.engine = None
         self.career = None
@@ -888,6 +893,7 @@ class App:
                     console,
                     self.hunt_stats_store.load(did),
                     difficulty_id=did,
+                    post_swallow=self.settings.post_swallow,
                 )
             return
         if self.phase is AppPhase.HUNT and self.hunt is not None:
@@ -1297,6 +1303,7 @@ class App:
                 lines=hunt_stats_lines(
                     self.hunt_stats_store.load(self.stats_screen.difficulty_id),
                     difficulty_id=self.stats_screen.difficulty_id,
+                    post_swallow=self.settings.post_swallow,
                 ),
                 footer_text=hunt_stats_footer(),
                 log_font=self.log_font,
@@ -1591,7 +1598,7 @@ class App:
                 if loaded is None:
                     self.load_game_error = "Could not load the saved hunt."
                 else:
-                    self.hunt = loaded
+                    self.hunt = self._bind_hunt_presentation(loaded)
                     self.phase = AppPhase.HUNT
                     self._start_hunt_rain()
             elif action is MenuAction.NEW_HUNT:

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import random
+from collections.abc import Callable
 from enum import Enum, auto
 
 import attrs
@@ -26,7 +27,14 @@ from src.hunt_combat import (
     trace_projectile,
     weapon_combat,
 )
-from src.hunt_loss import attack_angle, load_hunt_loss, swallow_lines
+from src.hunt_loss import (
+    POST_SWALLOW_ENDOSOMA,
+    HuntNarrativeDecks,
+    attack_angle,
+    load_hunt_loss,
+    pick_post_belly_lines,
+    pick_swallow_lines,
+)
 from src.hunt_facing import (
     FACING_DELTAS,
     angular_delta_deg,
@@ -201,6 +209,8 @@ class HuntSession:
     stats_recorded: bool = False
     help_open: bool = False
     restoring: bool = False
+    post_swallow: Callable[[], str] | None = None
+    narrative_decks: HuntNarrativeDecks | None = None
     scheduler: AutScheduler = attrs.field(factory=AutScheduler)
     visible: set[tuple[int, int]] = attrs.field(factory=set)
     last_known_x: int | None = None
@@ -367,6 +377,21 @@ class HuntSession:
         if self.raptor is not None:
             self.raptor_ring += dt * center_weight(self.map, self.raptor.x, self.raptor.y)
 
+    def post_swallow_stance(self) -> str:
+        from src.hunt_loss import normalize_post_swallow
+
+        if self.post_swallow is None:
+            return "digest"
+        return normalize_post_swallow(self.post_swallow())
+
+    def _decks(self) -> HuntNarrativeDecks:
+        if self.narrative_decks is None:
+            self.narrative_decks = HuntNarrativeDecks()
+        return self.narrative_decks
+
+    def _loss_rng(self) -> random.Random:
+        return self.rng if self.rng is not None else random.Random(0)
+
     def begin_swallow(self) -> None:
         if self.raptor is None:
             return
@@ -376,7 +401,12 @@ class HuntSession:
             self.player_x, self.player_y, self.facing,
             self.raptor.x, self.raptor.y,
         )
-        self.win_lines = swallow_lines(self.swallow_angle)
+        self.win_lines = pick_swallow_lines(
+            self.swallow_angle,
+            stance=self.post_swallow_stance(),
+            decks=self._decks(),
+            rng=self._loss_rng(),
+        )
         self.belly_turns = 0
         self.mode = HuntMode.SWALLOW
         self.notice = ""
@@ -1039,7 +1069,11 @@ def _handle_belly(session: HuntSession, event: tcod.event.Event) -> HuntAction:
     if session.belly_turns >= load_hunt_loss().belly_turns:
         session.mode = HuntMode.DIGEST
         session.outcome = "digested"
-        session.win_lines = load_hunt_loss().digest
+        session.win_lines = pick_post_belly_lines(
+            stance=session.post_swallow_stance(),
+            decks=session._decks(),
+            rng=session._loss_rng(),
+        )
     return HuntAction.NONE
 
 
@@ -1136,7 +1170,10 @@ def handle_hunt_event(session: HuntSession, event: tcod.event.Event) -> HuntActi
     if session.mode is HuntMode.DIGEST:
         if _is_end_dismiss(event):
             session.mode = HuntMode.GAME_OVER
-            session.win_lines = (msg.hunt_game_over(), msg.hunt_digested_over())
+            if session.post_swallow_stance() == POST_SWALLOW_ENDOSOMA:
+                session.win_lines = (msg.hunt_game_over(), msg.hunt_endosoma_over())
+            else:
+                session.win_lines = (msg.hunt_game_over(), msg.hunt_digested_over())
         return HuntAction.NONE
     if session.mode is HuntMode.GAME_OVER:
         if _is_end_dismiss(event):
@@ -1323,6 +1360,8 @@ def _belly_camera(session: HuntSession) -> tuple[int, int]:
 
 
 def _loss_fade_t(session: HuntSession) -> float:
+    if session.post_swallow_stance() == POST_SWALLOW_ENDOSOMA:
+        return 0.0
     total = max(1, load_hunt_loss().belly_turns)
     if session.mode in (HuntMode.DIGEST, HuntMode.GAME_OVER):
         return 1.0

@@ -25,11 +25,11 @@ Harvest notes: [`KDVR_REFERENCE.md`](KDVR_REFERENCE.md) (lineage + what not to i
 | User data | Outside install dir — **Velociraptor Hunt** (`VELOCIRAPTOR_HUNT_USER_DATA_DIR`) |
 | Profiling | `tools/profile_turn.py` (use when investigating turn cost) |
 | Foundation design | `openspec/changes/archive/2026-09-04-velociraptor-hunt/` (PR1–PR11 accepted) |
-| **Active follow-through** | none — `hunt-deferred` archived 2026-09-12 (provisional) |
-| **Permanent Q&A / design canon** | `openspec/changes/archive/2026-09-04-velociraptor-hunt/DESIGN_CANON.md` plus `openspec/changes/archive/2026-09-12-hunt-deferred/DESIGN_CANON.md` — **read after compact; do not re-ask locked decisions** |
+| **Active follow-through** | none — `endosoma-friendly` archived 2026-09-14 |
+| **Permanent Q&A / design canon** | `openspec/changes/archive/2026-09-04-velociraptor-hunt/DESIGN_CANON.md`, `openspec/changes/archive/2026-09-12-hunt-deferred/DESIGN_CANON.md`, plus `openspec/changes/archive/2026-09-14-endosoma-friendly/DESIGN_CANON.md` — **read after compact; do not re-ask locked decisions** |
 | Donor / harvest | This tree’s Gladiavore `src/` plus `reference/kdvr/`; originals are **not** in this folder |
 
-**Terminology (mandatory):** the raptor is **tranquilized** on hunter success (never killed); if the raptor lands **one melee**, the hunter is **finished**, then **swallowed** / **digested**. Do not use kill / die / death in code, logs, specs, or agent prose.
+**Terminology (mandatory):** the raptor is **tranquilized** on hunter success (never killed); if the raptor lands **one melee**, the hunter is **finished**, then **swallowed**. Do not use kill / die / death in code, logs, specs, or agent prose. Player-facing **general** copy uses **swallow** / **swallow you whole**. **Digested** is Digest-stance loss copy (and that Stats label) only.
 
 **Design motifs (Velociraptor Hunt):** one paddock, one raptor; **tranq vs swallow**; **URW tank**; **Q/W/R/S** gait; **A** pick visible tile then heading/cone (Ctrl+7/9 yaw; run/quick **steps** drop aim; D snaps to 45°); **F** targeting then confirm (blind linear shot; factors only after F); **deterministic** damage; **AUT** tenths, v1 0.0 or 1.0; fair FoW; rain; raptor **profiles** and **heaves**. Gladiavore career hub is **not** the product loop.
 
@@ -43,7 +43,7 @@ Harvest notes: [`KDVR_REFERENCE.md`](KDVR_REFERENCE.md) (lineage + what not to i
 
 Update this line when starting or archiving a change:
 
-**Active change:** none. Foundation archived `2026-09-04-velociraptor-hunt`. Deferred pack archived `2026-09-12-hunt-deferred` (provisional sign-off). Canon: both archive `DESIGN_CANON.md` files. Live spec: `openspec/specs/hunt/spec.md`. Next work needs a **new** `openspec/changes/<name>/`. Gladiavore-era folders under `openspec/changes/` are **donor history**.
+**Active change:** none. Foundation archived `2026-09-04-velociraptor-hunt`. Deferred pack archived `2026-09-12-hunt-deferred`. Endosoma-friendly archived `2026-09-14-endosoma-friendly`. Canon: those three archive `DESIGN_CANON.md` files. Live spec: `openspec/specs/hunt/spec.md`. Next work needs a **new** `openspec/changes/<name>/`. Gladiavore-era folders under `openspec/changes/` are **donor history**.
 
 ---
 
@@ -252,7 +252,7 @@ Do not leave specs contradicting the game.
 
 1. Read this file (`AGENTS.md`).
 2. Find active change: `openspec/changes/` (non-archive folders only). Gladiavore-era folders are donor history. If none, there is no active change until the designer opens one.
-3. Read **`openspec/changes/archive/2026-09-04-velociraptor-hunt/DESIGN_CANON.md`**, then **`openspec/changes/archive/2026-09-12-hunt-deferred/DESIGN_CANON.md`**. Do not re-ask locked decisions. Do not treat Gladiavore `DESIGN_CANON.md` as product canon.
+3. Read **`openspec/changes/archive/2026-09-04-velociraptor-hunt/DESIGN_CANON.md`**, then **`openspec/changes/archive/2026-09-12-hunt-deferred/DESIGN_CANON.md`**, then **`openspec/changes/archive/2026-09-14-endosoma-friendly/DESIGN_CANON.md`**. Do not re-ask locked decisions. Do not treat Gladiavore `DESIGN_CANON.md` as product canon.
 4. Read the active change `tasks.md` — identify first unchecked PR.
 5. Read that PR's section in `design.md` if implementing.
 6. **Do not code** until the user has authorized that PR (see **PR implementation gate**). If unclear which PR is active or whether implementation is authorized, ask.
